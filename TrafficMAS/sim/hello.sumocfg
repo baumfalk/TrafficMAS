@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.sf.net/xsd/sumoConfiguration.xsd">
 
     <input>
         <net-file value="hello.net.xml"/>
         <route-files value="hello.rou.xml"/>
+        <additional value="sensors.xml"/>
     </input>
 
     <time>
@@ -15,5 +16,5 @@
     <gui_only>
         <gui-settings-file value="hello.settings.xml"/>
     </gui_only>
-
+    <!--<remote-port value="8813"/>-->
 </configuration>
