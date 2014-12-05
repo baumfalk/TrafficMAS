@@ -1,8 +1,7 @@
 package nl.uu.trafficmas.roadnetwork;
 
-public class Sensor {
-	private Road road;
-	private Lane lane;
-	private double distance;
+import nl.uu.trafficmas.agent.PhysicalObject;
+
+public class Sensor extends PhysicalObject {
 	private double length;
 }
