@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mas>
+	<edges value="hello.edg.xml"/>
+    <nodes value="hello.nod.xml"/>
+    <sensors value="sensors.xml"/>
+    <agentprofiles value="hello.agentprofiles.xml"/>
+</mas>
