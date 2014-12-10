@@ -12,7 +12,7 @@
     </input>
 
     <output>
-        <output-file value="net.net.xml"/>
+        <output-file value="takeOverScenario.net.xml"/>
     </output>
 
 </configuration>
