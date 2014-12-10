@@ -41,17 +41,12 @@ public class Test2 {
                 conn.do_job_set(Vehicle.add("vehicle"+i, "Car", "route0", simtime, 1, 13.8, (byte) 0));
                 conn.do_job_set(Vehicle.add("vehicle"+j, "Car", "route1", simtime, 1, 13.8, (byte) 0));
                 
-                lastStepSpeedN42 = (double) conn.do_job_get(ArealDetector.getLastStepMeanSpeed("N42lane0"));
-                lastStepSpeedA28 = (double) conn.do_job_get(ArealDetector.getLastStepMeanSpeed("A28_350_lane0_0"));
+                //lastStepSpeedN42 = (double) conn.do_job_get(ArealDetector.getLastStepMeanSpeed("N42lane0"));
+                //lastStepSpeedA28 = (double) conn.do_job_get(ArealDetector.getLastStepMeanSpeed("A28_350_lane0_0"));
 
                 conn.do_timestep();
                 System.out.println("Simulation time: " + simtime);
-                if(lastStepSpeedN42 > 0){
-                	System.out.println("Last step mean speed N42: " + lastStepSpeedN42);
-                }
-                if(lastStepSpeedA28 > 0){
-                	System.out.println("Last step mean speed A28: " + lastStepSpeedA28);
-                }
+                
                 
                 
                 j++;

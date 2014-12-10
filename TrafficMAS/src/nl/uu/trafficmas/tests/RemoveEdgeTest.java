@@ -11,7 +11,7 @@ import org.junit.Test;
 public class RemoveEdgeTest {
 
 	@Test
-	public void test() {
+	public void removeEdge() {
 		RoadNetwork rn = new RoadNetwork();
 		Node n = new Node("test",0,0);
 		Road r = new Road(5,null,1);
