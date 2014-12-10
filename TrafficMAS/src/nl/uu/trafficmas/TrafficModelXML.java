@@ -18,7 +18,10 @@ import nl.uu.trafficmas.agent.AgentAction;
 import nl.uu.trafficmas.agent.AgentPhysical;
 import nl.uu.trafficmas.organisation.Organisation;
 import nl.uu.trafficmas.roadnetwork.Edge;
+import nl.uu.trafficmas.roadnetwork.Lane;
+import nl.uu.trafficmas.roadnetwork.LaneType;
 import nl.uu.trafficmas.roadnetwork.Node;
+import nl.uu.trafficmas.roadnetwork.Road;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 
 public class TrafficModelXML implements TrafficModel {
@@ -29,88 +32,71 @@ public class TrafficModelXML implements TrafficModel {
 	private String agentProfilesXML;
 	private String sumoConfigXML;
 	
-	public TrafficModelXML(String dir, String masXML, String sumoDir) {
-		this.dir = dir;
-		nodesXML = this.extractFromXML(masXML,"nodes").get(0).get(0).value;
-		edgesXML = this.extractFromXML(masXML,"edges").get(0).get(0).value;
-		agentProfilesXML = this.extractFromXML(masXML,"agentprofiles").get(0).get(0).value;
-		sumoConfigXML = this.extractFromXML(masXML, "sumoconfig").get(0).get(0).value;
+	public TrafficModelXML() {
+		
 	}
 	
-	private ArrayList<ArrayList<KeyValue<String,String>>> extractFromXML(String xmlLocation, String target) {
-		try{
-			// open the xml file
-			XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-			InputStream in = new FileInputStream(dir+"/"+xmlLocation);
-			XMLEventReader eventReader = inputFactory.createXMLEventReader(in);
-
-			return extractXMLLoop(eventReader,target);
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-		
-		return null;
+	public TrafficModelXML(String dir, String masXML, String sumoDir)  {
+		setup(dir,masXML,sumoDir);
 	}
-
-	private ArrayList<ArrayList<KeyValue<String,String>>> extractXMLLoop(XMLEventReader eventReader, String target) throws XMLStreamException {
-		ArrayList<ArrayList<KeyValue<String,String>>> foundTargetList = new ArrayList<ArrayList<KeyValue<String,String>>>();
-		while (eventReader.hasNext()) {
-			XMLEvent e = eventReader.nextEvent();
-			if(e.isStartElement() && e.asStartElement().getName().getLocalPart().equals(target)) {
-				foundTargetList.add(extractXMLAttributes(e));
-			}
-		}
-		
-		return foundTargetList;
-	}
-
-	private ArrayList<KeyValue<String,String>> extractXMLAttributes(XMLEvent e) {
-		StartElement se = e.asStartElement();					
-		Iterator<Attribute> it = se.getAttributes();
-		ArrayList<KeyValue<String,String>> attributes = new ArrayList<KeyValue<String,String>>();
-		while(it.hasNext()) {
-			Attribute a = it.next();
-			attributes.add(new KeyValue<String,String>(a.getName().getLocalPart(),a.getValue()));
-		}
-		return attributes;
+	
+	public void setup(String dir, String masXML, String sumoDir) {
+		this.dir = dir;
+		nodesXML = SimpleXMLReader.extractFromXML(dir,masXML,"nodes").get(0).get(0).value;
+		edgesXML = SimpleXMLReader.extractFromXML(dir,masXML,"edges").get(0).get(0).value;
+		agentProfilesXML = SimpleXMLReader.extractFromXML(dir,masXML,"agentprofiles").get(0).get(0).value;
+		sumoConfigXML = SimpleXMLReader.extractFromXML(dir,masXML, "sumoconfig").get(0).get(0).value;
 	}
 
 	@Override
 	public RoadNetwork instantiateRoadNetwork() {
-		ArrayList<Node> nodes = extractNodes(this.nodesXML);
+		HashMap<String,Node> nodes = extractNodes(dir,this.nodesXML);
+		ArrayList<Edge> edges = extractEdges(dir, this.edgesXML,nodes);
 		
 		return null;
 	}
 		
-	private ArrayList<Node> extractNodes(String nodesXML) {
-		ArrayList<ArrayList<KeyValue<String,String>>> nodesAttributes = extractFromXML(nodesXML,"node");
-		ArrayList<Node> nodes = new ArrayList<Node>();
+	public HashMap<String,Node> extractNodes(String dir,String nodesXML) {
+		ArrayList<ArrayList<KeyValue<String,String>>> nodesAttributes = SimpleXMLReader.extractFromXML(dir,nodesXML,"node");
+		HashMap<String,Node>nodes = new HashMap<String,Node>();
 		for(ArrayList<KeyValue<String,String>> nodeAttributes : nodesAttributes) {
+			String id = null;
+			String x = null;
+			String y = null;
 			for(KeyValue<String,String> attr : nodeAttributes) {
-				if(attr.key.equals("id")) {
-					Node n = new Node(attr.value);
-					nodes.add(n);
+				switch(attr.key) {
+				case "id":
+					id = attr.value;
+					break;
+				case "x":
+					x = attr.value;
+					break;
+				case "y":
+					y = attr.value;
+					break;
 				}
 			}
+			
+			Node node = new Node(id,Double.parseDouble(x),Double.parseDouble(y));
+			nodes.put(id,node);
 		}
 		
 		return nodes;
 	}
 	
-	private ArrayList<Edge> extractEdges(String edgesXML) {
-		ArrayList<ArrayList<KeyValue<String,String>>> edgesAttributes = extractFromXML(nodesXML,"node");
+	public ArrayList<Edge> extractEdges(String dir, String edgesXML,HashMap<String,Node> nodes) {
+		ArrayList<ArrayList<KeyValue<String,String>>> edgesAttributes = SimpleXMLReader.extractFromXML(dir, nodesXML,"edge");
 		ArrayList<Edge> edges = new ArrayList<Edge>();
 		for(ArrayList<KeyValue<String,String>> edgeAttributes : edgesAttributes) {
-			extractEdge(edges, edgeAttributes);
+			extractEdge(edges, edgeAttributes,nodes);
 		}
 		
 		return edges;
 	}
 
-	private void extractEdge(ArrayList<Edge> edges,
-			ArrayList<KeyValue<String, String>> edgeAttributes) {
+	public void extractEdge(ArrayList<Edge> edges,
+			ArrayList<KeyValue<String, String>> edgeAttributes,
+			HashMap<String,Node> nodes) {
 		String from 		= null;
 		String to 			= null;
 		String id 			= null;
@@ -135,9 +121,24 @@ public class TrafficModelXML implements TrafficModel {
 				break;
 			}
 		}
-		Edge n = new Edge(null, null, null);
+		
+		ArrayList<Lane> lanes = new ArrayList<Lane>();
+		int numberLanesInt = Integer.parseInt(numberLanes);
+		for (int i = 0; i < numberLanesInt; i++) {
+			lanes.add(new Lane(LaneType.Normal)); //Todo: find some way to encode lanetype in xml
+		}
+		Node fromNode = nodes.get(from);
+		Node toNode = nodes.get(to);
+		
+		double distance = Node.nodeDistance(fromNode, toNode);
+		
+		Road road = new Road(distance, lanes, Integer.parseInt(priority));
+		
+		Edge n = new Edge(fromNode, toNode, road);
 		edges.add(n);
 	}
+
+	
 
 	@Override
 	public ArrayList<Agent> instantiateAgents() {
