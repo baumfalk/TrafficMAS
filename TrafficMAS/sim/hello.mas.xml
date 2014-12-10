@@ -4,4 +4,5 @@
     <nodes value="hello.nod.xml"/>
     <sensors value="sensors.xml"/>
     <agentprofiles value="hello.agentprofiles.xml"/>
+    <sumoconfig value = "hello.sumocfg"/>
 </mas>

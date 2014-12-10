@@ -1,95 +1,58 @@
 package nl.uu.trafficmas;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-import javax.xml.stream.XMLEventReader;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.events.Attribute;
-import javax.xml.stream.events.StartElement;
-import javax.xml.stream.events.XMLEvent;
+import nl.uu.trafficmas.agent.Agent;
+import nl.uu.trafficmas.agent.AgentAction;
+import nl.uu.trafficmas.agent.AgentPhysical;
+import nl.uu.trafficmas.organisation.Organisation;
+import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 
 public class TrafficMAS {
 	public static void main(String[] args) {
-		if(args.length < 2) { 
-			System.out.println("At least two arguments needed");
+		if(args.length < 3) { 
+			System.out.println("At least three arguments needed");
 			System.exit(1);
 		}
-		String configXML 	= args[0];
-		String sumoLoc		= args[1];
-		TrafficMAS trafficMas = new TrafficMAS(configXML,sumoLoc);
+		TrafficModel model 	= new TrafficModelXML(args[0],args[1],args[2]);
+		TrafficView view 	= new TrafficViewConsole();
+		TrafficMAS trafficMas = new TrafficMAS(model, view);
 		trafficMas.run();		
 	}
 
-	private String nodesXML;
-	private String edgesXML;
-	private String sensorXML;
-	private String agentsXML;
+	private TrafficModel model;
+	private RoadNetwork roadNetwork;
+	private ArrayList<Agent> agents;
+	private ArrayList<Organisation> organisations;
+	private TrafficView view;
 	
-	private String sumoXML;
-	
-	public TrafficMAS(String configXML, String sumoLoc) {
-		readXML(configXML);
-		initializeRoadNetwork();
-		initializeAgents();
-		initializeOrganisations();
+	public TrafficMAS(TrafficModel model, TrafficView view) {
+		this.model = model;
+		roadNetwork = this.model.instantiateRoadNetwork();
+		agents = this.model.instantiateAgents();
+		organisations = this.model.instantiateOrganisations();
+		
+		this.view = view;
+		this.view.updateFromRoadNetwork(roadNetwork);
+		this.view.updateFromAgents(agents);
+		this.view.updateFromOrganisations(organisations);
+		this.view.visualize();
 	}
 	
-	private void initializeRoadNetwork() {
-		//readXML(nodesXML);
-		
-	}
-
-	private void initializeAgents() {
-		
-	}
-
-	private void initializeOrganisations() {
-		
-	}
-
-	@SuppressWarnings("unchecked")
-	public void readXML(String xmlLocation) {
-		
-		try{
-			// open the xml file
-			XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-			InputStream in = new FileInputStream(xmlLocation);
-			XMLEventReader eventReader = inputFactory.createXMLEventReader(in);
-
-			readXMLLoop(eventReader);
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
+	private void run() {
+		int i = 0;
+		while(i++ < 1000) {
+			ArrayList<AgentPhysical> aPhys = this.model.getAgentPhysical();
+			HashMap<AgentPhysical, AgentPhysical> leadingVehicles = this.model.getLeadingVehicles();
+			ArrayList<AgentAction> actions = this.performAgentActions(aPhys,leadingVehicles);
+			this.model.executeAgentActions(actions);
 		}
 	}
 
-	private void readXMLLoop(XMLEventReader eventReader)
-			throws XMLStreamException {
-		while (eventReader.hasNext()) {
-			XMLEvent e = eventReader.nextEvent();
-			readXMLElement(e);
-		}
-	}
-
-	private void readXMLElement(XMLEvent e) {
-		if(e.isStartElement()) {
-			StartElement se = e.asStartElement();					
-			//System.out.println(se.getName());
-			Iterator<Attribute> it = se.getAttributes();
-			while(it.hasNext()) {
-				Attribute a = it.next();
-				System.out.println(a.getValue());
-				   			
-			}
-		}
-	}
-	
-	public void run() {
-		// TODO Auto-generated method stub
+	private ArrayList<AgentAction> performAgentActions(ArrayList<AgentPhysical> aPhys,
+			HashMap<AgentPhysical, AgentPhysical> leadingVehicles) {
+				return null;
 		
 	}
 
