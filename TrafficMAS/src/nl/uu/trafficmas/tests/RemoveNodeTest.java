@@ -9,7 +9,7 @@ import org.junit.Test;
 public class RemoveNodeTest {
 
 	@Test
-	public void test() {
+	public void removeNode() {
 		RoadNetwork rn = new RoadNetwork();
 		Node n = new Node("test",0,0);
 		rn.addNode(n);

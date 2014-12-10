@@ -8,7 +8,7 @@ import org.junit.Test;
 public class NodeEqual {
 
 	@Test
-	public void test() {
+	public void nodeEqual() {
 		Node n1 = new Node("a",0,0);
 		Node n2 = new Node("a", 0, 0);
 		assertEquals(n1,n2);
