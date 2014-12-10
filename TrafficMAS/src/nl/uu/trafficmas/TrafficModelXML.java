@@ -24,7 +24,7 @@ import nl.uu.trafficmas.roadnetwork.Node;
 import nl.uu.trafficmas.roadnetwork.Road;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 
-public class TrafficModelXML implements TrafficModel {
+public class TrafficModelXML implements DataModel {
 
 	private String dir; 
 	private String nodesXML;
@@ -151,23 +151,4 @@ public class TrafficModelXML implements TrafficModel {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	@Override
-	public ArrayList<AgentPhysical> getAgentPhysical() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public HashMap<AgentPhysical, AgentPhysical> getLeadingVehicles() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void executeAgentActions(ArrayList<AgentAction> actions) {
-		// TODO Auto-generated method stub
-		
-	}
-
 }
