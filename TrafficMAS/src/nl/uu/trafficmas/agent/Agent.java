@@ -6,12 +6,14 @@ import de.tudresden.sumo.cmd.Vehicle;
 import de.tudresden.sumo.util.SumoCommand;
 import de.tudresden.ws.container.SumoStringList;
 import nl.uu.trafficmas.organisation.Sanction;
+import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Node;
 
 public abstract class Agent extends AgentPhysical {
 	private String agentID;
 	private Node goalNode;
 	private int goalArrivalTime;
+	private float maxSpeed;
 	
 	private int expectedArrivalTime;
 	private ArrayList<Sanction> currentSanctionList;
@@ -31,5 +33,47 @@ public abstract class Agent extends AgentPhysical {
 	public SumoCommand changeRoad(int goalRoadID){
 		SumoStringList edgeList = new SumoStringList();
 		return Vehicle.setRoute(agentID, edgeList);
+	}
+	
+	public String getAgentID(){
+		return agentID;
+	}
+	public void setAgentID(String agentID){
+		this.agentID = agentID;
+	}
+	
+	public Node getGoalNode() {
+		return goalNode;
+	}
+	public void setGoalNode(Node goalNode) {
+		this.goalNode = goalNode;
+	}
+	
+	public int getGoalArrivalTime() {
+		return goalArrivalTime;
+	}
+	public void setGoalArrivalTime(int goalArrivalTime) {
+		this.goalArrivalTime = goalArrivalTime;
+	}
+
+	public float getMaxSpeed() {
+		return maxSpeed;
+	}
+	public void setMaxSpeed(float maxSpeed) {
+		this.maxSpeed = maxSpeed;
+	}
+
+	public int getExpectedArrivalTime() {
+		return expectedArrivalTime;
+	}
+	public void setExpectedArrivalTime(int expectedArrivalTime) {
+		this.expectedArrivalTime = expectedArrivalTime;
+	}
+
+	public ArrayList<Sanction> getCurrentSanctionList() {
+		return currentSanctionList;
+	}
+	public void setCurrentSanctionList(ArrayList<Sanction> currentSanctionList) {
+		this.currentSanctionList = currentSanctionList;
 	}
 }
