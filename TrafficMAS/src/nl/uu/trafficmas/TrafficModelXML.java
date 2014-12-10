@@ -85,7 +85,7 @@ public class TrafficModelXML implements DataModel {
 	}
 	
 	public ArrayList<Edge> extractEdges(String dir, String edgesXML,HashMap<String,Node> nodes) {
-		ArrayList<ArrayList<KeyValue<String,String>>> edgesAttributes = SimpleXMLReader.extractFromXML(dir, nodesXML,"edge");
+		ArrayList<ArrayList<KeyValue<String,String>>> edgesAttributes = SimpleXMLReader.extractFromXML(dir, edgesXML,"edge");
 		ArrayList<Edge> edges = new ArrayList<Edge>();
 		for(ArrayList<KeyValue<String,String>> edgeAttributes : edgesAttributes) {
 			extractEdge(edges, edgeAttributes,nodes);
