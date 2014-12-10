@@ -17,7 +17,7 @@ public class SimpleXMLReader {
 		try{
 			// open the xml file
 			XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-			InputStream in = new FileInputStream(dir+"/"+xmlLocation);
+			InputStream in = new FileInputStream(dir+xmlLocation);
 			XMLEventReader eventReader = inputFactory.createXMLEventReader(in);
 
 			return extractXMLLoop(eventReader,target);
