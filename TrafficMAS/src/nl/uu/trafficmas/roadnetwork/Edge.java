@@ -10,4 +10,16 @@ public class Edge {
 		this.to = to;
 		this.road = road;
 	}
+	
+	public Node getFromNode(){
+		return from;
+	}
+	
+	public Node getToNode(){
+		return to;
+	}
+	
+	public Road getRoad(){
+		return road;
+	}
 }
