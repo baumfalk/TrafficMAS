@@ -12,10 +12,10 @@ import org.junit.Test;
 public class AddNodesTest {
 
 	@Test
-	public void test() {
+	public void addNodes() {
 		RoadNetwork rn = new RoadNetwork();
-		Node n1 = new Node();
-		Node n2 = new Node();
+		Node n1 = new Node("n1",0,0);
+		Node n2 = new Node("n2",0,0);
 		
 		ArrayList<Node> nodes = new ArrayList<Node>();
 		nodes.add(n1);

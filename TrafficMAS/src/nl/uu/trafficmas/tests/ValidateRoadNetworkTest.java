@@ -16,15 +16,15 @@ public class ValidateRoadNetworkTest {
 	@Test
 	public void validateRoadNetwork() {
 		RoadNetwork rn = new RoadNetwork();
-		Node n1 = new Node();
-		Node n2 = new Node();
-		Node n3 = new Node();
+		Node n1 = new Node("n1",0,0);
+		Node n2 = new Node("n2",0,0);
+		Node n3 = new Node("n3",0,0);
 		ArrayList<Node> nodes = new ArrayList<Node>();
 		nodes.add(n1);
 		nodes.add(n2);
 		nodes.add(n3);
-		Road r1 = new Road();
-		Road r2 = new Road();
+		Road r1 = new Road(2.0,null,1);
+		Road r2 = new Road(5.0,null,1);
 		Edge e1 = new Edge(n1,n1,r1);
 		Edge e2 = new Edge(n1,n2,r1);
 		Edge e3 = new Edge(n2,n3,r1);
