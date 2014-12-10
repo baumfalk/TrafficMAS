@@ -31,13 +31,14 @@ public class TrafficMAS {
 	private String sumoXML;
 	
 	public TrafficMAS(String configXML, String sumoLoc) {
+		readXML(configXML);
 		initializeRoadNetwork();
 		initializeAgents();
 		initializeOrganisations();
 	}
 	
 	private void initializeRoadNetwork() {
-		readXML(nodesXML);
+		//readXML(nodesXML);
 		
 	}
 
@@ -77,10 +78,11 @@ public class TrafficMAS {
 	private void readXMLElement(XMLEvent e) {
 		if(e.isStartElement()) {
 			StartElement se = e.asStartElement();					
-			System.out.println(se.getName());
+			//System.out.println(se.getName());
 			Iterator<Attribute> it = se.getAttributes();
 			while(it.hasNext()) {
 				Attribute a = it.next();
+				System.out.println(a.getValue());
 				   			
 			}
 		}

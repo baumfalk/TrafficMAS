@@ -25,6 +25,10 @@ public class RoadNetwork {
 		nodes.add(node);
 	}
 	
+	public void removeNode(Node node) {
+		nodes.remove(node);
+	}
+	
 	public void addEdge(Edge edge) {
 		edges.add(edge);
 	}
@@ -33,5 +37,8 @@ public class RoadNetwork {
 		edges.add(new Edge(from,to,road));
 	}
 	
+	public void removeEdge(Edge edge){
+		edges.remove(edge);
+	}
 	
 }

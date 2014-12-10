@@ -3,7 +3,7 @@
   <vType id="Car" accel="1.0" decel="5.0" length="5.0" minGap="2.0" maxSpeed="70.0" sigma="0" />
   <vType id="Granny" accel="1.0" decel="5.0" length="3.0" minGap="2.0" maxSpeed="10.0" sigma="0" />
   
-   <route id="route0" color="1,1,0" edges="N42 A28Tot700 A28TotExit"/>
-   <route id="route1" color="1,0,0" edges="A28Tot350 A28Tot700 A28TotExit"/>   
+   <route id="route0" color="1,1,0" edges="edge0 edge1 edge2"/>
+   <route id="route1" color="1,0,0" edges="edge0 edge3"/>
 	
 </routes>
