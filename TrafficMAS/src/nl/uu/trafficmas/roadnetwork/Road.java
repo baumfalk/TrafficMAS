@@ -13,15 +13,13 @@ public class Road {
 		this.priority = priority;
 	}
 	
-	public ArrayList<Lane> getLaneList(){
-		return laneList;
-	}
-	
-	public double getLength(){
-		return length;
-	}
-	
 	public double getPriority(){
 		return priority;
+	}
+
+	public Lane[] getLanes() {
+		// TODO Auto-generated method stub
+		Lane[] lanes = new Lane[laneList.size()];
+		return laneList.toArray(lanes);
 	}
 }
