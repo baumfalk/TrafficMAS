@@ -13,7 +13,7 @@ public class AddNodeTest {
 	@Test
 	public void addNode() {
 		RoadNetwork rn = new RoadNetwork();
-		Node n = new Node();
+		Node n = new Node("test");
 		rn.addNode(n);
 		
 		assertEquals(rn.getNodes().length, 1);

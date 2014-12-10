@@ -14,7 +14,7 @@ public class AddEdgeTest {
 	@Test
 	public void addEdge() {
 		RoadNetwork rn = new RoadNetwork();
-		Node n = new Node();
+		Node n = new Node("test");
 		Road r = new Road();
 		rn.addNode(n);
 		Edge edge = new Edge(n,n,r);
@@ -22,7 +22,7 @@ public class AddEdgeTest {
 		assertEquals(rn.getEdges().length, 1);
 		assertEquals(rn.getEdges()[0], edge);
 		
-		Node n2 = new Node();
+		Node n2 = new Node("test2");
 		rn.addEdge(n, n2, r);	
 		assertEquals(rn.getEdges().length, 2);
 		assertNotEquals(rn.getEdges()[1], edge);
