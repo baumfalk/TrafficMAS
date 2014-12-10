@@ -23,11 +23,12 @@ public class TrafficMAS {
 	}
 
 	private DataModel dataModel;
+	private SimulationModel simulationModel;
+	private TrafficView view;
+
 	private RoadNetwork roadNetwork;
 	private ArrayList<Agent> agents;
 	private ArrayList<Organisation> organisations;
-	private TrafficView view;
-	private SimulationModel simulationModel;
 	
 	public TrafficMAS(DataModel dataModel,SimulationModel simulationModel, TrafficView view) {
 		this.dataModel = dataModel;
@@ -62,7 +63,6 @@ public class TrafficMAS {
 	private ArrayList<AgentAction> getAgentActions(ArrayList<AgentPhysical> aPhys,
 			HashMap<AgentPhysical, AgentPhysical> leadingVehicles) {
 				return null;
-		
 	}
 
 }
