@@ -9,7 +9,7 @@ import nl.uu.trafficmas.agent.*;
  
 public class Test2 {
  
-    static String sumo_bin = "FillMeInUsingArguments";
+    static String sumo_bin = "sumo-gui";
     static final String config_file = "sim/hello.sumocfg";
      
     public static void main(String[] args) {
