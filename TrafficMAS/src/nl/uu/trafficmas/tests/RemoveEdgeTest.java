@@ -13,8 +13,8 @@ public class RemoveEdgeTest {
 	@Test
 	public void test() {
 		RoadNetwork rn = new RoadNetwork();
-		Node n = new Node("test");
-		Road r = new Road();
+		Node n = new Node("test",0,0);
+		Road r = new Road(5,null,1);
 		rn.addNode(n);
 		Edge edge = new Edge(n,n,r);
 		rn.addEdge(edge);

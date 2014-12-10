@@ -34,10 +34,7 @@ public class TrafficMAS {
 		organisations = this.model.instantiateOrganisations();
 		
 		this.view = view;
-		this.view.updateFromRoadNetwork(roadNetwork);
-		this.view.updateFromAgents(agents);
-		this.view.updateFromOrganisations(organisations);
-		this.view.visualize();
+		updateView();
 	}
 	
 	private void run() {
@@ -45,12 +42,21 @@ public class TrafficMAS {
 		while(i++ < 1000) {
 			ArrayList<AgentPhysical> aPhys = this.model.getAgentPhysical();
 			HashMap<AgentPhysical, AgentPhysical> leadingVehicles = this.model.getLeadingVehicles();
-			ArrayList<AgentAction> actions = this.performAgentActions(aPhys,leadingVehicles);
+			ArrayList<AgentAction> actions = this.getAgentActions(aPhys,leadingVehicles);
 			this.model.executeAgentActions(actions);
+			
+			updateView();
 		}
 	}
 
-	private ArrayList<AgentAction> performAgentActions(ArrayList<AgentPhysical> aPhys,
+	private void updateView() {
+		this.view.updateFromRoadNetwork(roadNetwork);
+		this.view.updateFromAgents(agents);
+		this.view.updateFromOrganisations(organisations);
+		this.view.visualize();
+	}
+
+	private ArrayList<AgentAction> getAgentActions(ArrayList<AgentPhysical> aPhys,
 			HashMap<AgentPhysical, AgentPhysical> leadingVehicles) {
 				return null;
 		
