@@ -15,7 +15,6 @@ import javax.xml.stream.events.XMLEvent;
 public class SimpleXMLReader {
 	public static ArrayList<ArrayList<KeyValue<String,String>>> extractFromXML(String dir, String xmlLocation, String target) {
 		try{
-			// open the xml file
 			XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 			InputStream in = new FileInputStream(dir+xmlLocation);
 			XMLEventReader eventReader = inputFactory.createXMLEventReader(in);

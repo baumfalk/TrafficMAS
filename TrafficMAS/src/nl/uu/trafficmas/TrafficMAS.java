@@ -15,23 +15,26 @@ public class TrafficMAS {
 			System.out.println("At least three arguments needed");
 			System.exit(1);
 		}
-		TrafficModel model 	= new TrafficModelXML(args[0],args[1],args[2]);
-		TrafficView view 	= new TrafficViewConsole();
-		TrafficMAS trafficMas = new TrafficMAS(model, view);
+		DataModel dataModel 		= new TrafficModelXML(args[0],args[1],args[2]);
+		SimulationModel simModel 	= new SimulationModelTraaS();
+		TrafficView view 			= new TrafficViewConsole();
+		TrafficMAS trafficMas 		= new TrafficMAS(dataModel, simModel, view);
 		trafficMas.run();		
 	}
 
-	private TrafficModel model;
+	private DataModel dataModel;
 	private RoadNetwork roadNetwork;
 	private ArrayList<Agent> agents;
 	private ArrayList<Organisation> organisations;
 	private TrafficView view;
+	private SimulationModel simulationModel;
 	
-	public TrafficMAS(TrafficModel model, TrafficView view) {
-		this.model = model;
-		roadNetwork = this.model.instantiateRoadNetwork();
-		agents = this.model.instantiateAgents();
-		organisations = this.model.instantiateOrganisations();
+	public TrafficMAS(DataModel dataModel,SimulationModel simulationModel, TrafficView view) {
+		this.dataModel = dataModel;
+		this.simulationModel = simulationModel;
+		roadNetwork = this.dataModel.instantiateRoadNetwork();
+		agents = this.dataModel.instantiateAgents();
+		organisations = this.dataModel.instantiateOrganisations();
 		
 		this.view = view;
 		updateView();
@@ -40,10 +43,10 @@ public class TrafficMAS {
 	private void run() {
 		int i = 0;
 		while(i++ < 1000) {
-			ArrayList<AgentPhysical> aPhys = this.model.getAgentPhysical();
-			HashMap<AgentPhysical, AgentPhysical> leadingVehicles = this.model.getLeadingVehicles();
+			ArrayList<AgentPhysical> aPhys = this.simulationModel.getAgentPhysical();
+			HashMap<AgentPhysical, AgentPhysical> leadingVehicles = this.simulationModel.getLeadingVehicles();
 			ArrayList<AgentAction> actions = this.getAgentActions(aPhys,leadingVehicles);
-			this.model.executeAgentActions(actions);
+			this.simulationModel.executeAgentActions(actions);
 			
 			updateView();
 		}
