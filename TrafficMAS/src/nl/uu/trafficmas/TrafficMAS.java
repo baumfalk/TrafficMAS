@@ -6,6 +6,7 @@ import java.util.HashMap;
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.agent.AgentAction;
 import nl.uu.trafficmas.agent.AgentPhysical;
+import nl.uu.trafficmas.agent.AgentProfileType;
 import nl.uu.trafficmas.agent.AgentType;
 import nl.uu.trafficmas.organisation.Organisation;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
@@ -35,7 +36,8 @@ public class TrafficMAS {
 	private ArrayList<Agent> agents;
 	private ArrayList<Organisation> organisations;
 	private double agentSpawnProbability;
-	private ArrayList<KeyValue<AgentType,Double>> agentTypeDistribution;
+	private ArrayList<KeyValue<AgentProfileType, Double>> agentTypeDistribution;
+	
 	public TrafficMAS(DataModel dataModel,SimulationModel simulationModel, TrafficView view) {
 		this.dataModel = dataModel;
 		this.simulationModel = simulationModel;
@@ -43,7 +45,7 @@ public class TrafficMAS {
 		
 		agents = new ArrayList<Agent>();
 		agentSpawnProbability = this.dataModel.getAgentSpawnProbability();
-		agentTypeDistribution = this.dataModel.getAgentTypeDistribution();
+		agentTypeDistribution = this.dataModel.getAgentProfileTypeDistribution();
 		//agents = this.dataModel.instantiateAgents();
 		organisations = this.dataModel.instantiateOrganisations();
 		
@@ -74,5 +76,4 @@ public class TrafficMAS {
 			HashMap<AgentPhysical, AgentPhysical> leadingVehicles) {
 				return null;
 	}
-
 }
