@@ -15,7 +15,7 @@ public class TrafficMAS {
 			System.out.println("At least three arguments needed");
 			System.exit(1);
 		}
-		DataModel dataModel 		= new TrafficModelXML(args[0],args[1],args[2]);
+		DataModel dataModel 		= new DataModelXML(args[0],args[1],args[2]);
 		SimulationModel simModel 	= new SimulationModelTraaS();
 		TrafficView view 			= new TrafficViewConsole();
 		TrafficMAS trafficMas 		= new TrafficMAS(dataModel, simModel, view);

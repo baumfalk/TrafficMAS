@@ -7,7 +7,7 @@ import static org.junit.Assert.fail;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import nl.uu.trafficmas.TrafficModelXML;
+import nl.uu.trafficmas.DataModelXML;
 import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.LaneType;
 import nl.uu.trafficmas.roadnetwork.Node;
@@ -20,7 +20,7 @@ public class XMLEdgeTest {
 	public void test() {
 		//    <edge from="A28H0" id="A28Tot350" to="A28H350" numLanes="2" priority="2" />
 
-		TrafficModelXML model = new TrafficModelXML();
+		DataModelXML model = new DataModelXML();
 		HashMap<String, Node> nodes = model.extractNodes("tests/", "NodeTest.xml");
 		ArrayList<Edge> edges = model.extractEdges("tests/", "EdgeTest.xml", nodes);
 		assertNotNull(edges);

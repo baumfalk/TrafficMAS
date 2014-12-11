@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.HashMap;
 
-import nl.uu.trafficmas.TrafficModelXML;
+import nl.uu.trafficmas.DataModelXML;
 import nl.uu.trafficmas.roadnetwork.Node;
 
 import org.junit.Test;
@@ -13,7 +13,7 @@ public class XMLNodeTest {
 
 	@Test
 	public void test() {
-		TrafficModelXML model = new TrafficModelXML();
+		DataModelXML model = new DataModelXML();
 //		<node id="A28H0" x="-350.0" y="0.0" />
 //	    <node id="A28H350" x="0.0" y="0.0" /> 
 		HashMap<String, Node> nodes = model.extractNodes("tests/", "NodeTest.xml");

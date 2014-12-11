@@ -24,7 +24,7 @@ import nl.uu.trafficmas.roadnetwork.Node;
 import nl.uu.trafficmas.roadnetwork.Road;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 
-public class TrafficModelXML implements DataModel {
+public class DataModelXML implements DataModel {
 
 	private String dir; 
 	private String nodesXML;
@@ -32,11 +32,11 @@ public class TrafficModelXML implements DataModel {
 	private String agentProfilesXML;
 	private String sumoConfigXML;
 	
-	public TrafficModelXML() {
+	public DataModelXML() {
 		
 	}
 	
-	public TrafficModelXML(String dir, String masXML, String sumoDir)  {
+	public DataModelXML(String dir, String masXML, String sumoDir)  {
 		setup(dir,masXML,sumoDir);
 	}
 	
