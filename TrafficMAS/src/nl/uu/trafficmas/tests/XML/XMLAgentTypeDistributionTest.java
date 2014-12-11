@@ -19,8 +19,7 @@ public class XMLAgentTypeDistributionTest {
 		
 		assertNotNull(dist);
 		assertEquals(dist.size(),3);
-		
-		
+			
 		assertEquals(dist.get(0).key,AgentProfileType.PregnantWoman);
 		assertEquals(dist.get(1).key,AgentProfileType.OldLady);
 		assertEquals(dist.get(2).key,AgentProfileType.Normal);
