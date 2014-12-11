@@ -17,9 +17,10 @@ public class TrafficMAS {
 		}
 		String dir = args[0];
 		String masXML = args[1];
+		String sumoBin = args[2];
 		
 		DataModel dataModel 		= new DataModelXML(dir,masXML);
-		SimulationModel simModel 	= new SimulationModelTraaS();
+		SimulationModel simModel 	= new SimulationModelTraaS(dataModel.getSumoConfigPath(),sumoBin);
 		TrafficView view 			= new TrafficViewConsole();
 		TrafficMAS trafficMas 		= new TrafficMAS(dataModel, simModel, view);
 		trafficMas.run();		
