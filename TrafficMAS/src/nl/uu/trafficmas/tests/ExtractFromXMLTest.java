@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import nl.uu.trafficmas.KeyValue;
 import nl.uu.trafficmas.SimpleXMLReader;
-import nl.uu.trafficmas.TrafficModelXML;
+import nl.uu.trafficmas.DataModelXML;
 
 import org.junit.Test;
 
