@@ -36,24 +36,31 @@ public class DataModelXML implements DataModel {
 		
 	}
 	
-	public DataModelXML(String dir, String masXML, String sumoDir)  {
-		setup(dir,masXML,sumoDir);
+	public DataModelXML(String dir, String masXML)  {
+		setup(dir,masXML);
 	}
 	
-	public void setup(String dir, String masXML, String sumoDir) {
+	public void setup(String dir, String masXML) {
 		this.dir = dir;
 		nodesXML = SimpleXMLReader.extractFromXML(dir,masXML,"nodes").get(0).get(0).value;
 		edgesXML = SimpleXMLReader.extractFromXML(dir,masXML,"edges").get(0).get(0).value;
 		agentProfilesXML = SimpleXMLReader.extractFromXML(dir,masXML,"agentprofiles").get(0).get(0).value;
-		sumoConfigXML = SimpleXMLReader.extractFromXML(dir,masXML, "sumoconfig").get(0).get(0).value;
+		sumoConfigXML = dir+SimpleXMLReader.extractFromXML(dir,masXML, "sumoconfig").get(0).get(0).value;
 	}
 
 	@Override
 	public RoadNetwork instantiateRoadNetwork() {
-		HashMap<String,Node> nodes = extractNodes(dir,this.nodesXML);
-		ArrayList<Edge> edges = extractEdges(dir, this.edgesXML,nodes);
+		return instantiateRoadNetwork(this.dir,this.nodesXML,this.edgesXML);
+	}
+	
+	public RoadNetwork instantiateRoadNetwork(String dir, String nodesXML, String edgesXML) {
+		HashMap<String,Node> nodes = extractNodes(dir,nodesXML);
+		ArrayList<Node> nodeList = new ArrayList<Node>(nodes.values());
+		ArrayList<Edge> edges = extractEdges(dir, edgesXML,nodes);
 		
-		return null;
+		RoadNetwork rn = new RoadNetwork(nodeList, edges);
+		
+		return rn;
 	}
 		
 	public HashMap<String,Node> extractNodes(String dir,String nodesXML) {
@@ -142,7 +149,7 @@ public class DataModelXML implements DataModel {
 
 	@Override
 	public ArrayList<Agent> instantiateAgents() {
-
+		
 		return null;
 	}
 
@@ -150,5 +157,10 @@ public class DataModelXML implements DataModel {
 	public ArrayList<Organisation> instantiateOrganisations() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public String getSumoConfigPath() {
+		return sumoConfigXML;
 	}
 }

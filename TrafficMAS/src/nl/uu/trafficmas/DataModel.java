@@ -13,4 +13,5 @@ public interface DataModel {
 	public RoadNetwork instantiateRoadNetwork();
 	public ArrayList<Agent> instantiateAgents();
 	public ArrayList<Organisation> instantiateOrganisations();
+	public String getSumoConfigPath();
 }
