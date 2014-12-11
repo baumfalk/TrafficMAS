@@ -1,4 +1,4 @@
-package nl.uu.trafficmas.tests;
+package nl.uu.trafficmas.tests.XML;
 
 import static org.junit.Assert.*;
 import nl.uu.trafficmas.DataModelXML;
@@ -11,8 +11,7 @@ public class XMLRouteNetworkTest {
 	@Test
 	public void test() {
 		
-		DataModelXML dm = new DataModelXML();
-		RoadNetwork rn = dm.instantiateRoadNetwork("tests/", "NodeTest.xml", "EdgeTest.xml");
+		RoadNetwork rn = DataModelXML.instantiateRoadNetwork("tests/", "NodeTest.xml", "EdgeTest.xml");
 		
 		assertEquals(rn.getNodes().length,2);
 		assertEquals(rn.getEdges().length,1);

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.agent.AgentAction;
 import nl.uu.trafficmas.agent.AgentPhysical;
+import nl.uu.trafficmas.agent.AgentType;
 import nl.uu.trafficmas.organisation.Organisation;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 
@@ -33,12 +34,17 @@ public class TrafficMAS {
 	private RoadNetwork roadNetwork;
 	private ArrayList<Agent> agents;
 	private ArrayList<Organisation> organisations;
-	
+	private double agentSpawnProbability;
+	private ArrayList<KeyValue<AgentType,Double>> agentTypeDistribution;
 	public TrafficMAS(DataModel dataModel,SimulationModel simulationModel, TrafficView view) {
 		this.dataModel = dataModel;
 		this.simulationModel = simulationModel;
 		roadNetwork = this.dataModel.instantiateRoadNetwork();
-		agents = this.dataModel.instantiateAgents();
+		
+		agents = new ArrayList<Agent>();
+		agentSpawnProbability = this.dataModel.getAgentSpawnProbability();
+		agentTypeDistribution = this.dataModel.getAgentTypeDistribution();
+		//agents = this.dataModel.instantiateAgents();
 		organisations = this.dataModel.instantiateOrganisations();
 		
 		this.view = view;
