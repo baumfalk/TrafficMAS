@@ -48,9 +48,6 @@ public abstract class Agent extends AgentPhysical {
 	public String getAgentID(){
 		return agentID;
 	}
-	public void setAgentID(String agentID){
-		this.agentID = agentID;
-	}
 	
 	public Node getGoalNode() {
 		return goalNode;
@@ -66,11 +63,8 @@ public abstract class Agent extends AgentPhysical {
 		this.goalArrivalTime = goalArrivalTime;
 	}
 
-	public float getMaxSpeed() {
+	public double getMaxSpeed() {
 		return maxSpeed;
-	}
-	public void setMaxSpeed(float maxSpeed) {
-		this.maxSpeed = maxSpeed;
 	}
 
 	public int getExpectedArrivalTime() {
