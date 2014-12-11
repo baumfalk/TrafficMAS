@@ -1,12 +1,11 @@
 package nl.uu.trafficmas.tests.SimulationModelTraaS;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import it.polito.appeal.traci.SumoTraciConnection;
 import nl.uu.trafficmas.SimulationModelTraaS;
 
 import org.junit.Test;
 
-import de.tudresden.sumo.cmd.Route;
 import de.tudresden.sumo.cmd.Simulation;
 
 public class InitializeTest {
