@@ -9,7 +9,7 @@ public class XMLSpawnProbabilityTest {
 
 	@Test
 	public void test() {
-		double prob = DataModelXML.getAgentSpawnProbability("tests/", "AgentTypesTest.xml");
+		double prob = DataModelXML.getAgentSpawnProbability("tests/", "AgentProfileTypesTest.xml");
 		assertEquals(prob,0.01,0);
 	}
 
