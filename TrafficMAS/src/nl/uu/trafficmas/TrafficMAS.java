@@ -36,6 +36,7 @@ public class TrafficMAS {
 	private ArrayList<Organisation> organisations;
 	private double agentSpawnProbability;
 	private ArrayList<KeyValue<AgentType,Double>> agentTypeDistribution;
+	
 	public TrafficMAS(DataModel dataModel,SimulationModel simulationModel, TrafficView view) {
 		this.dataModel = dataModel;
 		this.simulationModel = simulationModel;
