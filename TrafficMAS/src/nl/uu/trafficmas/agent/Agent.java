@@ -10,14 +10,24 @@ import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Node;
 
 public abstract class Agent extends AgentPhysical {
-	private String agentID;
+	private final String agentID;
 	private Node goalNode;
 	private int goalArrivalTime;
-	private float maxSpeed;
+	private final double maxSpeed;
 	
 	private int expectedArrivalTime;
 	private ArrayList<Sanction> currentSanctionList;
 	public abstract double utility(int arrivalTime, ArrayList<Sanction> sanctionList);
+	
+	public Agent(String agentID,Node goalNode, int goalArrivalTime, double maxSpeed){
+		this.agentID = agentID;
+		this.goalNode = goalNode;
+		this.goalArrivalTime = goalArrivalTime;
+		this.maxSpeed = maxSpeed;
+		expectedArrivalTime = goalArrivalTime;
+		currentSanctionList = new ArrayList<Sanction>();
+	}
+	
 	
 	// Change speed by decelerating to goalVelocity.
 	public SumoCommand changeVelocity(float goalVelocity){
@@ -38,9 +48,6 @@ public abstract class Agent extends AgentPhysical {
 	public String getAgentID(){
 		return agentID;
 	}
-	public void setAgentID(String agentID){
-		this.agentID = agentID;
-	}
 	
 	public Node getGoalNode() {
 		return goalNode;
@@ -56,11 +63,8 @@ public abstract class Agent extends AgentPhysical {
 		this.goalArrivalTime = goalArrivalTime;
 	}
 
-	public float getMaxSpeed() {
+	public double getMaxSpeed() {
 		return maxSpeed;
-	}
-	public void setMaxSpeed(float maxSpeed) {
-		this.maxSpeed = maxSpeed;
 	}
 
 	public int getExpectedArrivalTime() {
