@@ -11,5 +11,5 @@ public interface DataModel {
 	public ArrayList<Organisation> instantiateOrganisations();
 	public String getSumoConfigPath();
 	public double getAgentSpawnProbability();
-	public ArrayList<KeyValue<AgentProfileType, Double>> getAgentProfileTypeDistribution();
+	public ArrayList<Pair<AgentProfileType, Double>> getAgentProfileTypeDistribution();
 }

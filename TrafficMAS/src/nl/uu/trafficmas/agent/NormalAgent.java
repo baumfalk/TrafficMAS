@@ -13,9 +13,15 @@ public class NormalAgent extends Agent {
 		// TODO Auto-generated constructor stub
 	}
 
+	
+	
+	
 	@Override
 	public double utility(int arrivalTime, ArrayList<Sanction> sanctionList) {
 		// TODO Auto-generated method stub
+		
+		
+		
 		return 0;
 	}
 

@@ -8,8 +8,8 @@ import java.util.HashMap;
 
 import de.tudresden.sumo.cmd.Vehicle;
 import nl.uu.trafficmas.agent.Agent;
-import nl.uu.trafficmas.agent.AgentAction;
 import nl.uu.trafficmas.agent.AgentPhysical;
+import nl.uu.trafficmas.agent.actions.AgentAction;
 
 public class SimulationModelTraaS implements SimulationModel {
 
