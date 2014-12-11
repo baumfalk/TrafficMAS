@@ -16,6 +16,7 @@ import javax.xml.stream.events.XMLEvent;
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.agent.AgentAction;
 import nl.uu.trafficmas.agent.AgentPhysical;
+import nl.uu.trafficmas.agent.AgentType;
 import nl.uu.trafficmas.organisation.Organisation;
 import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Lane;
@@ -40,7 +41,7 @@ public class DataModelXML implements DataModel {
 		setup(dir,masXML);
 	}
 	
-	public void setup(String dir, String masXML) {
+	private void setup(String dir, String masXML) {
 		this.dir = dir;
 		nodesXML = SimpleXMLReader.extractFromXML(dir,masXML,"nodes").get(0).get(0).value;
 		edgesXML = SimpleXMLReader.extractFromXML(dir,masXML,"edges").get(0).get(0).value;
@@ -53,7 +54,7 @@ public class DataModelXML implements DataModel {
 		return instantiateRoadNetwork(this.dir,this.nodesXML,this.edgesXML);
 	}
 	
-	public RoadNetwork instantiateRoadNetwork(String dir, String nodesXML, String edgesXML) {
+	public static RoadNetwork instantiateRoadNetwork(String dir, String nodesXML, String edgesXML) {
 		HashMap<String,Node> nodes = extractNodes(dir,nodesXML);
 		ArrayList<Node> nodeList = new ArrayList<Node>(nodes.values());
 		ArrayList<Edge> edges = extractEdges(dir, edgesXML,nodes);
@@ -63,7 +64,7 @@ public class DataModelXML implements DataModel {
 		return rn;
 	}
 		
-	public HashMap<String,Node> extractNodes(String dir,String nodesXML) {
+	public static HashMap<String,Node> extractNodes(String dir,String nodesXML) {
 		ArrayList<ArrayList<KeyValue<String,String>>> nodesAttributes = SimpleXMLReader.extractFromXML(dir,nodesXML,"node");
 		HashMap<String,Node>nodes = new HashMap<String,Node>();
 		for(ArrayList<KeyValue<String,String>> nodeAttributes : nodesAttributes) {
@@ -91,7 +92,7 @@ public class DataModelXML implements DataModel {
 		return nodes;
 	}
 	
-	public ArrayList<Edge> extractEdges(String dir, String edgesXML,HashMap<String,Node> nodes) {
+	public static ArrayList<Edge> extractEdges(String dir, String edgesXML,HashMap<String,Node> nodes) {
 		ArrayList<ArrayList<KeyValue<String,String>>> edgesAttributes = SimpleXMLReader.extractFromXML(dir, edgesXML,"edge");
 		ArrayList<Edge> edges = new ArrayList<Edge>();
 		for(ArrayList<KeyValue<String,String>> edgeAttributes : edgesAttributes) {
@@ -101,7 +102,7 @@ public class DataModelXML implements DataModel {
 		return edges;
 	}
 
-	public void extractEdge(ArrayList<Edge> edges,
+	public static void extractEdge(ArrayList<Edge> edges,
 			ArrayList<KeyValue<String, String>> edgeAttributes,
 			HashMap<String,Node> nodes) {
 		String from 		= null;
@@ -144,15 +145,7 @@ public class DataModelXML implements DataModel {
 		Edge n = new Edge(fromNode, toNode, road);
 		edges.add(n);
 	}
-
 	
-
-	@Override
-	public ArrayList<Agent> instantiateAgents() {
-		
-		return null;
-	}
-
 	@Override
 	public ArrayList<Organisation> instantiateOrganisations() {
 		// TODO Auto-generated method stub
@@ -162,5 +155,52 @@ public class DataModelXML implements DataModel {
 	@Override
 	public String getSumoConfigPath() {
 		return sumoConfigXML;
+	}
+
+	@Override
+	public double getAgentSpawnProbability() {
+		return getAgentSpawnProbability(dir,agentProfilesXML);
+	}
+	
+	public static double getAgentSpawnProbability(String dir, String agentProfilesXML) {
+		ArrayList<ArrayList<KeyValue<String, String>>> agentsAttributes = SimpleXMLReader.extractFromXML(dir, agentProfilesXML,"agents");
+		
+		for (KeyValue<String,String> attribute : agentsAttributes.get(0)) {
+			switch(attribute.key) {
+			case "spawn-probability":
+				return Double.parseDouble(agentsAttributes.get(0).get(0).value);
+			}
+		}
+		
+		return 0;
+	}
+	
+
+	@Override
+	public ArrayList<KeyValue<AgentType, Double>> getAgentTypeDistribution() {
+		// TODO Auto-generated method stub
+		return getAgentTypeDistribution(dir,agentProfilesXML);
+	}
+	
+	public static ArrayList<KeyValue<AgentType, Double>> getAgentTypeDistribution(String dir, String agentProfilesXML) {
+		ArrayList<ArrayList<KeyValue<String, String>>> agentAttributes = SimpleXMLReader.extractFromXML(dir, agentProfilesXML,"agent");
+		ArrayList<KeyValue<AgentType, Double>> agentTypeAndDist = new ArrayList<KeyValue<AgentType,Double>>();
+		for(ArrayList<KeyValue<String, String>> attributes : agentAttributes) {
+			String type = null;
+			String dist = null;
+			for(KeyValue<String, String> attribute : attributes) {
+				switch(attribute.key) {
+				case "role":
+					type = attribute.value;
+				case "dist":
+					dist = attribute.value;
+				}
+			}
+			AgentType agentType = AgentType.valueOf(type);
+			double distVal = Double.parseDouble(dist);
+			agentTypeAndDist.add(new KeyValue<AgentType, Double>(agentType, distVal));
+		}
+		
+		return agentTypeAndDist;
 	}
 }
