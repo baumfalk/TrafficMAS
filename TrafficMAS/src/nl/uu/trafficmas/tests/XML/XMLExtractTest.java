@@ -1,4 +1,4 @@
-package nl.uu.trafficmas.tests;
+package nl.uu.trafficmas.tests.XML;
 
 import static org.junit.Assert.*;
 
@@ -10,7 +10,7 @@ import nl.uu.trafficmas.DataModelXML;
 
 import org.junit.Test;
 
-public class ExtractFromXMLTest {
+public class XMLExtractTest {
 
 	@Test
 	public void test() {
