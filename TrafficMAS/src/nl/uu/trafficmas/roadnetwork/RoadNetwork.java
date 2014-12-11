@@ -13,6 +13,13 @@ public class RoadNetwork {
 		edges = new ArrayList<Edge>();
 	}
 	
+	public RoadNetwork(ArrayList<Node> nodeList, ArrayList<Edge> edgeList) {
+		this.nodes = new ArrayList<Node>();
+		this.edges = new ArrayList<Edge>();
+		addNodes(nodeList);
+		addEdges(edgeList);
+	}
+
 	public Node[] getNodes() {
 		Node[] list = new Node[nodes.size()];
 		return nodes.toArray(list);
