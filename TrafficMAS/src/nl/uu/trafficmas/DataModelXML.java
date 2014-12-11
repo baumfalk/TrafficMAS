@@ -1,21 +1,9 @@
 package nl.uu.trafficmas;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
-import javax.xml.stream.XMLEventReader;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.events.Attribute;
-import javax.xml.stream.events.StartElement;
-import javax.xml.stream.events.XMLEvent;
-
-import nl.uu.trafficmas.agent.Agent;
-import nl.uu.trafficmas.agent.AgentAction;
-import nl.uu.trafficmas.agent.AgentPhysical;
+import nl.uu.trafficmas.agent.AgentProfileType;
 import nl.uu.trafficmas.agent.AgentType;
 import nl.uu.trafficmas.organisation.Organisation;
 import nl.uu.trafficmas.roadnetwork.Edge;
@@ -177,14 +165,13 @@ public class DataModelXML implements DataModel {
 	
 
 	@Override
-	public ArrayList<KeyValue<AgentType, Double>> getAgentTypeDistribution() {
-		// TODO Auto-generated method stub
-		return getAgentTypeDistribution(dir,agentProfilesXML);
+	public ArrayList<KeyValue<AgentProfileType, Double>> getAgentProfileTypeDistribution() {
+		return getAgentProfileTypeDistribution(dir,agentProfilesXML);
 	}
 	
-	public static ArrayList<KeyValue<AgentType, Double>> getAgentTypeDistribution(String dir, String agentProfilesXML) {
+	public static ArrayList<KeyValue<AgentProfileType, Double>> getAgentProfileTypeDistribution(String dir, String agentProfilesXML) {
 		ArrayList<ArrayList<KeyValue<String, String>>> agentAttributes = SimpleXMLReader.extractFromXML(dir, agentProfilesXML,"agent");
-		ArrayList<KeyValue<AgentType, Double>> agentTypeAndDist = new ArrayList<KeyValue<AgentType,Double>>();
+		ArrayList<KeyValue<AgentProfileType, Double>> agentTypeAndDist = new ArrayList<KeyValue<AgentProfileType,Double>>();
 		for(ArrayList<KeyValue<String, String>> attributes : agentAttributes) {
 			String type = null;
 			String dist = null;
@@ -196,9 +183,11 @@ public class DataModelXML implements DataModel {
 					dist = attribute.value;
 				}
 			}
-			AgentType agentType = AgentType.valueOf(type);
+			
+			
+			AgentProfileType agentType = AgentProfileType.valueOf(type);
 			double distVal = Double.parseDouble(dist);
-			agentTypeAndDist.add(new KeyValue<AgentType, Double>(agentType, distVal));
+			agentTypeAndDist.add(new KeyValue<AgentProfileType, Double>(agentType, distVal));
 		}
 		
 		return agentTypeAndDist;
