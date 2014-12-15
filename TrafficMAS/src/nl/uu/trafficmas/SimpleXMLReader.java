@@ -13,7 +13,7 @@ import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
 public class SimpleXMLReader {
-	public static ArrayList<ArrayList<KeyValue<String,String>>> extractFromXML(String dir, String xmlLocation, String target) {
+	public static ArrayList<ArrayList<Pair<String,String>>> extractFromXML(String dir, String xmlLocation, String target) {
 		try{
 			XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 			InputStream in = new FileInputStream(dir+xmlLocation);
@@ -29,8 +29,8 @@ public class SimpleXMLReader {
 		return null;
 	}
 
-	public static ArrayList<ArrayList<KeyValue<String,String>>> extractXMLLoop(XMLEventReader eventReader, String target) throws XMLStreamException {
-		ArrayList<ArrayList<KeyValue<String,String>>> foundTargetList = new ArrayList<ArrayList<KeyValue<String,String>>>();
+	public static ArrayList<ArrayList<Pair<String,String>>> extractXMLLoop(XMLEventReader eventReader, String target) throws XMLStreamException {
+		ArrayList<ArrayList<Pair<String,String>>> foundTargetList = new ArrayList<ArrayList<Pair<String,String>>>();
 		while (eventReader.hasNext()) {
 			XMLEvent e = eventReader.nextEvent();
 			if(e.isStartElement() && e.asStartElement().getName().getLocalPart().equals(target)) {
@@ -41,13 +41,13 @@ public class SimpleXMLReader {
 		return foundTargetList;
 	}
 
-	public static  ArrayList<KeyValue<String,String>> extractXMLAttributes(XMLEvent e) {
+	public static  ArrayList<Pair<String,String>> extractXMLAttributes(XMLEvent e) {
 		StartElement se = e.asStartElement();					
 		Iterator<Attribute> it = se.getAttributes();
-		ArrayList<KeyValue<String,String>> attributes = new ArrayList<KeyValue<String,String>>();
+		ArrayList<Pair<String,String>> attributes = new ArrayList<Pair<String,String>>();
 		while(it.hasNext()) {
 			Attribute a = it.next();
-			attributes.add(new KeyValue<String,String>(a.getName().getLocalPart(),a.getValue()));
+			attributes.add(new Pair<String,String>(a.getName().getLocalPart(),a.getValue()));
 		}
 		return attributes;
 	}

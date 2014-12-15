@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import nl.uu.trafficmas.agent.Agent;
-import nl.uu.trafficmas.agent.AgentAction;
 import nl.uu.trafficmas.agent.AgentPhysical;
+import nl.uu.trafficmas.agent.actions.AgentAction;
 
 public interface SimulationModel {
 	public void initialize(); 
