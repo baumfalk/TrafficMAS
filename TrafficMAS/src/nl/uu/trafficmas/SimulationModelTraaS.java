@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import de.tudresden.sumo.cmd.Vehicle;
+import de.tudresden.ws.container.SumoStringList;
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.agent.AgentAction;
 import nl.uu.trafficmas.agent.AgentPhysical;
@@ -24,21 +25,13 @@ public class SimulationModelTraaS implements SimulationModel {
 	
 	
 	@Override
-	public void addAgent(Agent agent, String routeID) {
-		String agentID, vType;
-		int depart;
-		double pos, speed;
-		byte lane;
-		
-		agentID = agent.getAgentID();
-		vType = "Car";
-		
-		// TODO: Change this accordingly.
-		depart = 1;
-		
-		
+	public void addAgent(Agent agent, String routeID, int tick) {
+		addAgent(agent, routeID, tick, conn);
+	}
+	
+	public static void addAgent(Agent agent, String routeID, int tick, SumoTraciConnection conn){
 		try {
-			conn.do_job_set(Vehicle.add(agentID, vType, routeID, depart, 0.0, 0.0, (byte) 0));
+			conn.do_job_set(Vehicle.add(agent.getAgentID(), "Car", routeID, tick, 0.0, 10.0, (byte) 0));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -46,8 +39,10 @@ public class SimulationModelTraaS implements SimulationModel {
 	
 	@Override
 	public ArrayList<AgentPhysical> getAgentPhysical() {
-		ArrayList<AgentPhysical> agentPhysList = new ArrayList<AgentPhysical>();
-		// TODO 
+		return getAgentPhysical(conn);
+	}
+	
+	public static ArrayList<AgentPhysical> getAgentPhysical(SumoTraciConnection conn){
 		return null;
 	}
 
@@ -65,24 +60,19 @@ public class SimulationModelTraaS implements SimulationModel {
 
 	@Override
 	public void initialize() {
-		try {
-			conn = initialize(sumoBin, sumocfg);
-	        
-        }catch(Exception ex){ex.printStackTrace();}
+		conn = initialize(sumoBin, sumocfg);     
 	}
 	
 	
 	public static SumoTraciConnection initialize(String sumoBin, String sumocfg){
 		SumoTraciConnection conn = new SumoTraciConnection(sumoBin, sumocfg);
-		
-		try {
-
+		// Add an extra option.
+		try {	
 			//start TraCI
 			conn.runServer();
-            //load routes and initialize the simulation
-	        conn.do_timestep();
-	        
-        }catch(Exception ex){ex.printStackTrace();}
+	       //load routes and initialize the simulation
+			conn.do_timestep();    
+       }catch(Exception ex){ex.printStackTrace();}
 		
 		return conn;
 	}
@@ -95,17 +85,15 @@ public class SimulationModelTraaS implements SimulationModel {
 	
 	public static SumoTraciConnection initializeWithOption(String option, String value, String sumoBin, String sumocfg){
 		SumoTraciConnection conn = new SumoTraciConnection(sumoBin, sumocfg);
-
-		
+		// Add an extra option.
 		conn.addOption(option, value);
-		try {
-			
+		try {	
 			//start TraCI
 			conn.runServer();
-            //load routes and initialize the simulation
-	        conn.do_timestep();
-	        
-        }catch(Exception ex){ex.printStackTrace();}
+	       //load routes and initialize the simulation
+			conn.do_timestep();    
+       }catch(Exception ex){ex.printStackTrace();}
+		
 		return conn;
 	}
 }
