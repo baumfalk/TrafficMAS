@@ -1,6 +1,0 @@
-<agents spawn-probability ="0.01">
-	<agent role="PregnantWoman" dist="0.05"/>
-	<agent role="OldLady" dist="0.1"/>
-	<agent role="John Smith" dist="0.65"/>
-	<agent role="Hotshot" dist = "0.2"/>
-</agents>
