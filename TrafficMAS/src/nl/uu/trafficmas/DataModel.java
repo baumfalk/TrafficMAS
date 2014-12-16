@@ -14,5 +14,5 @@ public interface DataModel {
 	public double getAgentSpawnProbability();
 	public int simulationLength();
 	public ArrayList<Pair<AgentProfileType, Double>> getAgentProfileTypeDistribution();
-	public ArrayList<Agent> instantiateAgents();
+	public ArrayList<Pair<Agent, Integer>> instantiateAgents();
 }

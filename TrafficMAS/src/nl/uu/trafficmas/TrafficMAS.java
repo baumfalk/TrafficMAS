@@ -38,11 +38,14 @@ public class TrafficMAS {
 	private TrafficView view;
 
 	private RoadNetwork roadNetwork;
-	private ArrayList<Agent> agents;
+	private ArrayList<Pair<Agent, Integer>> agents;
 	private ArrayList<Organisation> organisations;
 	private double agentSpawnProbability;
 	private ArrayList<Pair<AgentProfileType, Double>> agentTypeDistribution;
 	private Random rng;
+	
+	private HashMap<String,Agent> completeAgentMap = new HashMap<String, Agent>();
+
 		
 	public TrafficMAS(DataModel dataModel,SimulationModel simulationModel, TrafficView view) {
 		this(dataModel,simulationModel,view,-1);
@@ -60,10 +63,13 @@ public class TrafficMAS {
 		
 		roadNetwork = this.dataModel.instantiateRoadNetwork();
 		
-		agents = new ArrayList<Agent>();
+		agents = new ArrayList<Pair<Agent, Integer>>();
 		agentSpawnProbability = this.dataModel.getAgentSpawnProbability();
 		agentTypeDistribution = this.dataModel.getAgentProfileTypeDistribution();
 		agents = this.dataModel.instantiateAgents();
+		// This should be no problem with next commit pulled.
+		completeAgentMap = this.simulationModel.addAgents(agents);
+		
 		organisations = this.dataModel.instantiateOrganisations();
 		
 		this.view = view;
@@ -72,26 +78,28 @@ public class TrafficMAS {
 	
 	private void run() {
 		int i = 0;
+		HashMap<String, Agent> currentAgentMap = this.simulationModel.updateCurrentAgentMap(completeAgentMap, null);
+
 		while(i++ < 100) {
-			ArrayList<Agent> currentAgentList = this.simulationModel.updateCurrentAgentList();
-			ArrayList<AgentPhysical> aPhys = this.simulationModel.updateAgentsPhys(roadNetwork, currentAgentList);
-			HashMap<AgentPhysical, AgentPhysical> leadingVehicles = this.simulationModel.getLeadingVehicles();
-			ArrayList<AgentAction> actions = this.getAgentActions(aPhys,leadingVehicles);
+			currentAgentMap = this.simulationModel.updateCurrentAgentMap(completeAgentMap, currentAgentMap);
+			HashMap<String, AgentPhysical> aPhysMap = this.simulationModel.updateAgentsPhys(roadNetwork, currentAgentMap);
+			HashMap<String, AgentPhysical> leadingVehicles = this.simulationModel.getLeadingVehicles(aPhysMap);
+			HashMap<String, AgentAction> actions = this.getAgentActions(aPhysMap,leadingVehicles);
 			
 			this.simulationModel.prepareAgentActions(actions);
+			this.simulationModel.doTimeStep();
 		}
 		this.simulationModel.close();
 	}
 
 	private void updateView() {
 		this.view.updateFromRoadNetwork(roadNetwork);
-		this.view.updateFromAgents(agents);
+		//this.view.updateFromAgents(agents);
 		this.view.updateFromOrganisations(organisations);
 		this.view.visualize();
 	}
-
-	private ArrayList<AgentAction> getAgentActions(ArrayList<AgentPhysical> aPhys,
-			HashMap<AgentPhysical, AgentPhysical> leadingVehicles) {
-				return null;
+	private HashMap<String, AgentAction> getAgentActions(HashMap<String, AgentPhysical> aPhys, HashMap<String, AgentPhysical> leadingVehicles) {
+		
+		return null;
 	}
 }

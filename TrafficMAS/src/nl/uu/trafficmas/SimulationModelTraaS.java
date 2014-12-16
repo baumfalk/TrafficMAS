@@ -4,7 +4,9 @@ import it.polito.appeal.traci.SumoTraciConnection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
+import de.tudresden.sumo.cmd.Simulation;
 import de.tudresden.sumo.cmd.Vehicle;
 import de.tudresden.ws.container.SumoStringList;
 import nl.uu.trafficmas.agent.Agent;
@@ -24,7 +26,23 @@ public class SimulationModelTraaS implements SimulationModel {
 		this.sumocfg = sumocfg;
 	}
 	
+
+	@Override
+	public HashMap<String, Agent> addAgents(ArrayList<Pair<Agent, Integer>> agentPairList) {
+		
+		return addAgents(agentPairList, conn);
+	}
 	
+	//TODO: Implement routes.
+	public static HashMap<String, Agent> addAgents(ArrayList<Pair<Agent, Integer>> agentPairList, SumoTraciConnection conn){
+		HashMap<String, Agent> completeAgentMap = new HashMap<String, Agent>();
+		for(Pair<Agent, Integer> agentPair : agentPairList){
+			addAgent(agentPair.first, "route0", agentPair.second, conn);
+			completeAgentMap.put(agentPair.first.agentID, agentPair.first);
+		}
+		completeAgentMap = completeAgentMap;
+		return completeAgentMap;
+	}
 	
 	@Override
 	public void addAgent(Agent agent, String routeID, int tick) {
@@ -33,32 +51,29 @@ public class SimulationModelTraaS implements SimulationModel {
 	
 	public static void addAgent(Agent agent, String routeID, int tick, SumoTraciConnection conn){
 		try {
-			conn.do_job_set(Vehicle.add(agent.getAgentID(), "Car", routeID, tick, 0.0, 10.0, (byte) 0));
+			conn.do_job_set(Vehicle.add(agent.agentID, "Car", routeID, tick, 0.0, 10.0, (byte) 0));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
 	@Override
-	public ArrayList<AgentPhysical> updateAgentsPhys(RoadNetwork rn, ArrayList<Agent> currentAgentList) {
+	public HashMap<String, AgentPhysical> updateAgentsPhys(RoadNetwork rn, HashMap<String, Agent> currentAgentList) {
 		return updateAgentsPhys(rn, currentAgentList, conn);
 	}
 	
 	
-	// TODO: Optimize (use existing AgentPhysical List to update. In this way, LaneType is missing from the physicalAgent.
-	// Maybe LaneType should not be a part of the physical agent, since it does not occur within SUMO.
-	public static ArrayList<AgentPhysical> updateAgentsPhys(RoadNetwork rn, ArrayList<Agent> currentAgentList, SumoTraciConnection conn){
-		ArrayList<AgentPhysical> agentPhysList = new ArrayList<AgentPhysical>();
+	public static HashMap<String, AgentPhysical> updateAgentsPhys(RoadNetwork rn, HashMap<String, Agent> currentAgentMap, SumoTraciConnection conn){
+		HashMap<String, AgentPhysical> agentPhysMap = new HashMap<String, AgentPhysical>(currentAgentMap);
 		try {
-			SumoStringList agentIDs = (SumoStringList) conn.do_job_get(Vehicle.getIDList());
 			
-			// Loop over all agents
-			for(String agentID : agentIDs){
-				
-				// Create a new physical agent
-				AgentPhysical aPhys = new AgentPhysical();
+			
+			// Loop over all agents, TODO: Only check the agents that passed a sensor
+			for(Map.Entry<String, Agent> agentMap : currentAgentMap.entrySet()){
 				
 				
+				AgentPhysical aPhys = agentMap.getValue();
+				String agentID = agentMap.getKey();
 				
 				// Retrieve all physical agent information from SUMO
 				double velocity = (double) conn.do_job_get(Vehicle.getSpeed(agentID));
@@ -72,31 +87,45 @@ public class SimulationModelTraaS implements SimulationModel {
 				aPhys.setRoad(road);
 				aPhys.setLane(road.getLanes()[laneIndex]);
 				aPhys.setDistance(distance);
-				agentPhysList.add(aPhys);
+				agentPhysMap.put(agentID, aPhys);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return agentPhysList;
+		return agentPhysMap;
 	}
 
+	// This method returns a HashMap that contains every vehicleID as key, and its leading vehicle as value. 
 	@Override
-	public HashMap<AgentPhysical, AgentPhysical> getLeadingVehicles() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void prepareAgentActions(ArrayList<AgentAction> actions) {
-		// TODO Auto-generated method stub
+	public HashMap<String, AgentPhysical> getLeadingVehicles(HashMap<String, AgentPhysical> currentAgentPhysMap) {
+		HashMap<String, AgentPhysical> agentLeaderMap = new HashMap<String, AgentPhysical>();
 		
+		for(Map.Entry<String, AgentPhysical> entry: currentAgentPhysMap.entrySet()){
+			// TODO: Replace hardcoded distance with dynamic distance.
+			try {
+				String leadVehicleID = (String) conn.do_job_get(Vehicle.getLeader(entry.getValue().agentID, 100));
+				AgentPhysical leadingAgent = currentAgentPhysMap.get(leadVehicleID);
+				agentLeaderMap.put(leadVehicleID, leadingAgent);
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		
+		return agentLeaderMap;
+	}
+
+	@Override
+	public void prepareAgentActions(HashMap<String, AgentAction> actions) {
+		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void initialize() {
 		conn = initialize(sumoBin, sumocfg);     
 	}
-	
 	
 	public static SumoTraciConnection initialize(String sumoBin, String sumocfg){
 		SumoTraciConnection conn = new SumoTraciConnection(sumoBin, sumocfg);
@@ -138,20 +167,35 @@ public class SimulationModelTraaS implements SimulationModel {
 	}
 
 
-	@Override
-	public void addAgents(ArrayList<Pair<Agent, Integer>> agentList) {
-		// TODO Auto-generated method stub
-		
-	}
 
 
 
 	@Override
-	public ArrayList<Agent> updateCurrentAgentList() {
-		// TODO Auto-generated method stub
-		return null;
+	public HashMap<String, Agent> updateCurrentAgentMap(HashMap<String, Agent> completeAgentMap, HashMap<String, Agent> oldAgentMap) {
+		return updateCurrentAgentMap(completeAgentMap, oldAgentMap, conn);
 	}
+	
+	public static HashMap<String, Agent> updateCurrentAgentMap(HashMap<String, Agent> completeAgentMap, HashMap<String, Agent> oldAgentMap, SumoTraciConnection conn){
+		HashMap<String, Agent> currentAgentMap = new HashMap<String, Agent>(oldAgentMap);
+		try {
+			
+			SumoStringList departedVehicleIDList = (SumoStringList) conn.do_job_get(Simulation.getArrivedIDList());
+			SumoStringList arrivedVehicleIDList = (SumoStringList) conn.do_job_get(Simulation.getDepartedIDList());			
+			
+			for(String departedVehicleID: departedVehicleIDList){
+				currentAgentMap.remove(departedVehicleID);
+			}
 
+			for(String arrivedVehicleID: arrivedVehicleIDList){
+				currentAgentMap.put(arrivedVehicleID, completeAgentMap.get(arrivedVehicleID));
+
+			}
+			
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		return currentAgentMap;
+	}
 
 
 	@Override

@@ -202,7 +202,7 @@ public class DataModelXML implements DataModel {
 	}
 
 	@Override
-	public ArrayList<Agent> instantiateAgents() {
+	public ArrayList<Pair<Agent, Integer>> instantiateAgents() {
 		// TODO Auto-generated method stub
 		return null;
 	}

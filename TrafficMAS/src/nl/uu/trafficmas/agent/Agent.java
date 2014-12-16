@@ -7,7 +7,6 @@ import nl.uu.trafficmas.organisation.Sanction;
 import nl.uu.trafficmas.roadnetwork.Node;
 
 public abstract class Agent extends AgentPhysical {
-	private final String agentID;
 	private Node goalNode;
 	private int goalArrivalTime;
 	private final double maxSpeed;
@@ -17,7 +16,7 @@ public abstract class Agent extends AgentPhysical {
 	public abstract double utility(int arrivalTime, ArrayList<Sanction> sanctionList);
 	
 	public Agent(String agentID,Node goalNode, int goalArrivalTime, double maxSpeed){
-		this.agentID 			= agentID;
+		super(agentID);
 		this.goalNode 			= goalNode;
 		this.goalArrivalTime 	= goalArrivalTime;
 		this.maxSpeed			= maxSpeed;
@@ -39,10 +38,6 @@ public abstract class Agent extends AgentPhysical {
 			}
 		}
 		return bestAction;
-	}
-	
-	public String getAgentID(){
-		return agentID;
 	}
 	
 	public Node getGoalNode() {
