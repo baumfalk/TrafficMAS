@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on Wed Dec 10 10:18:36 2014 by SUMO sumo Version 0.21.0
+<!-- generated on Tue 16 Dec 2014 11:52:32 AM CET by SUMO gui Version 0.19.0
 <?xml version="1.0" encoding="UTF-8"?>
 
-<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo-sim.org/xsd/sumoConfiguration.xsd">
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo-sim.org/xsd/sumo-gui.exeConfiguration.xsd">
 
     <input>
         <net-file value="sim/hello.net.xml"/>
@@ -21,12 +21,8 @@
         <step-length value="1"/>
     </time>
 
-    <emissions>
-        <phemlight-path value="sim/./PHEMlight/"/>
-    </emissions>
-
     <traci_server>
-        <remote-port value="50896"/>
+        <remote-port value="46139"/>
     </traci_server>
 
     <random_number>
@@ -38,11 +34,7 @@
     </gui_only>
 
 </configuration>
-<<<<<<< HEAD
 -->
 
-<detector xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/det_e2_file.xsd">
-   <interval begin="0.00" end="11.00" id="A28_350_lane0_0" nSamples="0" meanSpeed="-1.00" meanOccupancy="0.00" maxOccupancy="0.00" meanMaxJamLengthInVehicles="0.00" meanMaxJamLengthInMeters="0.00" maxJamLengthInVehicles="0" maxJamLengthInMeters="0.00" jamLengthInVehiclesSum="0" jamLengthInMetersSum="0.00" meanHaltingDuration="0.00" maxHaltingDuration="0.00" haltingDurationSum="0.00" meanIntervalHaltingDuration="0.00" maxIntervalHaltingDuration="0.00" intervalHaltingDurationSum="0.00" startedHalts="0.00" meanVehicleNumber="0.00" maxVehicleNumber="0" />
+<detector xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo-sim.org/xsd/det_e2_file.xsd">
 </detector>
-=======
->>>>>>> ebbdfbe0b500202bd781c20ffa189455974db3ff
