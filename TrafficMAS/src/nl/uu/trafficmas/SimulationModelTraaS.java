@@ -2,7 +2,6 @@ package nl.uu.trafficmas;
 
 import it.polito.appeal.traci.SumoTraciConnection;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -11,7 +10,6 @@ import de.tudresden.ws.container.SumoStringList;
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.agent.AgentPhysical;
 import nl.uu.trafficmas.agent.actions.AgentAction;
-import nl.uu.trafficmas.roadnetwork.Lane;
 import nl.uu.trafficmas.roadnetwork.Road;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 
@@ -25,6 +23,7 @@ public class SimulationModelTraaS implements SimulationModel {
 		this.sumoBin = sumoBin;
 		this.sumocfg = sumocfg;
 	}
+	
 	
 	
 	@Override
@@ -41,14 +40,14 @@ public class SimulationModelTraaS implements SimulationModel {
 	}
 	
 	@Override
-	public ArrayList<AgentPhysical> getAgentsPhysical(RoadNetwork rn) {
-		return getAgentsPhysical(rn, conn);
+	public ArrayList<AgentPhysical> updateAgentsPhys(RoadNetwork rn, ArrayList<Agent> currentAgentList) {
+		return updateAgentsPhys(rn, currentAgentList, conn);
 	}
 	
 	
 	// TODO: Optimize (use existing AgentPhysical List to update. In this way, LaneType is missing from the physicalAgent.
 	// Maybe LaneType should not be a part of the physical agent, since it does not occur within SUMO.
-	public static ArrayList<AgentPhysical> getAgentsPhysical(RoadNetwork rn, SumoTraciConnection conn){
+	public static ArrayList<AgentPhysical> updateAgentsPhys(RoadNetwork rn, ArrayList<Agent> currentAgentList, SumoTraciConnection conn){
 		ArrayList<AgentPhysical> agentPhysList = new ArrayList<AgentPhysical>();
 		try {
 			SumoStringList agentIDs = (SumoStringList) conn.do_job_get(Vehicle.getIDList());
@@ -88,7 +87,7 @@ public class SimulationModelTraaS implements SimulationModel {
 	}
 
 	@Override
-	public void executeAgentActions(ArrayList<AgentAction> actions) {
+	public void prepareAgentActions(ArrayList<AgentAction> actions) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -135,7 +134,35 @@ public class SimulationModelTraaS implements SimulationModel {
 
 	@Override
 	public void close() {
-		// TODO Auto-generated method stub
 		conn.close();
 	}
+
+
+	@Override
+	public void addAgents(ArrayList<Pair<Agent, Integer>> agentList) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public ArrayList<Agent> updateCurrentAgentList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public void doTimeStep() {
+		try {
+			conn.do_timestep();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+
+
 }

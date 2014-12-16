@@ -31,11 +31,13 @@ public class GetAgentPhysicalTest {
 		try {
 			SimulationModelTraaS.addAgent(a1, "route0",1000,conn);
 			conn.do_timestep();
-			agentPhysList = SimulationModelTraaS.getAgentsPhysical(rn, conn);
+			
+			//agentPhysList = SimulationModelTraaS.updateAgentsPhys(rn, currentAgentList, conn);
 			AgentPhysical aPhys = agentPhysList.get(0);
 			assertEquals("A28Tot350", aPhys.getRoad().id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		fail("not implemented");
 	}
 }
