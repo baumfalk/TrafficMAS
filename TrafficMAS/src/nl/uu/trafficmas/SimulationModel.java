@@ -12,6 +12,7 @@ public interface SimulationModel {
 	public void initialize(); 
 	public void initializeWithOption(String option, String value);
 	public void close();
+	public void doTimeStep();
 	
 	public HashMap<String, Agent> addAgents(ArrayList<Pair<Agent, Integer>> agentList);
 	public void addAgent(Agent agent, String routeID, int tick);
@@ -20,5 +21,4 @@ public interface SimulationModel {
 	public HashMap<String, AgentPhysical> updateAgentsPhys(RoadNetwork rn, HashMap<String, Agent> currentAgentList);
 	public HashMap<String, AgentPhysical> getLeadingVehicles(HashMap<String, AgentPhysical> currentAgentPhysList);
 	public void prepareAgentActions(HashMap<String, AgentAction> actions);
-	public void doTimeStep();
 }
