@@ -48,6 +48,7 @@ public class DataModelXML implements DataModel {
 		ArrayList<Edge> edges = extractEdges(dir, edgesXML,nodes);
 		
 		RoadNetwork rn = new RoadNetwork(nodeList, edges);
+		rn.validateRoadNetwork();
 		
 		return rn;
 	}
@@ -128,7 +129,7 @@ public class DataModelXML implements DataModel {
 		
 		double distance = Node.nodeDistance(fromNode, toNode);
 		
-		Road road = new Road(distance, lanes, Integer.parseInt(priority));
+		Road road = new Road(id, distance, lanes, Integer.parseInt(priority));
 		
 		Edge n = new Edge(fromNode, toNode, road);
 		edges.add(n);
