@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<mas>
+<mas simulationlength = "1000">
 	<edges value="hello.edg.xml"/>
     <nodes value="hello.nod.xml"/>
     <sensors value="sensors.xml"/>

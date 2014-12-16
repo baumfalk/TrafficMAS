@@ -131,4 +131,11 @@ public class SimulationModelTraaS implements SimulationModel {
 		
 		return conn;
 	}
+
+
+	@Override
+	public void close() {
+		// TODO Auto-generated method stub
+		conn.close();
+	}
 }

@@ -2,6 +2,7 @@ package nl.uu.trafficmas;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.agent.AgentPhysical;
@@ -20,12 +21,16 @@ public class TrafficMAS {
 		String dir = args[0];
 		String masXML = args[1];
 		String sumoBin = args[2];
+		long seed = -1;
+		if(args.length >= 4) {
+			seed = Integer.parseInt(args[3]);
+		}
 		
 		DataModel dataModel 		= new DataModelXML(dir,masXML);
-		SimulationModel simModel 	= new SimulationModelTraaS(dataModel.getSumoConfigPath(),sumoBin);
+		SimulationModel simModel 	= new SimulationModelTraaS(sumoBin,dataModel.getSumoConfigPath());
 		TrafficView view 			= new TrafficViewConsole();
-		TrafficMAS trafficMas 		= new TrafficMAS(dataModel, simModel, view);
-		trafficMas.run();		
+		TrafficMAS trafficMas 		= new TrafficMAS(dataModel, simModel, view,seed);
+		trafficMas.run();
 	}
 
 	private DataModel dataModel;
@@ -37,16 +42,28 @@ public class TrafficMAS {
 	private ArrayList<Organisation> organisations;
 	private double agentSpawnProbability;
 	private ArrayList<Pair<AgentProfileType, Double>> agentTypeDistribution;
-	
+	private Random rng;
+		
 	public TrafficMAS(DataModel dataModel,SimulationModel simulationModel, TrafficView view) {
+		this(dataModel,simulationModel,view,-1);
+	}
+	
+	public TrafficMAS(DataModel dataModel,SimulationModel simulationModel, TrafficView view, long seed) {
+		if(seed == -1) {
+			this.rng = new Random();
+		} else {
+			this.rng = new Random(seed);
+		}
 		this.dataModel = dataModel;
 		this.simulationModel = simulationModel;
+		this.simulationModel.initialize();
+		
 		roadNetwork = this.dataModel.instantiateRoadNetwork();
 		
 		agents = new ArrayList<Agent>();
 		agentSpawnProbability = this.dataModel.getAgentSpawnProbability();
 		agentTypeDistribution = this.dataModel.getAgentProfileTypeDistribution();
-		//agents = this.dataModel.instantiateAgents();
+		agents = this.dataModel.instantiateAgents();
 		organisations = this.dataModel.instantiateOrganisations();
 		
 		this.view = view;
@@ -55,18 +72,13 @@ public class TrafficMAS {
 	
 	private void run() {
 		int i = 0;
-		while(i++ < 1000) {
-			
-			//add agent
-			
-			
+		while(i++ < 100) {
 			ArrayList<AgentPhysical> aPhys = this.simulationModel.getAgentsPhysical(roadNetwork);
 			HashMap<AgentPhysical, AgentPhysical> leadingVehicles = this.simulationModel.getLeadingVehicles();
 			ArrayList<AgentAction> actions = this.getAgentActions(aPhys,leadingVehicles);
 			this.simulationModel.executeAgentActions(actions);
-			
-			updateView();
 		}
+		this.simulationModel.close();
 	}
 
 	private void updateView() {
