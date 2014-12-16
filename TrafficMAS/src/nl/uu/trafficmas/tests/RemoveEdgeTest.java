@@ -14,7 +14,7 @@ public class RemoveEdgeTest {
 	public void removeEdge() {
 		RoadNetwork rn = new RoadNetwork();
 		Node n = new Node("test",0,0);
-		Road r = new Road(5,null,1);
+		Road r = new Road("r",5,null,1);
 		rn.addNode(n);
 		Edge edge = new Edge(n,n,r);
 		rn.addEdge(edge);

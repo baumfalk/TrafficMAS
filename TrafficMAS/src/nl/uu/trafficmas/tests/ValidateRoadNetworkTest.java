@@ -23,8 +23,8 @@ public class ValidateRoadNetworkTest {
 		nodes.add(n1);
 		nodes.add(n2);
 		nodes.add(n3);
-		Road r1 = new Road(2.0,null,1);
-		Road r2 = new Road(5.0,null,1);
+		Road r1 = new Road("r1", 2.0,null,1);
+		Road r2 = new Road("r2", 5.0,null,1);
 		Edge e1 = new Edge(n1,n1,r1);
 		Edge e2 = new Edge(n1,n2,r1);
 		Edge e3 = new Edge(n2,n3,r1);
@@ -73,5 +73,10 @@ public class ValidateRoadNetworkTest {
 		rn.addEdge(e4);
 		assertTrue(rn.validateRoadNetwork());
 		rn.clear();
+		
+		//TODO
+		// Every road must have an unique ID
+		
+		
 	}
 }

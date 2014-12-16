@@ -7,8 +7,7 @@ import nl.uu.trafficmas.roadnetwork.Node;
 
 public class NormalAgent extends Agent {
 
-	public NormalAgent(String agentID, Node goalNode, int goalArrivalTime,
-			double maxSpeed) {
+	public NormalAgent(String agentID, Node goalNode, int goalArrivalTime, double maxSpeed) {
 		super(agentID, goalNode, goalArrivalTime, maxSpeed);
 		// TODO Auto-generated constructor stub
 	}
