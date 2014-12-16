@@ -11,6 +11,9 @@ import de.tudresden.ws.container.SumoStringList;
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.agent.AgentPhysical;
 import nl.uu.trafficmas.agent.actions.AgentAction;
+import nl.uu.trafficmas.roadnetwork.Lane;
+import nl.uu.trafficmas.roadnetwork.Road;
+import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 
 public class SimulationModelTraaS implements SimulationModel {
 
@@ -38,12 +41,44 @@ public class SimulationModelTraaS implements SimulationModel {
 	}
 	
 	@Override
-	public ArrayList<AgentPhysical> getAgentPhysical() {
-		return getAgentPhysical(conn);
+	public ArrayList<AgentPhysical> getAgentsPhysical(RoadNetwork rn) {
+		return getAgentsPhysical(rn, conn);
 	}
 	
-	public static ArrayList<AgentPhysical> getAgentPhysical(SumoTraciConnection conn){
-		return null;
+	
+	// TODO: Optimize (use existing AgentPhysical List to update. In this way, LaneType is missing from the physicalAgent.
+	// Maybe LaneType should not be a part of the physical agent, since it does not occur within SUMO.
+	public static ArrayList<AgentPhysical> getAgentsPhysical(RoadNetwork rn, SumoTraciConnection conn){
+		ArrayList<AgentPhysical> agentPhysList = new ArrayList<AgentPhysical>();
+		try {
+			SumoStringList agentIDs = (SumoStringList) conn.do_job_get(Vehicle.getIDList());
+			
+			// Loop over all agents
+			for(String agentID : agentIDs){
+				
+				// Create a new physical agent
+				AgentPhysical aPhys = new AgentPhysical();
+				
+				
+				
+				// Retrieve all physical agent information from SUMO
+				double velocity = (double) conn.do_job_get(Vehicle.getSpeed(agentID));
+				String roadID = (String) conn.do_job_get(Vehicle.getRoadID(agentID));
+				Road road = rn.getRoadFromID(roadID);
+				int laneIndex = (int) conn.do_job_get(Vehicle.getLaneIndex(agentID));
+				double distance = (double) conn.do_job_get(Vehicle.getLanePosition(agentID));
+				
+				// Update the agent with information
+				aPhys.setVelocity(velocity);
+				aPhys.setRoad(road);
+				aPhys.setLane(road.getLanes()[laneIndex]);
+				aPhys.setDistance(distance);
+				agentPhysList.add(aPhys);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return agentPhysList;
 	}
 
 	@Override
