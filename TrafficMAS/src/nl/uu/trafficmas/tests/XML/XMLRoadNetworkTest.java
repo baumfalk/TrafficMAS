@@ -6,7 +6,7 @@ import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 
 import org.junit.Test;
 
-public class XMLRouteNetworkTest {
+public class XMLRoadNetworkTest {
 
 	@Test
 	public void test() {

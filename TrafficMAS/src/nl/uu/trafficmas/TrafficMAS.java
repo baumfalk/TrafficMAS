@@ -11,6 +11,7 @@ import nl.uu.trafficmas.agent.AgentType;
 import nl.uu.trafficmas.agent.actions.AgentAction;
 import nl.uu.trafficmas.organisation.Organisation;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
+import nl.uu.trafficmas.roadnetwork.Route;
 
 public class TrafficMAS {
 	public static void main(String[] args) {
@@ -38,11 +39,13 @@ public class TrafficMAS {
 	private TrafficView view;
 
 	private RoadNetwork roadNetwork;
-	private ArrayList<Agent> agents;
+	private ArrayList<Agent> activeAgents;
+	private ArrayList<Pair<Integer,Agent>> agentsAndTime;
 	private ArrayList<Organisation> organisations;
 	private double agentSpawnProbability;
 	private ArrayList<Pair<AgentProfileType, Double>> agentTypeDistribution;
 	private Random rng;
+	private ArrayList<Route> routes;
 		
 	public TrafficMAS(DataModel dataModel,SimulationModel simulationModel, TrafficView view) {
 		this(dataModel,simulationModel,view,-1);
@@ -60,10 +63,13 @@ public class TrafficMAS {
 		
 		roadNetwork = this.dataModel.instantiateRoadNetwork();
 		
-		agents = new ArrayList<Agent>();
+		agentsAndTime = new ArrayList<Pair<Integer,Agent>>();
 		agentSpawnProbability = this.dataModel.getAgentSpawnProbability();
 		agentTypeDistribution = this.dataModel.getAgentProfileTypeDistribution();
-		agents = this.dataModel.instantiateAgents();
+		routes = this.dataModel.getRoutes(roadNetwork);
+		agentsAndTime = this.dataModel.instantiateAgents(rng,routes);
+		activeAgents = new ArrayList<Agent>();
+				
 		organisations = this.dataModel.instantiateOrganisations();
 		
 		this.view = view;
@@ -85,7 +91,7 @@ public class TrafficMAS {
 
 	private void updateView() {
 		this.view.updateFromRoadNetwork(roadNetwork);
-		this.view.updateFromAgents(agents);
+		this.view.updateFromAgents(activeAgents);
 		this.view.updateFromOrganisations(organisations);
 		this.view.visualize();
 	}
