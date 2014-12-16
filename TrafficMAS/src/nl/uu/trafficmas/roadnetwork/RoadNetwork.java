@@ -62,10 +62,20 @@ public class RoadNetwork {
 		edges.remove(edge);
 	}
 	
-	public boolean validateRoadNetwork(){
-		//boolean result = true;
-		ArrayList<Road> roads = new ArrayList<Road>();
+	public Road getRoadFromID(String roadID){
 
+		for(Edge edge: edges){
+			if (edge.getRoad().id.equals(roadID)){
+				return edge.getRoad();
+			}
+		}
+		System.out.println("Failed to find road from ID");
+		return null;
+	}
+	
+	public boolean validateRoadNetwork(){
+
+		ArrayList<Road> roads = new ArrayList<Road>();
 		
 		// Check for duplicate nodes
 		Set<Node> setNodes = new HashSet<Node>(nodes);

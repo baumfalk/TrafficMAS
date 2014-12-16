@@ -60,7 +60,7 @@ public class TrafficMAS {
 			//add agent
 			
 			
-			ArrayList<AgentPhysical> aPhys = this.simulationModel.getAgentPhysical();
+			ArrayList<AgentPhysical> aPhys = this.simulationModel.getAgentsPhysical(roadNetwork);
 			HashMap<AgentPhysical, AgentPhysical> leadingVehicles = this.simulationModel.getLeadingVehicles();
 			ArrayList<AgentAction> actions = this.getAgentActions(aPhys,leadingVehicles);
 			this.simulationModel.executeAgentActions(actions);
