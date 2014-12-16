@@ -73,10 +73,12 @@ public class TrafficMAS {
 	private void run() {
 		int i = 0;
 		while(i++ < 100) {
-			ArrayList<AgentPhysical> aPhys = this.simulationModel.getAgentsPhysical(roadNetwork);
+			ArrayList<Agent> currentAgentList = this.simulationModel.updateCurrentAgentList();
+			ArrayList<AgentPhysical> aPhys = this.simulationModel.updateAgentsPhys(roadNetwork, currentAgentList);
 			HashMap<AgentPhysical, AgentPhysical> leadingVehicles = this.simulationModel.getLeadingVehicles();
 			ArrayList<AgentAction> actions = this.getAgentActions(aPhys,leadingVehicles);
-			this.simulationModel.executeAgentActions(actions);
+			
+			this.simulationModel.prepareAgentActions(actions);
 		}
 		this.simulationModel.close();
 	}
