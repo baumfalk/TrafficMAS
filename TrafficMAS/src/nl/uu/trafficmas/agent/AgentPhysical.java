@@ -3,8 +3,15 @@ package nl.uu.trafficmas.agent;
 import nl.uu.trafficmas.organisation.BruteState;
 
 public class AgentPhysical extends PhysicalObject implements BruteState {
+	public final String agentID;
 	private double velocity;
 	private AgentType agentType;
+	
+	// TODO: Replace with actual AgentType functionality.
+	public AgentPhysical(String agentID){
+		this.agentID = agentID;
+		this.agentType = AgentType.Normal;
+	}
 	
 	public double getVelocity() {
 		return velocity;
