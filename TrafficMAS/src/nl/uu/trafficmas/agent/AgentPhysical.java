@@ -5,6 +5,8 @@ import nl.uu.trafficmas.organisation.BruteState;
 public class AgentPhysical extends PhysicalObject implements BruteState {
 	private double velocity;
 	private AgentType agentType;
+	private static int currentAgentID=0;
+
 	
 	public double getVelocity() {
 		return velocity;
@@ -18,5 +20,9 @@ public class AgentPhysical extends PhysicalObject implements BruteState {
 	}
 	public void setAgentType(AgentType agentType) {
 		this.agentType = agentType;
+	}
+	
+	public static String getNextAgentID() {
+		return "Agent "+ currentAgentID++;
 	}
 }
