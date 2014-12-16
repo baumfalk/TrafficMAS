@@ -3,6 +3,7 @@ package nl.uu.trafficmas;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.agent.AgentProfileType;
 import nl.uu.trafficmas.agent.AgentType;
 import nl.uu.trafficmas.organisation.Organisation;
@@ -192,5 +193,17 @@ public class DataModelXML implements DataModel {
 		}
 		
 		return agentTypeAndDist;
+	}
+
+	@Override
+	public int simulationLength() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public ArrayList<Agent> instantiateAgents() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

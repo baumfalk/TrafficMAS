@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on Tue Dec 16 12:17:02 2014 by SUMO sumo Version 0.21.0
+<!-- generated on Tue Dec 16 12:20:54 2014 by SUMO sumo Version 0.21.0
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo-sim.org/xsd/sumoConfiguration.xsd">
@@ -25,7 +25,7 @@
     </emissions>
 
     <traci_server>
-        <remote-port value="53097"/>
+        <remote-port value="44586"/>
     </traci_server>
 
     <random_number>
@@ -37,7 +37,3 @@
     </gui_only>
 
 </configuration>
--->
-
-<detector xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo-sim.org/xsd/det_e2_file.xsd">
-</detector>
