@@ -178,15 +178,21 @@ public class SimulationModelTraaS implements SimulationModel {
 	// This method returns a HashMap that contains every vehicleID as key, and its leading vehicle as value. 
 	public static HashMap<String, AgentPhysical> getLeadingVehicles(HashMap<String, AgentPhysical> currentAgentPhysMap, SumoTraciConnection conn){
 		HashMap<String, AgentPhysical> agentLeaderMap = new HashMap<String, AgentPhysical>();
+		
+		// Loop through every agent currently in the simulation
 		for(Map.Entry<String, AgentPhysical> entry: currentAgentPhysMap.entrySet()){
 			// TODO: Replace hardcoded distance with dynamic distance depending on type of agent.
 			try {
-				// TODO: What object does this return?
 				Object[] leadVehicleArray = (Object[])(conn.do_job_get(Vehicle.getLeader(entry.getValue().agentID, LOOK_AHEAD_DISTANCE)));
-				//System.out.println(leadVehicleArray[0].toString());
-				//System.out.println(leadVehicleArray[1].toString());
-				AgentPhysical leadingAgent = currentAgentPhysMap.get(leadVehicleArray[0].toString());
-				agentLeaderMap.put(leadVehicleArray[0].toString(), leadingAgent);
+				
+				if(!(leadVehicleArray[1].equals(-1.0))){
+					// If leadVehicleArray[1] is not -1.0, the agent has a leading vehicle. 
+					AgentPhysical leadingAgent = currentAgentPhysMap.get(leadVehicleArray[0].toString());
+					agentLeaderMap.put(entry.getKey(), leadingAgent);
+				} else{
+					// If the agent has no leading vehicle, it will return null
+					agentLeaderMap.put(entry.getKey(), null);
+				}
 				
 			} catch (Exception e) {
 				e.printStackTrace();

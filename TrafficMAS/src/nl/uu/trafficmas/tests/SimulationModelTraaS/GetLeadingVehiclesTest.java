@@ -19,7 +19,7 @@ import org.junit.Test;
 public class GetLeadingVehiclesTest {
 
 	@Test
-	public void test() {
+	public void getLeadingVehicles() {
 		SumoTraciConnection conn = SimulationModelTraaS.initialize("sumo", "./tests/ConfigTest.xml");
 		RoadNetwork rn = DataModelXML.instantiateRoadNetwork("./tests/", "NodeTest.xml", "EdgeTest.xml");
 		ArrayList<Pair<Agent, Integer>> agentPairList = new ArrayList<Pair<Agent, Integer>>();
@@ -46,7 +46,7 @@ public class GetLeadingVehiclesTest {
 			HashMap<String, AgentPhysical> leadingVehicleMap = SimulationModelTraaS.getLeadingVehicles(agentPhysMap, conn);
 			
 			AgentPhysical a1Phys = a1;
-			//System.out.println(leadingVehicleMap.get(a1.agentID).agentID);
+
 			assertEquals(null, leadingVehicleMap.get(a1.agentID));
 			assertEquals(a1Phys, leadingVehicleMap.get(a2.agentID));
 			

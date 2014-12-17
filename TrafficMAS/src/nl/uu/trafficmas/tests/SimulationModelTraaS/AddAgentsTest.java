@@ -20,7 +20,7 @@ import de.tudresden.ws.container.SumoStringList;
 public class AddAgentsTest {
 
 	@Test
-	public void test() {
+	public void addAgents() {
 		SumoTraciConnection conn = SimulationModelTraaS.initialize("sumo", "./tests/ConfigTest.xml");
 		RoadNetwork rn = DataModelXML.instantiateRoadNetwork("./tests/", "NodeTest.xml", "EdgeTest.xml");
 		ArrayList<Pair<Agent, Integer>> agentPairList = new ArrayList<Pair<Agent, Integer>>();
