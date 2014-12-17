@@ -13,6 +13,9 @@ public abstract class Agent extends AgentPhysical {
 	
 	private int expectedArrivalTime;
 	private ArrayList<Sanction> currentSanctionList;
+	
+	public final static double DEFAULT_MAX_SPEED = 70;
+	
 	public abstract double utility(int arrivalTime, ArrayList<Sanction> sanctionList);
 	
 	public Agent(String agentID,Node goalNode, int goalArrivalTime, double maxSpeed){
@@ -71,4 +74,6 @@ public abstract class Agent extends AgentPhysical {
 	public void setCurrentSanctionList(ArrayList<Sanction> currentSanctionList) {
 		this.currentSanctionList = currentSanctionList;
 	}
+	
+	
 }

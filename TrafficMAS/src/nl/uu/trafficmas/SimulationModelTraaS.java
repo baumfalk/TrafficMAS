@@ -182,9 +182,11 @@ public class SimulationModelTraaS implements SimulationModel {
 			// TODO: Replace hardcoded distance with dynamic distance depending on type of agent.
 			try {
 				// TODO: What object does this return?
-				String leadVehicleID =  (String) conn.do_job_get(Vehicle.getLeader(entry.getValue().agentID, LOOK_AHEAD_DISTANCE));
-				AgentPhysical leadingAgent = currentAgentPhysMap.get(leadVehicleID);
-				agentLeaderMap.put(leadVehicleID, leadingAgent);
+				Object[] leadVehicleArray = (Object[])(conn.do_job_get(Vehicle.getLeader(entry.getValue().agentID, LOOK_AHEAD_DISTANCE)));
+				//System.out.println(leadVehicleArray[0].toString());
+				//System.out.println(leadVehicleArray[1].toString());
+				AgentPhysical leadingAgent = currentAgentPhysMap.get(leadVehicleArray[0].toString());
+				agentLeaderMap.put(leadVehicleArray[0].toString(), leadingAgent);
 				
 			} catch (Exception e) {
 				e.printStackTrace();

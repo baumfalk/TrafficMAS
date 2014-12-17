@@ -11,6 +11,7 @@ import nl.uu.trafficmas.agent.AgentType;
 import nl.uu.trafficmas.agent.actions.AgentAction;
 import nl.uu.trafficmas.organisation.Organisation;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
+import nl.uu.trafficmas.roadnetwork.Route;
 
 public class TrafficMAS {
 	public static void main(String[] args) {
@@ -38,7 +39,8 @@ public class TrafficMAS {
 	private TrafficView view;
 
 	private RoadNetwork roadNetwork;
-	private ArrayList<Pair<Agent, Integer>> agents;
+	private ArrayList<Agent> activeAgents;
+	private ArrayList<Pair<Agent,Integer>> agentsAndTime;
 	private ArrayList<Organisation> organisations;
 	private double agentSpawnProbability;
 	private ArrayList<Pair<AgentProfileType, Double>> agentTypeDistribution;
@@ -46,6 +48,7 @@ public class TrafficMAS {
 	
 	private HashMap<String,Agent> completeAgentMap = new HashMap<String, Agent>();
 
+	private ArrayList<Route> routes;
 		
 	public TrafficMAS(DataModel dataModel,SimulationModel simulationModel, TrafficView view) {
 		this(dataModel,simulationModel,view,-1);
@@ -63,14 +66,19 @@ public class TrafficMAS {
 		
 		roadNetwork = this.dataModel.instantiateRoadNetwork();
 		
-		agents = new ArrayList<Pair<Agent, Integer>>();
+
+		
+		agentsAndTime = new ArrayList<Pair<Agent,Integer>>();
 		agentSpawnProbability = this.dataModel.getAgentSpawnProbability();
 		agentTypeDistribution = this.dataModel.getAgentProfileTypeDistribution();
-		agents = this.dataModel.instantiateAgents();
-		// This should be no problem with next commit pulled.
-		completeAgentMap = this.simulationModel.addAgents(agents);
-		
+		routes = this.dataModel.getRoutes(roadNetwork);
+		agentsAndTime = this.dataModel.instantiateAgents(rng,routes);
+		activeAgents = new ArrayList<Agent>();
+				
 		organisations = this.dataModel.instantiateOrganisations();
+		
+		completeAgentMap = this.simulationModel.addAgents(agentsAndTime);
+
 		
 		this.view = view;
 		updateView();
@@ -94,7 +102,7 @@ public class TrafficMAS {
 
 	private void updateView() {
 		this.view.updateFromRoadNetwork(roadNetwork);
-		//this.view.updateFromAgents(agents);
+		this.view.updateFromAgents(activeAgents);
 		this.view.updateFromOrganisations(organisations);
 		this.view.visualize();
 	}

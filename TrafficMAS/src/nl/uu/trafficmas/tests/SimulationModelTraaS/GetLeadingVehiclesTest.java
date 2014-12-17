@@ -46,12 +46,12 @@ public class GetLeadingVehiclesTest {
 			HashMap<String, AgentPhysical> leadingVehicleMap = SimulationModelTraaS.getLeadingVehicles(agentPhysMap, conn);
 			
 			AgentPhysical a1Phys = a1;
+			//System.out.println(leadingVehicleMap.get(a1.agentID).agentID);
 			assertEquals(null, leadingVehicleMap.get(a1.agentID));
 			assertEquals(a1Phys, leadingVehicleMap.get(a2.agentID));
 			
 		} catch(Exception e){
 			e.printStackTrace();
 		}
-		fail("fdicks");
 	}
 }
