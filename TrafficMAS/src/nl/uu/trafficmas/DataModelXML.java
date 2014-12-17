@@ -2,10 +2,10 @@ package nl.uu.trafficmas;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.agent.AgentProfileType;
-import nl.uu.trafficmas.agent.AgentType;
 import nl.uu.trafficmas.organisation.Organisation;
 import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Lane;
@@ -13,14 +13,22 @@ import nl.uu.trafficmas.roadnetwork.LaneType;
 import nl.uu.trafficmas.roadnetwork.Node;
 import nl.uu.trafficmas.roadnetwork.Road;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
+import nl.uu.trafficmas.roadnetwork.Route;
 
 public class DataModelXML implements DataModel {
 
 	private String dir; 
+	private String masXML;
 	private String nodesXML;
+	private String routesXML;
 	private String edgesXML;
 	private String agentProfilesXML;
 	private String sumoConfigXML;
+	//TODO: replace ArrayList<Pair> By HashMa[
+	//TODO: split this class in several smaller classes
+	private int simulationLength;
+	private double agentSpawnProbability;
+	private ArrayList<Pair<AgentProfileType, Double>> agentProfileDistribution;
 	
 	public DataModelXML() {
 		
@@ -32,8 +40,10 @@ public class DataModelXML implements DataModel {
 	
 	private void setup(String dir, String masXML) {
 		this.dir = dir;
+		this.masXML = masXML;
 		nodesXML = SimpleXMLReader.extractFromXML(dir,masXML,"nodes").get(0).get(0).second;
 		edgesXML = SimpleXMLReader.extractFromXML(dir,masXML,"edges").get(0).get(0).second;
+		routesXML = SimpleXMLReader.extractFromXML(dir,masXML,"routes").get(0).get(0).second; 
 		agentProfilesXML = SimpleXMLReader.extractFromXML(dir,masXML,"agentprofiles").get(0).get(0).second;
 		sumoConfigXML = dir+SimpleXMLReader.extractFromXML(dir,masXML, "sumoconfig").get(0).get(0).second;
 	}
@@ -149,7 +159,8 @@ public class DataModelXML implements DataModel {
 
 	@Override
 	public double getAgentSpawnProbability() {
-		return getAgentSpawnProbability(dir,agentProfilesXML);
+		agentSpawnProbability =getAgentSpawnProbability(dir,agentProfilesXML);
+		return agentSpawnProbability;
 	}
 	
 	public static double getAgentSpawnProbability(String dir, String agentProfilesXML) {
@@ -168,7 +179,8 @@ public class DataModelXML implements DataModel {
 
 	@Override
 	public ArrayList<Pair<AgentProfileType, Double>> getAgentProfileTypeDistribution() {
-		return getAgentProfileTypeDistribution(dir,agentProfilesXML);
+		agentProfileDistribution = getAgentProfileTypeDistribution(dir,agentProfilesXML);
+		return agentProfileDistribution;
 	}
 	
 	public static ArrayList<Pair<AgentProfileType, Double>> getAgentProfileTypeDistribution(String dir, String agentProfilesXML) {
@@ -197,13 +209,92 @@ public class DataModelXML implements DataModel {
 
 	@Override
 	public int simulationLength() {
-		// TODO Auto-generated method stub
-		return 0;
+		simulationLength = simulationLength(dir, masXML);
+		return simulationLength;
+	}
+	
+	public static int simulationLength(String dir, String masXML) {
+		ArrayList<ArrayList<Pair<String, String>>> masAttributes = SimpleXMLReader.extractFromXML(dir,masXML,"mas");
+		int simulationLength = 0;
+		for(ArrayList<Pair<String, String>> attributes : masAttributes ) {
+			for(Pair<String, String> attribute: attributes) {
+				switch(attribute.first) {
+				case "simulationlength":
+					simulationLength =  Integer.parseInt(attribute.second);
+					break;
+				}
+			}
+		}
+		return simulationLength;
 	}
 
 	@Override
-	public ArrayList<Pair<Agent, Integer>> instantiateAgents() {
-		// TODO Auto-generated method stub
+	public ArrayList<Pair<Agent, Integer>> instantiateAgents(Random rng, ArrayList<Route> routes) {
+
+		
+		return instantiateAgents(rng,routes, simulationLength, agentSpawnProbability, agentProfileDistribution );
+	}
+	
+	public static ArrayList<Pair<Agent, Integer>> instantiateAgents(Random rng, ArrayList<Route> routes, int simulationLength, double agentSpawnProbability, ArrayList<Pair<AgentProfileType, Double>> agentProfileDistribution) {
+		ArrayList<Pair<Agent, Integer>> agentsAndTimes = new ArrayList<Pair<Agent,Integer>>(); 
+		for (int i = 0; i < simulationLength; i++) {
+			double coinFlip = rng.nextDouble();
+			if(coinFlip < agentSpawnProbability) {
+				coinFlip = rng.nextDouble();
+				AgentProfileType agentProfileType = selectAgentProfileType(coinFlip, agentProfileDistribution);
+				int goalArrivalTime = i; // TODO: change this into something more sensible.
+				
+				Edge[] routeEdges = routes.get(0).getRoute();
+				Node goalNode = routeEdges[routeEdges.length-1].getToNode();
+				Agent agent = agentProfileType.toAgent(Agent.getNextAgentID(), goalNode, goalArrivalTime, Agent.DEFAULT_MAX_SPEED); //TODO: change this default max speed
+				agentsAndTimes.add(new Pair<Agent,Integer>(agent,i));
+			}
+		}
+		
+		return agentsAndTimes;
+	}
+	
+	public static AgentProfileType selectAgentProfileType(double coinFlip, ArrayList<Pair<AgentProfileType, Double>> agentProfileDistribution) {
+		for(Pair<AgentProfileType, Double> pair : agentProfileDistribution) {
+			if(coinFlip < pair.second) {
+				return pair.first;
+			}
+			coinFlip -= pair.second;
+		}
+		
 		return null;
+	}
+
+	@Override
+	public ArrayList<Route> getRoutes(RoadNetwork rn) {
+		return getRoutes(rn,dir,routesXML);
+	}
+	
+	public static ArrayList<Route> getRoutes(RoadNetwork rn, String dir, String routesXML) {
+		ArrayList<ArrayList<Pair<String, String>>> routesAttributes = SimpleXMLReader.extractFromXML(dir,routesXML,"route");
+		ArrayList<Route> routes = new ArrayList<Route>();
+		for(ArrayList<Pair<String, String>> routeAttributes : routesAttributes) {
+			String id= null;
+			ArrayList<Edge> edges = new ArrayList<Edge>();
+			String edgesString = null;
+			for(Pair<String, String> attribute: routeAttributes) {
+				switch(attribute.first) {
+				case "id":
+					id = attribute.second;
+					break;
+				case "edges":
+					edgesString = attribute.second;
+					String[] edgesSplitted = edgesString.split(" ");
+					for(String roadID : edgesSplitted) {
+						edges.add(rn.getEdge(roadID));
+					}
+					break;
+				}
+			}
+			Route route = new Route(id,edges);
+			routes.add(route);
+		}
+		
+		return routes;
 	}
 }

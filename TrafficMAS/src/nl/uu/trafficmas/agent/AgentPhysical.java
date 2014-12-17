@@ -6,6 +6,8 @@ public class AgentPhysical extends PhysicalObject implements BruteState {
 	public final String agentID;
 	private double velocity;
 	private AgentType agentType;
+	private static int currentAgentID=0;
+
 	
 	// TODO: Replace with actual AgentType functionality.
 	public AgentPhysical(String agentID){
@@ -25,5 +27,9 @@ public class AgentPhysical extends PhysicalObject implements BruteState {
 	}
 	public void setAgentType(AgentType agentType) {
 		this.agentType = agentType;
+	}
+	
+	public static String getNextAgentID() {
+		return "Agent "+ currentAgentID++;
 	}
 }

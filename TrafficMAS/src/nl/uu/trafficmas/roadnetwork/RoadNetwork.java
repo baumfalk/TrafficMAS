@@ -25,6 +25,15 @@ public class RoadNetwork {
 		return nodes.toArray(list);
 	}
 	
+	//TODO: use hashmaps so this is faster
+	public Edge getEdge(String roadID) {
+		
+		for(Edge edge : edges) {
+			if(edge.getRoad().id.equals(roadID))
+				return edge;
+		}
+		return null;
+	}
 	public Edge[] getEdges() {
 		Edge[] list = new Edge[edges.size()];
 		return edges.toArray(list);
