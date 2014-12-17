@@ -208,7 +208,7 @@ public class DataModelXML implements DataModel {
 	}
 
 	@Override
-	public int simulationLength() {
+	public int getSimulationLength() {
 		simulationLength = simulationLength(dir, masXML);
 		return simulationLength;
 	}
@@ -247,7 +247,7 @@ public class DataModelXML implements DataModel {
 				Edge[] routeEdges = routes.get(0).getRoute();
 				Node goalNode = routeEdges[routeEdges.length-1].getToNode();
 				Agent agent = agentProfileType.toAgent(Agent.getNextAgentID(), goalNode, goalArrivalTime, Agent.DEFAULT_MAX_SPEED); //TODO: change this default max speed
-				agentsAndTimes.add(new Pair<Agent,Integer>(agent,i));
+				agentsAndTimes.add(new Pair<Agent,Integer>(agent,i*1000)); //*1000 because sumo counts in ms, not s.
 			}
 		}
 		
