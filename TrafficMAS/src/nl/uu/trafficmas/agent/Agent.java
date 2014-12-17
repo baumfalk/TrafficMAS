@@ -16,7 +16,22 @@ public abstract class Agent extends AgentPhysical {
 	
 	public final static double DEFAULT_MAX_SPEED = 70;
 	
-	public abstract double utility(int arrivalTime, ArrayList<Sanction> sanctionList);
+	public abstract double specificUtility(int arrivalTime, ArrayList<Sanction> sanctionList);
+	
+	public double utility(int arrivalTime, ArrayList<Sanction> sanctionList) {
+		double utility = 0;
+		if(arrivalTime == this.getGoalArrivalTime() && sanctionList == null) {
+			utility = 1;
+		} else{
+			//to prevent division by zero
+			if(arrivalTime==0) {
+				arrivalTime = 1;
+			}
+			utility = specificUtility(arrivalTime, sanctionList);
+		}
+		
+		return Math.max(0,Math.min(1, utility));
+	}
 	
 	public Agent(String agentID,Node goalNode, int goalArrivalTime, double maxSpeed){
 		super(agentID);
