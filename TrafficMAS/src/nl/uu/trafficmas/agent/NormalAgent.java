@@ -16,12 +16,15 @@ public class NormalAgent extends Agent {
 	
 	
 	@Override
-	public double utility(int arrivalTime, ArrayList<Sanction> sanctionList) {
-		// TODO Auto-generated method stub
+	public double specificUtility(int arrivalTime, ArrayList<Sanction> sanctionList) {
+		double utility = 0;
+		if(arrivalTime == this.getGoalArrivalTime() && sanctionList == null) {
+			utility = 1;
+		} else{
+			utility = (double) (this.getGoalArrivalTime() / (2*arrivalTime));
+		}
 		
-		
-		
-		return 0;
+		return Math.max(0,Math.min(1, utility));
 	}
 
 }

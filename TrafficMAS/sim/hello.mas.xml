@@ -3,6 +3,7 @@
 	<edges value="hello.edg.xml"/>
     <nodes value="hello.nod.xml"/>
     <sensors value="sensors.xml"/>
+    <routes value="hello.rou.xml"/>
     <agentprofiles value="hello.agentprofiles.xml"/>
     <sumoconfig value = "hello.sumocfg"/>
 </mas>

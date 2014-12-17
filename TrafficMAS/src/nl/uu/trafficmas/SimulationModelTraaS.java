@@ -155,13 +155,16 @@ public class SimulationModelTraaS implements SimulationModel {
 				double velocity = (double) conn.do_job_get(Vehicle.getSpeed(agentID));
 				String roadID = (String) conn.do_job_get(Vehicle.getRoadID(agentID));
 				Road road = rn.getRoadFromID(roadID);
+				
 				int laneIndex = (int) conn.do_job_get(Vehicle.getLaneIndex(agentID));
 				double distance = (double) conn.do_job_get(Vehicle.getLanePosition(agentID));
 				
 				// Update the agent with information
 				aPhys.setVelocity(velocity);
-				aPhys.setRoad(road);
-				aPhys.setLane(road.getLanes()[laneIndex]);
+				if(road != null) { //TODO: make this hack more robust
+					aPhys.setRoad(road);
+					aPhys.setLane(road.getLanes()[laneIndex]);
+				}
 				aPhys.setDistance(distance);
 				agentPhysMap.put(agentID, aPhys);
 			}
