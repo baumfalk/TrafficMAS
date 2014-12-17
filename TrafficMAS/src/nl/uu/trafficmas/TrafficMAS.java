@@ -39,7 +39,6 @@ public class TrafficMAS {
 	private TrafficView view;
 
 	private RoadNetwork roadNetwork;
-	private ArrayList<Agent> activeAgents;
 	private ArrayList<Pair<Agent,Integer>> agentsAndTime;
 	private ArrayList<Organisation> organisations;
 	private double agentSpawnProbability;
@@ -49,6 +48,8 @@ public class TrafficMAS {
 	private HashMap<String,Agent> completeAgentMap = new HashMap<String, Agent>();
 
 	private ArrayList<Route> routes;
+	private HashMap<String, Agent> currentAgentMap;
+	private int agentSimulationLength;
 		
 	public TrafficMAS(DataModel dataModel,SimulationModel simulationModel, TrafficView view) {
 		this(dataModel,simulationModel,view,-1);
@@ -65,15 +66,15 @@ public class TrafficMAS {
 		this.simulationModel.initialize();
 		
 		roadNetwork = this.dataModel.instantiateRoadNetwork();
-		
+		this.currentAgentMap = new HashMap<String, Agent>();
 
-		
 		agentsAndTime = new ArrayList<Pair<Agent,Integer>>();
 		agentSpawnProbability = this.dataModel.getAgentSpawnProbability();
 		agentTypeDistribution = this.dataModel.getAgentProfileTypeDistribution();
+		agentSimulationLength = this.dataModel.getSimulationLength();
+		
 		routes = this.dataModel.getRoutes(roadNetwork);
 		agentsAndTime = this.dataModel.instantiateAgents(rng,routes);
-		activeAgents = new ArrayList<Agent>();
 				
 		organisations = this.dataModel.instantiateOrganisations();
 		
@@ -86,13 +87,18 @@ public class TrafficMAS {
 	
 	private void run() {
 		int i = 0;
-		HashMap<String, Agent> currentAgentMap = this.simulationModel.updateCurrentAgentMap(completeAgentMap, null);
 
 		while(i++ < 100) {
+			for(Pair<Agent, Integer> val : agentsAndTime) {
+				if(val.second == i*1000) {
+					System.out.println(val.first.agentID + " is being added on " + i + "!");
+				}
+			}
 			currentAgentMap = this.simulationModel.updateCurrentAgentMap(completeAgentMap, currentAgentMap);
+			
 			HashMap<String, AgentPhysical> aPhysMap = this.simulationModel.updateAgentsPhys(roadNetwork, currentAgentMap);
 			HashMap<String, AgentPhysical> leadingVehicles = this.simulationModel.getLeadingVehicles(aPhysMap);
-			HashMap<String, AgentAction> actions = this.getAgentActions(aPhysMap,leadingVehicles);
+			HashMap<String, AgentAction> actions = this.getAgentActions(currentAgentMap,aPhysMap,leadingVehicles);
 			
 			this.simulationModel.prepareAgentActions(actions);
 			this.simulationModel.doTimeStep();
@@ -102,12 +108,17 @@ public class TrafficMAS {
 
 	private void updateView() {
 		this.view.updateFromRoadNetwork(roadNetwork);
-		this.view.updateFromAgents(activeAgents);
+		this.view.updateFromAgents(new ArrayList<Agent>(currentAgentMap.values()));
 		this.view.updateFromOrganisations(organisations);
 		this.view.visualize();
 	}
-	private HashMap<String, AgentAction> getAgentActions(HashMap<String, AgentPhysical> aPhys, HashMap<String, AgentPhysical> leadingVehicles) {
+	private HashMap<String, AgentAction> getAgentActions(HashMap<String, Agent> currentAgents, HashMap<String,AgentPhysical> aPhys, HashMap<String, AgentPhysical> leadingVehicles) {
 		
-		return null;
+		HashMap <String,AgentAction> actions = new HashMap<String, AgentAction>();
+		for(Agent agent : currentAgents.values()) {
+			actions.put(agent.agentID, agent.doAction());
+		}
+		
+		return actions;
 	}
 }

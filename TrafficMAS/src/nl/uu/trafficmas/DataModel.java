@@ -15,7 +15,7 @@ public interface DataModel {
 	public ArrayList<Organisation> instantiateOrganisations();
 	public String getSumoConfigPath();
 	public double getAgentSpawnProbability();
-	public int simulationLength();
+	public int getSimulationLength();
 	public ArrayList<Pair<AgentProfileType, Double>> getAgentProfileTypeDistribution();
 	public ArrayList<Route> getRoutes(RoadNetwork rn);
 	public ArrayList<Pair<Agent, Integer>> instantiateAgents(Random rng, ArrayList<Route> routes);
