@@ -7,14 +7,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import de.tudresden.sumo.cmd.Simulation;
-import de.tudresden.sumo.cmd.Vehicle;
-import de.tudresden.ws.container.SumoStringList;
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.agent.AgentPhysical;
 import nl.uu.trafficmas.agent.actions.AgentAction;
 import nl.uu.trafficmas.roadnetwork.Road;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
+import de.tudresden.sumo.cmd.Simulation;
+import de.tudresden.sumo.cmd.Vehicle;
+import de.tudresden.sumo.util.SumoCommand;
+import de.tudresden.ws.container.SumoStringList;
 
 public class SimulationModelTraaS implements SimulationModel {
 
@@ -28,8 +29,6 @@ public class SimulationModelTraaS implements SimulationModel {
 		this.sumoBin = sumoBin;
 		this.sumocfg = sumocfg;
 	}
-	
-	
 	
 	@Override
 	public void initialize() {
@@ -49,10 +48,10 @@ public class SimulationModelTraaS implements SimulationModel {
 	}
 	
 	@Override
-	public void initializeWithOption(HashMap<String,String> optionValueMap) {
-		conn = initializeWithOption(optionValueMap, sumoBin, sumocfg);
+	public void initializeWithOptions(HashMap<String,String> optionValueMap) {
+		conn = initializeWithOptions(optionValueMap, sumoBin, sumocfg);
 	}
-	public static SumoTraciConnection initializeWithOption(HashMap<String,String> optionValueMap, String sumoBin, String sumocfg){
+	public static SumoTraciConnection initializeWithOptions(HashMap<String,String> optionValueMap, String sumoBin, String sumocfg){
 		SumoTraciConnection conn = new SumoTraciConnection(sumoBin, sumocfg);
 		// Add an extra option.
 		for(Entry<String, String> keyValue : optionValueMap.entrySet()) {
@@ -89,12 +88,17 @@ public class SimulationModelTraaS implements SimulationModel {
 	public void addAgent(Agent agent, String routeID, int tick) {
 		addAgent(agent, routeID, tick, conn);
 	}
+	
 	public static void addAgent(Agent agent, String routeID, int tick, SumoTraciConnection conn){
 		try {
-			conn.do_job_set(Vehicle.add(agent.agentID, "Car", routeID, tick, 0.0, 10.0, (byte) 0));
+			conn.do_job_set(addAgentCommand(agent, routeID, tick));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static SumoCommand addAgentCommand(Agent agent, String routeID, int tick) {
+		return Vehicle.add(agent.agentID, "Car", routeID, tick, 0.0, 10.0, (byte) 0);
 	}
 	
 	@Override
@@ -105,9 +109,16 @@ public class SimulationModelTraaS implements SimulationModel {
 	//TODO: Implement routes.
 	public static HashMap<String, Agent> addAgents(ArrayList<Pair<Agent, Integer>> agentPairList, SumoTraciConnection conn){
 		HashMap<String, Agent> completeAgentMap = new HashMap<String, Agent>();
+		ArrayList<SumoCommand> cmds = new ArrayList<>();
 		for(Pair<Agent, Integer> agentPair : agentPairList){
-			addAgent(agentPair.first, "route0", agentPair.second, conn);
+			cmds.add(addAgentCommand(agentPair.first, "route0", agentPair.second));
 			completeAgentMap.put(agentPair.first.agentID, agentPair.first);
+		}
+		try {
+			conn.do_jobs_set(cmds);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return completeAgentMap;
 	}
@@ -123,8 +134,13 @@ public class SimulationModelTraaS implements SimulationModel {
 		HashMap<String, Agent> currentAgentMap = new HashMap<String, Agent>(oldAgentMap);
 		try {
 			
-			SumoStringList departedVehicleIDList = (SumoStringList) conn.do_job_get(Simulation.getArrivedIDList());
-			SumoStringList arrivedVehicleIDList = (SumoStringList) conn.do_job_get(Simulation.getDepartedIDList());			
+			ArrayList<SumoCommand> cmdList = new ArrayList<>();
+			cmdList.add(Simulation.getArrivedIDList());
+			cmdList.add(Simulation.getDepartedIDList());
+			ArrayList<Object> responses = conn.do_jobs_get(cmdList);
+			
+			SumoStringList departedVehicleIDList = (SumoStringList) responses.get(0);
+			SumoStringList arrivedVehicleIDList = (SumoStringList) responses.get(1);			
 			
 			for(String departedVehicleID: departedVehicleIDList){
 				currentAgentMap.remove(departedVehicleID);
@@ -149,19 +165,30 @@ public class SimulationModelTraaS implements SimulationModel {
 		HashMap<String, AgentPhysical> agentPhysMap = new HashMap<String, AgentPhysical>(currentAgentMap);
 		try {
 			// Loop over all agents, TODO: Only check the agents that passed a sensor
+			
+			ArrayList<SumoCommand> cmdList = new ArrayList<>();
+			for(Map.Entry<String, Agent> agentMap : currentAgentMap.entrySet()){
+				String agentID = agentMap.getKey();
+				cmdList.add(Vehicle.getSpeed(agentID));
+				cmdList.add(Vehicle.getRoadID(agentID));
+				cmdList.add(Vehicle.getLaneIndex(agentID));
+				cmdList.add(Vehicle.getLanePosition(agentID));
+			}
+			
+			ArrayList<Object> responses = conn.do_jobs_get(cmdList);
+			int currentAgent = 0;
 			for(Map.Entry<String, Agent> agentMap : currentAgentMap.entrySet()){
 				
-				
-				AgentPhysical aPhys = agentMap.getValue();
+				int currentResponseForAgent = 0;
 				String agentID = agentMap.getKey();
-				
+				AgentPhysical aPhys = agentMap.getValue();
+
 				// Retrieve all physical agent information from SUMO
-				double velocity = (double) conn.do_job_get(Vehicle.getSpeed(agentID));
-				String roadID = (String) conn.do_job_get(Vehicle.getRoadID(agentID));
+				double velocity = (double) responses.get(currentAgent*4 + currentResponseForAgent++);
+				String roadID = (String)responses.get(currentAgent*4 + currentResponseForAgent++);
 				Road road = rn.getRoadFromID(roadID);
-				
-				int laneIndex = (int) conn.do_job_get(Vehicle.getLaneIndex(agentID));
-				double distance = (double) conn.do_job_get(Vehicle.getLanePosition(agentID));
+				int laneIndex = (int) responses.get(currentAgent*4 + currentResponseForAgent++);
+				double distance = (double) responses.get(currentAgent*4 + currentResponseForAgent++);
 				
 				// Update the agent with information
 				aPhys.setVelocity(velocity);

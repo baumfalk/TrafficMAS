@@ -32,7 +32,7 @@ public class PrepareAgentActionsTest {
 		options.put("start", "1");
 		options.put("quit-on-end", "1");
 		
-		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOption(options,"sumo", "./tests/ConfigTest.xml");
+		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options,"sumo", "./tests/ConfigTest.xml");
 		RoadNetwork rn = DataModelXML.instantiateRoadNetwork("./tests/", "NodeTest.xml", "EdgeTest.xml");
 		ArrayList<Pair<Agent, Integer>> agentPairList = new ArrayList<Pair<Agent, Integer>>();
 		Agent a1 = new NormalAgent("agent1", rn.getNodes()[1], 6000, 70.0);
@@ -92,7 +92,7 @@ public class PrepareAgentActionsTest {
 		options.put("start", "1");
 		options.put("quit-on-end", "1");
 		
-		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOption(options,"sumo", "./tests/ConfigTest.xml");
+		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options,"sumo", "./tests/ConfigTest.xml");
 		RoadNetwork rn = DataModelXML.instantiateRoadNetwork("./tests/", "NodeTest.xml", "EdgeTest.xml");
 		ArrayList<Pair<Agent, Integer>> agentPairList = new ArrayList<Pair<Agent, Integer>>();
 		Agent a1 = new NormalAgent("agent1", rn.getNodes()[1], 6000, 70.0);
