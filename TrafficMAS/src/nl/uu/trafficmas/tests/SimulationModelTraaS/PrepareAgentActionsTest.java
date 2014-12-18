@@ -18,11 +18,18 @@ import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 
 import org.junit.Test;
 
+import de.tudresden.sumo.cmd.Vehicle;
+
 public class PrepareAgentActionsTest {
 
-	@Test
+	//@Test
 	public void changeLane() {
-		SumoTraciConnection conn = SimulationModelTraaS.initialize("sumo", "./tests/ConfigTest.xml");
+		HashMap<String, String> options = new HashMap<String, String>();
+		options.put("e", "60");
+		options.put("start", "1");
+		options.put("quit-on-end", "1");
+		
+		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOption(options,"sumo-gui", "./tests/ConfigTest.xml");
 		RoadNetwork rn = DataModelXML.instantiateRoadNetwork("./tests/", "NodeTest.xml", "EdgeTest.xml");
 		ArrayList<Pair<Agent, Integer>> agentPairList = new ArrayList<Pair<Agent, Integer>>();
 		Agent a1 = new NormalAgent("agent1", rn.getNodes()[1], 6000, 70.0);
@@ -37,6 +44,11 @@ public class PrepareAgentActionsTest {
 		HashMap<String, Agent> currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, new HashMap<String, Agent>(), conn);
 
 		try {
+			// Disable automatic SUMO overtaking, but enable automatic right drive changes.
+			conn.do_job_set(Vehicle.setLaneChangeMode(a2.agentID, 0b0001000000));
+			conn.do_job_set(Vehicle.setLaneChangeMode(a1.agentID, 0b0001000000));
+			conn.do_job_set(Vehicle.setSpeed(a1.agentID, 10.0));
+
 			int i = 0;
 			// Let some time pass so both agents are spawned and moving
 			while (i < 5) {
@@ -55,14 +67,25 @@ public class PrepareAgentActionsTest {
 			
 			SimulationModelTraaS.prepareAgentActions(actions, currentAgentMap, conn);
 			
+			while (i < 70) {
+				conn.do_timestep();
+				i++;
+				currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, currentAgentMap, conn);
+			}
+			
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 	}
 	
-	@Test
+	//@Test
 	public void changeVelocity() {
-		SumoTraciConnection conn = SimulationModelTraaS.initialize("sumo", "./tests/ConfigTest.xml");
+		HashMap<String, String> options = new HashMap<String, String>();
+		options.put("e", "60");
+		options.put("start", "1");
+		options.put("quit-on-end", "1");
+		
+		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOption(options,"sumo-gui", "./tests/ConfigTest.xml");
 		RoadNetwork rn = DataModelXML.instantiateRoadNetwork("./tests/", "NodeTest.xml", "EdgeTest.xml");
 		ArrayList<Pair<Agent, Integer>> agentPairList = new ArrayList<Pair<Agent, Integer>>();
 		Agent a1 = new NormalAgent("agent1", rn.getNodes()[1], 6000, 70.0);
@@ -78,6 +101,12 @@ public class PrepareAgentActionsTest {
 
 		try {
 			int i = 0;
+			
+			
+			conn.do_job_set(Vehicle.setLaneChangeMode(a2.agentID, 0b0001000000));
+			conn.do_job_set(Vehicle.setLaneChangeMode(a1.agentID, 0b0001000000));
+
+
 			// Let some time pass so both agents have spawned and are moving
 			while (i < 5) {
 				conn.do_timestep();
@@ -94,11 +123,18 @@ public class PrepareAgentActionsTest {
 			actions.put(a1.agentID, changeVelocityAction);
 			
 			SimulationModelTraaS.prepareAgentActions(actions, currentAgentMap, conn);
+			while (i < 70) {
+				conn.do_timestep();
+				i++;
+				currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, currentAgentMap, conn);
+				if (currentAgentMap.containsKey(a1.agentID)){
+					System.out.println((double) conn.do_job_get(Vehicle.getSpeed(a1.agentID)));
+				}
+			}
 			
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		fail("Not yet implemented");
 	}
 }
 	

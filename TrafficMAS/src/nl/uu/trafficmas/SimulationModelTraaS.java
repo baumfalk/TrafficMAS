@@ -22,7 +22,7 @@ public class SimulationModelTraaS implements SimulationModel {
 	String sumocfg;
 	String sumoBin;
 	public static final int LOOK_AHEAD_DISTANCE = 100;
-	public static final int OVERTAKE_DURATION = 1;
+	public static final int OVERTAKE_DURATION = 5;
 	
 	public SimulationModelTraaS(String sumoBin, String sumocfg){
 		this.sumoBin = sumoBin;
@@ -224,8 +224,6 @@ public class SimulationModelTraaS implements SimulationModel {
 				switch(entry.getValue().getName()) {
 				case "ChangeLane":
 					if(agentLaneIndex < maxLaneIndex){
-						System.out.println("AgentLane+1: " + agentLaneIndex+1);
-						System.out.println("Agent: " + entry.getKey());
 						conn.do_job_set(Vehicle.changeLane(entry.getKey(), (byte) (agentLaneIndex+1) , OVERTAKE_DURATION));
 					} else {
 						//TODO exceptions.
@@ -236,7 +234,7 @@ public class SimulationModelTraaS implements SimulationModel {
 					break;
 				case "ChangeVelocity":
 					// TODO
-					conn.do_job_set(Vehicle.setSpeed(entry.getKey(), 80.0));
+					conn.do_job_set(Vehicle.setSpeed(entry.getKey(), 200.0));
 					break;
 				default:
 					System.out.println("Error on action name, no action executed");
