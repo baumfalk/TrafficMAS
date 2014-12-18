@@ -104,7 +104,8 @@ public class TrafficMAS {
 			
 			HashMap<String, AgentPhysical> aPhysMap = this.simulationModel.updateAgentsPhys(roadNetwork, currentAgentMap);
 			HashMap<String, AgentPhysical> leadingVehicles = this.simulationModel.getLeadingVehicles(aPhysMap);
-			HashMap<String, AgentAction> actions = this.getAgentActions(currentAgentMap, leadingVehicles);
+			//TODO: fix that we get the next lane thing.
+			HashMap<String, AgentAction> actions = this.getAgentActions(currentAgentMap, leadingVehicles, i, null);
 			
 			this.simulationModel.prepareAgentActions(actions, currentAgentMap);
 			this.simulationModel.doTimeStep();
@@ -120,7 +121,7 @@ public class TrafficMAS {
 	}
 	
 	// TODO: Write test for this function
-	private HashMap<String, AgentAction> getAgentActions(HashMap<String, Agent> currentAgents, HashMap<String, AgentPhysical> leadingVehicles, int currentTime, HashMap<Agent,Double> agentMeanSpeedNextLane) {
+	private HashMap<String, AgentAction> getAgentActions(HashMap<String, Agent> currentAgents, HashMap<String, AgentPhysical> leadingVehicles, int currentTime, HashMap<String,Double> agentMeanSpeedNextLane) {
 		
 		HashMap <String,AgentAction> actions = new HashMap<String, AgentAction>();
 		for(Agent agent : currentAgents.values()) {
