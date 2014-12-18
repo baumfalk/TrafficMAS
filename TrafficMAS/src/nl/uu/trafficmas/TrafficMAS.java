@@ -95,17 +95,20 @@ public class TrafficMAS {
 		int i = 0;
 
 		while(i++ < SimulationLength) {
-			for(Pair<Agent, Integer> val : agentsAndTime) {
+			System.out.println(i);
+			/*for(Pair<Agent, Integer> val : agentsAndTime) {
 				if(val.second == i*1000) {
-					System.out.println(val.first.agentID + " is being added on " + i + "!");
+					System.out.println(val.first.agentID + " is being added on " + i + "!" + "("+val.first.getClass().getCanonicalName() +")");
 				}
-			}
+			}*/
 			currentAgentMap = this.simulationModel.updateCurrentAgentMap(completeAgentMap, currentAgentMap);
 			
 			HashMap<String, AgentPhysical> aPhysMap = this.simulationModel.updateAgentsPhys(roadNetwork, currentAgentMap);
 			HashMap<String, AgentPhysical> leadingVehicles = this.simulationModel.getLeadingVehicles(aPhysMap);
+			
+			HashMap<String, Double> agentMeanSpeadNextLane = this.simulationModel.getMeanSpeedNextLane(aPhysMap);
 			//TODO: fix that we get the next lane thing.
-			HashMap<String, AgentAction> actions = this.getAgentActions(currentAgentMap, leadingVehicles, i, null);
+			HashMap<String, AgentAction> actions = getAgentActions(currentAgentMap, leadingVehicles, i, agentMeanSpeadNextLane);
 			
 			this.simulationModel.prepareAgentActions(actions, currentAgentMap);
 			this.simulationModel.doTimeStep();
@@ -121,7 +124,7 @@ public class TrafficMAS {
 	}
 	
 	// TODO: Write test for this function
-	private HashMap<String, AgentAction> getAgentActions(HashMap<String, Agent> currentAgents, HashMap<String, AgentPhysical> leadingVehicles, int currentTime, HashMap<String,Double> agentMeanSpeedNextLane) {
+	public static HashMap<String, AgentAction> getAgentActions(HashMap<String, Agent> currentAgents, HashMap<String, AgentPhysical> leadingVehicles, int currentTime, HashMap<String,Double> agentMeanSpeedNextLane) {
 		
 		HashMap <String,AgentAction> actions = new HashMap<String, AgentAction>();
 		for(Agent agent : currentAgents.values()) {

@@ -50,7 +50,7 @@ public class UpdateCurrentAgentMapTest {
 				i++;
 				currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, currentAgentMap, conn);
 			}
-			assertEquals(9, currentAgentMap.size());
+			assertEquals(8, currentAgentMap.size());
 			
 			
 		

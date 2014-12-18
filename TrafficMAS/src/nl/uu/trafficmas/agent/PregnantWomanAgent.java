@@ -26,4 +26,10 @@ public class PregnantWomanAgent extends Agent {
 		return Math.max(0,Math.min(1, utility));
 	}
 
+	@Override
+	public int goalArrivalTime(int startTime, int minimalTravelTime) {
+		// if your wife is in labour, you are in a hurry
+		return startTime + minimalTravelTime;
+	}
+
 }

@@ -28,4 +28,13 @@ public class NormalAgent extends Agent {
 		return Math.max(0,Math.min(1, utility));
 	}
 
+
+
+
+	@Override
+	public int goalArrivalTime(int startTime, int minimalTravelTime) {
+		// normally we are kinda in a hurry
+		return startTime + minimalTravelTime *2;
+	}
+
 }
