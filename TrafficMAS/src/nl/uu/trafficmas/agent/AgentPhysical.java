@@ -4,7 +4,7 @@ import nl.uu.trafficmas.organisation.BruteState;
 
 public class AgentPhysical extends PhysicalObject implements BruteState {
 	public final String agentID;
-	private double velocity;
+	protected double velocity;
 	private AgentType agentType;
 	private static int currentAgentID=0;
 
