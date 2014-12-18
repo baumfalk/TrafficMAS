@@ -9,9 +9,7 @@ import java.util.HashMap;
 import nl.uu.trafficmas.DataModelXML;
 import nl.uu.trafficmas.Pair;
 import nl.uu.trafficmas.SimulationModelTraaS;
-import nl.uu.trafficmas.TrafficMAS;
 import nl.uu.trafficmas.agent.Agent;
-import nl.uu.trafficmas.agent.AgentPhysical;
 import nl.uu.trafficmas.agent.NormalAgent;
 import nl.uu.trafficmas.agent.actions.AgentAction;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
@@ -19,8 +17,6 @@ import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import org.junit.Test;
 
 import de.tudresden.sumo.cmd.Vehicle;
-import de.tudresden.sumo.config.Constants;
-import de.tudresden.sumo.util.SumoCommand;
 
 public class PrepareAgentActionsTest {
 
@@ -88,11 +84,11 @@ public class PrepareAgentActionsTest {
 	@Test
 	public void changeVelocity() {
 		HashMap<String, String> options = new HashMap<String, String>();
-		options.put("e", "60");
+		options.put("e", "35");
 		options.put("start", "1");
 		options.put("quit-on-end", "1");
 		
-		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOption(options,"sumo-gui", "./tests/ConfigTest.xml");
+		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOption(options,"sumo", "./tests/ConfigTest.xml");
 		RoadNetwork rn = DataModelXML.instantiateRoadNetwork("./tests/", "NodeTest.xml", "EdgeTest.xml");
 		ArrayList<Pair<Agent, Integer>> agentPairList = new ArrayList<Pair<Agent, Integer>>();
 		Agent a1 = new NormalAgent("agent1", rn.getNodes()[1], 6000, 70.0);
@@ -119,8 +115,7 @@ public class PrepareAgentActionsTest {
 				i++;
 				currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, currentAgentMap, conn);
 			}
-			HashMap<String, AgentPhysical> agentPhysMap =  SimulationModelTraaS.updateAgentsPhys(rn, currentAgentMap, conn);
-			HashMap<String, AgentPhysical> leadingVehicleMap = SimulationModelTraaS.getLeadingVehicles(agentPhysMap, conn);
+			SimulationModelTraaS.updateAgentsPhys(rn, currentAgentMap, conn);
 			HashMap<String, AgentAction> actions = new HashMap<String, AgentAction>();
 			
 			// Check for every action
@@ -128,13 +123,10 @@ public class PrepareAgentActionsTest {
 			actions.put(a1.agentID, changeVelocityAction);
 			
 			SimulationModelTraaS.prepareAgentActions(actions, currentAgentMap, conn);
-			while (i < 70) {
+			while (i < 37) {
 				conn.do_timestep();
 				i++;
 				currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, currentAgentMap, conn);
-				if (currentAgentMap.containsKey(a1.agentID)){
-					System.out.println((double) conn.do_job_get(Vehicle.getSpeed(a1.agentID)));
-				}
 			}
 			
 		}catch(Exception e){
