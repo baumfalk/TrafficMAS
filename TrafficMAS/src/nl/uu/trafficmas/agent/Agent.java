@@ -4,7 +4,9 @@ import java.util.ArrayList;
 
 import nl.uu.trafficmas.agent.actions.AgentAction;
 import nl.uu.trafficmas.organisation.Sanction;
+import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Node;
+import nl.uu.trafficmas.roadnetwork.Road;
 
 public abstract class Agent extends AgentPhysical {
 	private Node goalNode;
@@ -13,6 +15,8 @@ public abstract class Agent extends AgentPhysical {
 	
 	private int expectedArrivalTime;
 	private ArrayList<Sanction> currentSanctionList;
+	private Edge[] currentRoute;
+	private ArrayList<Double> expectedTravelTimePerRoad;
 	
 	public final static double DEFAULT_MAX_SPEED = 70;
 	
@@ -33,21 +37,28 @@ public abstract class Agent extends AgentPhysical {
 		return Math.max(0,Math.min(1, utility));
 	}
 	
-	public Agent(String agentID,Node goalNode, int goalArrivalTime, double maxSpeed){
+	public Agent(String agentID,Node goalNode,Edge[] routeEdges, int goalArrivalTime, double maxSpeed){
 		super(agentID);
 		this.goalNode 			= goalNode;
 		this.goalArrivalTime 	= goalArrivalTime;
 		this.maxSpeed			= maxSpeed;
 		expectedArrivalTime 	= goalArrivalTime;
+		this.currentRoute = routeEdges;
+		this.expectedTravelTimePerRoad = new ArrayList<>();
+		for(Edge edge : routeEdges) {
+			double time = edge.getRoad().length/maxSpeed;
+			expectedTravelTimePerRoad.add(time);
+		}
 		currentSanctionList 	= new ArrayList<Sanction>();
 	}
 	
 	
-	public AgentAction doAction() {
-		double bestUtility 		= 0;
+	public AgentAction doAction(int currentTime, double meanSpeedNextLane) {
+		// Only do an action if it improves our situation
+		double bestUtility 		= utility(expectedArrivalTime,currentSanctionList);
 		AgentAction bestAction 	= null;
 		for(AgentAction action : AgentAction.values()) {
-			int time = action.getTime();
+			int time = action.getTime(currentTime, meanSpeedNextLane, this.distance, this.road.length, expectedTravelTimePerRoad);
 			ArrayList<Sanction> sanctions = action.getSanctions();
 			double newUtility = utility(time, sanctions);
 			if(newUtility > bestUtility) {
@@ -55,6 +66,7 @@ public abstract class Agent extends AgentPhysical {
 				bestUtility = newUtility; 
 			}
 		}
+		
 		return bestAction;
 	}
 	

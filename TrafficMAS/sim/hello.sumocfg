@@ -8,11 +8,6 @@
         <!--<additional value="sensors.xml"/>-->
     </input>
 
-    <time>
-        <begin value="0"/>
-        <end value="10000"/>
-    </time>
-
     <gui_only>
         <gui-settings-file value="hello.settings.xml"/>
     </gui_only>
