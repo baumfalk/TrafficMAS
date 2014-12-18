@@ -26,7 +26,7 @@ public class PrepareAgentActionsTest {
 	public void changeLane() {
 		double agent1Speed = 10.0;
 		Random random = new Random(1337);
-		int simLength = 7;
+		int simLength = 36;
 
 		HashMap<String, String> options = new HashMap<String, String>();
 		options.put("e", Integer.toString(simLength));
@@ -58,7 +58,7 @@ public class PrepareAgentActionsTest {
 
 			int i = 0;
 			// Let some time pass so both agents are spawned and moving
-			while (i < 5) {
+			while (i < 6) {
 				conn.do_timestep();
 				i++;
 				currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, currentAgentMap, conn);
@@ -77,12 +77,10 @@ public class PrepareAgentActionsTest {
 				currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, currentAgentMap, conn);
 				SimulationModelTraaS.updateAgentsPhys(rn, currentAgentMap, conn);
 			}
-			
 			// Agent 2 is going maxSpeed, this means agent 1 was passed.
 			// TODO get maxSpeed from Lane object. 
 			assertEquals(13.9, a2.getVelocity(),0.1);
 			assertEquals(agent1Speed, a1.getVelocity(),0.1);
-			
 			
 		}catch(Exception e){
 			e.printStackTrace();

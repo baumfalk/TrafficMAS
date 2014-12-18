@@ -82,7 +82,7 @@ public class TrafficMAS {
 		optionValueMap.put("e", Integer.toString(SimulationLength));
 		optionValueMap.put("start", "1");
 		optionValueMap.put("quit-on-end", "1");
-		this.simulationModel.initializeWithOption(optionValueMap);
+		this.simulationModel.initializeWithOptions(optionValueMap);
 		
 		completeAgentMap = this.simulationModel.addAgents(agentsAndTime);
 
