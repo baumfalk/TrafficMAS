@@ -63,20 +63,26 @@ public class TrafficMAS {
 		}
 		this.dataModel = dataModel;
 		this.simulationModel = simulationModel;
-		this.simulationModel.initialize();
 		
 		roadNetwork = this.dataModel.instantiateRoadNetwork();
 		this.currentAgentMap = new HashMap<String, Agent>();
 
 		agentsAndTime = new ArrayList<Pair<Agent,Integer>>();
+		SimulationLength = this.dataModel.getSimulationLength();
 		agentSpawnProbability = this.dataModel.getAgentSpawnProbability();
 		agentTypeDistribution = this.dataModel.getAgentProfileTypeDistribution();
 		SimulationLength = this.dataModel.getSimulationLength();
 		
 		routes = this.dataModel.getRoutes(roadNetwork);
 		agentsAndTime = this.dataModel.instantiateAgents(rng,routes);
-				
 		organisations = this.dataModel.instantiateOrganisations();
+		
+		//Start TraaS with options
+		HashMap<String, String> optionValueMap = new HashMap<String, String>();
+		optionValueMap.put("e", Integer.toString(SimulationLength));
+		optionValueMap.put("start", "1");
+		optionValueMap.put("quit-on-end", "1");
+		this.simulationModel.initializeWithOption(optionValueMap);
 		
 		completeAgentMap = this.simulationModel.addAgents(agentsAndTime);
 
