@@ -3,15 +3,15 @@ package nl.uu.trafficmas.agent;
 import java.util.ArrayList;
 
 import nl.uu.trafficmas.organisation.Sanction;
+import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Node;
 
 public class OldLadyAgent extends Agent {
 
-	public OldLadyAgent(String agentID, Node goalNode, int goalArrivalTime,
-			double maxSpeed) {
-		super(agentID, goalNode, goalArrivalTime, maxSpeed);
-		// TODO Auto-generated constructor stub
+	public OldLadyAgent(String agentID, Node goalNode, Edge[] route, int goalArrivalTime, double maxSpeed) {
+		super(agentID, goalNode, route, goalArrivalTime, maxSpeed);
 	}
+
 
 	@Override
 	public double specificUtility(int arrivalTime, ArrayList<Sanction> sanctionList) {
