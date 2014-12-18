@@ -11,6 +11,7 @@ import nl.uu.trafficmas.DataModelXML;
 import nl.uu.trafficmas.Pair;
 import nl.uu.trafficmas.SimulationModelTraaS;
 import nl.uu.trafficmas.agent.Agent;
+import nl.uu.trafficmas.agent.AgentPhysical;
 import nl.uu.trafficmas.agent.AgentProfileType;
 import nl.uu.trafficmas.agent.actions.AgentAction;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
@@ -109,7 +110,7 @@ public class PrepareAgentActionsTest {
 		ArrayList<Pair<Agent, Integer>> agentPairList = DataModelXML.instantiateAgents(random, routes, simulationLength, agentSpawnProb, dist);
 		HashMap<String, Agent> completeAgentMap = SimulationModelTraaS.addAgents(agentPairList, conn);
 		HashMap<String, Agent> currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, new HashMap<String, Agent>(), conn);
-
+		HashMap<String, AgentPhysical> aPhysMap = new HashMap<String, AgentPhysical>();
 		Agent a1 = completeAgentMap.get("Agent 0");
 		Agent a2 = completeAgentMap.get("Agent 1");
 		try {
@@ -138,9 +139,10 @@ public class PrepareAgentActionsTest {
 				conn.do_timestep();
 				i++;
 				currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, currentAgentMap, conn);
+				aPhysMap = SimulationModelTraaS.updateAgentsPhys(rn, currentAgentMap, conn);
 			}
 			// TODO Change AgentAction data structure and change this. 
-			fail("Not implemented");
+			assertEquals(17.0,aPhysMap.get(a1.agentID).getVelocity(),0.5);
 			
 		}catch(Exception e){
 			e.printStackTrace();
