@@ -5,6 +5,7 @@ import it.polito.appeal.traci.SumoTraciConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import de.tudresden.sumo.cmd.Simulation;
 import de.tudresden.sumo.cmd.Vehicle;
@@ -48,13 +49,15 @@ public class SimulationModelTraaS implements SimulationModel {
 	}
 	
 	@Override
-	public void initializeWithOption(String option, String value) {
-		conn = initializeWithOption(option, value, sumoBin, sumocfg);
+	public void initializeWithOption(HashMap<String,String> optionValueMap) {
+		conn = initializeWithOption(optionValueMap, sumoBin, sumocfg);
 	}
-	public static SumoTraciConnection initializeWithOption(String option, String value, String sumoBin, String sumocfg){
+	public static SumoTraciConnection initializeWithOption(HashMap<String,String> optionValueMap, String sumoBin, String sumocfg){
 		SumoTraciConnection conn = new SumoTraciConnection(sumoBin, sumocfg);
 		// Add an extra option.
-		conn.addOption(option, value);
+		for(Entry<String, String> keyValue : optionValueMap.entrySet()) {
+			conn.addOption(keyValue.getKey(), keyValue.getValue());
+		}
 		try {	
 			//start TraCI
 			conn.runServer();
@@ -209,6 +212,7 @@ public class SimulationModelTraaS implements SimulationModel {
 	public void prepareAgentActions(HashMap<String, AgentAction> actions, HashMap<String, Agent> currentAgentMap) {
 		prepareAgentActions(actions, currentAgentMap, conn);
 	}
+	
 	public static void prepareAgentActions(HashMap<String, AgentAction> actions, HashMap<String, Agent> currentAgentMap, SumoTraciConnection conn){
 		for(Map.Entry<String, AgentAction> entry: actions.entrySet()){
 			
@@ -222,7 +226,6 @@ public class SimulationModelTraaS implements SimulationModel {
 					if(agentLaneIndex < maxLaneIndex){
 						System.out.println("AgentLane+1: " + agentLaneIndex+1);
 						System.out.println("Agent: " + entry.getKey());
-						System.out.println("dicks");
 						conn.do_job_set(Vehicle.changeLane(entry.getKey(), (byte) (agentLaneIndex+1) , OVERTAKE_DURATION));
 					} else {
 						//TODO exceptions.

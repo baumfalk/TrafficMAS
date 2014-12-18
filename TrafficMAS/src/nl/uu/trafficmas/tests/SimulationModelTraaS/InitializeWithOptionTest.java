@@ -1,7 +1,10 @@
 package nl.uu.trafficmas.tests.SimulationModelTraaS;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import it.polito.appeal.traci.SumoTraciConnection;
+
+import java.util.HashMap;
+
 import nl.uu.trafficmas.SimulationModelTraaS;
 
 import org.junit.Test;
@@ -12,7 +15,10 @@ public class InitializeWithOptionTest {
 
 	@Test
 	public void initializeWithOption() {
-		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOption("step-length", "0.1", "sumo", "./tests/ConfigTest.xml");
+		
+		HashMap <String,String> options = new HashMap<>();
+		options.put("step-length", "0.1");
+		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOption(options, "sumo", "./tests/ConfigTest.xml");
 		try {
             int simtime = (int) conn.do_job_get(Simulation.getCurrentTime());
 			conn.do_timestep();
