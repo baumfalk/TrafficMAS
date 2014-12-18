@@ -21,4 +21,5 @@ public interface SimulationModel {
 	public HashMap<String, AgentPhysical> updateAgentsPhys(RoadNetwork rn, HashMap<String, Agent> currentAgentList);
 	public HashMap<String, AgentPhysical> getLeadingVehicles(HashMap<String, AgentPhysical> currentAgentPhysList);
 	public void prepareAgentActions(HashMap<String, AgentAction> actions, HashMap<String, Agent> currentAgentMap);
+	public HashMap<String,Double> getMeanSpeedNextLane(HashMap<String, AgentPhysical> aPhysMap);
 }

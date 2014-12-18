@@ -52,6 +52,7 @@ public abstract class Agent extends AgentPhysical {
 		currentSanctionList 	= new ArrayList<Sanction>();
 	}
 	
+	public abstract int goalArrivalTime(int startTime, int minimalTravelTime);
 	
 	public AgentAction doAction(int currentTime, double meanSpeedNextLane) {
 		// Only do an action if it improves our situation
@@ -66,7 +67,11 @@ public abstract class Agent extends AgentPhysical {
 				bestUtility = newUtility; 
 			}
 		}
-		
+		if(bestAction != null) {
+			System.out.println(this.agentID + " will do " + bestAction);
+		} else {
+			System.out.println(this.agentID + " will do nothing");
+		}
 		return bestAction;
 	}
 	

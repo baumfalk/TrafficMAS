@@ -133,8 +133,16 @@ public class DataModelXML implements DataModel {
 		ArrayList<Lane> lanes = new ArrayList<Lane>();
 		int numberLanesInt = Integer.parseInt(numberLanes);
 		for (int i = 0; i < numberLanesInt; i++) {
-			lanes.add(new Lane(LaneType.Normal,(byte) i)); //Todo: find some way to encode lanetype in xml
+			lanes.add(new Lane(LaneType.Normal,(byte) i)); //TODO: find some way to encode lanetype in xml
+			lanes.get(i).setID(id+"_"+i); //TODO: write a test to check this 
 		}
+		
+		for (int i = 0; i < numberLanesInt; i++) {
+			if(i!= numberLanesInt-1) {
+				lanes.get(i).setLeftLane(lanes.get(i+1));
+			}
+		}
+		
 		Node fromNode = nodes.get(from);
 		Node toNode = nodes.get(to);
 		
@@ -237,7 +245,7 @@ public class DataModelXML implements DataModel {
 	
 	public static ArrayList<Pair<Agent, Integer>> instantiateAgents(Random rng, ArrayList<Route> routes, int simulationLength, double agentSpawnProbability, ArrayList<Pair<AgentProfileType, Double>> agentProfileDistribution) {
 		ArrayList<Pair<Agent, Integer>> agentsAndTimes = new ArrayList<Pair<Agent,Integer>>(); 
-		for (int i = 0; i < simulationLength; i++) {
+		for (int i = 1; i <= simulationLength; i++) {
 			double coinFlip = rng.nextDouble();
 			if(coinFlip < agentSpawnProbability) {
 				coinFlip = rng.nextDouble();

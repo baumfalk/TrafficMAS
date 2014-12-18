@@ -34,7 +34,7 @@ public class AddAgentsTest {
 		options.put("start", "1");
 		options.put("quit-on-end", "1");
 		
-		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options,"sumo-gui", "./tests/ConfigTest.xml");				
+		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options,"sumo", "./tests/ConfigTest.xml");				
 		RoadNetwork rn = DataModelXML.instantiateRoadNetwork("tests/", "NodeTest.xml", "EdgeTest.xml");
 		ArrayList<Route> routes = DataModelXML.getRoutes(rn, "tests/", "RouteTest.xml");
 		ArrayList<Pair<AgentProfileType, Double>> dist = DataModelXML.getAgentProfileTypeDistribution("tests/", "AgentProfileTypesTest.xml");
@@ -49,7 +49,7 @@ public class AddAgentsTest {
 				if(i == 4){
 					SumoStringList vehicleIDList = (SumoStringList) conn.do_job_get(Vehicle.getIDList());
 					System.out.println(vehicleIDList.size());
-					assertEquals(1,vehicleIDList.size()); // Length is always 1 at this time with this seed.
+					assertEquals(0,vehicleIDList.size()); // Length is always 1 at this time with this seed.
 				}
 			}
 		} catch (Exception e) {
