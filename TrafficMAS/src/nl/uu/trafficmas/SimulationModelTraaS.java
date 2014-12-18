@@ -195,7 +195,7 @@ public class SimulationModelTraaS implements SimulationModel {
 				if(road != null) { //TODO: make this hack more robust
 					aPhys.setRoad(road);
 					aPhys.setLane(road.getLanes()[laneIndex]);
-				}
+				} 
 				aPhys.setDistance(distance);
 				agentPhysMap.put(agentID, aPhys);
 			}

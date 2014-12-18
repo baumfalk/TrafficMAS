@@ -27,21 +27,20 @@ public class AddAgentsTest {
 	@Test
 	public void addAgents() {
 		Random random = new Random(1337);
-		int simLength = 4;
+		int simLength = 20;
 
 		HashMap<String, String> options = new HashMap<String, String>();
 		options.put("e", Integer.toString(simLength));
 		options.put("start", "1");
 		options.put("quit-on-end", "1");
 		
-		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOption(options,"sumo-gui", "./tests/ConfigTest.xml");				
+		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options,"sumo-gui", "./tests/ConfigTest.xml");				
 		RoadNetwork rn = DataModelXML.instantiateRoadNetwork("tests/", "NodeTest.xml", "EdgeTest.xml");
 		ArrayList<Route> routes = DataModelXML.getRoutes(rn, "tests/", "RouteTest.xml");
 		ArrayList<Pair<AgentProfileType, Double>> dist = DataModelXML.getAgentProfileTypeDistribution("tests/", "AgentProfileTypesTest.xml");
 		
-		int simulationLength = 20;
 		double agentSpawnProb = 0.5;
-		ArrayList<Pair<Agent, Integer>> agentPairList = DataModelXML.instantiateAgents(random, routes, simulationLength, agentSpawnProb, dist);
+		ArrayList<Pair<Agent, Integer>> agentPairList = DataModelXML.instantiateAgents(random, routes, simLength, agentSpawnProb, dist);
 		SimulationModelTraaS.addAgents(agentPairList, conn);
 		try {
 			int i = 0;
