@@ -48,6 +48,24 @@ public enum AgentAction {
 		return sanctions;
 	}
 	
+	public String getName(){
+		String name;
+		switch(this) {
+		case ChangeLane:
+			name = "ChangeLane";
+			break;
+		case ChangeRoad:
+			name = "ChangeRoad";
+			break;
+		case ChangeVelocity:
+			name = "ChangeVelocity";
+			break;
+		default:
+			name = "No action";
+		}
+		return name;
+	}
+	
 	private ArrayList<Sanction> getChangeLaneSanctions() {
 		// TODO Auto-generated method stub
 		return null;

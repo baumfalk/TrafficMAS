@@ -21,6 +21,7 @@ public class SimulationModelTraaS implements SimulationModel {
 	String sumocfg;
 	String sumoBin;
 	public static final int LOOK_AHEAD_DISTANCE = 100;
+	public static final int OVERTAKE_DURATION = 1;
 	
 	public SimulationModelTraaS(String sumoBin, String sumocfg){
 		this.sumoBin = sumoBin;
@@ -205,7 +206,41 @@ public class SimulationModelTraaS implements SimulationModel {
 	}
 	
 	@Override
-	public void prepareAgentActions(HashMap<String, AgentAction> actions) {
-		// TODO Auto-generated method stub
+	public void prepareAgentActions(HashMap<String, AgentAction> actions, HashMap<String, Agent> currentAgentMap) {
+		prepareAgentActions(actions, currentAgentMap, conn);
+	}
+	public static void prepareAgentActions(HashMap<String, AgentAction> actions, HashMap<String, Agent> currentAgentMap, SumoTraciConnection conn){
+		for(Map.Entry<String, AgentAction> entry: actions.entrySet()){
+			
+			Agent currentAgent = currentAgentMap.get(entry.getKey());
+			byte agentLaneIndex = currentAgent.getLane().laneIndex;
+			int maxLaneIndex = currentAgent.getRoad().laneList.size()-1;
+			
+			try {
+				switch(entry.getValue().getName()) {
+				case "ChangeLane":
+					if(agentLaneIndex < maxLaneIndex){
+						System.out.println("AgentLane+1: " + agentLaneIndex+1);
+						System.out.println("Agent: " + entry.getKey());
+						System.out.println("dicks");
+						conn.do_job_set(Vehicle.changeLane(entry.getKey(), (byte) (agentLaneIndex+1) , OVERTAKE_DURATION));
+					} else {
+						//TODO exceptions.
+					}
+					break;
+				case "ChangeRoad":
+					// TODO
+					break;
+				case "ChangeVelocity":
+					// TODO
+					conn.do_job_set(Vehicle.setSpeed(entry.getKey(), 80.0));
+					break;
+				default:
+					System.out.println("Error on action name, no action executed");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}		
+		}
 	}
 }

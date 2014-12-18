@@ -49,7 +49,7 @@ public class TrafficMAS {
 
 	private ArrayList<Route> routes;
 	private HashMap<String, Agent> currentAgentMap;
-	private int agentSimulationLength;
+	private int SimulationLength;
 		
 	public TrafficMAS(DataModel dataModel,SimulationModel simulationModel, TrafficView view) {
 		this(dataModel,simulationModel,view,-1);
@@ -71,7 +71,7 @@ public class TrafficMAS {
 		agentsAndTime = new ArrayList<Pair<Agent,Integer>>();
 		agentSpawnProbability = this.dataModel.getAgentSpawnProbability();
 		agentTypeDistribution = this.dataModel.getAgentProfileTypeDistribution();
-		agentSimulationLength = this.dataModel.getSimulationLength();
+		SimulationLength = this.dataModel.getSimulationLength();
 		
 		routes = this.dataModel.getRoutes(roadNetwork);
 		agentsAndTime = this.dataModel.instantiateAgents(rng,routes);
@@ -88,7 +88,7 @@ public class TrafficMAS {
 	private void run() {
 		int i = 0;
 
-		while(i++ < 100) {
+		while(i++ < SimulationLength) {
 			for(Pair<Agent, Integer> val : agentsAndTime) {
 				if(val.second == i*1000) {
 					System.out.println(val.first.agentID + " is being added on " + i + "!");
@@ -98,9 +98,9 @@ public class TrafficMAS {
 			
 			HashMap<String, AgentPhysical> aPhysMap = this.simulationModel.updateAgentsPhys(roadNetwork, currentAgentMap);
 			HashMap<String, AgentPhysical> leadingVehicles = this.simulationModel.getLeadingVehicles(aPhysMap);
-			HashMap<String, AgentAction> actions = this.getAgentActions(currentAgentMap,aPhysMap,leadingVehicles);
+			HashMap<String, AgentAction> actions = this.getAgentActions(currentAgentMap, leadingVehicles);
 			
-			this.simulationModel.prepareAgentActions(actions);
+			this.simulationModel.prepareAgentActions(actions, currentAgentMap);
 			this.simulationModel.doTimeStep();
 		}
 		this.simulationModel.close();
@@ -112,7 +112,9 @@ public class TrafficMAS {
 		this.view.updateFromOrganisations(organisations);
 		this.view.visualize();
 	}
-	private HashMap<String, AgentAction> getAgentActions(HashMap<String, Agent> currentAgents, HashMap<String,AgentPhysical> aPhys, HashMap<String, AgentPhysical> leadingVehicles) {
+	
+	// TODO: Write test for this function
+	private HashMap<String, AgentAction> getAgentActions(HashMap<String, Agent> currentAgents, HashMap<String, AgentPhysical> leadingVehicles) {
 		
 		HashMap <String,AgentAction> actions = new HashMap<String, AgentAction>();
 		for(Agent agent : currentAgents.values()) {
