@@ -3,13 +3,14 @@ package nl.uu.trafficmas.agent;
 import java.util.ArrayList;
 
 import nl.uu.trafficmas.organisation.Sanction;
+import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Node;
+import nl.uu.trafficmas.roadnetwork.Road;
 
 public class NormalAgent extends Agent {
 
-	public NormalAgent(String agentID, Node goalNode, int goalArrivalTime, double maxSpeed) {
-		super(agentID, goalNode, goalArrivalTime, maxSpeed);
-		// TODO Auto-generated constructor stub
+	public NormalAgent(String agentID, Node goalNode, Edge[] routeEdges, int goalArrivalTime, double maxSpeed) {
+		super(agentID, goalNode, routeEdges, goalArrivalTime, maxSpeed);
 	}
 
 	
