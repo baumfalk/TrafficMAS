@@ -89,6 +89,7 @@ public class PrepareAgentActionsTest {
 	
 	@Test
 	public void changeVelocity() {
+		fail("Not implemented");
 		Random random = new Random(1337);
 		int simLength = 30;
 
@@ -129,7 +130,7 @@ public class PrepareAgentActionsTest {
 			HashMap<String, AgentAction> actions = new HashMap<String, AgentAction>();
 			
 			// Check for every action
-			AgentAction changeVelocityAction = AgentAction.ChangeVelocity;
+			AgentAction changeVelocityAction = AgentAction.ChangeVelocity5;
 			actions.put(a1.agentID, changeVelocityAction);
 			
 			SimulationModelTraaS.prepareAgentActions(actions, currentAgentMap, conn);
@@ -145,7 +146,14 @@ public class PrepareAgentActionsTest {
 			e.printStackTrace();
 		}
 	}
+	
+	public void changeRoad() {
+		fail("Not implemented");
+	}
+
 }
+
+	
 	
 
 	
