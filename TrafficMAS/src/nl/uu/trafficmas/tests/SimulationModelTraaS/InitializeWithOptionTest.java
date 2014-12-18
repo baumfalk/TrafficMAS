@@ -18,7 +18,7 @@ public class InitializeWithOptionTest {
 		
 		HashMap <String,String> options = new HashMap<>();
 		options.put("step-length", "0.1");
-		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOption(options, "sumo", "./tests/ConfigTest.xml");
+		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options, "sumo", "./tests/ConfigTest.xml");
 		try {
             int simtime = (int) conn.do_job_get(Simulation.getCurrentTime());
 			conn.do_timestep();

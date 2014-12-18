@@ -10,7 +10,7 @@ import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 
 public interface SimulationModel {
 	public void initialize(); 
-	public void initializeWithOption(HashMap<String, String> optionValueMap);
+	public void initializeWithOptions(HashMap<String, String> optionValueMap);
 	public void close();
 	public void doTimeStep();
 	
