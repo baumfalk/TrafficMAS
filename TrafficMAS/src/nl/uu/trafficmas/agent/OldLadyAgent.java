@@ -25,4 +25,11 @@ public class OldLadyAgent extends Agent {
 		return Math.max(0,Math.min(1, utility));
 	}
 
+
+	@Override
+	public int goalArrivalTime(int startTime, int minimalTravelTime) {
+		// Old lady isn't in a hurry!
+		return startTime + minimalTravelTime*3;
+	}
+
 }

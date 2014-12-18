@@ -104,22 +104,23 @@ public enum AgentAction {
 
 	private int getChangeVelocityTime(int speedIncrease) {
 		// TODO Auto-generated method stub
-		return 0;
+		return Integer.MAX_VALUE;
 	}
 
 	private int getChangeRoadTime() {
 		// TODO Auto-generated method stub
-		return 0;
+		return Integer.MAX_VALUE;
 	}
 
 	private int getChangeLaneTime(int currentTime, double meanSpeedNextLane, double currentPos, double laneLength, ArrayList<Double> meanTimeForRouteRoads) {
 		
-		double time = currentTime + (laneLength-currentPos)/meanSpeedNextLane;
-		
+		double finishTime = currentTime;
+		double timeSpentOnNextLane = (laneLength-currentPos)/meanSpeedNextLane;
+		finishTime += timeSpentOnNextLane;
 		for(Double timeOnEdge : meanTimeForRouteRoads) {
-			time += timeOnEdge;
+			finishTime += timeOnEdge;
 		}
 		
-		return (int) Math.round(time);
+		return (int) Math.round(finishTime);
 	}
 }
