@@ -73,7 +73,13 @@ public enum AgentAction {
 			name = "ChangeRoad";
 			break;
 		case ChangeVelocity5:
-			name = "ChangeVelocity";
+			name = "ChangeVelocity5";
+			break;
+		case ChangeVelocity10:
+			name = "ChangeVelocity10";
+			break;
+		case ChangeVelocity20:
+			name = "ChangeVelocity20";
 			break;
 		default:
 			name = "No action";
