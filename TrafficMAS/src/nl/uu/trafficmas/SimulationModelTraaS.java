@@ -275,24 +275,24 @@ public class SimulationModelTraaS implements SimulationModel {
 		
 			if(entry.getValue() == null)
 				continue;
-			switch(entry.getValue().getName()) {
-			case "ChangeLane":
+			switch(entry.getValue()) {
+			case ChangeLane:
 				if(agentLaneIndex < maxLaneIndex){
 					cmdList.add(Vehicle.changeLane(entry.getKey(), (byte) (agentLaneIndex+1) , OVERTAKE_DURATION));
 				} else {
 					//TODO exceptions.
 				}
 				break;
-			case "ChangeRoad":
+			case ChangeRoad:
 				// TODO
 				break;
-			case "ChangeVelocity5":
+			case ChangeVelocity5:
 				cmdList.add(Vehicle.slowDown(entry.getKey(), currentAgent.getVelocity()+5.0,5));
 				break;
-			case "ChangeVelocity10":
+			case ChangeVelocity10:
 				cmdList.add(Vehicle.slowDown(entry.getKey(), currentAgent.getVelocity()+10.0,10));
 				break;
-			case "ChangeVelocity20":
+			case ChangeVelocity20:
 				cmdList.add(Vehicle.slowDown(entry.getKey(), currentAgent.getVelocity()+20.0,15));
 				break;
 			default:
