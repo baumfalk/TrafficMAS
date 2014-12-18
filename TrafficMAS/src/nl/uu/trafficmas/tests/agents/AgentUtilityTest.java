@@ -14,7 +14,7 @@ public class AgentUtilityTest {
 		
 		// goal achieved should be utility 1
 		for(AgentProfileType apt : agentProfileTypes) {
-			Agent agent = apt.toAgent(Agent.getNextAgentID(), null, 10, 10);
+			Agent agent = apt.toAgent(Agent.getNextAgentID(), null, null, 10, 10);
 			assertEquals(agent.specificUtility(agent.getGoalArrivalTime(), null),1,0);
 		}
 	}
