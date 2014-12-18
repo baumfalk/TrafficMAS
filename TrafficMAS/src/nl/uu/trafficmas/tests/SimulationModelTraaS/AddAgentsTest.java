@@ -49,7 +49,7 @@ public class AddAgentsTest {
 				if(i == 4){
 					SumoStringList vehicleIDList = (SumoStringList) conn.do_job_get(Vehicle.getIDList());
 					System.out.println(vehicleIDList.size());
-					assertEquals(1,vehicleIDList.size()); // Length is always 1 at this time with this seed.
+					assertEquals(0,vehicleIDList.size()); // Length is always 1 at this time with this seed.
 				}
 			}
 		} catch (Exception e) {
