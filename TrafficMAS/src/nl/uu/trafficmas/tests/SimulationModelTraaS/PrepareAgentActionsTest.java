@@ -19,10 +19,12 @@ import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import org.junit.Test;
 
 import de.tudresden.sumo.cmd.Vehicle;
+import de.tudresden.sumo.config.Constants;
+import de.tudresden.sumo.util.SumoCommand;
 
 public class PrepareAgentActionsTest {
 
-	//@Test
+	@Test
 	public void changeLane() {
 		HashMap<String, String> options = new HashMap<String, String>();
 		options.put("e", "60");
@@ -78,7 +80,7 @@ public class PrepareAgentActionsTest {
 		}
 	}
 	
-	//@Test
+	@Test
 	public void changeVelocity() {
 		HashMap<String, String> options = new HashMap<String, String>();
 		options.put("e", "60");
@@ -105,8 +107,7 @@ public class PrepareAgentActionsTest {
 			
 			conn.do_job_set(Vehicle.setLaneChangeMode(a2.agentID, 0b0001000000));
 			conn.do_job_set(Vehicle.setLaneChangeMode(a1.agentID, 0b0001000000));
-
-
+			conn.do_job_set(Vehicle.setSpeedMode(a1.agentID, 0b00000));
 			// Let some time pass so both agents have spawned and are moving
 			while (i < 5) {
 				conn.do_timestep();
