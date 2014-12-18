@@ -50,10 +50,10 @@ public enum AgentAction {
 			sanctions = getChangeVelocitySanctions(5);
 			break;
 		case ChangeVelocity10:
-			sanctions = getChangeVelocitySanctions(5);
+			sanctions = getChangeVelocitySanctions(10);
 			break;
 		case ChangeVelocity20:
-			sanctions = getChangeVelocitySanctions(5);
+			sanctions = getChangeVelocitySanctions(20);
 			break;
 		default:
 			sanctions = null;
@@ -63,29 +63,6 @@ public enum AgentAction {
 		return sanctions;
 	}
 	
-	public String getName(){
-		String name;
-		switch(this) {
-		case ChangeLane:
-			name = "ChangeLane";
-			break;
-		case ChangeRoad:
-			name = "ChangeRoad";
-			break;
-		case ChangeVelocity5:
-			name = "ChangeVelocity5";
-			break;
-		case ChangeVelocity10:
-			name = "ChangeVelocity10";
-			break;
-		case ChangeVelocity20:
-			name = "ChangeVelocity20";
-			break;
-		default:
-			name = "No action";
-		}
-		return name;
-	}
 	
 	private ArrayList<Sanction> getChangeLaneSanctions() {
 		// TODO Auto-generated method stub
