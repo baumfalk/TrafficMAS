@@ -133,7 +133,7 @@ public class DataModelXML implements DataModel {
 		ArrayList<Lane> lanes = new ArrayList<Lane>();
 		int numberLanesInt = Integer.parseInt(numberLanes);
 		for (int i = 0; i < numberLanesInt; i++) {
-			lanes.add(new Lane(LaneType.Normal)); //Todo: find some way to encode lanetype in xml
+			lanes.add(new Lane(LaneType.Normal,(byte) i)); //Todo: find some way to encode lanetype in xml
 		}
 		Node fromNode = nodes.get(from);
 		Node toNode = nodes.get(to);

@@ -17,6 +17,7 @@ public class PhysicalObject {
 	public Lane getLane() {
 		return lane;
 	}
+	
 	public void setLane(Lane lane) {
 		this.lane = lane;
 	}
