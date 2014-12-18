@@ -7,7 +7,10 @@ import nl.uu.trafficmas.organisation.Sanction;
 public enum AgentAction {
 	ChangeLane,
 	ChangeRoad,
-	ChangeVelocity;
+	ChangeVelocity5,
+	ChangeVelocity10,
+	ChangeVelocity20;
+	
 	
 	
 	public int getTime(int currentTime, double meanSpeedNextLane, double currentPos, double laneLength, ArrayList<Double> meanTimeForRouteRoads){ 
@@ -19,8 +22,14 @@ public enum AgentAction {
 		case ChangeRoad:
 			time = getChangeRoadTime();
 			break;
-		case ChangeVelocity:
-			time = getChangeVelocityTime();
+		case ChangeVelocity5:
+			time = getChangeVelocityTime(5);
+			break;
+		case ChangeVelocity10:
+			time = getChangeVelocityTime(10);
+			break;
+		case ChangeVelocity20:
+			time = getChangeVelocityTime(20);
 			break;
 		default:
 			time = -1;
@@ -37,8 +46,14 @@ public enum AgentAction {
 		case ChangeRoad:
 			sanctions = getChangeRoadSanctions();
 			break;
-		case ChangeVelocity:
-			sanctions = getChangeVelocitySanctions();
+		case ChangeVelocity5:
+			sanctions = getChangeVelocitySanctions(5);
+			break;
+		case ChangeVelocity10:
+			sanctions = getChangeVelocitySanctions(5);
+			break;
+		case ChangeVelocity20:
+			sanctions = getChangeVelocitySanctions(5);
 			break;
 		default:
 			sanctions = null;
@@ -57,7 +72,7 @@ public enum AgentAction {
 		case ChangeRoad:
 			name = "ChangeRoad";
 			break;
-		case ChangeVelocity:
+		case ChangeVelocity5:
 			name = "ChangeVelocity";
 			break;
 		default:
@@ -76,12 +91,12 @@ public enum AgentAction {
 		return null;
 	}
 
-	private ArrayList<Sanction> getChangeVelocitySanctions() {
+	private ArrayList<Sanction> getChangeVelocitySanctions(int speedIncrease) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	private int getChangeVelocityTime() {
+	private int getChangeVelocityTime(int speedIncrease) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
