@@ -234,7 +234,7 @@ public class SimulationModelTraaS implements SimulationModel {
 					break;
 				case "ChangeVelocity":
 					// TODO
-					conn.do_job_set(Vehicle.setSpeed(entry.getKey(), 200.0));
+					conn.do_job_set(Vehicle.slowDown(entry.getKey(), 70.0,10));
 					break;
 				default:
 					System.out.println("Error on action name, no action executed");
