@@ -10,11 +10,11 @@ public enum AgentAction {
 	ChangeVelocity;
 	
 	
-	public int getTime(){ 
+	public int getTime(int currentTime, double meanSpeedNextLane, double currentPos, double laneLength, ArrayList<Double> meanTimeForRouteRoads){ 
 		int time;
 		switch(this) {
 		case ChangeLane:
-			time = getChangeLaneTime();
+			time = getChangeLaneTime(currentTime, meanSpeedNextLane,currentPos,laneLength,meanTimeForRouteRoads);
 			break;
 		case ChangeRoad:
 			time = getChangeRoadTime();
@@ -91,8 +91,14 @@ public enum AgentAction {
 		return 0;
 	}
 
-	private int getChangeLaneTime() {
-		// TODO Auto-generated method stub
-		return 0;
+	private int getChangeLaneTime(int currentTime, double meanSpeedNextLane, double currentPos, double laneLength, ArrayList<Double> meanTimeForRouteRoads) {
+		
+		double time = currentTime + (laneLength-currentPos)/meanSpeedNextLane;
+		
+		for(Double timeOnEdge : meanTimeForRouteRoads) {
+			time += timeOnEdge;
+		}
+		
+		return (int) Math.round(time);
 	}
 }

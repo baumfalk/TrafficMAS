@@ -3,14 +3,14 @@ package nl.uu.trafficmas.agent;
 import java.util.ArrayList;
 
 import nl.uu.trafficmas.organisation.Sanction;
+import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Node;
+import nl.uu.trafficmas.roadnetwork.Road;
 
 public class PregnantWomanAgent extends Agent {
 
-	public PregnantWomanAgent(String agentID, Node goalNode,
-			int goalArrivalTime, double maxSpeed) {
-		super(agentID, goalNode, goalArrivalTime, maxSpeed);
-		// TODO Auto-generated constructor stub
+	public PregnantWomanAgent(String agentID, Node goalNode, Edge[] route, int goalArrivalTime, double maxSpeed) {
+		super(agentID, goalNode, route, goalArrivalTime, maxSpeed);
 	}
 
 	@Override

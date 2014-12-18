@@ -120,11 +120,11 @@ public class TrafficMAS {
 	}
 	
 	// TODO: Write test for this function
-	private HashMap<String, AgentAction> getAgentActions(HashMap<String, Agent> currentAgents, HashMap<String, AgentPhysical> leadingVehicles) {
+	private HashMap<String, AgentAction> getAgentActions(HashMap<String, Agent> currentAgents, HashMap<String, AgentPhysical> leadingVehicles, int currentTime, HashMap<Agent,Double> agentMeanSpeedNextLane) {
 		
 		HashMap <String,AgentAction> actions = new HashMap<String, AgentAction>();
 		for(Agent agent : currentAgents.values()) {
-			actions.put(agent.agentID, agent.doAction());
+			actions.put(agent.agentID, agent.doAction(currentTime, agentMeanSpeedNextLane.get(agent.agentID)));
 		}
 		
 		return actions;
