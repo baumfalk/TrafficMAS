@@ -59,12 +59,12 @@ public class PrepareAgentActionsTest {
 
 			int i = 0;
 			// Let some time pass so both agents are spawned and moving
-			while (i < 6) {
+			while (i < 7) {
 				conn.do_timestep();
 				i++;
 				currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, currentAgentMap, conn);
 			}
-			SimulationModelTraaS.updateAgentsPhys(rn, currentAgentMap, conn);
+			SimulationModelTraaS.updateAgents(rn, currentAgentMap, conn);
 			HashMap<String, AgentAction> actions = new HashMap<String, AgentAction>();
 			
 			// Testing action ChangeLane
@@ -76,7 +76,7 @@ public class PrepareAgentActionsTest {
 				conn.do_timestep();
 				i++;
 				currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, currentAgentMap, conn);
-				SimulationModelTraaS.updateAgentsPhys(rn, currentAgentMap, conn);
+				SimulationModelTraaS.updateAgents(rn, currentAgentMap, conn);
 			}
 			// Agent 2 is going maxSpeed, this means agent 1 was passed.
 			// TODO get maxSpeed from Lane object. 
@@ -110,7 +110,7 @@ public class PrepareAgentActionsTest {
 		ArrayList<Pair<Agent, Integer>> agentPairList = DataModelXML.instantiateAgents(random, routes, simulationLength, agentSpawnProb, dist);
 		HashMap<String, Agent> completeAgentMap = SimulationModelTraaS.addAgents(agentPairList, conn);
 		HashMap<String, Agent> currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, new HashMap<String, Agent>(), conn);
-		HashMap<String, AgentPhysical> aPhysMap = new HashMap<String, AgentPhysical>();
+		HashMap<String, Agent> agentMap = new HashMap<String, Agent>();
 		Agent a1 = completeAgentMap.get("Agent 0");
 		Agent a2 = completeAgentMap.get("Agent 1");
 		try {
@@ -127,7 +127,7 @@ public class PrepareAgentActionsTest {
 				i++;
 				currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, currentAgentMap, conn);
 			}
-			SimulationModelTraaS.updateAgentsPhys(rn, currentAgentMap, conn);
+			SimulationModelTraaS.updateAgents(rn, currentAgentMap, conn);
 			HashMap<String, AgentAction> actions = new HashMap<String, AgentAction>();
 			
 			// Check for every action
@@ -139,10 +139,10 @@ public class PrepareAgentActionsTest {
 				conn.do_timestep();
 				i++;
 				currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, currentAgentMap, conn);
-				aPhysMap = SimulationModelTraaS.updateAgentsPhys(rn, currentAgentMap, conn);
+				agentMap = SimulationModelTraaS.updateAgents(rn, currentAgentMap, conn);
 			}
 			// TODO Change AgentAction data structure and change this. 
-			assertEquals(17.0,aPhysMap.get(a1.agentID).getVelocity(),0.5);
+			assertEquals(17.0,agentMap.get(a1.agentID).getVelocity(),0.5);
 			
 		}catch(Exception e){
 			e.printStackTrace();

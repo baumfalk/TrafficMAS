@@ -13,11 +13,11 @@ public enum AgentAction {
 	
 	
 	
-	public int getTime(int currentTime, double meanSpeedNextLane, double currentPos, double laneLength, ArrayList<Double> meanTimeForRouteRoads){ 
+	public int getTime(int currentTime, double meanTravelTimeNextLane, double currentPos, double laneLength, int currentRoadID, ArrayList<Double> meanTimeForRouteRoads){ 
 		int time;
 		switch(this) {
 		case ChangeLane:
-			time = getChangeLaneTime(currentTime, meanSpeedNextLane,currentPos,laneLength,meanTimeForRouteRoads);
+			time = getChangeLaneTime(currentTime, meanTravelTimeNextLane,currentPos,laneLength,currentRoadID,meanTimeForRouteRoads);
 			break;
 		case ChangeRoad:
 			time = getChangeRoadTime();
@@ -89,13 +89,14 @@ public enum AgentAction {
 		return Integer.MAX_VALUE;
 	}
 
-	private int getChangeLaneTime(int currentTime, double meanSpeedNextLane, double currentPos, double laneLength, ArrayList<Double> meanTimeForRouteRoads) {
+	private int getChangeLaneTime(int currentTime, double meanTravelTimeNextLane, double currentPos, double laneLength, int currentRoadID, ArrayList<Double> meanTimeForRouteRoads) {
 		
 		double finishTime = currentTime;
+		double meanSpeedNextLane = laneLength/meanTravelTimeNextLane;
 		double timeSpentOnNextLane = (laneLength-currentPos)/meanSpeedNextLane;
 		finishTime += timeSpentOnNextLane;
-		for(Double timeOnEdge : meanTimeForRouteRoads) {
-			finishTime += timeOnEdge;
+		for(int i = currentRoadID; i < meanTimeForRouteRoads.size(); i++) {
+			finishTime += meanTimeForRouteRoads.get(i);
 		}
 		
 		return (int) Math.round(finishTime);

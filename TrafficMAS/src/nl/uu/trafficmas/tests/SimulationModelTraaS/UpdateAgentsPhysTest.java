@@ -57,7 +57,7 @@ public class UpdateAgentsPhysTest {
 				currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, currentAgentMap, conn);
 			}
 			
-			HashMap<String, AgentPhysical> agentPhysMap =  SimulationModelTraaS.updateAgentsPhys(rn, currentAgentMap, conn);
+			HashMap<String, Agent> agentPhysMap =  SimulationModelTraaS.updateAgents(rn, currentAgentMap, conn);
 			AgentPhysical aPhys1 = agentPhysMap.get(a1.agentID);
 			AgentPhysical aPhys2 = agentPhysMap.get(a2.agentID);
 			

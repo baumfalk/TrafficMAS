@@ -20,4 +20,9 @@ public class Node {
 	public static double nodeDistance(Node fromNode, Node toNode) {
 		return Math.sqrt(Math.pow(Math.abs(fromNode.x-toNode.x),2)+Math.pow(Math.abs(fromNode.y-toNode.y),2));
 	}
+	
+	@Override
+	public String toString() {
+		return name;
+	}
 }

@@ -9,12 +9,9 @@ import nl.uu.trafficmas.roadnetwork.Road;
 
 public class NormalAgent extends Agent {
 
-	public NormalAgent(String agentID, Node goalNode, Edge[] routeEdges, int goalArrivalTime, double maxSpeed) {
-		super(agentID, goalNode, routeEdges, goalArrivalTime, maxSpeed);
+	public NormalAgent(String agentID, Node goalNode, Edge[] routeEdges, int goalArrivalTime, double maxSpeed, double maxComfySpeed) {
+		super(agentID, goalNode, routeEdges, goalArrivalTime, maxSpeed,maxComfySpeed);
 	}
-
-	
-	
 	
 	@Override
 	public double specificUtility(int arrivalTime, ArrayList<Sanction> sanctionList) {
@@ -27,14 +24,4 @@ public class NormalAgent extends Agent {
 		
 		return Math.max(0,Math.min(1, utility));
 	}
-
-
-
-
-	@Override
-	public int goalArrivalTime(int startTime, int minimalTravelTime) {
-		// normally we are kinda in a hurry
-		return startTime + minimalTravelTime *2;
-	}
-
 }
