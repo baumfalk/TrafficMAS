@@ -8,12 +8,14 @@ public class Lane implements BruteState {
 	public final byte laneIndex;
 	private String id;
 	private  Lane leftLane;
+	private double laneMeanTravelTime;
 	
 	public Lane(LaneType laneType, byte laneIndex) {
 		this.laneIndex = laneIndex;
 		this.laneType = laneType;
 		this.leftLane = null;
 		id = null;
+		laneMeanTravelTime = Double.MAX_VALUE;
 	}
 	
 	public void setLeftLane(Lane leftLane) {
@@ -41,5 +43,13 @@ public class Lane implements BruteState {
 
 	public Lane getLeftLane() {
 		return leftLane;
+	}
+
+	public double getMeanTravelTime() {
+		return laneMeanTravelTime;
+	}
+	public void setMeanTravelTime(double laneMeanTravelTime) {
+		// TODO Auto-generated method stub
+		this.laneMeanTravelTime = laneMeanTravelTime;
 	}
 }

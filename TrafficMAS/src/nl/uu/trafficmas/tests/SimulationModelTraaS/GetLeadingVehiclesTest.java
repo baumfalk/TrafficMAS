@@ -50,14 +50,14 @@ public class GetLeadingVehiclesTest {
 				i++;
 				currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, currentAgentMap, conn);
 			}
-			HashMap<String, AgentPhysical> agentPhysMap =  SimulationModelTraaS.updateAgentsPhys(rn, currentAgentMap, conn);
-			HashMap<String, AgentPhysical> leadingVehicleMap = SimulationModelTraaS.getLeadingVehicles(agentPhysMap, conn);
+			HashMap<String, Agent> agents =  SimulationModelTraaS.updateAgents(rn, currentAgentMap, conn);
+			HashMap<String, Agent> leadingVehicleMap = SimulationModelTraaS.getLeadingVehicles(agents, conn);
 			
 			// Agent 1 does not have a leading vehicle
 			assertEquals(null, leadingVehicleMap.get("Agent 0"));
 			
 			// Agent 2 has agent 1 as leading vehicle
-			assertEquals(agentPhysMap.get("Agent 0"), leadingVehicleMap.get("Agent 1"));
+			assertEquals(agents.get("Agent 0"), leadingVehicleMap.get("Agent 1"));
 			
 		} catch(Exception e){
 			e.printStackTrace();

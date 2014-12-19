@@ -250,9 +250,16 @@ public class DataModelXML implements DataModel {
 			if(coinFlip < agentSpawnProbability) {
 				coinFlip = rng.nextDouble();
 				AgentProfileType agentProfileType = selectAgentProfileType(coinFlip, agentProfileDistribution);
-				int goalArrivalTime = i; // TODO: change this into something more sensible.
 				
+				int currentTime = i;
+				int minimalTravelTime = 0;
 				Edge[] routeEdges = routes.get(0).getRoute();
+				double maxComfySpeed = agentProfileType.getMaxComfortableDrivingSpeed(Agent.DEFAULT_MAX_SPEED);
+				for(Edge routeEdge : routeEdges) {
+					minimalTravelTime += Math.round(routeEdge.getRoad().length/maxComfySpeed);
+				}
+				int goalArrivalTime = agentProfileType.goalArrivalTime(currentTime, minimalTravelTime);
+				
 				Node goalNode = routeEdges[routeEdges.length-1].getToNode();
 				Agent agent = agentProfileType.toAgent(Agent.getNextAgentID(), goalNode, routeEdges,  goalArrivalTime, Agent.DEFAULT_MAX_SPEED); //TODO: change this default max speed
 				agentsAndTimes.add(new Pair<Agent,Integer>(agent,i*1000)); //*1000 because sumo counts in ms, not s.

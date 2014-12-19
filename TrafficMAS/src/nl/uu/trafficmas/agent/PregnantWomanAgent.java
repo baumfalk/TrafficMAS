@@ -9,8 +9,8 @@ import nl.uu.trafficmas.roadnetwork.Road;
 
 public class PregnantWomanAgent extends Agent {
 
-	public PregnantWomanAgent(String agentID, Node goalNode, Edge[] route, int goalArrivalTime, double maxSpeed) {
-		super(agentID, goalNode, route, goalArrivalTime, maxSpeed);
+	public PregnantWomanAgent(String agentID, Node goalNode, Edge[] route, int goalArrivalTime, double maxSpeed, double maxComfySpeed) {
+		super(agentID, goalNode, route, goalArrivalTime, maxSpeed, maxComfySpeed);
 	}
 
 	@Override
@@ -25,11 +25,4 @@ public class PregnantWomanAgent extends Agent {
 		
 		return Math.max(0,Math.min(1, utility));
 	}
-
-	@Override
-	public int goalArrivalTime(int startTime, int minimalTravelTime) {
-		// if your wife is in labour, you are in a hurry
-		return startTime + minimalTravelTime;
-	}
-
 }
