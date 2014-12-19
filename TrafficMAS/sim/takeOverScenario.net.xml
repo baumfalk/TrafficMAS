@@ -57,7 +57,7 @@
 
     <connection from="edge0" to="edge3" fromLane="0" toLane="0" dir="s" state="M"/>
     <connection from="edge0" to="edge3" fromLane="1" toLane="1" dir="s" state="M"/>
-    <connection from="edge0" to="edge1" fromLane="1" toLane="0" dir="s" state="M"/>
+    <connection from="edge0" to="edge1" fromLane="0" toLane="0" dir="s" state="M"/>
     <connection from="edge0" to="edge1" fromLane="1" toLane="1" dir="s" state="M"/>
     <connection from="edge1" to="edge2" fromLane="0" toLane="0" dir="s" state="M"/>
     <connection from="edge1" to="edge2" fromLane="1" toLane="1" dir="s" state="M"/>

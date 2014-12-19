@@ -115,6 +115,7 @@ public class SimulationModelTraaS implements SimulationModel {
 		HashMap<String, Agent> completeAgentMap = new HashMap<String, Agent>();
 		ArrayList<SumoCommand> cmds = new ArrayList<>();
 		for(Pair<Agent, Integer> agentPair : agentPairList){
+			//cmds.add(Vehicle.setColor(agentPair.first, SumoColor (1,0,0)));
 			cmds.add(addAgentCommand(agentPair.first, "route0", agentPair.second));
 			cmds.add(Vehicle.setLaneChangeMode(agentPair.first.agentID, 0b0001000000));
 			cmds.add(Vehicle.setSpeedMode(agentPair.first.agentID, 0b00000));
@@ -206,6 +207,7 @@ public class SimulationModelTraaS implements SimulationModel {
 				} 
 				aPhys.setDistance(distance);
 				agentPhysMap.put(agentID, aPhys);
+				currentAgent++;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

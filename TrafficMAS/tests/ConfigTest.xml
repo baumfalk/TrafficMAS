@@ -7,10 +7,10 @@
         <route-files value="RouteTest.xml"/>
     </input>
 
-    <time>
-        <begin value="0"/>
-        <end value="10000"/>
-    </time>
+    <gui_only>
+        <gui-settings-file value="SettingsTest.xml"/>
+    </gui_only>
+
     <!--<remote-port value="8813"/>-->
 </configuration>
 
