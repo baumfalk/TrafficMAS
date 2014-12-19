@@ -17,6 +17,7 @@ public abstract class Agent extends AgentPhysical {
 	private ArrayList<Sanction> currentSanctionList;
 	private Edge[] currentRoute;
 	private ArrayList<Double> expectedTravelTimePerRoad;
+	private AgentProfileType agentProfileType;
 	
 	public final static double DEFAULT_MAX_SPEED = 70;
 	
@@ -37,13 +38,19 @@ public abstract class Agent extends AgentPhysical {
 		return Math.max(0,Math.min(1, utility));
 	}
 	
-	public Agent(String agentID,Node goalNode,Edge[] routeEdges, int goalArrivalTime, double maxSpeed){
+	public AgentProfileType getAgentType(){
+
+		return agentProfileType;
+	}
+	
+	public Agent(String agentID,Node goalNode,Edge[] routeEdges, int goalArrivalTime, double maxSpeed, AgentProfileType agentProfileType){
 		super(agentID);
 		this.goalNode 			= goalNode;
 		this.goalArrivalTime 	= goalArrivalTime;
 		this.maxSpeed			= maxSpeed;
 		expectedArrivalTime 	= goalArrivalTime;
 		this.currentRoute = routeEdges;
+		this.agentProfileType 	= agentProfileType;
 		this.expectedTravelTimePerRoad = new ArrayList<>();
 		for(Edge edge : routeEdges) {
 			double time = edge.getRoad().length/maxSpeed;

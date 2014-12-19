@@ -10,7 +10,7 @@ import nl.uu.trafficmas.roadnetwork.Road;
 public class NormalAgent extends Agent {
 
 	public NormalAgent(String agentID, Node goalNode, Edge[] routeEdges, int goalArrivalTime, double maxSpeed) {
-		super(agentID, goalNode, routeEdges, goalArrivalTime, maxSpeed);
+		super(agentID, goalNode, routeEdges, goalArrivalTime, maxSpeed, AgentProfileType.Normal);
 	}
 
 	
