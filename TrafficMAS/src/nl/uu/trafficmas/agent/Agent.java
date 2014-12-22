@@ -11,15 +11,16 @@ import nl.uu.trafficmas.roadnetwork.Road;
 public abstract class Agent extends AgentPhysical {
 	private Node goalNode;
 	private int goalArrivalTime;
-	private final double maxSpeed;
+	protected final double maxSpeed;
 	
 	private int expectedArrivalTime;
 	private ArrayList<Sanction> currentSanctionList;
 	private Edge[] currentRoute;
 	private ArrayList<Double> expectedTravelTimePerRoad;
+	private double maxComfySpeed;
 	private AgentProfileType agentProfileType;
 	
-	public final static double DEFAULT_MAX_SPEED = 70;
+	public final static double DEFAULT_MAX_SPEED = 20;
 	
 	public abstract double specificUtility(int arrivalTime, ArrayList<Sanction> sanctionList);
 	
@@ -43,41 +44,49 @@ public abstract class Agent extends AgentPhysical {
 		return agentProfileType;
 	}
 	
-	public Agent(String agentID,Node goalNode,Edge[] routeEdges, int goalArrivalTime, double maxSpeed, AgentProfileType agentProfileType){
+	public Agent(String agentID,Node goalNode,Edge[] routeEdges, int goalArrivalTime, double maxSpeed, AgentProfileType agentProfileType, double maxComfySpeed){
 		super(agentID);
-		this.goalNode 			= goalNode;
-		this.goalArrivalTime 	= goalArrivalTime;
-		this.maxSpeed			= maxSpeed;
-		expectedArrivalTime 	= goalArrivalTime;
-		this.currentRoute = routeEdges;
-		this.agentProfileType 	= agentProfileType;
-		this.expectedTravelTimePerRoad = new ArrayList<>();
+		this.goalNode 					= goalNode;
+		this.goalArrivalTime 			= goalArrivalTime;
+		this.maxSpeed					= maxSpeed;
+		this.maxComfySpeed 				= maxComfySpeed;
+		this.expectedArrivalTime 		= goalArrivalTime;
+		this.currentRoute 				= routeEdges;
+		this.agentProfileType 			= agentProfileType;
+		this.expectedTravelTimePerRoad 	= new ArrayList<>();
+		
 		for(Edge edge : routeEdges) {
-			double time = edge.getRoad().length/maxSpeed;
+			double time = edge.getRoad().length/maxComfySpeed;
 			expectedTravelTimePerRoad.add(time);
 		}
 		currentSanctionList 	= new ArrayList<Sanction>();
 	}
 	
-	public abstract int goalArrivalTime(int startTime, int minimalTravelTime);
-	
-	public AgentAction doAction(int currentTime, double meanSpeedNextLane) {
+	public AgentAction doAction(int currentTime) {
 		// Only do an action if it improves our situation
 		double bestUtility 		= utility(expectedArrivalTime,currentSanctionList);
 		AgentAction bestAction 	= null;
+		
+		int currentRoadID = 0;
+		for(;currentRoadID<currentRoute.length;currentRoadID++) {
+			if(currentRoute[currentRoadID].getRoad().id.equals(this.road.id)) {
+				break;
+			}
+		}
+		
 		for(AgentAction action : AgentAction.values()) {
-			int time = action.getTime(currentTime, meanSpeedNextLane, this.distance, this.road.length, expectedTravelTimePerRoad);
-			ArrayList<Sanction> sanctions = action.getSanctions();
-			double newUtility = utility(time, sanctions);
+			int time 						= action.getTime(currentTime, this.lane.getMeanTravelTime(), this.distance, this.road.length, currentRoadID, expectedTravelTimePerRoad);
+			ArrayList<Sanction> sanctions 	= action.getSanctions();
+			double newUtility 				= utility(time, sanctions);
 			if(newUtility > bestUtility) {
 				bestAction = action;
 				bestUtility = newUtility; 
 			}
 		}
 		if(bestAction != null) {
-			System.out.println(this.agentID + " will do " + bestAction);
+			System.out.println(this.getClass().getSimpleName()+": "+this.agentID + " will do " + bestAction);
 		} else {
-			System.out.println(this.agentID + " will do nothing");
+			System.out.println(this.getClass().getSimpleName()+": "+this.agentID + " will do nothing");
 		}
 		return bestAction;
 	}
@@ -114,5 +123,27 @@ public abstract class Agent extends AgentPhysical {
 		this.currentSanctionList = currentSanctionList;
 	}
 	
+	public Edge [] getRoute() {
+		return currentRoute;
+	}
+	@Override
+	public void setRoad(Road road) {
+		super.setRoad(road);
+		int currentRoadID = 0;
+		for(;currentRoadID<currentRoute.length;currentRoadID++) {
+			if(this.road.id.equals(currentRoute[currentRoadID].getRoad().id)) {
+				break;
+			}
+		}
+		//update the currentRoute
+		Edge[] tempRoute = new Edge[currentRoute.length-currentRoadID];
+		for(int i=currentRoadID; i<currentRoute.length;i++) {
+			tempRoute[i-currentRoadID] = currentRoute[i];
+		}
+		currentRoute = tempRoute;
+	}
 	
+	public double getMaxComfySpeed() {
+		return maxComfySpeed;
+	}
 }

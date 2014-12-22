@@ -18,8 +18,8 @@ public interface SimulationModel {
 	public void addAgent(Agent agent, String routeID, int tick);
 
 	public HashMap<String, Agent> updateCurrentAgentMap(HashMap<String, Agent> completeAgentMap, HashMap<String, Agent> oldAgentMap);
-	public HashMap<String, AgentPhysical> updateAgentsPhys(RoadNetwork rn, HashMap<String, Agent> currentAgentList);
-	public HashMap<String, AgentPhysical> getLeadingVehicles(HashMap<String, AgentPhysical> currentAgentPhysList);
+	public HashMap<String, Agent> updateAgents(RoadNetwork rn, HashMap<String, Agent> currentAgentList);
+	public HashMap<String, Agent> getLeadingVehicles(HashMap<String, Agent> currentAgentPhysList);
 	public void prepareAgentActions(HashMap<String, AgentAction> actions, HashMap<String, Agent> currentAgentMap);
-	public HashMap<String,Double> getMeanSpeedNextLane(HashMap<String, AgentPhysical> aPhysMap);
+	public RoadNetwork updateRoadNetwork(RoadNetwork roadNetwork);
 }

@@ -22,4 +22,13 @@ public class Edge {
 	public Road getRoad(){
 		return road;
 	}
+	
+	public String getID() {
+		return road.id;
+	}
+	
+	@Override 
+	public String toString() {
+		return from+" --> "+to+"\r\n"+road;
+	}
 }

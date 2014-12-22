@@ -8,15 +8,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.sun.org.apache.xml.internal.security.keys.content.KeyValue;
-
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.agent.AgentPhysical;
 import nl.uu.trafficmas.agent.AgentProfileType;
 import nl.uu.trafficmas.agent.actions.AgentAction;
+import nl.uu.trafficmas.roadnetwork.Edge;
+import nl.uu.trafficmas.roadnetwork.Lane;
 import nl.uu.trafficmas.roadnetwork.Road;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
-import de.tudresden.sumo.cmd.Lane;
 import de.tudresden.sumo.cmd.Simulation;
 import de.tudresden.sumo.cmd.Vehicle;
 import de.tudresden.sumo.util.SumoCommand;
@@ -87,9 +86,6 @@ public class SimulationModelTraaS implements SimulationModel {
 		}
 	}
 	
-	
-	
-	
 	@Override
 	public void addAgent(Agent agent, String routeID, int tick) {
 		addAgent(agent, routeID, tick, conn);
@@ -104,7 +100,7 @@ public class SimulationModelTraaS implements SimulationModel {
 	}
 	
 	public static SumoCommand addAgentCommand(Agent agent, String routeID, int tick) {
-		return Vehicle.add(agent.agentID, "Car", routeID, tick, 0.0, 10.0, (byte) 0);
+		return Vehicle.add(agent.agentID, "Car", routeID, tick, 0.0, Math.min(agent.getMaxComfySpeed(),10), (byte) 0);
 	}
 	
 	@Override
@@ -131,9 +127,6 @@ public class SimulationModelTraaS implements SimulationModel {
 		}
 		return completeAgentMap;
 	}
-	
-	
-	
 	
 	@Override
 	public HashMap<String, Agent> updateCurrentAgentMap(HashMap<String, Agent> completeAgentMap, HashMap<String, Agent> oldAgentMap) {
@@ -167,13 +160,13 @@ public class SimulationModelTraaS implements SimulationModel {
 	}
 	
 	@Override
-	public HashMap<String, AgentPhysical> updateAgentsPhys(RoadNetwork rn, HashMap<String, Agent> currentAgentList) {
-		return updateAgentsPhys(rn, currentAgentList, conn);
+	public HashMap<String, Agent> updateAgents(RoadNetwork rn, HashMap<String, Agent> currentAgentList) {
+		return updateAgents(rn, currentAgentList, conn);
 	}
-	public static HashMap<String, AgentPhysical> updateAgentsPhys(RoadNetwork rn, HashMap<String, Agent> currentAgentMap, SumoTraciConnection conn){
-		HashMap<String, AgentPhysical> agentPhysMap = new HashMap<String, AgentPhysical>(currentAgentMap);
+	public static HashMap<String, Agent> updateAgents(RoadNetwork rn, HashMap<String, Agent> currentAgentMap, SumoTraciConnection conn){
+		HashMap<String, Agent> agentsMap = new HashMap<String, Agent>(currentAgentMap);
 		if(currentAgentMap.size() == 0) 
-			return agentPhysMap;
+			return agentsMap;
 		try {
 			// Loop over all agents, TODO: Only check the agents that passed a sensor
 			
@@ -192,7 +185,7 @@ public class SimulationModelTraaS implements SimulationModel {
 				
 				int currentResponseForAgent = 0;
 				String agentID = agentMap.getKey();
-				AgentPhysical aPhys = agentMap.getValue();
+				Agent agent = agentMap.getValue();
 
 				// Retrieve all physical agent information from SUMO
 				double velocity = (double) responses.get(currentAgent*4 + currentResponseForAgent++);
@@ -202,34 +195,48 @@ public class SimulationModelTraaS implements SimulationModel {
 				double distance = (double) responses.get(currentAgent*4 + currentResponseForAgent++);
 				
 				// Update the agent with information
-				aPhys.setVelocity(velocity);
+				agent.setVelocity(velocity);
+				
 				if(road != null) { //TODO: make this hack more robust
-					aPhys.setRoad(road);
-					aPhys.setLane(road.getLanes()[laneIndex]);
-				} 
-				aPhys.setDistance(distance);
-				agentPhysMap.put(agentID, aPhys);
+					agent.setRoad(road);
+					agent.setLane(road.getLanes()[laneIndex]);
+				}
+				
+				agent.setDistance(distance);
+				double expectedArrivalTime = 0;
+				Edge [] route = agent.getRoute();
+				for(Edge edge: route) {
+					if(edge.getRoad().equals(agent.getRoad())) {
+						double distRemains = edge.getRoad().length - agent.getDistance();
+						double averageSpeedEdge = edge.getRoad().length/edge.getRoad().getMeanTravelTime();
+						expectedArrivalTime += distRemains/averageSpeedEdge;
+					}
+					expectedArrivalTime += edge.getRoad().getMeanTravelTime(); 
+				}
+				
+				agent.setExpectedArrivalTime((int) Math.round(expectedArrivalTime));
+				agentsMap.put(agentID, agent);
 				currentAgent++;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return agentPhysMap;
+		return agentsMap;
 	}
 
 	@Override
-	public HashMap<String, AgentPhysical> getLeadingVehicles(HashMap<String, AgentPhysical> currentAgentPhysMap) {
+	public HashMap<String, Agent> getLeadingVehicles(HashMap<String, Agent> currentAgentPhysMap) {
 		return getLeadingVehicles(currentAgentPhysMap, conn);
 	}
 	// This method returns a HashMap that contains every vehicleID as key, and its leading vehicle as value. 
-	public static HashMap<String, AgentPhysical> getLeadingVehicles(HashMap<String, AgentPhysical> currentAgentPhysMap, SumoTraciConnection conn){
-		HashMap<String, AgentPhysical> agentLeaderMap = new HashMap<String, AgentPhysical>();
+	public static HashMap<String, Agent> getLeadingVehicles(HashMap<String, Agent> agents, SumoTraciConnection conn){
+		HashMap<String, Agent> agentLeaderMap = new HashMap<String, Agent>();
 
 		
-		if(currentAgentPhysMap.size() == 0)
+		if(agents.size() == 0)
 			return agentLeaderMap;
 		ArrayList<SumoCommand> cmdList = new ArrayList<SumoCommand>();
-		for(Map.Entry<String, AgentPhysical> entry: currentAgentPhysMap.entrySet()){
+		for(Map.Entry<String, Agent> entry: agents.entrySet()){
 			cmdList.add(Vehicle.getLeader(entry.getValue().agentID, LOOK_AHEAD_DISTANCE));
 		}
 		ArrayList<Object> responses= null;
@@ -241,13 +248,13 @@ public class SimulationModelTraaS implements SimulationModel {
 		}
 		// Loop through every agent currently in the simulation
 		int currentEntry = 0;
-		for(Map.Entry<String, AgentPhysical> entry: currentAgentPhysMap.entrySet()){
+		for(Map.Entry<String, Agent> entry: agents.entrySet()){
 			// TODO: Replace hardcoded distance with dynamic distance depending on type of agent.
 			Object[] leadVehicleArray = (Object[]) responses.get(currentEntry++);
 			
 			if(!(leadVehicleArray[1].equals(-1.0))){
 				// If leadVehicleArray[1] is not -1.0, the agent has a leading vehicle. 
-				AgentPhysical leadingAgent = currentAgentPhysMap.get(leadVehicleArray[0].toString());
+				Agent leadingAgent = agents.get(leadVehicleArray[0].toString());
 				agentLeaderMap.put(entry.getKey(), leadingAgent);
 			} else{
 				// If the agent has no leading vehicle, it will return null
@@ -279,24 +286,24 @@ public class SimulationModelTraaS implements SimulationModel {
 		
 			if(entry.getValue() == null)
 				continue;
-			switch(entry.getValue().getName()) {
-			case "ChangeLane":
+			switch(entry.getValue()) {
+			case ChangeLane:
 				if(agentLaneIndex < maxLaneIndex){
 					cmdList.add(Vehicle.changeLane(entry.getKey(), (byte) (agentLaneIndex+1) , OVERTAKE_DURATION));
 				} else {
 					//TODO exceptions.
 				}
 				break;
-			case "ChangeRoad":
+			case ChangeRoad:
 				// TODO
 				break;
-			case "ChangeVelocity5":
+			case ChangeVelocity5:
 				cmdList.add(Vehicle.slowDown(entry.getKey(), currentAgent.getVelocity()+5.0,5));
 				break;
-			case "ChangeVelocity10":
+			case ChangeVelocity10:
 				cmdList.add(Vehicle.slowDown(entry.getKey(), currentAgent.getVelocity()+10.0,10));
 				break;
-			case "ChangeVelocity20":
+			case ChangeVelocity20:
 				cmdList.add(Vehicle.slowDown(entry.getKey(), currentAgent.getVelocity()+20.0,15));
 				break;
 			default:
@@ -318,48 +325,42 @@ public class SimulationModelTraaS implements SimulationModel {
 		
 	}
 	
-
 	@Override
-	public HashMap<String, Double> getMeanSpeedNextLane(HashMap<String, AgentPhysical> aPhysMap) {
-		return getMeanSpeedNextLane(aPhysMap,conn);
+	public RoadNetwork updateRoadNetwork(RoadNetwork roadNetwork) {
+		return updateRoadNetwork(roadNetwork,conn);
 	}
 	
-	public static HashMap<String,Double> getMeanSpeedNextLane(HashMap<String, AgentPhysical> aPhysMap, SumoTraciConnection conn) {
-		HashMap<String,Double> agentMeanSpeedNextLane = new HashMap<String,Double>();
-		if(aPhysMap.size()==0) {
-			return agentMeanSpeedNextLane;
-		}
+	//TODO write a test for this
+	public RoadNetwork updateRoadNetwork(RoadNetwork roadNetwork, SumoTraciConnection conn) {
 		ArrayList<SumoCommand> cmdList = new ArrayList<SumoCommand>();
-		HashSet<Integer> noLeftLaneAgent = new HashSet<Integer>();
-		int agentNumber = 0;
-		for(Entry<String, AgentPhysical> keyVal : aPhysMap.entrySet())
-		{
-			if(keyVal.getValue().getLane().hasLeftLane()) {
-				cmdList.add(Lane.getLastStepMeanSpeed(keyVal.getValue().getLane().getLeftLane().getID()));
-			} else {
-				noLeftLaneAgent.add(agentNumber);
+		for(Edge edge: roadNetwork.getEdges()) {
+			cmdList.add(de.tudresden.sumo.cmd.Edge.getTraveltime(edge.getID()));
+			for(Lane lane :edge.getRoad().getLanes()) {
+				cmdList.add(de.tudresden.sumo.cmd.Lane.getTraveltime(lane.getID()));
+				cmdList.add(de.tudresden.sumo.cmd.Lane.getLastStepVehicleNumber(lane.getID()));
 			}
-			agentNumber++;
 		}
-		ArrayList<Object> responses= null;
+		ArrayList<Object> responses = null;
 		try {
 			 responses = conn.do_jobs_get(cmdList);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		agentNumber = 0;
-		for(Entry<String, AgentPhysical> keyVal : aPhysMap.entrySet())
-		{
-			double meanLaneSpeed = Double.MAX_VALUE;
-			if(!noLeftLaneAgent.contains(agentNumber)) {
-				meanLaneSpeed = (double) responses.get(agentNumber);
+		int currentIndex = 0;
+		for(Edge edge: roadNetwork.getEdges()) {
+			double roadMeanTravelTime = (double) responses.get(currentIndex++);
+			edge.getRoad().setMeanTravelTime(roadMeanTravelTime);
+			for(Lane lane : edge.getRoad().getLanes()) {
+				double laneMeanTravelTime = (double) responses.get(currentIndex++);
+				int laneGetVehicleNumber = (int) responses.get(currentIndex++);
+				//empty lane, then sumo is unreliable
+				if(laneGetVehicleNumber == 0) {
+					laneMeanTravelTime = 0;
+				}
+				lane.setMeanTravelTime(laneMeanTravelTime);	
 			}
-			agentMeanSpeedNextLane.put(keyVal.getKey(), meanLaneSpeed);
-			agentNumber++;
 		}
-		return agentMeanSpeedNextLane;
 		
+		return roadNetwork;//TODO update the road network
 	}
 }
