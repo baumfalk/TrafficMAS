@@ -26,9 +26,6 @@ public class DataModelXML implements DataModel {
 	private String sumoConfigXML;
 	//TODO: replace ArrayList<Pair> By HashMa[
 	//TODO: split this class in several smaller classes
-	private int simulationLength;
-	private double agentSpawnProbability;
-	private ArrayList<Pair<AgentProfileType, Double>> agentProfileDistribution;
 	
 	public DataModelXML() {
 		
@@ -167,8 +164,7 @@ public class DataModelXML implements DataModel {
 
 	@Override
 	public double getAgentSpawnProbability() {
-		agentSpawnProbability =getAgentSpawnProbability(dir,agentProfilesXML);
-		return agentSpawnProbability;
+		return getAgentSpawnProbability(dir,agentProfilesXML);
 	}
 	
 	public static double getAgentSpawnProbability(String dir, String agentProfilesXML) {
@@ -186,14 +182,13 @@ public class DataModelXML implements DataModel {
 	
 
 	@Override
-	public ArrayList<Pair<AgentProfileType, Double>> getAgentProfileTypeDistribution() {
-		agentProfileDistribution = getAgentProfileTypeDistribution(dir,agentProfilesXML);
-		return agentProfileDistribution;
+	public HashMap<AgentProfileType, Double> getAgentProfileTypeDistribution() {
+		return getAgentProfileTypeDistribution(dir,agentProfilesXML);
 	}
 	
-	public static ArrayList<Pair<AgentProfileType, Double>> getAgentProfileTypeDistribution(String dir, String agentProfilesXML) {
+	public static HashMap<AgentProfileType, Double> getAgentProfileTypeDistribution(String dir, String agentProfilesXML) {
 		ArrayList<ArrayList<Pair<String, String>>> agentAttributes = SimpleXMLReader.extractFromXML(dir, agentProfilesXML,"agent");
-		ArrayList<Pair<AgentProfileType, Double>> agentTypeAndDist = new ArrayList<Pair<AgentProfileType,Double>>();
+		HashMap<AgentProfileType, Double> agentTypeAndDist = new HashMap<AgentProfileType, Double>();
 		for(ArrayList<Pair<String, String>> attributes : agentAttributes) {
 			String type = null;
 			String dist = null;
@@ -209,7 +204,7 @@ public class DataModelXML implements DataModel {
 			
 			AgentProfileType agentType = AgentProfileType.valueOf(type);
 			double distVal = Double.parseDouble(dist);
-			agentTypeAndDist.add(new Pair<AgentProfileType, Double>(agentType, distVal));
+			agentTypeAndDist.put(agentType, distVal);
 		}
 		
 		return agentTypeAndDist;
@@ -217,8 +212,7 @@ public class DataModelXML implements DataModel {
 
 	@Override
 	public int getSimulationLength() {
-		simulationLength = simulationLength(dir, masXML);
-		return simulationLength;
+		return simulationLength(dir, masXML);
 	}
 	
 	public static int simulationLength(String dir, String masXML) {
@@ -234,13 +228,6 @@ public class DataModelXML implements DataModel {
 			}
 		}
 		return simulationLength;
-	}
-
-	@Override
-	public ArrayList<Pair<Agent, Integer>> instantiateAgents(Random rng, ArrayList<Route> routes) {
-
-		
-		return instantiateAgents(rng,routes, simulationLength, agentSpawnProbability, agentProfileDistribution );
 	}
 	
 	public static ArrayList<Pair<Agent, Integer>> instantiateAgents(Random rng, ArrayList<Route> routes, int simulationLength, double agentSpawnProbability, ArrayList<Pair<AgentProfileType, Double>> agentProfileDistribution) {
@@ -315,7 +302,11 @@ public class DataModelXML implements DataModel {
 
 	@Override
 	public MASData getMASData() {
-		// TODO Auto-generated method stub
-		return null;
+		int simulationLength 		= DataModelXML.simulationLength(dir, masXML);
+		String sumoConfigPath 		= this.sumoConfigXML;
+		double spawnProbability 	= DataModelXML.getAgentSpawnProbability(dir, masXML);
+		HashMap<AgentProfileType,Double> agentProfileTypeDistribution = DataModelXML.getAgentProfileTypeDistribution(dir, masXML);
+		
+		return new MASData(simulationLength, sumoConfigPath, spawnProbability, agentProfileTypeDistribution);
 	}
 }

@@ -1,6 +1,7 @@
 package nl.uu.trafficmas.datamodel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 import nl.uu.trafficmas.agent.Agent;
@@ -16,7 +17,6 @@ public interface DataModel {
 	public String getSumoConfigPath();
 	public double getAgentSpawnProbability();
 	public int getSimulationLength();
-	public ArrayList<Pair<AgentProfileType, Double>> getAgentProfileTypeDistribution();
+	public HashMap<AgentProfileType, Double> getAgentProfileTypeDistribution();
 	public ArrayList<Route> getRoutes(RoadNetwork rn);
-	public ArrayList<Pair<Agent, Integer>> instantiateAgents(Random rng, ArrayList<Route> routes);
 }
