@@ -5,20 +5,17 @@ import java.util.HashMap;
 import java.util.Random;
 
 import nl.uu.trafficmas.agent.Agent;
-import nl.uu.trafficmas.agent.AgentPhysical;
 import nl.uu.trafficmas.agent.AgentProfileType;
-import nl.uu.trafficmas.agent.AgentType;
 import nl.uu.trafficmas.agent.actions.AgentAction;
 import nl.uu.trafficmas.datamodel.DataModel;
-import nl.uu.trafficmas.datamodel.DataModelXML;
+import nl.uu.trafficmas.datamodel.MASData;
 import nl.uu.trafficmas.datamodel.Pair;
 import nl.uu.trafficmas.organisation.Organisation;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
 import nl.uu.trafficmas.simulationmodel.SimulationModel;
-import nl.uu.trafficmas.simulationmodel.SimulationModelTraaS;
+import nl.uu.trafficmas.simulationmodel.StateData;
 import nl.uu.trafficmas.view.TrafficView;
-import nl.uu.trafficmas.view.TrafficViewConsole;
 
 public class TrafficMASController {
 	private DataModel dataModel;
@@ -37,6 +34,7 @@ public class TrafficMASController {
 	private ArrayList<Route> routes;
 	private HashMap<String, Agent> currentAgentMap;
 	private int SimulationLength;
+	private MASData masData;
 		
 	public TrafficMASController(DataModel dataModel,SimulationModel simulationModel, TrafficView view) {
 		this(dataModel,simulationModel,view,-1);
@@ -56,7 +54,6 @@ public class TrafficMASController {
 		this.setupSimulation();
 		this.setupView();
 		
-		roadNetwork = this.dataModel.getRoadNetwork();
 		this.currentAgentMap = new HashMap<String, Agent>();
 
 		agentsAndTime = new ArrayList<Pair<Agent,Integer>>();
@@ -88,8 +85,8 @@ public class TrafficMASController {
 
 		while(i++ < SimulationLength) {
 			this.updateMAS();
-			this.nextMASState();
-			this.updateSimulation();
+			StateData stateData = this.nextMASState();
+			this.updateSimulation(stateData);
 			this.nextSimulationState();
 			this.updateView();
 			System.out.println(i);
@@ -109,7 +106,6 @@ public class TrafficMASController {
 			this.simulationModel.doTimeStep();
 		}
 		this.cleanUp();
-		this.simulationModel.close();
 	}
 
 	
@@ -125,35 +121,44 @@ public class TrafficMASController {
 	}
 	
 	private void readData() {
-		
+		roadNetwork = this.dataModel.getRoadNetwork();
+		routes = this.dataModel.getRoutes(roadNetwork);
+		masData = this.dataModel.getMASData();
 	}
 	
 	private void setupMAS() {
-		
+		this.instantiateAgents();
+		this.instantiateOrganisations();
 	}
 	
 	private void setupSimulation() {
-		
+		HashMap<String, String> optionValueMap = new HashMap<String, String>();
+		optionValueMap.put("e", Integer.toString(SimulationLength));
+		optionValueMap.put("start", "1");
+		optionValueMap.put("quit-on-end", "1");
+		this.simulationModel.initializeWithOptions(optionValueMap);
+		completeAgentMap = this.simulationModel.addAgents(agentsAndTime);
 	}
 	
 	private void setupView() {
-		
+		this.view = view;
+		view.initialize();
 	}
 	
 	private void updateMAS() {
 		
 	}
 	
-	private void nextMASState() {
-		
+	private StateData nextMASState() {
+		return null;
 	}
 	
-	private void updateSimulation() {
-		
+	private void updateSimulation(StateData stateData) {
+		this.simulationModel.updateStateData(stateData);
 	}
 	
 	private void nextSimulationState() {
-		
+		this.simulationModel.doTimeStep();
 	}
 	
 	private void updateView() {
@@ -164,11 +169,7 @@ public class TrafficMASController {
 	}
 	
 	private void cleanUp() {
-		
-	}
-	
-	private void instantiateRoadNetwork() {
-		
+		this.simulationModel.close();
 	}
 	
 	private void instantiateAgents() {
