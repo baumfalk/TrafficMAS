@@ -364,4 +364,16 @@ public class SimulationModelTraaS implements SimulationModel {
 		
 		return roadNetwork;//TODO update the road network
 	}
+
+	@Override
+	public StateData getStateData() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void updateStateData(StateData stateData) {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -49,7 +49,7 @@ public class DataModelXML implements DataModel {
 	}
 
 	@Override
-	public RoadNetwork instantiateRoadNetwork() {
+	public RoadNetwork getRoadNetwork() {
 		return instantiateRoadNetwork(this.dir,this.nodesXML,this.edgesXML);
 	}
 	
@@ -311,5 +311,11 @@ public class DataModelXML implements DataModel {
 		}
 		
 		return routes;
+	}
+
+	@Override
+	public MASData getMASData() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -13,5 +13,5 @@ public interface TrafficView {
 	public void updateFromOrganisation(Organisation org);
 	public void updateFromOrganisations(ArrayList<Organisation> orgs);
 	public void visualize();
-	
+	public void addMessage(String message);
 }

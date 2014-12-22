@@ -43,5 +43,9 @@ public class TrafficViewConsole implements TrafficView {
 		// TODO Auto-generated method stub
 
 	}
-
+	
+	@Override
+	public void addMessage(String message) {
+		
+	}
 }

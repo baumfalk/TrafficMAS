@@ -51,7 +51,12 @@ public class TrafficMASController {
 		this.dataModel = dataModel;
 		this.simulationModel = simulationModel;
 		
-		roadNetwork = this.dataModel.instantiateRoadNetwork();
+		this.readData();
+		this.setupMAS();
+		this.setupSimulation();
+		this.setupView();
+		
+		roadNetwork = this.dataModel.getRoadNetwork();
 		this.currentAgentMap = new HashMap<String, Agent>();
 
 		agentsAndTime = new ArrayList<Pair<Agent,Integer>>();
@@ -82,6 +87,11 @@ public class TrafficMASController {
 		int i = 0;
 
 		while(i++ < SimulationLength) {
+			this.updateMAS();
+			this.nextMASState();
+			this.updateSimulation();
+			this.nextSimulationState();
+			this.updateView();
 			System.out.println(i);
 			/*for(Pair<Agent, Integer> val : agentsAndTime) {
 				if(val.second == i*1000) {
@@ -98,15 +108,10 @@ public class TrafficMASController {
 			this.simulationModel.prepareAgentActions(actions, currentAgentMap);
 			this.simulationModel.doTimeStep();
 		}
+		this.cleanUp();
 		this.simulationModel.close();
 	}
 
-	private void updateView() {
-		this.view.updateFromRoadNetwork(roadNetwork);
-		this.view.updateFromAgents(new ArrayList<Agent>(currentAgentMap.values()));
-		this.view.updateFromOrganisations(organisations);
-		this.view.visualize();
-	}
 	
 	// TODO: Write test for this function
 	public static HashMap<String, AgentAction> getAgentActions(HashMap<String, Agent> currentAgents, HashMap<String, Agent> leadingVehicles, int currentTime) {
@@ -117,5 +122,60 @@ public class TrafficMASController {
 		}
 		
 		return actions;
+	}
+	
+	private void readData() {
+		
+	}
+	
+	private void setupMAS() {
+		
+	}
+	
+	private void setupSimulation() {
+		
+	}
+	
+	private void setupView() {
+		
+	}
+	
+	private void updateMAS() {
+		
+	}
+	
+	private void nextMASState() {
+		
+	}
+	
+	private void updateSimulation() {
+		
+	}
+	
+	private void nextSimulationState() {
+		
+	}
+	
+	private void updateView() {
+		this.view.updateFromRoadNetwork(roadNetwork);
+		this.view.updateFromAgents(new ArrayList<Agent>(currentAgentMap.values()));
+		this.view.updateFromOrganisations(organisations);
+		this.view.visualize();
+	}
+	
+	private void cleanUp() {
+		
+	}
+	
+	private void instantiateRoadNetwork() {
+		
+	}
+	
+	private void instantiateAgents() {
+		
+	}
+	
+	private void instantiateOrganisations() {
+		
 	}
 }

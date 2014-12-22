@@ -10,8 +10,8 @@ import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
 
 public interface DataModel {
-	public RoadNetwork instantiateRoadNetwork();
-	
+	public RoadNetwork 	getRoadNetwork();
+	public MASData 		getMASData();
 	public ArrayList<Organisation> instantiateOrganisations();
 	public String getSumoConfigPath();
 	public double getAgentSpawnProbability();
