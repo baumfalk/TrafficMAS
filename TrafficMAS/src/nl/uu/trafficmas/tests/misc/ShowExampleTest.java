@@ -45,10 +45,10 @@ public class ShowExampleTest {
 		ArrayList<Pair<Agent, Integer>> agentPairList = DataModelXML.instantiateAgents(random, routes, simLength, agentSpawnProb, dist);
 		HashMap<String, Agent> completeAgentMap = SimulationModelTraaS.addAgents(agentPairList, conn);
 		HashMap<String, Agent> currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, new HashMap<String, Agent>(), conn);
-		HashMap<String, AgentPhysical> aPhysMap = new HashMap<String, AgentPhysical>();
+		HashMap<String, Agent> aPhysMap = new HashMap<String, Agent>();
 		Edge[] lst = new Edge[0];
 		
-		Agent a1 = new NormalAgent("Extra 0", rn.getNodes()[1], lst, 1000, 70.0);
+		Agent a1 = new NormalAgent("Extra 0", rn.getNodes()[1], lst, 1000, 70.0,70);
 		
 		completeAgentMap.put(a1.agentID, a1);
 		
@@ -65,7 +65,7 @@ public class ShowExampleTest {
 			while(i++ < simLength){
 				conn.do_timestep();
 				currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, currentAgentMap, conn);
-				aPhysMap = SimulationModelTraaS.updateAgentsPhys(rn, currentAgentMap, conn);
+				aPhysMap = SimulationModelTraaS.updateAgents(rn, currentAgentMap, conn);
 			}
 			for(Agent a : currentAgentMap.values()){
 				System.out.println(a.getAgentType());
