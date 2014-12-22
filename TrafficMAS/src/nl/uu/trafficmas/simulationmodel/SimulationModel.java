@@ -12,8 +12,12 @@ import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 public interface SimulationModel {
 	public void initialize(); 
 	public void initializeWithOptions(HashMap<String, String> optionValueMap);
+	
 	public void close();
 	public void doTimeStep();
+	
+	public StateData getStateData();
+	public void updateStateData(StateData stateData);
 	
 	public HashMap<String, Agent> addAgents(ArrayList<Pair<Agent, Integer>> agentList);
 	public void addAgent(Agent agent, String routeID, int tick);
