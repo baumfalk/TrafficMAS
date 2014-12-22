@@ -1,4 +1,4 @@
-package nl.uu.trafficmas;
+package nl.uu.trafficmas.simulationmodel;
 
 import it.polito.appeal.traci.SumoTraciConnection;
 
@@ -12,6 +12,7 @@ import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.agent.AgentPhysical;
 import nl.uu.trafficmas.agent.AgentProfileType;
 import nl.uu.trafficmas.agent.actions.AgentAction;
+import nl.uu.trafficmas.datamodel.Pair;
 import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Lane;
 import nl.uu.trafficmas.roadnetwork.Road;

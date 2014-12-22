@@ -7,7 +7,7 @@ import static org.junit.Assert.fail;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import nl.uu.trafficmas.DataModelXML;
+import nl.uu.trafficmas.datamodel.DataModelXML;
 import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.LaneType;
 import nl.uu.trafficmas.roadnetwork.Node;

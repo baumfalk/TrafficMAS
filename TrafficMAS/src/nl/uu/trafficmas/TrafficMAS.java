@@ -9,9 +9,16 @@ import nl.uu.trafficmas.agent.AgentPhysical;
 import nl.uu.trafficmas.agent.AgentProfileType;
 import nl.uu.trafficmas.agent.AgentType;
 import nl.uu.trafficmas.agent.actions.AgentAction;
+import nl.uu.trafficmas.datamodel.DataModel;
+import nl.uu.trafficmas.datamodel.DataModelXML;
+import nl.uu.trafficmas.datamodel.Pair;
 import nl.uu.trafficmas.organisation.Organisation;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
+import nl.uu.trafficmas.simulationmodel.SimulationModel;
+import nl.uu.trafficmas.simulationmodel.SimulationModelTraaS;
+import nl.uu.trafficmas.view.TrafficView;
+import nl.uu.trafficmas.view.TrafficViewConsole;
 
 public class TrafficMAS {
 	public static void main(String[] args) {

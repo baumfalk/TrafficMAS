@@ -1,7 +1,7 @@
 package nl.uu.trafficmas.tests;
 
 import static org.junit.Assert.*;
-import nl.uu.trafficmas.DataModelXML;
+import nl.uu.trafficmas.datamodel.DataModelXML;
 import nl.uu.trafficmas.roadnetwork.Road;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 

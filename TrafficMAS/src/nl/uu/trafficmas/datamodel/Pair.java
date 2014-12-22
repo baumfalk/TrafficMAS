@@ -1,4 +1,4 @@
-package nl.uu.trafficmas;
+package nl.uu.trafficmas.datamodel;
 
 public class Pair<First,Second> {
 	public final First first;

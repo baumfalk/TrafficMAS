@@ -1,4 +1,4 @@
-package nl.uu.trafficmas;
+package nl.uu.trafficmas.datamodel;
 
 import java.io.FileInputStream;
 import java.io.InputStream;

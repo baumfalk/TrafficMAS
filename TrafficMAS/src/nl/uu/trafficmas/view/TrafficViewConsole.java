@@ -1,4 +1,4 @@
-package nl.uu.trafficmas;
+package nl.uu.trafficmas.view;
 
 import java.util.ArrayList;
 
