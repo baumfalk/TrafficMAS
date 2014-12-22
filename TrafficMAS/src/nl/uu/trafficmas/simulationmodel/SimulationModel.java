@@ -1,4 +1,4 @@
-package nl.uu.trafficmas;
+package nl.uu.trafficmas.simulationmodel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,6 +6,7 @@ import java.util.HashMap;
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.agent.AgentPhysical;
 import nl.uu.trafficmas.agent.actions.AgentAction;
+import nl.uu.trafficmas.datamodel.Pair;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 
 public interface SimulationModel {

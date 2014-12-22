@@ -5,7 +5,7 @@ import it.polito.appeal.traci.SumoTraciConnection;
 
 import java.util.HashMap;
 
-import nl.uu.trafficmas.SimulationModelTraaS;
+import nl.uu.trafficmas.simulationmodel.SimulationModelTraaS;
 
 import org.junit.Test;
 

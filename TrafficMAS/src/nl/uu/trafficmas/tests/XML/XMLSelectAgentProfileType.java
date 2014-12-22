@@ -4,9 +4,9 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
-import nl.uu.trafficmas.DataModelXML;
-import nl.uu.trafficmas.Pair;
 import nl.uu.trafficmas.agent.AgentProfileType;
+import nl.uu.trafficmas.datamodel.DataModelXML;
+import nl.uu.trafficmas.datamodel.Pair;
 
 import org.junit.Test;
 

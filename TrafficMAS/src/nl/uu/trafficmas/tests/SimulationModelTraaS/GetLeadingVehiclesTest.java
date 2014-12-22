@@ -7,15 +7,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
-import nl.uu.trafficmas.DataModelXML;
-import nl.uu.trafficmas.Pair;
-import nl.uu.trafficmas.SimulationModelTraaS;
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.agent.AgentPhysical;
 import nl.uu.trafficmas.agent.AgentProfileType;
 import nl.uu.trafficmas.agent.NormalAgent;
+import nl.uu.trafficmas.datamodel.DataModelXML;
+import nl.uu.trafficmas.datamodel.Pair;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
+import nl.uu.trafficmas.simulationmodel.SimulationModelTraaS;
 
 import org.junit.Test;
 

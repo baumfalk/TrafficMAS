@@ -1,4 +1,4 @@
-package nl.uu.trafficmas;
+package nl.uu.trafficmas.datamodel;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -2,7 +2,7 @@ package nl.uu.trafficmas.tests.SimulationModelTraaS;
 
 import static org.junit.Assert.assertEquals;
 import it.polito.appeal.traci.SumoTraciConnection;
-import nl.uu.trafficmas.SimulationModelTraaS;
+import nl.uu.trafficmas.simulationmodel.SimulationModelTraaS;
 
 import org.junit.Test;
 

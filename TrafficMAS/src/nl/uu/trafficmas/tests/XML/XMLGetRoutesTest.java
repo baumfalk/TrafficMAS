@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
-import nl.uu.trafficmas.DataModelXML;
+import nl.uu.trafficmas.datamodel.DataModelXML;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
 
