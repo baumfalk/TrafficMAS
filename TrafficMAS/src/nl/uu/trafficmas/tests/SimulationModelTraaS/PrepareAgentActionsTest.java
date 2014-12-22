@@ -53,10 +53,6 @@ public class PrepareAgentActionsTest {
 		Agent a2 = completeAgentMap.get("Agent 3");
 		try {
 			
-			// Disable automatic SUMO overtaking, but enable automatic right drive changes.
-			//conn.do_job_set(Vehicle.setLaneChangeMode(a1.agentID, 0b0001000000));
-			//conn.do_job_set(Vehicle.setLaneChangeMode(a2.agentID, 0b0001000000));
-			
 			// Reduce velocity of front car, so a2 can execute an overtaking action.
 			conn.do_job_set(Vehicle.setSpeed(a1.agentID, agent1Speed));
 			conn.do_job_set(Vehicle.setColor(a2.agentID, colorHotShot));
