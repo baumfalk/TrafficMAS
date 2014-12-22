@@ -40,7 +40,9 @@ public class PrepareAgentActionsTest {
 		RoadNetwork rn = DataModelXML.instantiateRoadNetwork("tests/", "NodeTest.xml", "EdgeTest.xml");
 		ArrayList<Route> routes = DataModelXML.getRoutes(rn, "tests/", "RouteTest.xml");
 		ArrayList<Pair<AgentProfileType, Double>> dist = DataModelXML.getAgentProfileTypeDistribution("tests/", "AgentProfileTypesTest.xml");
-		SumoColor color = new SumoColor(255,0,0,255);
+		SumoColor colorHotShot = new SumoColor(255,0,0,255);
+		SumoColor colorOldLady = new SumoColor(0,255,0,255);
+		
 		
 		double agentSpawnProb = 0.5;
 		ArrayList<Pair<Agent, Integer>> agentPairList = DataModelXML.instantiateAgents(random, routes, simLength, agentSpawnProb, dist);
@@ -57,7 +59,8 @@ public class PrepareAgentActionsTest {
 			
 			// Reduce velocity of front car, so a2 can execute an overtaking action.
 			conn.do_job_set(Vehicle.setSpeed(a1.agentID, agent1Speed));
-			conn.do_job_set(Vehicle.setColor(a2.agentID, color ));
+			conn.do_job_set(Vehicle.setColor(a2.agentID, colorHotShot));
+			conn.do_job_set(Vehicle.setColor(a1.agentID, colorOldLady ));
 
 			int i = 0;
 			// Let some time pass so both agents are spawned and moving
@@ -71,6 +74,7 @@ public class PrepareAgentActionsTest {
 			
 			// Testing action ChangeLane
 			AgentAction changeLaneAction = AgentAction.ChangeLane;
+			
 			actions.put(a2.agentID, changeLaneAction);
 			SimulationModelTraaS.prepareAgentActions(actions, currentAgentMap, conn);
 			
