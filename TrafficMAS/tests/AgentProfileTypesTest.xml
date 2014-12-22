@@ -1,5 +1,5 @@
-<agents spawn-probability ="0.6">
-	<agent role="PregnantWoman" dist="0.8"/>
+<agents spawn-probability ="0.01">
+	<agent role="PregnantWoman" dist="0.05"/>
 	<agent role="OldLady" dist="0.2"/>
-	<!-- <agent role="Normal" dist="0.75"/>-->
+	<agent role="Normal" dist="0.75"/>
 </agents>
