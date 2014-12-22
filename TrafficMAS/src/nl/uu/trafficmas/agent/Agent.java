@@ -18,6 +18,7 @@ public abstract class Agent extends AgentPhysical {
 	private Edge[] currentRoute;
 	private ArrayList<Double> expectedTravelTimePerRoad;
 	private double maxComfySpeed;
+	private AgentProfileType agentProfileType;
 	
 	public final static double DEFAULT_MAX_SPEED = 20;
 	
@@ -38,15 +39,22 @@ public abstract class Agent extends AgentPhysical {
 		return Math.max(0,Math.min(1, utility));
 	}
 	
-	public Agent(String agentID,Node goalNode,Edge[] routeEdges, int goalArrivalTime, double maxSpeed, double maxComfySpeed){
+	public AgentProfileType getAgentType(){
+
+		return agentProfileType;
+	}
+	
+	public Agent(String agentID,Node goalNode,Edge[] routeEdges, int goalArrivalTime, double maxSpeed, AgentProfileType agentProfileType, double maxComfySpeed){
 		super(agentID);
-		this.goalNode 			= goalNode;
-		this.goalArrivalTime 	= goalArrivalTime;
-		this.maxSpeed			= maxSpeed;
-		this.maxComfySpeed 		= maxComfySpeed;
-		this.expectedArrivalTime 	= goalArrivalTime;
-		this.currentRoute = routeEdges;
-		this.expectedTravelTimePerRoad = new ArrayList<>();
+		this.goalNode 					= goalNode;
+		this.goalArrivalTime 			= goalArrivalTime;
+		this.maxSpeed					= maxSpeed;
+		this.maxComfySpeed 				= maxComfySpeed;
+		this.expectedArrivalTime 		= goalArrivalTime;
+		this.currentRoute 				= routeEdges;
+		this.agentProfileType 			= agentProfileType;
+		this.expectedTravelTimePerRoad 	= new ArrayList<>();
+		
 		for(Edge edge : routeEdges) {
 			double time = edge.getRoad().length/maxComfySpeed;
 			expectedTravelTimePerRoad.add(time);
@@ -67,9 +75,9 @@ public abstract class Agent extends AgentPhysical {
 		}
 		
 		for(AgentAction action : AgentAction.values()) {
-			int time = action.getTime(currentTime, this.lane.getMeanTravelTime(), this.distance, this.road.length, currentRoadID, expectedTravelTimePerRoad);
-			ArrayList<Sanction> sanctions = action.getSanctions();
-			double newUtility = utility(time, sanctions);
+			int time 						= action.getTime(currentTime, this.lane.getMeanTravelTime(), this.distance, this.road.length, currentRoadID, expectedTravelTimePerRoad);
+			ArrayList<Sanction> sanctions 	= action.getSanctions();
+			double newUtility 				= utility(time, sanctions);
 			if(newUtility > bestUtility) {
 				bestAction = action;
 				bestUtility = newUtility; 

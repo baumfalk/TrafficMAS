@@ -5,12 +5,11 @@ import java.util.ArrayList;
 import nl.uu.trafficmas.organisation.Sanction;
 import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Node;
-import nl.uu.trafficmas.roadnetwork.Road;
 
 public class NormalAgent extends Agent {
 
 	public NormalAgent(String agentID, Node goalNode, Edge[] routeEdges, int goalArrivalTime, double maxSpeed, double maxComfySpeed) {
-		super(agentID, goalNode, routeEdges, goalArrivalTime, maxSpeed,maxComfySpeed);
+		super(agentID, goalNode, routeEdges, goalArrivalTime, maxSpeed, AgentProfileType.Normal,maxComfySpeed);
 	}
 	
 	@Override

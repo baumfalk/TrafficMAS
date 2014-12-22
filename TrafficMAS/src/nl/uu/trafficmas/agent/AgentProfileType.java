@@ -1,10 +1,7 @@
 package nl.uu.trafficmas.agent;
 
-import java.util.ArrayList;
-
 import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Node;
-import nl.uu.trafficmas.roadnetwork.Road;
 
 public enum AgentProfileType {
 	Normal,
