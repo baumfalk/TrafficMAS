@@ -9,7 +9,7 @@ import nl.uu.trafficmas.roadnetwork.Node;
 public class OldLadyAgent extends Agent {
 
 	public OldLadyAgent(String agentID, Node goalNode, Edge[] route, int goalArrivalTime, double maxSpeed,double maxComfySpeed) {
-		super(agentID, goalNode, route, goalArrivalTime, maxSpeed,maxComfySpeed);
+		super(agentID, goalNode, route, goalArrivalTime, maxSpeed, AgentProfileType.OldLady,maxComfySpeed);
 	}
 
 

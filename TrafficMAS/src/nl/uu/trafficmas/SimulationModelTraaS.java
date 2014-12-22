@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import nl.uu.trafficmas.agent.Agent;
+import nl.uu.trafficmas.agent.AgentPhysical;
+import nl.uu.trafficmas.agent.AgentProfileType;
 import nl.uu.trafficmas.agent.actions.AgentAction;
 import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Lane;
@@ -17,6 +19,7 @@ import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import de.tudresden.sumo.cmd.Simulation;
 import de.tudresden.sumo.cmd.Vehicle;
 import de.tudresden.sumo.util.SumoCommand;
+import de.tudresden.ws.container.SumoColor;
 import de.tudresden.ws.container.SumoStringList;
 
 public class SimulationModelTraaS implements SimulationModel {
@@ -114,6 +117,7 @@ public class SimulationModelTraaS implements SimulationModel {
 			cmds.add(Vehicle.setLaneChangeMode(agentPair.first.agentID, 0b0001000000));
 			cmds.add(Vehicle.setSpeedMode(agentPair.first.agentID, 0b00000));
 			completeAgentMap.put(agentPair.first.agentID, agentPair.first);
+		
 		}
 		try {
 			conn.do_jobs_set(cmds);
