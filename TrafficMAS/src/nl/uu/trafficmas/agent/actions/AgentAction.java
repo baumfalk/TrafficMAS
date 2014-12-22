@@ -13,11 +13,11 @@ public enum AgentAction {
 	
 	
 	
-	public int getTime(int currentTime, double meanSpeedNextLane, double currentPos, double laneLength, ArrayList<Double> meanTimeForRouteRoads){ 
+	public int getTime(int currentTime, double meanTravelTimeNextLane, double currentPos, double laneLength, int currentRoadID, ArrayList<Double> meanTimeForRouteRoads){ 
 		int time;
 		switch(this) {
 		case ChangeLane:
-			time = getChangeLaneTime(currentTime, meanSpeedNextLane,currentPos,laneLength,meanTimeForRouteRoads);
+			time = getChangeLaneTime(currentTime, meanTravelTimeNextLane,currentPos,laneLength,currentRoadID,meanTimeForRouteRoads);
 			break;
 		case ChangeRoad:
 			time = getChangeRoadTime();
@@ -50,10 +50,10 @@ public enum AgentAction {
 			sanctions = getChangeVelocitySanctions(5);
 			break;
 		case ChangeVelocity10:
-			sanctions = getChangeVelocitySanctions(5);
+			sanctions = getChangeVelocitySanctions(10);
 			break;
 		case ChangeVelocity20:
-			sanctions = getChangeVelocitySanctions(5);
+			sanctions = getChangeVelocitySanctions(20);
 			break;
 		default:
 			sanctions = null;
@@ -63,29 +63,6 @@ public enum AgentAction {
 		return sanctions;
 	}
 	
-	public String getName(){
-		String name;
-		switch(this) {
-		case ChangeLane:
-			name = "ChangeLane";
-			break;
-		case ChangeRoad:
-			name = "ChangeRoad";
-			break;
-		case ChangeVelocity5:
-			name = "ChangeVelocity5";
-			break;
-		case ChangeVelocity10:
-			name = "ChangeVelocity10";
-			break;
-		case ChangeVelocity20:
-			name = "ChangeVelocity20";
-			break;
-		default:
-			name = "No action";
-		}
-		return name;
-	}
 	
 	private ArrayList<Sanction> getChangeLaneSanctions() {
 		// TODO Auto-generated method stub
@@ -112,13 +89,14 @@ public enum AgentAction {
 		return Integer.MAX_VALUE;
 	}
 
-	private int getChangeLaneTime(int currentTime, double meanSpeedNextLane, double currentPos, double laneLength, ArrayList<Double> meanTimeForRouteRoads) {
+	private int getChangeLaneTime(int currentTime, double meanTravelTimeNextLane, double currentPos, double laneLength, int currentRoadID, ArrayList<Double> meanTimeForRouteRoads) {
 		
 		double finishTime = currentTime;
+		double meanSpeedNextLane = laneLength/meanTravelTimeNextLane;
 		double timeSpentOnNextLane = (laneLength-currentPos)/meanSpeedNextLane;
 		finishTime += timeSpentOnNextLane;
-		for(Double timeOnEdge : meanTimeForRouteRoads) {
-			finishTime += timeOnEdge;
+		for(int i = currentRoadID; i < meanTimeForRouteRoads.size(); i++) {
+			finishTime += meanTimeForRouteRoads.get(i);
 		}
 		
 		return (int) Math.round(finishTime);

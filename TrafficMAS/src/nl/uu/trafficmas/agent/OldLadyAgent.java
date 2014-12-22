@@ -8,8 +8,8 @@ import nl.uu.trafficmas.roadnetwork.Node;
 
 public class OldLadyAgent extends Agent {
 
-	public OldLadyAgent(String agentID, Node goalNode, Edge[] route, int goalArrivalTime, double maxSpeed) {
-		super(agentID, goalNode, route, goalArrivalTime, maxSpeed, AgentProfileType.OldLady);
+	public OldLadyAgent(String agentID, Node goalNode, Edge[] route, int goalArrivalTime, double maxSpeed,double maxComfySpeed) {
+		super(agentID, goalNode, route, goalArrivalTime, maxSpeed, AgentProfileType.OldLady,maxComfySpeed);
 	}
 
 
@@ -24,12 +24,4 @@ public class OldLadyAgent extends Agent {
 		
 		return Math.max(0,Math.min(1, utility));
 	}
-
-
-	@Override
-	public int goalArrivalTime(int startTime, int minimalTravelTime) {
-		// Old lady isn't in a hurry!
-		return startTime + minimalTravelTime*3;
-	}
-
 }
