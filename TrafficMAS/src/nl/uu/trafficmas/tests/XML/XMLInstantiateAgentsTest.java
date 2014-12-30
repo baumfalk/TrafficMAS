@@ -3,6 +3,7 @@ package nl.uu.trafficmas.tests.XML;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 import nl.uu.trafficmas.agent.Agent;
@@ -21,11 +22,11 @@ public class XMLInstantiateAgentsTest {
 		Random random = new Random(1337);
 		RoadNetwork rn = DataModelXML.instantiateRoadNetwork("tests/", "NodeTest.xml", "EdgeTest.xml");
 		ArrayList<Route> routes = DataModelXML.getRoutes(rn, "tests/", "RouteTest.xml");
-		ArrayList<Pair<AgentProfileType, Double>> dist = DataModelXML.getAgentProfileTypeDistribution("tests/", "AgentProfileTypesTest.xml");
+		HashMap<AgentProfileType, Double> dist = DataModelXML.getAgentProfileTypeDistribution("tests/", "AgentProfileTypesTest.xml");
 
 		int simulationLength = 10;
 		double agentSpawnProb = 0;
-		ArrayList<Pair<Agent, Integer>> lst = DataModelXML.instantiateAgents(random, routes, simulationLength, agentSpawnProb, dist);
+		HashMap<Agent, Integer> lst = DataModelXML.instantiateAgents(random, routes, simulationLength, agentSpawnProb, dist);
 		assertEquals(lst.size(),0);
 		
 		simulationLength = 20;
@@ -37,7 +38,5 @@ public class XMLInstantiateAgentsTest {
 		agentSpawnProb = 0.5;
 		lst = DataModelXML.instantiateAgents(random, routes, simulationLength, agentSpawnProb, dist);
 		assertEquals(lst.size(),98); //always 98 with this seed
-		 	
 	}
-
 }

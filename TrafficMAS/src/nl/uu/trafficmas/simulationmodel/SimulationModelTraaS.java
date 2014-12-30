@@ -105,20 +105,19 @@ public class SimulationModelTraaS implements SimulationModel {
 	}
 	
 	@Override
-	public HashMap<String, Agent> addAgents(ArrayList<Pair<Agent, Integer>> agentPairList) {
+	public HashMap<String, Agent> addAgents(HashMap<Agent, Integer> agentPairList) {
 		
 		return addAgents(agentPairList, conn);
 	}
 	//TODO: Implement routes.
-	public static HashMap<String, Agent> addAgents(ArrayList<Pair<Agent, Integer>> agentPairList, SumoTraciConnection conn){
+	public static HashMap<String, Agent> addAgents(HashMap<Agent, Integer> agentPairList, SumoTraciConnection conn){
 		HashMap<String, Agent> completeAgentMap = new HashMap<String, Agent>();
 		ArrayList<SumoCommand> cmds = new ArrayList<>();
-		for(Pair<Agent, Integer> agentPair : agentPairList){
-			cmds.add(addAgentCommand(agentPair.first, "route0", agentPair.second));
-			cmds.add(Vehicle.setLaneChangeMode(agentPair.first.agentID, 0b0001000000));
-			cmds.add(Vehicle.setSpeedMode(agentPair.first.agentID, 0b00000));
-			completeAgentMap.put(agentPair.first.agentID, agentPair.first);
-		
+		for( Entry<Agent, Integer> agentPair : agentPairList.entrySet()){
+			cmds.add(addAgentCommand(agentPair.getKey(), "route0", agentPair.getValue()));
+			cmds.add(Vehicle.setLaneChangeMode(agentPair.getKey().agentID, 0b0001000000));
+			cmds.add(Vehicle.setSpeedMode(agentPair.getKey().agentID, 0b00000));
+			completeAgentMap.put(agentPair.getKey().agentID, agentPair.getKey());
 		}
 		try {
 			conn.do_jobs_set(cmds);
@@ -367,10 +366,40 @@ public class SimulationModelTraaS implements SimulationModel {
 
 	@Override
 	public StateData getStateData() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return getStateData(conn);
 	}
 
+	public static StateData getStateData(SumoTraciConnection conn) {
+		StateData stateData = null;
+		QueryBuilder qb = new QueryBuilder();
+		qb.addQuerySubject(QuerySubject.Vehicle);
+		qb.addQuerySubject(QuerySubject.Edge);
+		qb.addQuerySubject(QuerySubject.Lane);
+
+		qb.addQueryField(QuerySubject.Vehicle, QueryField.Position);
+		qb.addQueryField(QuerySubject.Vehicle, QueryField.Speed);
+		qb.addQueryField(QuerySubject.Vehicle, QueryField.LeadingVehicle);
+		qb.addQueryField(QuerySubject.Vehicle, QueryField.LaneId);
+
+		qb.addQueryField(QuerySubject.Edge, QueryField.MeanSpeed);
+		qb.addQueryField(QuerySubject.Edge, QueryField.MeanTime);
+		
+		qb.addQueryField(QuerySubject.Lane, QueryField.MeanSpeed);
+		qb.addQueryField(QuerySubject.Edge, QueryField.MeanTime);
+		qb.addQueryField(QuerySubject.Edge, QueryField.EdgeId);
+
+		try {
+			qb.executeQuery(conn);
+			stateData = qb.getStateData();
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		return stateData;
+	}
+	
 	@Override
 	public void updateStateData(StateData stateData) {
 		// TODO Auto-generated method stub

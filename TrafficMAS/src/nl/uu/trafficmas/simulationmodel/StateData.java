@@ -2,7 +2,7 @@ package nl.uu.trafficmas.simulationmodel;
 
 import java.util.HashMap;
 
-public class StateData {
+public class StateData implements Data {
 	public final HashMap<String, AgentData> agentsData;
 	public final HashMap<String, EdgeData> edgesData;
 	public final HashMap<String, LaneData> lanesData;

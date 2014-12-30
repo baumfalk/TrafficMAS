@@ -2,6 +2,9 @@ package nl.uu.trafficmas.datamodel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 
 import nl.uu.trafficmas.agent.Agent;
@@ -182,13 +185,13 @@ public class DataModelXML implements DataModel {
 	
 
 	@Override
-	public HashMap<AgentProfileType, Double> getAgentProfileTypeDistribution() {
+	public LinkedHashMap<AgentProfileType, Double> getAgentProfileTypeDistribution() {
 		return getAgentProfileTypeDistribution(dir,agentProfilesXML);
 	}
 	
-	public static HashMap<AgentProfileType, Double> getAgentProfileTypeDistribution(String dir, String agentProfilesXML) {
+	public static LinkedHashMap<AgentProfileType, Double> getAgentProfileTypeDistribution(String dir, String agentProfilesXML) {
 		ArrayList<ArrayList<Pair<String, String>>> agentAttributes = SimpleXMLReader.extractFromXML(dir, agentProfilesXML,"agent");
-		HashMap<AgentProfileType, Double> agentTypeAndDist = new HashMap<AgentProfileType, Double>();
+		LinkedHashMap<AgentProfileType, Double> agentTypeAndDist = new LinkedHashMap<AgentProfileType, Double>();
 		for(ArrayList<Pair<String, String>> attributes : agentAttributes) {
 			String type = null;
 			String dist = null;
@@ -200,7 +203,6 @@ public class DataModelXML implements DataModel {
 					dist = attribute.second;
 				}
 			}
-			
 			
 			AgentProfileType agentType = AgentProfileType.valueOf(type);
 			double distVal = Double.parseDouble(dist);
@@ -230,13 +232,13 @@ public class DataModelXML implements DataModel {
 		return simulationLength;
 	}
 	
-	public static ArrayList<Pair<Agent, Integer>> instantiateAgents(Random rng, ArrayList<Route> routes, int simulationLength, double agentSpawnProbability, ArrayList<Pair<AgentProfileType, Double>> agentProfileDistribution) {
-		ArrayList<Pair<Agent, Integer>> agentsAndTimes = new ArrayList<Pair<Agent,Integer>>(); 
+	public static HashMap<Agent, Integer> instantiateAgents(Random rng, ArrayList<Route> routes, int simulationLength, double agentSpawnProbability, HashMap<AgentProfileType, Double> dist) {
+		HashMap<Agent, Integer> agentsAndTimes = new HashMap<Agent, Integer>(); 
 		for (int i = 1; i <= simulationLength; i++) {
 			double coinFlip = rng.nextDouble();
 			if(coinFlip < agentSpawnProbability) {
 				coinFlip = rng.nextDouble();
-				AgentProfileType agentProfileType = selectAgentProfileType(coinFlip, agentProfileDistribution);
+				AgentProfileType agentProfileType = selectAgentProfileType(coinFlip, dist);
 				
 				int currentTime = i;
 				int minimalTravelTime = 0;
@@ -249,19 +251,20 @@ public class DataModelXML implements DataModel {
 				
 				Node goalNode = routeEdges[routeEdges.length-1].getToNode();
 				Agent agent = agentProfileType.toAgent(Agent.getNextAgentID(), goalNode, routeEdges,  goalArrivalTime, Agent.DEFAULT_MAX_SPEED); //TODO: change this default max speed
-				agentsAndTimes.add(new Pair<Agent,Integer>(agent,i*1000)); //*1000 because sumo counts in ms, not s.
+				agentsAndTimes.put(agent,i*1000); //*1000 because sumo counts in ms, not s.
 			}
 		}
 		
 		return agentsAndTimes;
 	}
 	
-	public static AgentProfileType selectAgentProfileType(double coinFlip, ArrayList<Pair<AgentProfileType, Double>> agentProfileDistribution) {
-		for(Pair<AgentProfileType, Double> pair : agentProfileDistribution) {
-			if(coinFlip < pair.second) {
-				return pair.first;
+	public static AgentProfileType selectAgentProfileType(double coinFlip, HashMap<AgentProfileType, Double> dist) {
+	
+		for( Entry<AgentProfileType, Double> pair : dist.entrySet()) {
+			if(coinFlip < pair.getValue()) {
+				return pair.getKey();
 			}
-			coinFlip -= pair.second;
+			coinFlip -= pair.getValue();
 		}
 		
 		return null;
