@@ -19,7 +19,7 @@ public interface SimulationModel {
 	public StateData getStateData();
 	public void updateStateData(StateData stateData);
 	
-	public HashMap<String, Agent> addAgents(ArrayList<Pair<Agent, Integer>> agentList);
+	public HashMap<String, Agent> addAgents(HashMap<Agent, Integer> agentPairList);
 	public void addAgent(Agent agent, String routeID, int tick);
 
 	public HashMap<String, Agent> updateCurrentAgentMap(HashMap<String, Agent> completeAgentMap, HashMap<String, Agent> oldAgentMap);

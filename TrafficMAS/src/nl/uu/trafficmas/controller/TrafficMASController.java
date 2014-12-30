@@ -23,7 +23,7 @@ public class TrafficMASController {
 	private TrafficView view;
 
 	private RoadNetwork roadNetwork;
-	private ArrayList<Pair<Agent,Integer>> agentsAndTime;
+	private HashMap<Agent, Integer> agentsAndTime;
 	private ArrayList<Organisation> organisations;
 	private double agentSpawnProbability;
 	private ArrayList<Pair<AgentProfileType, Double>> agentTypeDistribution;
@@ -55,23 +55,9 @@ public class TrafficMASController {
 		this.setupView();
 		
 		this.currentAgentMap = new HashMap<String, Agent>();
-
-		agentsAndTime = new ArrayList<Pair<Agent,Integer>>();
-		SimulationLength = this.dataModel.getSimulationLength();
-		agentSpawnProbability = this.dataModel.getAgentSpawnProbability();
-		agentTypeDistribution = this.dataModel.getAgentProfileTypeDistribution();
-		SimulationLength = this.dataModel.getSimulationLength();
 		
 		routes = this.dataModel.getRoutes(roadNetwork);
-		agentsAndTime = this.dataModel.instantiateAgents(rng,routes);
-		organisations = this.dataModel.instantiateOrganisations();
 		
-		//Start TraaS with options
-		HashMap<String, String> optionValueMap = new HashMap<String, String>();
-		optionValueMap.put("e", Integer.toString(SimulationLength));
-		optionValueMap.put("start", "1");
-		optionValueMap.put("quit-on-end", "1");
-		this.simulationModel.initializeWithOptions(optionValueMap);
 		
 		completeAgentMap = this.simulationModel.addAgents(agentsAndTime);
 
@@ -84,10 +70,12 @@ public class TrafficMASController {
 		int i = 0;
 
 		while(i++ < SimulationLength) {
-			this.updateMAS();
-			StateData stateData = this.nextMASState();
-			this.updateSimulation(stateData);
-			this.nextSimulationState();
+			StateData simulationStateData = this.nextSimulationState();
+			this.updateMAS(simulationStateData);
+			
+			StateData MASStateData = this.nextMASState();
+			this.updateSimulation(MASStateData);
+			
 			this.updateView();
 			System.out.println(i);
 			/*for(Pair<Agent, Integer> val : agentsAndTime) {
@@ -121,12 +109,12 @@ public class TrafficMASController {
 	}
 	
 	private void readData() {
-		roadNetwork = this.dataModel.getRoadNetwork();
-		routes = this.dataModel.getRoutes(roadNetwork);
 		masData = this.dataModel.getMASData();
 	}
 	
 	private void setupMAS() {
+		roadNetwork = this.dataModel.getRoadNetwork();
+		routes = this.dataModel.getRoutes(roadNetwork);
 		this.instantiateAgents();
 		this.instantiateOrganisations();
 	}
@@ -141,11 +129,10 @@ public class TrafficMASController {
 	}
 	
 	private void setupView() {
-		this.view = view;
 		view.initialize();
 	}
 	
-	private void updateMAS() {
+	private void updateMAS(StateData simulationStateData) {
 		
 	}
 	
@@ -157,8 +144,9 @@ public class TrafficMASController {
 		this.simulationModel.updateStateData(stateData);
 	}
 	
-	private void nextSimulationState() {
+	private StateData nextSimulationState() {
 		this.simulationModel.doTimeStep();
+		return null;
 	}
 	
 	private void updateView() {

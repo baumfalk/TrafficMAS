@@ -3,6 +3,7 @@ package nl.uu.trafficmas.tests.XML;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import nl.uu.trafficmas.agent.AgentProfileType;
 import nl.uu.trafficmas.datamodel.DataModelXML;
@@ -14,7 +15,7 @@ public class XMLSelectAgentProfileType {
 
 	@Test
 	public void test() {
-		ArrayList<Pair<AgentProfileType, Double>> dist = DataModelXML.getAgentProfileTypeDistribution("tests/", "AgentProfileTypesTest.xml");
+		HashMap<AgentProfileType, Double> dist = DataModelXML.getAgentProfileTypeDistribution("tests/", "AgentProfileTypesTest.xml");
 		double coinFlip = 0.04;
 		AgentProfileType agentType = DataModelXML.selectAgentProfileType(coinFlip, dist);
 		assertEquals(agentType, AgentProfileType.PregnantWoman);
