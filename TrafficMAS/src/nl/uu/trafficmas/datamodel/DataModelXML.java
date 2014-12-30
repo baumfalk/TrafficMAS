@@ -233,7 +233,7 @@ public class DataModelXML implements DataModel {
 	}
 	
 	public static HashMap<Agent, Integer> instantiateAgents(Random rng, ArrayList<Route> routes, int simulationLength, double agentSpawnProbability, HashMap<AgentProfileType, Double> dist) {
-		HashMap<Agent, Integer> agentsAndTimes = new HashMap<Agent, Integer>(); 
+		HashMap<Agent, Integer> agentsAndTimes = new LinkedHashMap<Agent, Integer>(); 
 		for (int i = 1; i <= simulationLength; i++) {
 			double coinFlip = rng.nextDouble();
 			if(coinFlip < agentSpawnProbability) {

@@ -11,7 +11,7 @@ public enum QuerySubject {
 	Lane,
 	Edge;
 
-	public boolean hasField(QueryField sf) {
+	public boolean hasField(QueryField sf) throws Exception {
 		boolean hasField = false;
 		switch(this) {
 		case Edge:
@@ -28,7 +28,7 @@ public enum QuerySubject {
 		return hasField;
 	}
 
-	private boolean hasFieldEdge(QueryField sf) {
+	private boolean hasFieldEdge(QueryField sf) throws Exception {
 		boolean hasField = false;
 		switch(sf) {
 		case EdgeId:
@@ -49,11 +49,16 @@ public enum QuerySubject {
 		case LeadingVehicle:
 			hasField = false;
 			break;
+		case LaneId:
+			hasField = false;
+			break;
+		default:
+			throw new Exception("Case not handled!");	
 		}
 		return hasField;
 	}
 
-	private boolean hasFieldLane(QueryField sf) {
+	private boolean hasFieldLane(QueryField sf) throws Exception {
 		boolean hasField = false;
 		switch(sf) {
 		case EdgeId:
@@ -74,11 +79,16 @@ public enum QuerySubject {
 		case LeadingVehicle:
 			hasField = false;
 			break;
+		case LaneId:
+			hasField = false;
+			break;
+		default:
+			throw new Exception("Case not handled!");	
 		}
 		return hasField;
 	}
 
-	private boolean hasFieldVehicle(QueryField sf) {
+	private boolean hasFieldVehicle(QueryField sf) throws Exception {
 		boolean hasField = false;
 		switch(sf) {
 		case EdgeId:
@@ -99,6 +109,11 @@ public enum QuerySubject {
 		case LeadingVehicle:
 			hasField = true;
 			break;
+		case LaneId:
+			hasField = true;
+			break;
+		default:
+			throw new Exception("Case not handled!");
 		}
 		return hasField;
 	}

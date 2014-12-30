@@ -377,19 +377,19 @@ public class SimulationModelTraaS implements SimulationModel {
 		qb.addQuerySubject(QuerySubject.Edge);
 		qb.addQuerySubject(QuerySubject.Lane);
 
-		qb.addQueryField(QuerySubject.Vehicle, QueryField.Position);
-		qb.addQueryField(QuerySubject.Vehicle, QueryField.Speed);
-		qb.addQueryField(QuerySubject.Vehicle, QueryField.LeadingVehicle);
-		qb.addQueryField(QuerySubject.Vehicle, QueryField.LaneId);
-
-		qb.addQueryField(QuerySubject.Edge, QueryField.MeanSpeed);
-		qb.addQueryField(QuerySubject.Edge, QueryField.MeanTime);
-		
-		qb.addQueryField(QuerySubject.Lane, QueryField.MeanSpeed);
-		qb.addQueryField(QuerySubject.Edge, QueryField.MeanTime);
-		qb.addQueryField(QuerySubject.Edge, QueryField.EdgeId);
-
 		try {
+			qb.addQueryField(QuerySubject.Vehicle, QueryField.Position);
+			qb.addQueryField(QuerySubject.Vehicle, QueryField.Speed);
+			qb.addQueryField(QuerySubject.Vehicle, QueryField.LeadingVehicle);
+			qb.addQueryField(QuerySubject.Vehicle, QueryField.LaneId);
+	
+			qb.addQueryField(QuerySubject.Edge, QueryField.MeanSpeed);
+			qb.addQueryField(QuerySubject.Edge, QueryField.MeanTime);
+			
+			qb.addQueryField(QuerySubject.Lane, QueryField.MeanSpeed);
+			qb.addQueryField(QuerySubject.Edge, QueryField.MeanTime);
+			qb.addQueryField(QuerySubject.Edge, QueryField.EdgeId);
+
 			qb.executeQuery(conn);
 			stateData = qb.getStateData();
 		} catch (Exception e1) {
