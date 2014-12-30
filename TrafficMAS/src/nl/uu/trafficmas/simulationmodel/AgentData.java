@@ -23,4 +23,17 @@ public class AgentData implements Data {
 		this.position = position;
 		this.speed = speed;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("ID: "+ id+"\r\n");
+		sb.append("Speed: "+ speed+"\r\n");
+		sb.append("Position: "+ position+"\r\n");
+		sb.append("LaneID: "+ laneID+"\r\n");
+		sb.append("LeaderID: "+ leaderId+"\r\n");
+		sb.append("LeaderDistance: "+ leaderDistance+"\r\n");
+
+		return sb.toString();
+	}
 }

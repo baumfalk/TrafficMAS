@@ -9,6 +9,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 import de.tudresden.sumo.util.SumoCommand;
+import de.tudresden.ws.container.SumoStringList;
 
 public class QueryBuilder {
 	private LinkedHashSet<QuerySubject> 	querySubjects;
@@ -51,7 +52,7 @@ public class QueryBuilder {
 		}
 	}
 	
-	public void addQueryField(QuerySubject sq, QueryField sf) {
+	public void addQueryField(QuerySubject sq, QueryField sf) throws Exception {
 		if(!querySubjects.contains(sq)) {
 			this.addQuerySubject(sq);
 		}
@@ -65,7 +66,7 @@ public class QueryBuilder {
 		ArrayList<SumoCommand> cmdList = new ArrayList<SumoCommand>();
 		cmdList.add(de.tudresden.sumo.cmd.Simulation.getCurrentTime());
 		for(QuerySubject querySubject : querySubjects) {
-			cmdList.add(querySubject.getIDCountCommand());
+			//cmdList.add(querySubject.getIDCountCommand());
 			cmdList.add(querySubject.getIDListCommand());
 		}
 		ArrayList<Object> responses = conn.do_jobs_get(cmdList);
@@ -122,13 +123,9 @@ public class QueryBuilder {
 		// how many ids are there for each subject,
 		// and what field do we need to retrieve for each id?
 		for(QuerySubject querySubject : querySubjects) {
-			int idCount 			= (int) responses.remove(0);
-			List<Object> subList 	= responses.subList(0, idCount);
-			List<String> idList = new ArrayList<String>();
-			for(Object o : subList) {
-				idList.add((String)o);
-			}
-			responses.subList(0, idCount).clear();
+			//SumoStringList s				= (SumoStringList) responses.remove(0);
+			SumoStringList subList 	= (SumoStringList) responses.remove(0);
+			List<String> idList = new ArrayList<String>(subList);
 			subjectIDs.put(querySubject, idList);
 			// prepare queries
 			for(String id : subjectIDs.get(querySubject)) {
