@@ -307,8 +307,8 @@ public class DataModelXML implements DataModel {
 	public MASData getMASData() {
 		int simulationLength 		= DataModelXML.simulationLength(dir, masXML);
 		String sumoConfigPath 		= this.sumoConfigXML;
-		double spawnProbability 	= DataModelXML.getAgentSpawnProbability(dir, masXML);
-		HashMap<AgentProfileType,Double> agentProfileTypeDistribution = DataModelXML.getAgentProfileTypeDistribution(dir, masXML);
+		double spawnProbability 	= DataModelXML.getAgentSpawnProbability(dir, this.agentProfilesXML);
+		HashMap<AgentProfileType,Double> agentProfileTypeDistribution = DataModelXML.getAgentProfileTypeDistribution(dir, agentProfilesXML);
 		
 		return new MASData(simulationLength, sumoConfigPath, spawnProbability, agentProfileTypeDistribution);
 	}
