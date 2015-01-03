@@ -34,7 +34,6 @@ public class TrafficMASController {
 	private ArrayList<Route> routes;
 	private HashMap<String, Agent> currentAgentMap;
 	private int SimulationLength;
-	private MASData masData;
 		
 	public TrafficMASController(DataModel dataModel,SimulationModel simulationModel, TrafficView view) {
 		this(dataModel,simulationModel,view,-1);
@@ -48,22 +47,19 @@ public class TrafficMASController {
 		}
 		this.dataModel = dataModel;
 		this.simulationModel = simulationModel;
-		
+		this.view = view;
 		this.readData();
 		this.setupMAS();
 		this.setupSimulation();
 		this.setupView();
-		
-		this.currentAgentMap = new HashMap<String, Agent>();
+		this.updateView();
+
+		/*this.currentAgentMap = new HashMap<String, Agent>();
 		
 		routes = this.dataModel.getRoutes(roadNetwork);
 		
-		
 		completeAgentMap = this.simulationModel.addAgents(agentsAndTime);
-
-		
-		this.view = view;
-		updateView();
+*/
 	}
 	
 	public void run() {
@@ -82,7 +78,7 @@ public class TrafficMASController {
 				if(val.second == i*1000) {
 					System.out.println(val.first.agentID + " is being added on " + i + "!" + "("+val.first.getClass().getCanonicalName() +")");
 				}
-			}*/
+			}
 			currentAgentMap = this.simulationModel.updateCurrentAgentMap(completeAgentMap, currentAgentMap);
 			roadNetwork = this.simulationModel.updateRoadNetwork(roadNetwork);
 			HashMap<String, Agent> agentMap = this.simulationModel.updateAgents(roadNetwork, currentAgentMap);
@@ -91,7 +87,7 @@ public class TrafficMASController {
 			HashMap<String, AgentAction> actions = getAgentActions(currentAgentMap, leadingVehicles, i);
 			
 			this.simulationModel.prepareAgentActions(actions, currentAgentMap);
-			this.simulationModel.doTimeStep();
+			this.simulationModel.doTimeStep();*/
 		}
 		this.cleanUp();
 	}
@@ -109,27 +105,32 @@ public class TrafficMASController {
 	}
 	
 	private void readData() {
-		masData = this.dataModel.getMASData();
+		dataModel.getMASData();
 	}
 	
 	private void setupMAS() {
-		roadNetwork = this.dataModel.getRoadNetwork();
-		routes = this.dataModel.getRoutes(roadNetwork);
-		this.instantiateAgents();
-		this.instantiateOrganisations();
+		roadNetwork = dataModel.getRoadNetwork();
+		routes = dataModel.getRoutes(roadNetwork);
+		this.instantiateAgents(dataModel);
+		this.instantiateOrganisations(dataModel);
 	}
 	
 	private void setupSimulation() {
+		// start the simulation
 		HashMap<String, String> optionValueMap = new HashMap<String, String>();
 		optionValueMap.put("e", Integer.toString(SimulationLength));
 		optionValueMap.put("start", "1");
 		optionValueMap.put("quit-on-end", "1");
 		this.simulationModel.initializeWithOptions(optionValueMap);
+		// add the agents
+		this.simulationModel.addAgents(agentsAndTime);
+		
+		
 		completeAgentMap = this.simulationModel.addAgents(agentsAndTime);
 	}
 	
 	private void setupView() {
-		view.initialize();
+		this.view.initialize();
 	}
 	
 	private void updateMAS(StateData simulationStateData) {
@@ -160,11 +161,11 @@ public class TrafficMASController {
 		this.simulationModel.close();
 	}
 	
-	private void instantiateAgents() {
+	private void instantiateAgents(DataModel dataModel) {
 		
 	}
 	
-	private void instantiateOrganisations() {
+	private void instantiateOrganisations(DataModel dataModel) {
 		
 	}
 }
