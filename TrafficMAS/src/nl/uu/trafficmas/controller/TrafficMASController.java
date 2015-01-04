@@ -2,6 +2,7 @@ package nl.uu.trafficmas.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.Random;
 
 import nl.uu.trafficmas.agent.Agent;
@@ -11,6 +12,8 @@ import nl.uu.trafficmas.datamodel.DataModel;
 import nl.uu.trafficmas.datamodel.MASData;
 import nl.uu.trafficmas.datamodel.Pair;
 import nl.uu.trafficmas.organisation.Organisation;
+import nl.uu.trafficmas.roadnetwork.Edge;
+import nl.uu.trafficmas.roadnetwork.Node;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
 import nl.uu.trafficmas.simulationmodel.SimulationModel;
@@ -53,6 +56,8 @@ public class TrafficMASController {
 		this.setupSimulation();
 		this.setupView();
 		this.updateView();
+		
+		
 
 		/*this.currentAgentMap = new HashMap<String, Agent>();
 		
@@ -161,9 +166,44 @@ public class TrafficMASController {
 		this.simulationModel.close();
 	}
 	
-	private void instantiateAgents(DataModel dataModel) {
-		
+	public HashMap<Agent, Integer> instantiateAgents(DataModel dataModel){
+		HashMap<Agent, Integer> agentsAndTimes = new HashMap<Agent, Integer>();
+		MASData masData = dataModel.getMASData();
+		int simulationLength = masData.simulationLength;
+		double agentSpawnProbability = masData.spawnProbability;
+		HashMap<AgentProfileType, Double> agentProfileDistribution = masData.agentProfileTypeDistribution;
+		for (int i = 1; i <= simulationLength; i++) {
+			double coinFlip = rng.nextDouble();
+			if(coinFlip < agentSpawnProbability) {
+				coinFlip = rng.nextDouble();
+				AgentProfileType agentProfileType = selectAgentProfileType(coinFlip, agentProfileDistribution);
+				int currentTime = i;
+				int minimalTravelTime = 0;
+				Edge[] routeEdges = routes.get(0).getRoute();
+				double maxComfySpeed = agentProfileType.getMaxComfortableDrivingSpeed(Agent.DEFAULT_MAX_SPEED);
+				for(Edge routeEdge : routeEdges) {
+					minimalTravelTime += Math.round(routeEdge.getRoad().length/maxComfySpeed);
+				}
+				int goalArrivalTime = agentProfileType.goalArrivalTime(currentTime, minimalTravelTime);
+				
+				Node goalNode = routeEdges[routeEdges.length-1].getToNode();
+				Agent agent = agentProfileType.toAgent(Agent.getNextAgentID(), goalNode, routeEdges,  goalArrivalTime, Agent.DEFAULT_MAX_SPEED); //TODO: change this default max speed
+				agentsAndTimes.put(agent,i*1000); //*1000 because sumo counts in ms, not s.
+			}
+		}
+		return agentsAndTimes;
 	}
+	
+	public static AgentProfileType selectAgentProfileType(double coinFlip, HashMap<AgentProfileType, Double> agentProfileDistribution) {
+		for(Entry<AgentProfileType, Double> entry : agentProfileDistribution.entrySet()) {
+			if(coinFlip < entry.getValue()) {
+				return entry.getKey();
+			}
+			coinFlip -= entry.getValue();
+		}
+		return null;
+	}
+	
 	
 	private void instantiateOrganisations(DataModel dataModel) {
 		
