@@ -63,6 +63,14 @@ public abstract class Agent extends AgentPhysical {
 		currentSanctionList 	= new ArrayList<Sanction>();
 	}
 	
+	public int getCurrentTime() {
+		return currentTime;
+	}
+
+	public void setCurrentTime(int currentTime) {
+		this.currentTime = currentTime;
+	}
+
 	public AgentAction doAction() {
 		// Only do an action if it improves our situation
 		double bestUtility 		= utility(expectedArrivalTime,currentSanctionList);
