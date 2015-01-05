@@ -1,6 +1,7 @@
 package nl.uu.trafficmas.view;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.organisation.Organisation;
@@ -21,7 +22,7 @@ public class TrafficViewConsole implements TrafficView {
 	}
 
 	@Override
-	public void updateFromAgents(ArrayList<Agent> agents) {
+	public void updateFromAgents(Collection<Agent> agents) {
 		// TODO Auto-generated method stub
 
 	}
@@ -33,7 +34,7 @@ public class TrafficViewConsole implements TrafficView {
 	}
 
 	@Override
-	public void updateFromOrganisations(ArrayList<Organisation> orgs) {
+	public void updateFromOrganisations(Collection<Organisation> orgs) {
 		// TODO Auto-generated method stub
 
 	}
@@ -51,6 +52,12 @@ public class TrafficViewConsole implements TrafficView {
 
 	@Override
 	public void initialize() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void close() {
 		// TODO Auto-generated method stub
 		
 	}

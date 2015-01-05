@@ -14,12 +14,12 @@ public class XMLGetRoutesTest {
 
 	@Test
 	public void test() {
-		RoadNetwork rn = DataModelXML.instantiateRoadNetwork("tests/", "NodeTest.xml", "EdgeTest.xml");
-		ArrayList<Route> routes = DataModelXML.getRoutes(rn, "tests/", "RouteTest.xml");
+		RoadNetwork rn = DataModelXML.instantiateRoadNetwork("tests/XML/", "NodeTest.xml", "EdgeTest.xml");
+		ArrayList<Route> routes = DataModelXML.getRoutes(rn, "tests/XML/", "RouteTest.xml");
 		assertEquals(routes.size(),1);
 		
-		rn = DataModelXML.instantiateRoadNetwork("tests/", "NodeTest2.xml", "EdgeTest2.xml");
-		routes = DataModelXML.getRoutes(rn, "tests/", "RouteTest2.xml");
+		rn = DataModelXML.instantiateRoadNetwork("tests/XML/", "NodeTest2.xml", "EdgeTest2.xml");
+		routes = DataModelXML.getRoutes(rn, "tests/XML/", "RouteTest2.xml");
 		assertEquals(routes.size(),2);
 		assertEquals(routes.get(1).routeID,"route1");
 	}

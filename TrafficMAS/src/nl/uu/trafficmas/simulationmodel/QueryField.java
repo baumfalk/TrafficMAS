@@ -7,5 +7,5 @@ public enum QueryField {
 	MeanTime,
 	EdgeId,
 	LeadingVehicle,
-	LaneId;
+	LaneIndex;
 }

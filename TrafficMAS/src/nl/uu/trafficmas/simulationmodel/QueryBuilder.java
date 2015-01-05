@@ -58,6 +58,8 @@ public class QueryBuilder {
 		}
 		if(sq.hasField(sf)) {
 			querySubjectFields.get(sq).add(sf);
+		} else {
+			throw new Exception(sq + " doesn't have the field" + sf);
 		}
 	}
 	

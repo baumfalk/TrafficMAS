@@ -11,12 +11,12 @@ import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
 
 public interface DataModel {
-	public RoadNetwork 	getRoadNetwork();
+	public RoadNetwork 	instantiateRoadNetwork();
 	public MASData 		getMASData();
-	public ArrayList<Organisation> instantiateOrganisations();
 	public String getSumoConfigPath();
 	public double getAgentSpawnProbability();
 	public int getSimulationLength();
 	public HashMap<AgentProfileType, Double> getAgentProfileTypeDistribution();
 	public ArrayList<Route> getRoutes(RoadNetwork rn);
+	public void close();
 }

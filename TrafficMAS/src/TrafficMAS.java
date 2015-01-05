@@ -25,6 +25,6 @@ public class TrafficMAS {
 		SimulationModel simModel 		= new SimulationModelTraaS(sumoBin,dataModel.getSumoConfigPath());
 		TrafficView view 				= new TrafficViewConsole();
 		TrafficMASController trafficMas	= new TrafficMASController(dataModel, simModel, view,seed);
-		trafficMas.run();
+		trafficMas.run(dataModel, simModel, view);
 	}
 }

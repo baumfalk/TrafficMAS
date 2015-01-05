@@ -7,11 +7,11 @@ public class AgentData implements Data {
 	public final double leaderDistance;
 	public final double position;
 	public final double speed;
-	public final String laneID;
+	public final String roadID;
+	public final int laneIndex;
 
-	public AgentData(String id, Object[] leader, double position, double speed, String laneID) {
+	public AgentData(String id, Object[] leader, double position, double speed, String roadID, int laneIndex) {
 		this.id = id;
-		this.laneID = laneID;
 		if(leader == null) {
 			leaderId = null;
 			leaderDistance = Double.MIN_VALUE;
@@ -20,8 +20,10 @@ public class AgentData implements Data {
 			leaderId = (String) leader[0];
 			leaderDistance = (double) leader[1];
 		}
-		this.position = position;
-		this.speed = speed;
+		this.position 	= position;
+		this.speed		= speed;
+		this.roadID 	= roadID;
+		this.laneIndex 	= laneIndex;
 	}
 	
 	@Override
@@ -30,7 +32,8 @@ public class AgentData implements Data {
 		sb.append("ID: "+ id+"\r\n");
 		sb.append("Speed: "+ speed+"\r\n");
 		sb.append("Position: "+ position+"\r\n");
-		sb.append("LaneID: "+ laneID+"\r\n");
+		sb.append("roadID: "+ roadID+"\r\n");
+		sb.append("laneIndex: "+ laneIndex+"\r\n");
 		sb.append("LeaderID: "+ leaderId+"\r\n");
 		sb.append("LeaderDistance: "+ leaderDistance+"\r\n");
 

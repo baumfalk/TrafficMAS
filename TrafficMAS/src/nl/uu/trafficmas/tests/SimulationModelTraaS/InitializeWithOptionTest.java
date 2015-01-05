@@ -1,4 +1,4 @@
-package nl.uu.trafficmas.tests.SimulationModelTraaS;
+package nl.uu.trafficmas.tests.simulationModelTraaS;
 
 import static org.junit.Assert.assertEquals;
 import it.polito.appeal.traci.SumoTraciConnection;
