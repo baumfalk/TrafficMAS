@@ -11,7 +11,10 @@ import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.agent.AgentPhysical;
 import nl.uu.trafficmas.agent.AgentProfileType;
 import nl.uu.trafficmas.agent.NormalAgent;
+import nl.uu.trafficmas.controller.TrafficMASController;
+import nl.uu.trafficmas.datamodel.DataModel;
 import nl.uu.trafficmas.datamodel.DataModelXML;
+import nl.uu.trafficmas.datamodel.MASData;
 import nl.uu.trafficmas.datamodel.Pair;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
@@ -24,28 +27,27 @@ public class UpdateCurrentAgentMapTest {
 	@Test
 	public void test() {
 		Random random = new Random(1337);
-		int simLength = 20;
-
+		
+		DataModel dataModel = new DataModelXML("tests/SimulationTraaS/QueryBuilder/","MASTest.xml");
+		MASData masData = dataModel.getMASData();
+		
 		HashMap<String, String> options = new HashMap<String, String>();
-		options.put("e", Integer.toString(simLength));
+		options.put("e", Integer.toString(masData.simulationLength));
 		options.put("start", "1");
 		options.put("quit-on-end", "1");
 		
-		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options,"sumo", "./tests/ConfigTest.xml");				
-		RoadNetwork rn = DataModelXML.instantiateRoadNetwork("tests/", "NodeTest.xml", "EdgeTest.xml");
-		ArrayList<Route> routes = DataModelXML.getRoutes(rn, "tests/", "RouteTest.xml");
-		HashMap<AgentProfileType, Double> dist = DataModelXML.getAgentProfileTypeDistribution("tests/", "AgentProfileTypesTest.xml");
+		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options,"sumo", "./tests/Controller/ConfigTest.xml");				
+		RoadNetwork rn = DataModelXML.instantiateRoadNetwork("tests/Controller/", "NodeTest.xml", "EdgeTest.xml");
+		ArrayList<Route> routes = DataModelXML.getRoutes(rn, "tests/Controller/", "RouteTest.xml");
 		
-		
-		double agentSpawnProb = 0.5;
-		HashMap<Agent, Integer> agentPairList = DataModelXML.instantiateAgents(random, routes, simLength, agentSpawnProb, dist);
+		HashMap<Agent,Integer> agentPairList = TrafficMASController.instantiateAgents(masData, random, routes);
 		HashMap<String, Agent> completeAgentMap = SimulationModelTraaS.addAgents(agentPairList, conn);
 		HashMap<String, Agent> currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, new HashMap<String, Agent>(), conn);
 	
 		try {
 			int i = 0;
 			// Let some time pass so both agents are spawned and moving
-			while (i < simLength) {
+			while (i < masData.simulationLength) {
 				conn.do_timestep();
 				i++;
 				currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, currentAgentMap, conn);

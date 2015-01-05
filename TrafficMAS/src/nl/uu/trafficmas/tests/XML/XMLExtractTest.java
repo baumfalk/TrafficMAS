@@ -15,7 +15,7 @@ public class XMLExtractTest {
 	@Test
 	public void test() {
 
-		ArrayList<ArrayList<Pair<String, String>>> result = SimpleXMLReader.extractFromXML("tests/", "ExtractFromXMLTest.xml", "test1");
+		ArrayList<ArrayList<Pair<String, String>>> result = SimpleXMLReader.extractFromXML("tests/XML/ExtractFromXML/", "ExtractFromXMLTest.xml", "test1");
 		assertNotNull("Result shouldn't be null", result);
 		assertEquals(result.size(),1);
 		assertEquals(result.get(0).size(),2);

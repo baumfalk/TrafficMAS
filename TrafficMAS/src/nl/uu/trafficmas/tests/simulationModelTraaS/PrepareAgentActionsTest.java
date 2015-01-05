@@ -12,7 +12,10 @@ import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.agent.AgentPhysical;
 import nl.uu.trafficmas.agent.AgentProfileType;
 import nl.uu.trafficmas.agent.actions.AgentAction;
+import nl.uu.trafficmas.controller.TrafficMASController;
+import nl.uu.trafficmas.datamodel.DataModel;
 import nl.uu.trafficmas.datamodel.DataModelXML;
+import nl.uu.trafficmas.datamodel.MASData;
 import nl.uu.trafficmas.datamodel.Pair;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
@@ -24,31 +27,30 @@ import de.tudresden.sumo.cmd.Vehicle;
 import de.tudresden.ws.container.SumoColor;
 
 public class PrepareAgentActionsTest {
-
+/*
 	@Test
 	public void changeLane() {
-		double agent1Speed = 10.0;
 		Random random = new Random(1337);
-		int simLength = 50;
-
+		
+		DataModel dataModel = new DataModelXML("tests/SimulationTraaS/QueryBuilder/","MASTest.xml");
+		MASData masData = dataModel.getMASData();
+		
 		HashMap<String, String> options = new HashMap<String, String>();
-		options.put("e", Integer.toString(simLength));
+		options.put("e", Integer.toString(masData.simulationLength));
 		options.put("start", "1");
 		options.put("quit-on-end", "1");
 		
-		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options,"sumo", "./tests/ConfigTest.xml");				
-		RoadNetwork rn = DataModelXML.instantiateRoadNetwork("tests/", "NodeTest.xml", "EdgeTest.xml");
-		ArrayList<Route> routes = DataModelXML.getRoutes(rn, "tests/", "RouteTest.xml");
-		HashMap<AgentProfileType, Double> dist = DataModelXML.getAgentProfileTypeDistribution("tests/", "AgentProfileTypesTest.xml");
-		SumoColor colorHotShot = new SumoColor(255,0,0,255);
-		SumoColor colorOldLady = new SumoColor(0,255,0,255);
+		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options,"sumo", "./tests/Controller/ConfigTest.xml");				
+		RoadNetwork rn = DataModelXML.instantiateRoadNetwork("tests/Controller/", "NodeTest.xml", "EdgeTest.xml");
+		ArrayList<Route> routes = DataModelXML.getRoutes(rn, "tests/Controller/", "RouteTest.xml");
 		
-		
-		double agentSpawnProb = 0.5;
-		HashMap<Agent, Integer> agentPairList = DataModelXML.instantiateAgents(random, routes, simLength, agentSpawnProb, dist);
+		HashMap<Agent,Integer> agentPairList = TrafficMASController.instantiateAgents(masData, random, routes);
 		HashMap<String, Agent> completeAgentMap = SimulationModelTraaS.addAgents(agentPairList, conn);
 		HashMap<String, Agent> currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, new HashMap<String, Agent>(), conn);
 
+		double agent1Speed = 10.0;
+		SumoColor colorHotShot = new SumoColor(255,0,0,255);
+		SumoColor colorOldLady = new SumoColor(0,255,0,255);
 		Agent a1 = completeAgentMap.get("Agent 0");
 		Agent a2 = completeAgentMap.get("Agent 3");
 		try {
@@ -154,10 +156,11 @@ public class PrepareAgentActionsTest {
 	public void changeRoad() {
 		fail("Not implemented");
 	}
+*/
 
 }
 
-	
+
 	
 
 	

@@ -11,7 +11,10 @@ import java.util.Random;
 
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.agent.AgentProfileType;
+import nl.uu.trafficmas.controller.TrafficMASController;
+import nl.uu.trafficmas.datamodel.DataModel;
 import nl.uu.trafficmas.datamodel.DataModelXML;
+import nl.uu.trafficmas.datamodel.MASData;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
 import nl.uu.trafficmas.simulationmodel.AgentData;
@@ -25,33 +28,33 @@ public class QueryBuilderTest {
 	@Test
 	public void test() {
 		Random random = new Random(1337);
-		int simLength = 20;
-		//fail("Not yet implemented");
+		
+		DataModel dataModel = new DataModelXML("tests/SimulationModelTraaS/QueryBuilder/","MASTest.xml");
+		MASData masData = dataModel.getMASData(); 
+		
 		HashMap<String, String> options = new HashMap<String, String>();
-		options.put("e", Integer.toString(simLength));
+		options.put("e", Integer.toString(masData.simulationLength));
 		options.put("start", "1");
 		options.put("quit-on-end", "1");
 		
-		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options,"sumo", "./tests/ConfigTest.xml");				
-		RoadNetwork rn = DataModelXML.instantiateRoadNetwork("tests/", "NodeTest.xml", "EdgeTest.xml");
-		ArrayList<Route> routes = DataModelXML.getRoutes(rn, "tests/", "RouteTest.xml");
-		HashMap<AgentProfileType, Double> dist = DataModelXML.getAgentProfileTypeDistribution("tests/", "AgentProfileTypesTest.xml");
+		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options,"sumo", "./tests/SimulationModelTraaS/QueryBuilder/ConfigTest.xml");				
+		RoadNetwork rn = DataModelXML.instantiateRoadNetwork("tests/SimulationModelTraaS/QueryBuilder/", "NodeTest.xml", "EdgeTest.xml");
+		ArrayList<Route> routes = DataModelXML.getRoutes(rn, "tests/SimulationModelTraaS/QueryBuilder/", "RouteTest.xml");
 		
-		double agentSpawnProb = 0.5;
-		HashMap<Agent,Integer> agentPairList = DataModelXML.instantiateAgents(random, routes, simLength, agentSpawnProb, dist);
+		HashMap<Agent,Integer> agentPairList = TrafficMASController.instantiateAgents(masData, random, routes);
 		SimulationModelTraaS.addAgents(agentPairList, conn);
 		
 		StateData stateData = SimulationModelTraaS.getStateData(conn);
 		assertNotNull(stateData);
 		int i = 0;
-		while(i++ < simLength){
+		while(i++ < masData.simulationLength){
 			try {
 				conn.do_timestep();
 				stateData = SimulationModelTraaS.getStateData(conn);
 				if(!stateData.agentsData.isEmpty()) {
 					stateData = SimulationModelTraaS.getStateData(conn);
 					for(Entry<String, AgentData> val : stateData.agentsData.entrySet()) {
-						assertNotNull(val.getValue().laneID);
+						//assertNotNull(val.getValue().laneID);
 						assertNotNull(val.getValue().position);
 						assertNotNull(val.getValue().speed);
 					}
