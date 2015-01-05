@@ -111,6 +111,7 @@ public class SimulationModelTraaS implements SimulationModel {
 	}
 	//TODO: Implement routes.
 	public static HashMap<String, Agent> addAgents(HashMap<Agent, Integer> agentPairList, SumoTraciConnection conn){
+		
 		HashMap<String, Agent> completeAgentMap = new HashMap<String, Agent>();
 		ArrayList<SumoCommand> cmds = new ArrayList<>();
 		for( Entry<Agent, Integer> agentPair : agentPairList.entrySet()){
@@ -120,7 +121,9 @@ public class SimulationModelTraaS implements SimulationModel {
 			completeAgentMap.put(agentPair.getKey().agentID, agentPair.getKey());
 		}
 		try {
-			conn.do_jobs_set(cmds);
+			if(agentPairList.size() > 0){
+				conn.do_jobs_set(cmds);
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
