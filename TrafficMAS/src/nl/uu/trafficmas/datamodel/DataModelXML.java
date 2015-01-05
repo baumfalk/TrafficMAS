@@ -1,11 +1,15 @@
 package nl.uu.trafficmas.datamodel;
 
+import static org.junit.Assert.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
+
+import org.junit.Test;
 
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.agent.AgentProfileType;
@@ -49,7 +53,7 @@ public class DataModelXML implements DataModel {
 	}
 
 	@Override
-	public RoadNetwork getRoadNetwork() {
+	public RoadNetwork instantiateRoadNetwork() {
 		return instantiateRoadNetwork(this.dir,this.nodesXML,this.edgesXML);
 	}
 	
@@ -155,12 +159,6 @@ public class DataModelXML implements DataModel {
 	}
 	
 	@Override
-	public ArrayList<Organisation> instantiateOrganisations() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public String getSumoConfigPath() {
 		return sumoConfigXML;
 	}
@@ -232,44 +230,6 @@ public class DataModelXML implements DataModel {
 		return simulationLength;
 	}
 	
-	public static HashMap<Agent, Integer> instantiateAgents(Random rng, ArrayList<Route> routes, int simulationLength, double agentSpawnProbability, HashMap<AgentProfileType, Double> dist) {
-		HashMap<Agent, Integer> agentsAndTimes = new LinkedHashMap<Agent, Integer>(); 
-		for (int i = 1; i <= simulationLength; i++) {
-			double coinFlip = rng.nextDouble();
-			if(coinFlip < agentSpawnProbability) {
-				coinFlip = rng.nextDouble();
-				AgentProfileType agentProfileType = selectAgentProfileType(coinFlip, dist);
-				
-				int currentTime = i;
-				int minimalTravelTime = 0;
-				Edge[] routeEdges = routes.get(0).getRoute();
-				double maxComfySpeed = agentProfileType.getMaxComfortableDrivingSpeed(Agent.DEFAULT_MAX_SPEED);
-				for(Edge routeEdge : routeEdges) {
-					minimalTravelTime += Math.round(routeEdge.getRoad().length/maxComfySpeed);
-				}
-				int goalArrivalTime = agentProfileType.goalArrivalTime(currentTime, minimalTravelTime);
-				
-				Node goalNode = routeEdges[routeEdges.length-1].getToNode();
-				Agent agent = agentProfileType.toAgent(Agent.getNextAgentID(), goalNode, routeEdges,  goalArrivalTime, Agent.DEFAULT_MAX_SPEED); //TODO: change this default max speed
-				agentsAndTimes.put(agent,i*1000); //*1000 because sumo counts in ms, not s.
-			}
-		}
-		
-		return agentsAndTimes;
-	}
-	
-	public static AgentProfileType selectAgentProfileType(double coinFlip, HashMap<AgentProfileType, Double> dist) {
-	
-		for( Entry<AgentProfileType, Double> pair : dist.entrySet()) {
-			if(coinFlip < pair.getValue()) {
-				return pair.getKey();
-			}
-			coinFlip -= pair.getValue();
-		}
-		
-		return null;
-	}
-
 	@Override
 	public ArrayList<Route> getRoutes(RoadNetwork rn) {
 		return getRoutes(rn,dir,routesXML);
@@ -305,11 +265,22 @@ public class DataModelXML implements DataModel {
 
 	@Override
 	public MASData getMASData() {
+		return getMASData(dir, masXML, sumoConfigXML, agentProfilesXML);
+	}
+	
+	public static MASData getMASData(String dir, String masXML, String sumoConfigXML, String agentProfilesXML){
 		int simulationLength 		= DataModelXML.simulationLength(dir, masXML);
-		String sumoConfigPath 		= this.sumoConfigXML;
-		double spawnProbability 	= DataModelXML.getAgentSpawnProbability(dir, this.agentProfilesXML);
+		String sumoConfigPath 		= sumoConfigXML;
+		double spawnProbability 	= DataModelXML.getAgentSpawnProbability(dir, agentProfilesXML);
 		HashMap<AgentProfileType,Double> agentProfileTypeDistribution = DataModelXML.getAgentProfileTypeDistribution(dir, agentProfilesXML);
 		
 		return new MASData(simulationLength, sumoConfigPath, spawnProbability, agentProfileTypeDistribution);
 	}
+
+	@Override
+	public void close() {
+		// TODO Auto-generated method stub
+		
+	}
+	
 }

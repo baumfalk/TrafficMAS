@@ -1,4 +1,4 @@
-package nl.uu.trafficmas.tests;
+package nl.uu.trafficmas.tests.roadNetwork;
 
 import static org.junit.Assert.*;
 import nl.uu.trafficmas.roadnetwork.*;

@@ -14,7 +14,7 @@ public class XMLAgentTypeDistributionTest {
 
 	@Test
 	public void test() {
-		HashMap<AgentProfileType, Double> dist = DataModelXML.getAgentProfileTypeDistribution("tests/", "AgentProfileTypesTest.xml");
+		HashMap<AgentProfileType, Double> dist = DataModelXML.getAgentProfileTypeDistribution("tests/XML/", "AgentProfileTypesTest.xml");
 		
 		assertNotNull(dist);
 		assertEquals(dist.size(),3);

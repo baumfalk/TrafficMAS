@@ -49,7 +49,7 @@ public enum QuerySubject {
 		case LeadingVehicle:
 			hasField = false;
 			break;
-		case LaneId:
+		case LaneIndex:
 			hasField = false;
 			break;
 		default:
@@ -79,7 +79,7 @@ public enum QuerySubject {
 		case LeadingVehicle:
 			hasField = false;
 			break;
-		case LaneId:
+		case LaneIndex:
 			hasField = false;
 			break;
 		default:
@@ -92,7 +92,7 @@ public enum QuerySubject {
 		boolean hasField = false;
 		switch(sf) {
 		case EdgeId:
-			hasField = false;
+			hasField = true;
 			break;
 		case MeanSpeed:
 			hasField = false;
@@ -109,7 +109,7 @@ public enum QuerySubject {
 		case LeadingVehicle:
 			hasField = true;
 			break;
-		case LaneId:
+		case LaneIndex:
 			hasField = true;
 			break;
 		default:
@@ -188,8 +188,11 @@ public enum QuerySubject {
 			case Speed:
 				cmd = de.tudresden.sumo.cmd.Vehicle.getSpeed(id);
 				break;
-			case LaneId:
-				cmd = de.tudresden.sumo.cmd.Vehicle.getLaneID(id);
+			case EdgeId:
+				cmd = de.tudresden.sumo.cmd.Vehicle.getRoadID(id);
+				break;
+			case LaneIndex:
+				cmd = de.tudresden.sumo.cmd.Vehicle.getLaneIndex(id);
 				break;
 			}
 			break;
@@ -201,7 +204,7 @@ public enum QuerySubject {
 			List<Object> subList, String id) {
 		Data data = null;
 		String [] 	edgeId 			= new String[1];
-		String [] 	laneId			= new String[1];
+		int	   [] 	laneIndex		= new int[0];
 		Object [][] leadingVehicle 	= new Object[1][2];
 		double [] 	meanSpeed 		= new double[1];
 		double [] 	meanTime 		= new double[1];
@@ -210,8 +213,8 @@ public enum QuerySubject {
 		
 		Iterator<QueryField> queryFieldIt = linkedHashSet.iterator();
 		Iterator<Object> responseIt = subList.iterator();
-		parseResponses(edgeId, laneId, leadingVehicle, meanSpeed, meanTime,
-				position, speed, queryFieldIt, responseIt);
+		parseResponses(edgeId, leadingVehicle, meanSpeed, meanTime,
+				position, speed, laneIndex, queryFieldIt,responseIt);
 		switch (this) {
 		case Edge:
 			data = new EdgeData(id, meanSpeed[0],meanTime[0]);
@@ -220,16 +223,16 @@ public enum QuerySubject {
 			data = new LaneData(id, meanSpeed[0], meanTime[0], edgeId[0]);
 			break;
 		case Vehicle:
-			data = new AgentData(id, leadingVehicle[0], position[0], speed[0],laneId[0]);
+			data = new AgentData(id, leadingVehicle[0], position[0], speed[0],edgeId[0],laneIndex[0]);
 			break;
 		}
 		
 		return data;
 	}
 
-	private void parseResponses(String[] edgeId, String[] laneId, Object[][] leadingVehicle,
+	private void parseResponses(String[] edgeId, Object[][] leadingVehicle,
 			double[] meanSpeed, double[] meanTime, double[] position,
-			double[] speed, Iterator<QueryField> queryFieldIt,
+			double[] speed, int [] laneIndex, Iterator<QueryField> queryFieldIt,
 			Iterator<Object> responseIt) {
 		while(queryFieldIt.hasNext() && responseIt.hasNext()) {
 			QueryField queryField = queryFieldIt.next();
@@ -253,8 +256,8 @@ public enum QuerySubject {
 			case Speed:
 				speed[0] = (double) response;
 				break;
-			case LaneId:
-				laneId[0] = (String) response;
+			case LaneIndex:
+				laneIndex[0] = (int) response;
 				break;
 			}
 		}

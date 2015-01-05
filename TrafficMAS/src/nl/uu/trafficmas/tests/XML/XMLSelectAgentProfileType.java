@@ -15,7 +15,7 @@ public class XMLSelectAgentProfileType {
 
 	@Test
 	public void test() {
-		HashMap<AgentProfileType, Double> dist = DataModelXML.getAgentProfileTypeDistribution("tests/", "AgentProfileTypesTest.xml");
+		HashMap<AgentProfileType, Double> dist = DataModelXML.getAgentProfileTypeDistribution("tests/XML/", "AgentProfileTypesTest.xml");
 		double coinFlip = 0.04;
 		AgentProfileType agentType = DataModelXML.selectAgentProfileType(coinFlip, dist);
 		assertEquals(agentType, AgentProfileType.PregnantWoman);

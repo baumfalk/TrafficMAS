@@ -8,8 +8,8 @@ import nl.uu.trafficmas.roadnetwork.Node;
 
 public class PregnantWomanAgent extends Agent {
 
-	public PregnantWomanAgent(String agentID, Node goalNode, Edge[] route, int goalArrivalTime, double maxSpeed,double maxComfySpeed) {
-		super(agentID, goalNode, route, goalArrivalTime, maxSpeed, AgentProfileType.PregnantWoman, maxComfySpeed);
+	public PregnantWomanAgent(String agentID, Node goalNode, Edge[] route, int goalArrivalTime, double maxSpeed,double maxComfySpeed,int currentTime) {
+		super(agentID, goalNode, route, goalArrivalTime, maxSpeed, AgentProfileType.PregnantWoman, maxComfySpeed,currentTime);
 	}
 
 	@Override

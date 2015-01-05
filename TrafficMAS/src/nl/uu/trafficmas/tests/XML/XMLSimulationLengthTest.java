@@ -9,7 +9,7 @@ public class XMLSimulationLengthTest {
 
 	@Test
 	public void testSimulationLengthStringString() {
-		int simulationLength = DataModelXML.simulationLength("tests/", "MASTest.xml");
+		int simulationLength = DataModelXML.simulationLength("tests/XML/", "MASTest.xml");
 		assertEquals(simulationLength,1000);
 	}
 

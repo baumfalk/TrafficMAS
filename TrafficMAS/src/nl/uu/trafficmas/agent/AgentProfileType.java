@@ -8,18 +8,18 @@ public enum AgentProfileType {
 	PregnantWoman,
 	OldLady;
 	
-	public Agent toAgent(String agentID, Node goalNode, Edge[] routeEdges, int goalArrivalTime, double maxSpeed) {
+	public Agent toAgent(String agentID, Node goalNode, Edge[] routeEdges, int goalArrivalTime, double maxSpeed,int currentTime) {
 		Agent agent = null;
 		double maxComfySpeed = this.getMaxComfortableDrivingSpeed(maxSpeed);
 		switch(this) {
 		case Normal:
-			agent = new NormalAgent(agentID, goalNode, routeEdges, goalArrivalTime, maxSpeed,maxComfySpeed);
+			agent = new NormalAgent(agentID, goalNode, routeEdges, goalArrivalTime, maxSpeed,maxComfySpeed,currentTime);
 			break;
 		case OldLady:
-			agent = new OldLadyAgent(agentID, goalNode, routeEdges, goalArrivalTime, maxSpeed,maxComfySpeed);
+			agent = new OldLadyAgent(agentID, goalNode, routeEdges, goalArrivalTime, maxSpeed,maxComfySpeed,currentTime);
 			break;
 		case PregnantWoman:
-			agent = new PregnantWomanAgent(agentID, goalNode, routeEdges, goalArrivalTime, maxSpeed,maxComfySpeed);
+			agent = new PregnantWomanAgent(agentID, goalNode, routeEdges, goalArrivalTime, maxSpeed,maxComfySpeed,currentTime);
 			break;
 		}
 		return agent;

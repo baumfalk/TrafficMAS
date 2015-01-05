@@ -17,14 +17,12 @@ public interface SimulationModel {
 	public void doTimeStep();
 	
 	public StateData getStateData();
-	public void updateStateData(StateData stateData);
+	public void updateStateData(HashMap<Agent, AgentAction> agentActions);
 	
 	public HashMap<String, Agent> addAgents(HashMap<Agent, Integer> agentPairList);
 	public void addAgent(Agent agent, String routeID, int tick);
 
-	public HashMap<String, Agent> updateCurrentAgentMap(HashMap<String, Agent> completeAgentMap, HashMap<String, Agent> oldAgentMap);
-	public HashMap<String, Agent> updateAgents(RoadNetwork rn, HashMap<String, Agent> currentAgentList);
-	public HashMap<String, Agent> getLeadingVehicles(HashMap<String, Agent> currentAgentPhysList);
 	public void prepareAgentActions(HashMap<String, AgentAction> actions, HashMap<String, Agent> currentAgentMap);
 	public RoadNetwork updateRoadNetwork(RoadNetwork roadNetwork);
+	public HashMap<String, Agent> updateCurrentAgentMap(HashMap<String, Agent> completeAgentMap, HashMap<String, Agent> oldAgentMap);
 }

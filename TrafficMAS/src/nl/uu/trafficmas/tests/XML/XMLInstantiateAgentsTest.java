@@ -20,9 +20,9 @@ public class XMLInstantiateAgentsTest {
 	@Test
 	public void test() {
 		Random random = new Random(1337);
-		RoadNetwork rn = DataModelXML.instantiateRoadNetwork("tests/", "NodeTest.xml", "EdgeTest.xml");
-		ArrayList<Route> routes = DataModelXML.getRoutes(rn, "tests/", "RouteTest.xml");
-		HashMap<AgentProfileType, Double> dist = DataModelXML.getAgentProfileTypeDistribution("tests/", "AgentProfileTypesTest.xml");
+		RoadNetwork rn = DataModelXML.instantiateRoadNetwork("tests/XML/", "NodeTest.xml", "EdgeTest.xml");
+		ArrayList<Route> routes = DataModelXML.getRoutes(rn, "tests/XML/", "RouteTest.xml");
+		HashMap<AgentProfileType, Double> dist = DataModelXML.getAgentProfileTypeDistribution("tests/XML/", "AgentProfileTypesTest.xml");
 
 		int simulationLength = 10;
 		double agentSpawnProb = 0;
