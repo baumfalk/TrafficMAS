@@ -28,7 +28,7 @@ public class UpdateCurrentAgentMapTest {
 	public void test() {
 		Random random = new Random(1337);
 		
-		DataModel dataModel = new DataModelXML("tests/SimulationTraaS/QueryBuilder/","MASTest.xml");
+		DataModel dataModel = new DataModelXML("tests/SimulationModelTraaS/UpdateCurrentAgentMap/","MASTest.xml");
 		MASData masData = dataModel.getMASData();
 		
 		HashMap<String, String> options = new HashMap<String, String>();
@@ -36,9 +36,9 @@ public class UpdateCurrentAgentMapTest {
 		options.put("start", "1");
 		options.put("quit-on-end", "1");
 		
-		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options,"sumo", "./tests/Controller/ConfigTest.xml");				
-		RoadNetwork rn = DataModelXML.instantiateRoadNetwork("tests/Controller/", "NodeTest.xml", "EdgeTest.xml");
-		ArrayList<Route> routes = DataModelXML.getRoutes(rn, "tests/Controller/", "RouteTest.xml");
+		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options,"sumo", "./tests/SimulationModelTraaS/UpdateCurrentAgentMap/ConfigTest.xml");				
+		RoadNetwork rn = DataModelXML.instantiateRoadNetwork("tests/SimulationModelTraaS/UpdateCurrentAgentMap/", "NodeTest.xml", "EdgeTest.xml");
+		ArrayList<Route> routes = DataModelXML.getRoutes(rn, "tests/SimulationModelTraaS/UpdateCurrentAgentMap/", "RouteTest.xml");
 		
 		HashMap<Agent,Integer> agentPairList = TrafficMASController.instantiateAgents(masData, random, routes);
 		HashMap<String, Agent> completeAgentMap = SimulationModelTraaS.addAgents(agentPairList, conn);
@@ -46,13 +46,12 @@ public class UpdateCurrentAgentMapTest {
 	
 		try {
 			int i = 0;
-			// Let some time pass so both agents are spawned and moving
 			while (i < masData.simulationLength) {
 				conn.do_timestep();
 				i++;
 				currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, currentAgentMap, conn);
 			}
-			assertEquals(8, currentAgentMap.size());
+			assertEquals(6, currentAgentMap.size());
 			
 			
 		

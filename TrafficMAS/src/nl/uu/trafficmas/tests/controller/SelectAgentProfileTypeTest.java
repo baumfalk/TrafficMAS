@@ -13,17 +13,19 @@ public class SelectAgentProfileTypeTest {
 
 	@Test
 	public void test() {
-		DataModel dataModel = new DataModelXML("tests/Controller/InstantiateAgent/","MASTest.xml");
+		DataModel dataModel = new DataModelXML("tests/Controller/SelectAgentProfileType/","MASTest.xml");
 		MASData masData = dataModel.getMASData();
 		double coinFlip = 0.04;
 		
 		AgentProfileType agentType = TrafficMASController.selectAgentProfileType(coinFlip, masData.agentProfileTypeDistribution);
-		assertEquals(AgentProfileType.Normal,agentType);
+		assertEquals(AgentProfileType.PregnantWoman,agentType);
 		
 		coinFlip = 0.05;
 		agentType = TrafficMASController.selectAgentProfileType(coinFlip, masData.agentProfileTypeDistribution);
+		assertEquals(AgentProfileType.OldLady,agentType);
 		
 		coinFlip = 0.95;
 		agentType = TrafficMASController.selectAgentProfileType(coinFlip, masData.agentProfileTypeDistribution);
+		assertEquals(AgentProfileType.Normal,agentType);
 	}
 }

@@ -11,7 +11,7 @@ public class XMLRoadNetworkTest {
 	@Test
 	public void test() {
 		
-		RoadNetwork rn = DataModelXML.instantiateRoadNetwork("tests/XML/", "NodeTest.xml", "EdgeTest.xml");
+		RoadNetwork rn = DataModelXML.instantiateRoadNetwork("tests/XML/InstantiateRoadNetwork/", "NodeTest.xml", "EdgeTest.xml");
 		
 		assertEquals(rn.getNodes().length,2);
 		assertEquals(rn.getEdges().length,1);
