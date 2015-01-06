@@ -14,14 +14,14 @@ import nl.uu.trafficmas.roadnetwork.Node;
 
 import org.junit.Test;
 
-public class XMLEdgeTest {
+public class XMLExtractEdgesTest {
 
 	@Test
-	public void test() {
-		//    <edge from="A28H0" id="A28Tot350" to="A28H350" numLanes="2" priority="2" />
+	public void extractEdges() {
+		// <edge from="A28H0" id="A28Tot350" to="A28H350" numLanes="2" priority="2" />
 
-		HashMap<String, Node> nodes = DataModelXML.extractNodes("tests/XML/", "NodeTest.xml");
-		ArrayList<Edge> edges = DataModelXML.extractEdges("tests/XML/", "EdgeTest.xml", nodes);
+		HashMap<String, Node> nodes = DataModelXML.extractNodes("tests/XML/ExtractEdges/", "NodeTest.xml");
+		ArrayList<Edge> edges = DataModelXML.extractEdges("tests/XML/ExtractEdges/", "EdgeTest.xml", nodes);
 		assertNotNull(edges);
 		assertEquals(edges.size(),1);
 		assertEquals(edges.get(0).getFromNode().name,"A28H0");

@@ -33,9 +33,9 @@ public class InstantiateAgentsTest {
 		options.put("start", "1");
 		options.put("quit-on-end", "1");
 		
-		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options,"sumo", "./tests/Controller/ConfigTest.xml");				
-		RoadNetwork rn = DataModelXML.instantiateRoadNetwork("tests/Controller/", "NodeTest.xml", "EdgeTest.xml");
-		ArrayList<Route> routes = DataModelXML.getRoutes(rn, "tests/Controller/", "RouteTest.xml");
+		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options,"sumo", "./tests/Controller/InstantiateAgent/ConfigTest.xml");				
+		RoadNetwork rn = DataModelXML.instantiateRoadNetwork("tests/Controller/InstantiateAgent/", "NodeTest.xml", "EdgeTest.xml");
+		ArrayList<Route> routes = DataModelXML.getRoutes(rn, "tests/Controller/InstantiateAgent/", "RouteTest.xml");
 		
 		HashMap<Agent,Integer> agentPairList = TrafficMASController.instantiateAgents(masData, random, routes);
 		

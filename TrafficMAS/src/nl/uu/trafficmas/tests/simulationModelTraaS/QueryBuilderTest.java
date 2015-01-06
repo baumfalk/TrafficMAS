@@ -54,7 +54,7 @@ public class QueryBuilderTest {
 				if(!stateData.agentsData.isEmpty()) {
 					stateData = SimulationModelTraaS.getStateData(conn);
 					for(Entry<String, AgentData> val : stateData.agentsData.entrySet()) {
-						//assertNotNull(val.getValue().laneID);
+						assertNotNull(val.getValue().laneIndex);
 						assertNotNull(val.getValue().position);
 						assertNotNull(val.getValue().speed);
 					}

@@ -32,7 +32,7 @@ public enum QuerySubject {
 		boolean hasField = false;
 		switch(sf) {
 		case EdgeId:
-			hasField = false;
+			hasField = true;
 			break;
 		case MeanSpeed:
 			hasField = true;
