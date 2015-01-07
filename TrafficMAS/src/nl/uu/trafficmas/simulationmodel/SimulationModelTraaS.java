@@ -283,10 +283,10 @@ public class SimulationModelTraaS implements SimulationModel {
 	
 			qb.addQueryField(QuerySubject.Edge, QueryField.MeanSpeed);
 			qb.addQueryField(QuerySubject.Edge, QueryField.MeanTime);
-			
-			qb.addQueryField(QuerySubject.Lane, QueryField.MeanSpeed);
 			qb.addQueryField(QuerySubject.Edge, QueryField.MeanTime);
-			qb.addQueryField(QuerySubject.Edge, QueryField.EdgeId);
+
+			qb.addQueryField(QuerySubject.Lane, QueryField.MeanSpeed);
+			qb.addQueryField(QuerySubject.Lane, QueryField.EdgeId);
 
 			qb.executeQuery(conn);
 			stateData = qb.getStateData();
