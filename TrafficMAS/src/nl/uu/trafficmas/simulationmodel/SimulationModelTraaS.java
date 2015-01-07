@@ -263,7 +263,6 @@ public class SimulationModelTraaS implements SimulationModel {
 
 	@Override
 	public StateData getNewStateData() {
-		
 		return getStateData(conn,true);
 	}
 
