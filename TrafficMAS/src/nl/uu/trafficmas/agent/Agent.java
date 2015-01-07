@@ -92,11 +92,6 @@ public abstract class Agent extends AgentPhysical {
 				bestUtility = newUtility; 
 			}
 		}
-		if(bestAction != null) {
-			System.out.println(this.getClass().getSimpleName()+": "+this.agentID + " will do " + bestAction);
-		} else {
-			System.out.println(this.getClass().getSimpleName()+": "+this.agentID + " will do nothing");
-		}
 		return bestAction;
 	}
 	
@@ -154,5 +149,10 @@ public abstract class Agent extends AgentPhysical {
 	
 	public double getMaxComfySpeed() {
 		return maxComfySpeed;
+	}
+	
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName()+" " +agentID;
 	}
 }

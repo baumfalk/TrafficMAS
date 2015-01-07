@@ -21,10 +21,21 @@ public class TrafficMAS {
 			seed = Integer.parseInt(args[3]);
 		}
 		
+		long start_time = System.nanoTime();
+		
 		DataModel dataModel 			= new DataModelXML(dir,masXML);
 		SimulationModel simModel 		= new SimulationModelTraaS(sumoBin,dataModel.getSumoConfigPath());
 		TrafficView view 				= new TrafficViewConsole();
 		TrafficMASController trafficMas	= new TrafficMASController(dataModel, simModel, view,seed);
+		long end_time = System.nanoTime();
+		double difference = (end_time - start_time)/1e6;
+		System.out.println("inittime:" + difference + "ms");
+		
+		 start_time = System.nanoTime();
 		trafficMas.run(dataModel, simModel, view);
+		end_time = System.nanoTime();
+		difference = (end_time - start_time)/1e6;
+		System.out.println("run time:" + difference + "ms");
+
 	}
 }

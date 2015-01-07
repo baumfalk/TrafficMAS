@@ -8,6 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 
+import de.tudresden.sumo.config.Constants;
 import de.tudresden.sumo.util.SumoCommand;
 import de.tudresden.ws.container.SumoStringList;
 
@@ -22,11 +23,13 @@ public class QueryBuilder {
 	private HashMap<String,AgentData> 	agentsData;
 	private HashMap<String,EdgeData> 	edgesData;
 	private HashMap<String,LaneData> 	lanesData;
+	private boolean timeStep;
 	
 	public QueryBuilder() {
 		querySubjects 		= new LinkedHashSet<QuerySubject>();
 		querySubjectFields 	= new LinkedHashMap<QuerySubject,LinkedHashSet<QueryField>>();
 		subjectIDs			= new LinkedHashMap<QuerySubject,List<String>>();
+		timeStep 			= false;
 	}
 	
 	public StateData getStateData() {
@@ -62,25 +65,40 @@ public class QueryBuilder {
 	public void executeQuery(SumoTraciConnection conn) throws Exception {
 		// for what subjects do we need to get info?
 		ArrayList<SumoCommand> cmdList = new ArrayList<SumoCommand>();
+		if(timeStep) {
+			cmdList.add(new SumoCommand(Constants.CMD_SIMSTEP2, 0));
+		}
 		cmdList.add(de.tudresden.sumo.cmd.Simulation.getCurrentTime());
 		for(QuerySubject querySubject : querySubjects) {
 			//cmdList.add(querySubject.getIDCountCommand());
 			cmdList.add(querySubject.getIDListCommand());
 		}
-		ArrayList<Object> responses = conn.do_jobs_get(cmdList);
+		long start_time = System.nanoTime();
 		
+		ArrayList<Object> responses = conn.do_jobs_get(cmdList);
+		long end_time = System.nanoTime();
+		double difference = (end_time - start_time)/1e6;
+		System.out.println("Querybuilder: get id lists " + difference );
 		cmdList.clear();
 		
+		// first response is null/or subscribed events
+		if(timeStep) {
+			responses.remove(0);
+		}
 		int currentTimeStep = (int) responses.remove(0);
 		
 		// generate the new queries
 		generateQueries(cmdList, responses);
 		// responses should now be empty!
 		assert(responses.isEmpty());
+
 		
 		// get new responses
+		start_time = System.nanoTime();
 		responses = conn.do_jobs_get(cmdList);
-		
+		end_time = System.nanoTime();
+		difference = (end_time - start_time)/1e6;
+		System.out.println("Querybuilder: get stuff " + difference );
 		processResponses(responses);
 		assert(responses.isEmpty());
 		
@@ -132,5 +150,10 @@ public class QueryBuilder {
 				}
 			}
 		}
+	}
+
+	public void doNextTimeStep() {
+		// TODO Auto-generated method stub
+		this.timeStep = true;
 	}
 }

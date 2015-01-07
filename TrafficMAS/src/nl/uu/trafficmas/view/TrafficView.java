@@ -1,6 +1,5 @@
 package nl.uu.trafficmas.view;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 import nl.uu.trafficmas.agent.Agent;

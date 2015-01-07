@@ -262,14 +262,17 @@ public class SimulationModelTraaS implements SimulationModel {
 	}
 
 	@Override
-	public StateData getStateData() {
+	public StateData getNewStateData() {
 		
-		return getStateData(conn);
+		return getStateData(conn,true);
 	}
 
-	public static StateData getStateData(SumoTraciConnection conn) {
+	public static StateData getStateData(SumoTraciConnection conn, boolean timeStep) {
 		StateData stateData = null;
 		QueryBuilder qb = new QueryBuilder();
+		if(timeStep) {
+			qb.doNextTimeStep();
+		}
 		qb.addQuerySubject(QuerySubject.Vehicle);
 		qb.addQuerySubject(QuerySubject.Edge);
 		qb.addQuerySubject(QuerySubject.Lane);
@@ -299,7 +302,7 @@ public class SimulationModelTraaS implements SimulationModel {
 	}
 
 	@Override
-	public void updateStateData(HashMap<Agent, AgentAction> agentActions) {
+	public void simulateAgentActions(HashMap<Agent, AgentAction> agentActions) {
 		
 	}
 }
