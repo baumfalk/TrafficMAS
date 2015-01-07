@@ -7,7 +7,7 @@ import org.junit.Test;
 public class InstantiateOrganisationsTest {
 
 	@Test
-	public void test() {
+	public void instantiateOrganisations() {
 		fail("Not yet implemented");
 	}
 

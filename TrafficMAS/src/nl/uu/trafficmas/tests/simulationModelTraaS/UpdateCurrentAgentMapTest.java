@@ -25,7 +25,7 @@ import org.junit.Test;
 public class UpdateCurrentAgentMapTest {
 
 	@Test
-	public void test() {
+	public void updateCurrentAgentMap() {
 		Random random = new Random(1337);
 		
 		DataModel dataModel = new DataModelXML("tests/SimulationModelTraaS/UpdateCurrentAgentMap/","MASTest.xml");

@@ -7,7 +7,7 @@ import org.junit.Test;
 public class arrayParameterTest {
 
 	@Test
-	public void test() {
+	public void arrayParameter() {
 		double [] array = new double[1];
 		array(array);
 		assertNotNull(array);

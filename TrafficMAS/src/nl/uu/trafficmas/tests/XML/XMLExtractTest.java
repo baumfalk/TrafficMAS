@@ -13,7 +13,7 @@ import org.junit.Test;
 public class XMLExtractTest {
 
 	@Test
-	public void test() {
+	public void xmlExtract() {
 
 		ArrayList<ArrayList<Pair<String, String>>> result = SimpleXMLReader.extractFromXML("tests/XML/ExtractFromXML/", "ExtractFromXMLTest.xml", "test1");
 		assertNotNull("Result shouldn't be null", result);

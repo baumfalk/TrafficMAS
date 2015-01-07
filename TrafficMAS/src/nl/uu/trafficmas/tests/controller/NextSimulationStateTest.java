@@ -11,7 +11,7 @@ import org.junit.Test;
 public class NextSimulationStateTest {
 
 	@Test
-	public void test() {
+	public void nextSimulationState() {
 		fail("Not yet implemented");
 		SimulationModel simulationModel = new SimulationModelTraaS(null, null); 
 		StateData simulationStateData =  TrafficMASController.nextSimulationState(simulationModel);
