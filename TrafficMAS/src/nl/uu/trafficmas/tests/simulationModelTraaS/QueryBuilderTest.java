@@ -52,7 +52,6 @@ public class QueryBuilderTest {
 				conn.do_timestep();
 				stateData = SimulationModelTraaS.getStateData(conn);
 				if(!stateData.agentsData.isEmpty()) {
-					stateData = SimulationModelTraaS.getStateData(conn);
 					for(Entry<String, AgentData> val : stateData.agentsData.entrySet()) {
 						assertNotNull(val.getValue().laneIndex);
 						assertNotNull(val.getValue().position);
@@ -63,9 +62,7 @@ public class QueryBuilderTest {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}	
-			
 		}
-		
 	}
 
 }

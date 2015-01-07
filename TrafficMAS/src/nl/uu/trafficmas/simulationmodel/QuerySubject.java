@@ -11,113 +11,6 @@ public enum QuerySubject {
 	Lane,
 	Edge;
 
-	public boolean hasField(QueryField sf) throws Exception {
-		boolean hasField = false;
-		switch(this) {
-		case Edge:
-			hasField = hasFieldEdge(sf);
-			break;
-		case Lane:
-			hasField = hasFieldLane(sf);
-			break;
-		case Vehicle:
-			hasField = hasFieldVehicle(sf);
-			break;
-		}
-		
-		return hasField;
-	}
-
-	private boolean hasFieldEdge(QueryField sf) throws Exception {
-		boolean hasField = false;
-		switch(sf) {
-		case EdgeId:
-			hasField = true;
-			break;
-		case MeanSpeed:
-			hasField = true;
-			break;
-		case MeanTime:
-			hasField = true;
-			break;
-		case Position:
-			hasField = false;
-			break;
-		case Speed:
-			hasField = false;
-			break;
-		case LeadingVehicle:
-			hasField = false;
-			break;
-		case LaneIndex:
-			hasField = false;
-			break;
-		default:
-			throw new Exception("Case not handled!");	
-		}
-		return hasField;
-	}
-
-	private boolean hasFieldLane(QueryField sf) throws Exception {
-		boolean hasField = false;
-		switch(sf) {
-		case EdgeId:
-			hasField = true;
-			break;
-		case MeanSpeed:
-			hasField = true;
-			break;
-		case MeanTime:
-			hasField = true;
-			break;
-		case Position:
-			hasField = false;
-			break;
-		case Speed:
-			hasField = false;
-			break;
-		case LeadingVehicle:
-			hasField = false;
-			break;
-		case LaneIndex:
-			hasField = false;
-			break;
-		default:
-			throw new Exception("Case not handled!");	
-		}
-		return hasField;
-	}
-
-	private boolean hasFieldVehicle(QueryField sf) throws Exception {
-		boolean hasField = false;
-		switch(sf) {
-		case EdgeId:
-			hasField = true;
-			break;
-		case MeanSpeed:
-			hasField = false;
-			break;
-		case MeanTime:
-			hasField = false;
-			break;
-		case Position:
-			hasField = true;
-			break;
-		case Speed:
-			hasField = true;
-			break;
-		case LeadingVehicle:
-			hasField = true;
-			break;
-		case LaneIndex:
-			hasField = true;
-			break;
-		default:
-			throw new Exception("Case not handled!");
-		}
-		return hasField;
-	}
-
 	public SumoCommand getIDCountCommand() {
 		SumoCommand cmd = null;
 		switch(this) {
@@ -150,7 +43,7 @@ public enum QuerySubject {
 		return cmd;
 	}
 
-	public SumoCommand queryFieldToCommand(QueryField queryField, String id) {
+	public SumoCommand queryFieldToCommand(QueryField queryField, String id) throws Exception {
 		SumoCommand cmd = null;
 		switch(this) {
 		case Edge:
@@ -161,6 +54,8 @@ public enum QuerySubject {
 			case MeanTime:
 				cmd = de.tudresden.sumo.cmd.Edge.getTraveltime(id);
 				break;
+			default:
+				throw new Exception(this+" cannot handle " + queryField);
 			}
 			break;
 		case Lane:
@@ -174,6 +69,8 @@ public enum QuerySubject {
 			case EdgeId:
 				cmd = de.tudresden.sumo.cmd.Lane.getEdgeID(id);
 				break;
+			default:
+				throw new Exception(this+" cannot handle " + queryField);
 			}
 			break;
 		case Vehicle:
@@ -194,6 +91,8 @@ public enum QuerySubject {
 			case LaneIndex:
 				cmd = de.tudresden.sumo.cmd.Vehicle.getLaneIndex(id);
 				break;
+			default:
+				throw new Exception(this+" cannot handle " + queryField);
 			}
 			break;
 		}
@@ -204,7 +103,7 @@ public enum QuerySubject {
 			List<Object> subList, String id) {
 		Data data = null;
 		String [] 	edgeId 			= new String[1];
-		int	   [] 	laneIndex		= new int[0];
+		int	   [] 	laneIndex		= new int[1];
 		Object [][] leadingVehicle 	= new Object[1][2];
 		double [] 	meanSpeed 		= new double[1];
 		double [] 	meanTime 		= new double[1];

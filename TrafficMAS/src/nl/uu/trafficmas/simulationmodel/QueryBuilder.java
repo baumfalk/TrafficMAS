@@ -56,11 +56,7 @@ public class QueryBuilder {
 		if(!querySubjects.contains(sq)) {
 			this.addQuerySubject(sq);
 		}
-		if(sq.hasField(sf)) {
-			querySubjectFields.get(sq).add(sf);
-		} else {
-			throw new Exception(sq + " doesn't have the field" + sf);
-		}
+		querySubjectFields.get(sq).add(sf);
 	}
 	
 	public void executeQuery(SumoTraciConnection conn) throws Exception {
@@ -121,7 +117,7 @@ public class QueryBuilder {
 	}
 
 	private void generateQueries(ArrayList<SumoCommand> cmdList,
-			ArrayList<Object> responses) {
+			ArrayList<Object> responses) throws Exception {
 		// how many ids are there for each subject,
 		// and what field do we need to retrieve for each id?
 		for(QuerySubject querySubject : querySubjects) {
