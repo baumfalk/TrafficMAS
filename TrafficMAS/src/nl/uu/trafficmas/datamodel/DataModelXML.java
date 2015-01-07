@@ -31,8 +31,6 @@ public class DataModelXML implements DataModel {
 	private String edgesXML;
 	private String agentProfilesXML;
 	private String sumoConfigXML;
-	//TODO: replace ArrayList<Pair> By HashMa[
-	//TODO: split this class in several smaller classes
 	
 	public DataModelXML() {
 		
@@ -57,17 +55,36 @@ public class DataModelXML implements DataModel {
 		return instantiateRoadNetwork(this.dir,this.nodesXML,this.edgesXML);
 	}
 	
+	/**
+	 * Creates a RoadNetwork in the MAS according to 'nodesXML' and 'edgesXML'.
+	 * The RoadNetwork object is also validated by validateRoadNetwork(). 
+	 * These xml files must be present in the directory given by the variable 'dir'.
+	 * @param dir
+	 * @param nodesXML
+	 * @param edgesXML
+	 * @return a RoadNetwork, if the RoadNetwork is not correctly validated, this method will return null.
+	 */
 	public static RoadNetwork instantiateRoadNetwork(String dir, String nodesXML, String edgesXML) {
 		HashMap<String,Node> nodes = extractNodes(dir,nodesXML);
 		ArrayList<Node> nodeList = new ArrayList<Node>(nodes.values());
 		ArrayList<Edge> edges = extractEdges(dir, edgesXML,nodes);
 		
 		RoadNetwork rn = new RoadNetwork(nodeList, edges);
-		rn.validateRoadNetwork();
-		
-		return rn;
+		if(rn.validateRoadNetwork()){
+			return rn;
+		} else{
+			System.out.println("RoadNetwork is unvalid!");
+			return null;
+		}
 	}
 		
+	/**
+	 * Extracts all values needed from 'nodesXML' and returns a HashMap filled with Node objects.
+	 * The xml file must be present in the directory given by the variable 'dir'.
+	 * @param dir
+	 * @param nodesXML
+	 * @return a map with all Node objects.
+	 */
 	public static HashMap<String,Node> extractNodes(String dir,String nodesXML) {
 		ArrayList<ArrayList<Pair<String,String>>> nodesAttributes = SimpleXMLReader.extractFromXML(dir,nodesXML,"node");
 		HashMap<String,Node>nodes = new HashMap<String,Node>();
@@ -96,6 +113,15 @@ public class DataModelXML implements DataModel {
 		return nodes;
 	}
 	
+	/**
+	 * Extracts all values needed from 'edgesXML' and returns an ArrayList filled with Edge objects. 
+	 * The 'nodes' is used, since Edge object need to be connected to Node objects.
+	 * The XML file must be present in the directory given by the variable 'dir'.
+	 * @param dir
+	 * @param edgesXML
+	 * @param nodes 
+	 * @return a List containing all Edge objects.
+	 */
 	public static ArrayList<Edge> extractEdges(String dir, String edgesXML,HashMap<String,Node> nodes) {
 		ArrayList<ArrayList<Pair<String,String>>> edgesAttributes = SimpleXMLReader.extractFromXML(dir, edgesXML,"edge");
 		ArrayList<Edge> edges = new ArrayList<Edge>();
@@ -106,6 +132,13 @@ public class DataModelXML implements DataModel {
 		return edges;
 	}
 
+	/**
+	 * Extracts the values from 'edgeAttributes' 
+	 * and uses the appropriate Node objects from 'nodes' to add an Edge object to the list 'edges'.
+	 * @param edges
+	 * @param edgeAttributes
+	 * @param nodes
+	 */
 	public static void extractEdge(ArrayList<Edge> edges,
 			ArrayList<Pair<String, String>> edgeAttributes,
 			HashMap<String,Node> nodes) {
@@ -168,6 +201,14 @@ public class DataModelXML implements DataModel {
 		return getAgentSpawnProbability(dir,agentProfilesXML);
 	}
 	
+	/**
+	 * Returns the probability for an agent to spawn on each tick,
+	 * this value is extracted from 'agentProfilesXML'.
+	 * The xml file must be present in the directory given by the variable 'dir'.
+	 * @param dir
+	 * @param agentProfilesXML
+	 * @return a value between 0 and 1, including 0 and 1.
+	 */
 	public static double getAgentSpawnProbability(String dir, String agentProfilesXML) {
 		ArrayList<ArrayList<Pair<String, String>>> agentsAttributes = SimpleXMLReader.extractFromXML(dir, agentProfilesXML,"agents");
 		
@@ -187,6 +228,13 @@ public class DataModelXML implements DataModel {
 		return getAgentProfileTypeDistribution(dir,agentProfilesXML);
 	}
 	
+	/**
+ 	 * Extracts the agentProfileTypeDistribution from 'agentProfilesXML' and returns it in a HashMap.
+	 * The XML file must be present in the directory given by the variable 'dir'.
+	 * @param dir
+	 * @param agentProfilesXML
+	 * @return a map containing the AgentProfile and the chance of it occurring in a value between 0 and 1.
+	 */
 	public static LinkedHashMap<AgentProfileType, Double> getAgentProfileTypeDistribution(String dir, String agentProfilesXML) {
 		ArrayList<ArrayList<Pair<String, String>>> agentAttributes = SimpleXMLReader.extractFromXML(dir, agentProfilesXML,"agent");
 		LinkedHashMap<AgentProfileType, Double> agentTypeAndDist = new LinkedHashMap<AgentProfileType, Double>();
@@ -215,6 +263,13 @@ public class DataModelXML implements DataModel {
 		return simulationLength(dir, masXML);
 	}
 	
+	/**
+	 * Extracts the simulation length from 'masXML' and converts it to an Integer value.
+	 * The XML file must be present in the directory given by the variable 'dir'.
+	 * @param dir
+	 * @param masXML
+	 * @return an Integer with the time in seconds concerning how long SUMO will run.
+	 */
 	public static int simulationLength(String dir, String masXML) {
 		ArrayList<ArrayList<Pair<String, String>>> masAttributes = SimpleXMLReader.extractFromXML(dir,masXML,"mas");
 		int simulationLength = 0;
@@ -235,6 +290,14 @@ public class DataModelXML implements DataModel {
 		return getRoutes(rn,dir,routesXML);
 	}
 	
+	/**
+	 * Extracts a list of Route objects, by reading 'routesXML'.
+	 * The xml file must be present in the directory given by the variable 'dir'.
+	 * @param rn
+	 * @param dir
+	 * @param routesXML
+	 * @return an ArrayList of Route objects
+	 */
 	public static ArrayList<Route> getRoutes(RoadNetwork rn, String dir, String routesXML) {
 		ArrayList<ArrayList<Pair<String, String>>> routesAttributes = SimpleXMLReader.extractFromXML(dir,routesXML,"route");
 		ArrayList<Route> routes = new ArrayList<Route>();
@@ -268,6 +331,15 @@ public class DataModelXML implements DataModel {
 		return getMASData(dir, masXML, sumoConfigXML, agentProfilesXML);
 	}
 	
+	/**
+	 * Returns the MASData data structure which contains data read from several XML files.
+	 * MASData contains simulationLength, sumoConfigPath, spawnProbability and agentProfileTypeDistribution.
+	 * @param dir
+	 * @param masXML
+	 * @param sumoConfigXML
+	 * @param agentProfilesXML
+	 * @return the MASData data structure
+	 */
 	public static MASData getMASData(String dir, String masXML, String sumoConfigXML, String agentProfilesXML){
 		int simulationLength 		= DataModelXML.simulationLength(dir, masXML);
 		String sumoConfigPath 		= sumoConfigXML;

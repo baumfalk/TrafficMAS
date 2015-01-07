@@ -13,6 +13,15 @@ import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
 public class SimpleXMLReader {
+	
+	/**
+	 * Extracts the all found attributes as specified by 'target' from the file specified by 'xmlLocation'.
+	 * The XML files must be present in the directory given by the variable 'dir'.
+	 * @param dir
+	 * @param xmlLocation
+	 * @param target
+	 * @return a list of a list, containing pairs which consist of the name and values of the target attributes
+	 */
 	public static ArrayList<ArrayList<Pair<String,String>>> extractFromXML(String dir, String xmlLocation, String target) {
 		try{
 			XMLInputFactory inputFactory = XMLInputFactory.newInstance();
@@ -29,6 +38,13 @@ public class SimpleXMLReader {
 		return null;
 	}
 
+	/**
+	 * Parses all attributes in the XML file and returns an XMLEvent containing information about the attributes which name that equal 'target'.
+	 * @param eventReader
+	 * @param target
+	 * @return an XMLEvent.
+	 * @throws XMLStreamException
+	 */
 	public static ArrayList<ArrayList<Pair<String,String>>> extractXMLLoop(XMLEventReader eventReader, String target) throws XMLStreamException {
 		ArrayList<ArrayList<Pair<String,String>>> foundTargetList = new ArrayList<ArrayList<Pair<String,String>>>();
 		while (eventReader.hasNext()) {
@@ -41,6 +57,11 @@ public class SimpleXMLReader {
 		return foundTargetList;
 	}
 
+	/**
+	 * Extracts all attributes of a certain type specified by XMLEvent 'e'
+	 * @param e
+	 * @return an ArrayList of type Pair, the pairs contain the name and values of the attributes.
+	 */
 	public static  ArrayList<Pair<String,String>> extractXMLAttributes(XMLEvent e) {
 		StartElement se = e.asStartElement();					
 		Iterator<Attribute> it = se.getAttributes();
