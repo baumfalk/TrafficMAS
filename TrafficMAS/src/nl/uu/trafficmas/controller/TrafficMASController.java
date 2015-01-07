@@ -72,6 +72,7 @@ public class TrafficMASController {
 		//////////////////////
 		this.completeAgentMap 	= TrafficMASController.setupSimulation(masData, simulationModel, agentsAndTime);
 		this.currentAgentMap 	= new HashMap<String, Agent>();
+		
 		////////////////
 		// setup view //
 		////////////////

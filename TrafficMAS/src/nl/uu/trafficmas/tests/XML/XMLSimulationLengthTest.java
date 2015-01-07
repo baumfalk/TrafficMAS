@@ -8,7 +8,7 @@ import org.junit.Test;
 public class XMLSimulationLengthTest {
 
 	@Test
-	public void testSimulationLengthStringString() {
+	public void xmlSimulationLength() {
 		int simulationLength = DataModelXML.simulationLength("tests/XML/SimulationLength/", "MASTest.xml");
 		assertEquals(simulationLength,1000);
 	}

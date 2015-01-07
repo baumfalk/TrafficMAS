@@ -14,8 +14,8 @@ public class InitializeTest {
 	public void initialize() {
 
 		
-		SumoTraciConnection conn = SimulationModelTraaS.initialize("sumo", "./tests/ConfigTest.xml");
 		try {
+			SumoTraciConnection conn = SimulationModelTraaS.initialize("sumo", "./tests/SimulationModelTraaS/Initialize/ConfigTest.xml");
             int simtime = (int) conn.do_job_get(Simulation.getCurrentTime());
 			conn.do_timestep();
 			assertEquals(1000, simtime);

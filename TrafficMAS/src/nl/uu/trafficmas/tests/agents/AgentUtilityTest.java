@@ -10,7 +10,7 @@ import org.junit.Test;
 public class AgentUtilityTest {
 
 	@Test
-	public void test() {
+	public void agentUtility() {
 		AgentProfileType[] agentProfileTypes = AgentProfileType.values();
 		Edge[] lst = new Edge[0];
 		// goal achieved should be utility 1

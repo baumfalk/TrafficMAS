@@ -26,7 +26,7 @@ import org.junit.Test;
 public class QueryBuilderTest {
 
 	@Test
-	public void test() {
+	public void queryBuilder() {
 		Random random = new Random(1337);
 		
 		DataModel dataModel = new DataModelXML("tests/SimulationModelTraaS/QueryBuilder/","MASTest.xml");

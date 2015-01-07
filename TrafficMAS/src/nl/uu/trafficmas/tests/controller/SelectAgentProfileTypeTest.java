@@ -12,7 +12,7 @@ import org.junit.Test;
 public class SelectAgentProfileTypeTest {
 
 	@Test
-	public void test() {
+	public void selectAgentProfileTypeTest() {
 		DataModel dataModel = new DataModelXML("tests/Controller/SelectAgentProfileType/","MASTest.xml");
 		MASData masData = dataModel.getMASData();
 		double coinFlip = 0.04;

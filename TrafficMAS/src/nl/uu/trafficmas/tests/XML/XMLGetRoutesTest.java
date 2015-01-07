@@ -13,7 +13,7 @@ import org.junit.Test;
 public class XMLGetRoutesTest {
 
 	@Test
-	public void test() {
+	public void xmlGetRoutes() {
 		RoadNetwork rn = DataModelXML.instantiateRoadNetwork("tests/XML/GetRoutes/", "NodeTest.xml", "EdgeTest.xml");
 		ArrayList<Route> routes = DataModelXML.getRoutes(rn, "tests/XML/GetRoutes/", "RouteTest.xml");
 		assertEquals(routes.size(),1);

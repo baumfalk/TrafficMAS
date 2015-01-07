@@ -13,7 +13,7 @@ import org.junit.Test;
 public class XMLAgentTypeDistributionTest {
 
 	@Test
-	public void test() {
+	public void xmlAgentTypeDistribution() {
 		HashMap<AgentProfileType, Double> dist = DataModelXML.getAgentProfileTypeDistribution("tests/XML/GetAgentProfileType/", "AgentProfileTypesTest.xml");
 		
 		assertNotNull(dist);

@@ -9,7 +9,7 @@ import org.junit.Test;
 public class XMLRoadNetworkTest {
 
 	@Test
-	public void test() {
+	public void xmlRoadNetwork() {
 		
 		RoadNetwork rn = DataModelXML.instantiateRoadNetwork("tests/XML/InstantiateRoadNetwork/", "NodeTest.xml", "EdgeTest.xml");
 		
