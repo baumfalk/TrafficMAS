@@ -53,9 +53,9 @@ public class AddAgentsTest {
 			while(i++ < masData.simulationLength){
 				conn.do_timestep();
 				
-				if(i == 110){
+				if(i == 80){
 					SumoStringList vehicleIDList = (SumoStringList) conn.do_job_get(Vehicle.getIDList());
-					assertEquals(1,vehicleIDList.size()); // Length is always 1 at this time with this seed.
+					assertEquals(4,vehicleIDList.size()); // Length is always 1 at this time with this seed.
 				}
 			}
 			conn.close();

@@ -212,7 +212,6 @@ public class TrafficMASController {
 	 */
 	private  void updateMAS(StateData simulationStateData) {
 		currentAgentMap = TrafficMASController.updateAgents(completeAgentMap, roadNetwork, simulationStateData);
-		assertEquals(currentAgentMap.size(),simulationStateData.agentsData.size()); // TODO: This doesn't do anything, Jetze?
 	}
 	
 	/**
@@ -228,11 +227,11 @@ public class TrafficMASController {
 	
 	// TODO: make test for updateAgents
 	/**
-	 * 
+	 * Updates the information all agents in 'completeAgentMap' of which data was returned in 'stateData'. 
 	 * @param completeAgentMap
 	 * @param roadNetwork
 	 * @param stateData
-	 * @return
+	 * @return a map of every agent in the simulation, some of which have been updated.
 	 */
 	public static HashMap<String, Agent> updateAgents(HashMap<String,Agent> completeAgentMap, RoadNetwork roadNetwork, StateData stateData){
 		HashMap<String, Agent> agentsMap = new LinkedHashMap<String, Agent>();
@@ -243,18 +242,17 @@ public class TrafficMASController {
 				agentsMap.put(agentID, agent);
 			}
 		}
-		
 		return agentsMap;
 	}
 	// TODO: Make test for updateAgent
 	/**
-	 * 
+	 * Updates the agent 'agent' with id 'agentID', 'stateData' contains the new information with which the agent is updated. 
 	 * @param roadNetwork
 	 * @param stateData
 	 * @param agentID
 	 * @param agent
 	 */
-	private static void updateAgent(RoadNetwork roadNetwork,
+	public static void updateAgent(RoadNetwork roadNetwork,
 			StateData stateData, String agentID, Agent agent) {
 		double velocity = stateData.agentsData.get(agentID).speed;
 		String roadID 	= stateData.agentsData.get(agentID).roadID;
