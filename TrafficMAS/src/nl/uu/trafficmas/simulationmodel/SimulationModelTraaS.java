@@ -5,6 +5,7 @@ import it.polito.appeal.traci.SumoTraciConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -112,7 +113,7 @@ public class SimulationModelTraaS implements SimulationModel {
 	//TODO: Implement routes.
 	public static HashMap<String, Agent> addAgents(HashMap<Agent, Integer> agentPairList, SumoTraciConnection conn){
 		
-		HashMap<String, Agent> completeAgentMap = new HashMap<String, Agent>();
+		HashMap<String, Agent> completeAgentMap = new LinkedHashMap<String, Agent>();
 		ArrayList<SumoCommand> cmds = new ArrayList<>();
 		for( Entry<Agent, Integer> agentPair : agentPairList.entrySet()){
 			cmds.add(addAgentCommand(agentPair.getKey(), "route0", agentPair.getValue()));
