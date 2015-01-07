@@ -18,4 +18,15 @@ public class MASData {
 		this.agentProfileTypeDistribution 	= agentProfileTypeDistribution;
 	}
 	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("SimulationLength: "+simulationLength+"\r\n");
+		sb.append("sumoConfigPath: "+sumoConfigPath+"\r\n");
+		sb.append("spawnProbability: "+spawnProbability+"\r\n");
+		sb.append("Agent Profile Distr"+agentProfileTypeDistribution+"\r\n");
+		return sb.toString();
+		
+	}
+	
 }

@@ -1,10 +1,10 @@
 package nl.uu.trafficmas.tests.XML;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
 
-import nl.uu.trafficmas.datamodel.DataModelXML;
 import nl.uu.trafficmas.datamodel.Pair;
 import nl.uu.trafficmas.datamodel.SimpleXMLReader;
 

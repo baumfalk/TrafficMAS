@@ -1,17 +1,14 @@
 package nl.uu.trafficmas.controller;
 
-import it.polito.appeal.traci.SumoTraciConnection;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
-import de.tudresden.sumo.cmd.Vehicle;
-import de.tudresden.sumo.util.SumoCommand;
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.agent.AgentProfileType;
 import nl.uu.trafficmas.agent.actions.AgentAction;
@@ -38,7 +35,6 @@ public class TrafficMASController {
 
 	private ArrayList<Route> routes;
 	private HashMap<String, Agent> currentAgentMap;
-	private int SimulationLength;
 	private MASData masData;
 		
 	public TrafficMASController(DataModel dataModel,SimulationModel simulationModel, TrafficView view) {
@@ -51,26 +47,36 @@ public class TrafficMASController {
 		} else {
 			this.rng = new Random(seed);
 		}
-	
+		view.addMessage("Initializing MAS with seed: "+ seed);
 		///////////////
 		// load data //
 		///////////////
 		this.masData 		= this.readData(dataModel);
-		
+		view.addMessage(masData.toString());
 		///////////////
 		// setup mas //
 		///////////////
 		// setup environment
+		
 		this.roadNetwork 	= this.setupRoadNetwork(dataModel);
+		view.addMessage("Initialized roadnetwork");
+
 		this.routes 		= this.setupRoutes(dataModel,roadNetwork);
+		view.addMessage("Initialized routes");
+
 		// setup agents & organizations
 		this.agentsAndTime 	= TrafficMASController.instantiateAgents(masData, rng, routes);
+		view.addMessage("Generated agent spawn times");
+
 		this.organisations 	= TrafficMASController.instantiateOrganisations(masData);
-		
+		view.addMessage("Initialized organisations");
+
 		//////////////////////
 		// setup simulation //
 		//////////////////////
 		this.completeAgentMap 	= TrafficMASController.setupSimulation(masData, simulationModel, agentsAndTime);
+		view.addMessage("Simulation is set up");
+
 		this.currentAgentMap 	= new HashMap<String, Agent>();
 		
 		////////////////
@@ -78,6 +84,9 @@ public class TrafficMASController {
 		////////////////
 		TrafficMASController.setupView(view);
 		TrafficMASController.updateView(view, roadNetwork, currentAgentMap.values(), organisations);
+		view.addMessage("View is set up and updated");
+
+		view.visualize();
 	}
 
 	private RoadNetwork setupRoadNetwork(DataModel dataModel) {
@@ -89,17 +98,42 @@ public class TrafficMASController {
 	}
 
 	public void run(DataModel dataModel, SimulationModel simulationModel, TrafficView view) {
-		int i = 0;
-
+		int i = 1;
+		view.addMessage("Starting main loop");
 		while(i++ < masData.simulationLength) {
+			long start_time = System.nanoTime();
+			long total_start_time = start_time;
 			StateData simulationStateData = TrafficMASController.nextSimulationState(simulationModel);
+			view.addMessage("+++++++++++++++++++++");
+			long end_time = System.nanoTime();
+			double difference = (end_time - start_time)/1e6;
+
+			view.addMessage("Timestep: "+i);
+			view.addMessage("Simulation timestep: "+simulationStateData.currentTimeStep);
+			view.addMessage("sim next state duration:"+difference+"ms");
+			view.addMessage("Number of agents in sim:"+simulationStateData.agentsData.size());
+
 			this.updateMAS(simulationStateData); 
-			
+			view.addMessage("Number of agents in MAS:"+currentAgentMap.size());
+
 			HashMap<Agent,AgentAction> agentActions = this.nextMASState();
-			TrafficMASController.updateSimulation(simulationModel, agentActions);
+			view.addMessage("Agent actions: "+agentActions);
 			
+			start_time = System.nanoTime();
+			TrafficMASController.updateSimulation(simulationModel, agentActions);
+			end_time = System.nanoTime();
+			difference = (end_time - start_time)/1e6;
+			view.addMessage("sim update duration:"+difference+"ms");
+
 			TrafficMASController.updateView(view, roadNetwork, currentAgentMap.values(), organisations);
+			end_time = System.nanoTime();
+			difference = (end_time - total_start_time)/1e6;
+			view.addMessage("duration:"+difference+"ms");
+			view.addMessage("+++++++++++++++++++++");
+			
+			view.visualize();
 		}
+		
 		TrafficMASController.cleanUp(dataModel, simulationModel, view);
 	}
 
@@ -137,66 +171,74 @@ public class TrafficMASController {
 	
 	private  void updateMAS(StateData simulationStateData) {
 		//TODO update Agents (currentTime etc)
-		currentAgentMap = TrafficMASController.updateAgents(currentAgentMap, roadNetwork, simulationStateData);
+		currentAgentMap = TrafficMASController.updateAgents(completeAgentMap, roadNetwork, simulationStateData);
+		assertEquals(currentAgentMap.size(),simulationStateData.agentsData.size());
 	}
 	
 	private HashMap<Agent, AgentAction> nextMASState() {
 		//TODO: Organization sanctions
-		getAgentActions(this.currentAgentMap);
 		
 		return  getAgentActions(this.currentAgentMap);
 	}
 	
-	public static HashMap<String, Agent> updateAgents(HashMap<String, Agent> currentAgentMap, RoadNetwork roadNetwork, StateData stateData){
-		HashMap<String, Agent> agentsMap = new HashMap<String, Agent>(currentAgentMap);
-		if(currentAgentMap.size() == 0) 
-			return agentsMap;
-		
-			for(Map.Entry<String, Agent> agentMap : currentAgentMap.entrySet()){
-				String agentID 	= agentMap.getKey();
-				Agent agent 	= agentMap.getValue();
-	
-				// Retrieve all physical agent information from SUMO
-				double velocity = stateData.agentsData.get(agentID).speed;
-				String roadID 	= stateData.agentsData.get(agentID).roadID;
-				Road road 		= roadNetwork.getRoadFromID(roadID);
-				int laneIndex 	= stateData.agentsData.get(agentID).laneIndex;
-				double distance = stateData.agentsData.get(agentID).position;
-				
-				// Update the agent with information
-				agent.setVelocity(velocity);
-				agent.setRoad(road);
-				agent.setLane(road.getLanes()[laneIndex]);
-				
-				agent.setDistance(distance);
-				double expectedArrivalTime = 0;
-				Edge [] route = agent.getRoute();
-				
-				//TODO review this
-				for(Edge edge: route) {
-					if(edge.getRoad().equals(agent.getRoad())) {
-						double distRemains = edge.getRoad().length - agent.getDistance();
-						double averageSpeedEdge = edge.getRoad().length/edge.getRoad().getMeanTravelTime();
-						expectedArrivalTime += distRemains/averageSpeedEdge;
-					}
-					expectedArrivalTime += edge.getRoad().getMeanTravelTime(); 
-				}
-				
-				agent.setExpectedArrivalTime((int) Math.round(expectedArrivalTime));
+	// TODO: make test for updateAgents
+	public static HashMap<String, Agent> updateAgents(HashMap<String,Agent> completeAgentMap, RoadNetwork roadNetwork, StateData stateData){
+		HashMap<String, Agent> agentsMap = new LinkedHashMap<String, Agent>();
+		for(String agentID : stateData.agentsData.keySet()) {
+			if(!agentsMap.containsKey(agentID)) {
+				Agent agent = completeAgentMap.get(agentID);
+				updateAgent(roadNetwork, stateData, agentID, agent);
 				agentsMap.put(agentID, agent);
 			}
+		}
+		
 		return agentsMap;
+	}
+
+	private static void updateAgent(RoadNetwork roadNetwork,
+			StateData stateData, String agentID, Agent agent) {
+		double velocity = stateData.agentsData.get(agentID).speed;
+		String roadID 	= stateData.agentsData.get(agentID).roadID;
+		Road road 		= roadNetwork.getRoadFromID(roadID);
+		int laneIndex 	= stateData.agentsData.get(agentID).laneIndex;
+		double distance = stateData.agentsData.get(agentID).position;
+		
+		// Update the agent with information
+		agent.setVelocity(velocity);
+		agent.setRoad(road);
+		agent.setLane(road.getLanes()[laneIndex]);
+		
+		agent.setDistance(distance);
+		double expectedArrivalTime = 0;
+		Edge [] route = agent.getRoute();
+		
+		//TODO review this
+		for(Edge edge: route) {
+			if(edge.getRoad().equals(agent.getRoad())) {
+				double distRemains = edge.getRoad().length - agent.getDistance();
+				double averageSpeedEdge = edge.getRoad().length/edge.getRoad().getMeanTravelTime();
+				expectedArrivalTime += distRemains/averageSpeedEdge;
+			}
+			expectedArrivalTime += edge.getRoad().getMeanTravelTime(); 
+		}
+		
+		agent.setExpectedArrivalTime((int) Math.round(expectedArrivalTime));
 	}
 
 	public static void updateSimulation(SimulationModel simulationModel, HashMap<Agent, AgentAction> agentActions) {
 		if(agentActions != null) {
-			simulationModel.updateStateData(agentActions);
+			simulationModel.simulateAgentActions(agentActions);
 		}
 	}
 	
 	public static StateData nextSimulationState(SimulationModel simulationModel) {
-		simulationModel.doTimeStep();
-		return simulationModel.getStateData();
+		long start_time = System.nanoTime();
+		//simulationModel.doTimeStep();
+		long end_time = System.nanoTime();
+		double difference = (end_time - start_time)/1e6;
+		System.out.println("Simulation timestep:"+difference);
+		// do step and get new data
+		return simulationModel.getNewStateData();
 	}
 	
 	public static void updateView(TrafficView view, RoadNetwork roadNetwork, Collection<Agent> currentAgents, Collection<Organisation> organisations ) {

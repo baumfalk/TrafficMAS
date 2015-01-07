@@ -1,6 +1,5 @@
 package nl.uu.trafficmas.view;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 import nl.uu.trafficmas.agent.Agent;
@@ -9,6 +8,12 @@ import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 
 public class TrafficViewConsole implements TrafficView {
 
+	StringBuilder sb;
+	
+	public TrafficViewConsole(){
+		sb = new StringBuilder();
+	}
+	
 	@Override
 	public void updateFromRoadNetwork(RoadNetwork rn) {
 		// TODO Auto-generated method stub
@@ -42,12 +47,15 @@ public class TrafficViewConsole implements TrafficView {
 	@Override
 	public void visualize() {
 		// TODO Auto-generated method stub
-
+		if(sb.length() > 0) {
+			System.out.println(sb.toString());
+			sb = new StringBuilder();
+		}
 	}
 	
 	@Override
 	public void addMessage(String message) {
-		
+		sb.append(message+"\r\n");
 	}
 
 	@Override
