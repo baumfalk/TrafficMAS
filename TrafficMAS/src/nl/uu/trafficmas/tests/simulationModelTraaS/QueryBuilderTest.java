@@ -44,13 +44,12 @@ public class QueryBuilderTest {
 		HashMap<Agent,Integer> agentPairList = TrafficMASController.instantiateAgents(masData, random, routes);
 		SimulationModelTraaS.addAgents(agentPairList, conn);
 		
-		StateData stateData = SimulationModelTraaS.getStateData(conn);
+		StateData stateData = SimulationModelTraaS.getStateData(conn, false);
 		assertNotNull(stateData);
 		int i = 0;
 		while(i++ < masData.simulationLength){
 			try {
-				conn.do_timestep();
-				stateData = SimulationModelTraaS.getStateData(conn);
+				stateData = SimulationModelTraaS.getStateData(conn, true);
 				if(!stateData.agentsData.isEmpty()) {
 					for(Entry<String, AgentData> val : stateData.agentsData.entrySet()) {
 						assertNotNull(val.getValue().laneIndex);

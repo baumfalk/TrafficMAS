@@ -107,6 +107,7 @@ public class TrafficMASController {
 	}
 
 	/**
+	 * Main Loop, updates simulationModel and View.
 	 * @param dataModel
 	 * @param simulationModel
 	 * @param view
@@ -153,6 +154,11 @@ public class TrafficMASController {
 
 	
 	// TODO: Write test for this function
+	/**
+	 * Generates a map containing the best actions for every Agent alive at that timestep.
+	 * @param currentAgents
+	 * @return a map containing an agent as key and an AgentAction as value.
+	 */
 	public static HashMap<Agent, AgentAction> getAgentActions(HashMap<String, Agent> currentAgents) {
 		
 		HashMap <Agent,AgentAction> actions = new HashMap<Agent, AgentAction>();
@@ -193,7 +199,7 @@ public class TrafficMASController {
 	}
 	
 	/**
-	 * Not yet implemented
+	 * Sets up the GUI by calling view.initialize().
 	 * @param view
 	 */
 	public static void setupView(TrafficView view) {
@@ -201,15 +207,19 @@ public class TrafficMASController {
 	}
 	
 	/**
-	 * 
+	 * Updates the MAS with the 'simulationStateData'. Agents, Edges and Lanes are updated.
 	 * @param simulationStateData
 	 */
 	private  void updateMAS(StateData simulationStateData) {
-		//TODO update Agents (currentTime etc)
 		currentAgentMap = TrafficMASController.updateAgents(completeAgentMap, roadNetwork, simulationStateData);
-		assertEquals(currentAgentMap.size(),simulationStateData.agentsData.size());
+		assertEquals(currentAgentMap.size(),simulationStateData.agentsData.size()); // TODO: This doesn't do anything, Jetze?
 	}
 	
+	/**
+	 * Calculates the next step for the MAS. Organisations execute their actions, Agent actions are sent to SUMO.
+	 * Not yet completely implemented.	 
+	 * @return 
+	 */
 	private HashMap<Agent, AgentAction> nextMASState() {
 		//TODO: Organization sanctions
 		
@@ -217,6 +227,13 @@ public class TrafficMASController {
 	}
 	
 	// TODO: make test for updateAgents
+	/**
+	 * 
+	 * @param completeAgentMap
+	 * @param roadNetwork
+	 * @param stateData
+	 * @return
+	 */
 	public static HashMap<String, Agent> updateAgents(HashMap<String,Agent> completeAgentMap, RoadNetwork roadNetwork, StateData stateData){
 		HashMap<String, Agent> agentsMap = new LinkedHashMap<String, Agent>();
 		for(String agentID : stateData.agentsData.keySet()) {
@@ -229,7 +246,14 @@ public class TrafficMASController {
 		
 		return agentsMap;
 	}
-
+	// TODO: Make test for updateAgent
+	/**
+	 * 
+	 * @param roadNetwork
+	 * @param stateData
+	 * @param agentID
+	 * @param agent
+	 */
 	private static void updateAgent(RoadNetwork roadNetwork,
 			StateData stateData, String agentID, Agent agent) {
 		double velocity = stateData.agentsData.get(agentID).speed;
