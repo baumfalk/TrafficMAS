@@ -1,7 +1,6 @@
 package nl.uu.trafficmas.controller;
 
 import static org.junit.Assert.assertEquals;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -89,14 +88,29 @@ public class TrafficMASController {
 		view.visualize();
 	}
 
+	/**
+	 * Uses dataModel.instantiateRoadNetwork() to return a RoadNetwork according to the XML files read by Datamodel.
+	 * @param dataModel
+	 * @return a RoadNetwork filled with all Edge and Node objects
+	 */
 	private RoadNetwork setupRoadNetwork(DataModel dataModel) {
 		return dataModel.instantiateRoadNetwork();
 	}
 	
+	/**
+	 * Uses dataModel.getRoutes() to return an ArrayList<Route> according to the XML files read by Datamodel.
+	 * @param dataModel
+	 * @return a list of routes which agents can follow.
+	 */
 	private ArrayList<Route> setupRoutes(DataModel dataModel, RoadNetwork roadNetwork) {
 		return dataModel.getRoutes(roadNetwork);
 	}
 
+	/**
+	 * @param dataModel
+	 * @param simulationModel
+	 * @param view
+	 */
 	public void run(DataModel dataModel, SimulationModel simulationModel, TrafficView view) {
 		int i = 1;
 		view.addMessage("Starting main loop");
@@ -149,10 +163,23 @@ public class TrafficMASController {
 		return actions;
 	}
 	
+
+	/**
+	 * This function uses dataModel.getMASData() to return  the MASData.
+	 * @param dataModel
+	 * @return the MASData data structure which contains  includes simulationLength, sumoConfigPath, spawnProbability and AgentProfileTypeDistribution.
+	 */
 	private MASData readData(DataModel dataModel) {
 		return dataModel.getMASData();
 	}
 	
+	/**
+	 * Sets up the simulation. The SUMO application is started via TraaS with certain options and all SumoCommands to add Agents are sent.
+	 * @param masData
+	 * @param simulationModel
+	 * @param agentsAndTime
+	 * @return a map of all Agent objects that will act in the simulation.
+	 */
 	public static HashMap<String,Agent> setupSimulation(MASData masData, SimulationModel simulationModel, HashMap<Agent,Integer> agentsAndTime) {
 		// start the simulation
 		HashMap<String, String> optionValueMap = new HashMap<String, String>();
@@ -165,10 +192,18 @@ public class TrafficMASController {
 		return simulationModel.addAgents(agentsAndTime);
 	}
 	
+	/**
+	 * Not yet implemented
+	 * @param view
+	 */
 	public static void setupView(TrafficView view) {
 		view.initialize();
 	}
 	
+	/**
+	 * 
+	 * @param simulationStateData
+	 */
 	private  void updateMAS(StateData simulationStateData) {
 		//TODO update Agents (currentTime etc)
 		currentAgentMap = TrafficMASController.updateAgents(completeAgentMap, roadNetwork, simulationStateData);
@@ -254,6 +289,14 @@ public class TrafficMASController {
 		view.close();
 	}
 	
+	/**
+	 * Generates a Map of Agents and their respective starting times according to 'masData', each agent is also assigned a route from 'routes'.
+	 * Randomness is determined by 'rng'.  
+	 * @param masData
+	 * @param rng
+	 * @param routes
+	 * @return a LinkedHashMap which contains all agents who will spawn during the simulation, and their respective spawn times, in order. 
+	 */
 	public static HashMap<Agent, Integer> instantiateAgents(MASData masData, Random rng, ArrayList<Route> routes){
 		LinkedHashMap<Agent, Integer> agentsAndTimes = new LinkedHashMap<Agent, Integer>();
 		int simulationLength = masData.simulationLength;
@@ -270,6 +313,16 @@ public class TrafficMASController {
 		return agentsAndTimes;
 	}
 
+	/**
+	 * Creates an Agent object with its respective spawn time and puts it in the hashMap 'agentsAndTimes'.
+	 * Agent is instantiated with an String ID in the form of "Agent n", a goalNode, a route from 'routes', a goal arrival time, a maximum speed, and the 'currentTime' (in seconds)
+	 * The AgentProfileType is determined with by 'coinflip' and 'agentProfileDistribution'.
+	 * @param routes
+	 * @param agentsAndTimes
+	 * @param agentProfileDistribution
+	 * @param currentTime
+	 * @param coinFlip
+	 */
 	private static void createAgent(ArrayList<Route> routes,
 			LinkedHashMap<Agent, Integer> agentsAndTimes,
 			HashMap<AgentProfileType, Double> agentProfileDistribution, int currentTime,
@@ -288,6 +341,12 @@ public class TrafficMASController {
 		agentsAndTimes.put(agent,currentTime*1000); //*1000 because sumo counts in ms, not s.
 	}
 	
+	/**
+	 * Selects a certain AgentProfile according to the 'coinflip' (which is determined by an earlier rng value) and the 'agentProfileDistribution'.
+	 * @param coinFlip
+	 * @param agentProfileDistribution
+	 * @return a AgentProfileType, currently either Normal, OldLady or PregnantWoman.
+	 */
 	public static AgentProfileType selectAgentProfileType(double coinFlip, HashMap<AgentProfileType, Double> agentProfileDistribution) {
 		for(Entry<AgentProfileType, Double> entry : agentProfileDistribution.entrySet()) {
 			if(coinFlip < entry.getValue()) {
@@ -298,7 +357,11 @@ public class TrafficMASController {
 		return null;
 	}
 	
-	
+	/**
+	 * Not yet Implemented.
+	 * @param masData
+	 * @return
+	 */
 	public static ArrayList<Organisation> instantiateOrganisations(MASData masData) {
 		return null;
 	}
