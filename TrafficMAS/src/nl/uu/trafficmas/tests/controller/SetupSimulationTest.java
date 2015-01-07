@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.Random;
 
 import nl.uu.trafficmas.agent.Agent;
@@ -35,7 +36,7 @@ public class SetupSimulationTest {
 
 		HashMap<String, Agent> completeAgentMap = TrafficMASController.setupSimulation(masData, simModel, agentsAndTime);
 		
-		assertTrue(completeAgentMap.containsKey("Agent 1"));
+		assertEquals(9, completeAgentMap.size());
 
 	}
 
