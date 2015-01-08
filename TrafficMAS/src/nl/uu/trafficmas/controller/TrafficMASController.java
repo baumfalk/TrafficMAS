@@ -47,6 +47,7 @@ public class TrafficMASController {
 			this.rng = new Random(seed);
 		}
 		view.addMessage("Initializing MAS with seed: "+ seed);
+		
 		///////////////
 		// load data //
 		///////////////
@@ -225,7 +226,6 @@ public class TrafficMASController {
 		return  getAgentActions(this.currentAgentMap);
 	}
 	
-	// TODO: make test for updateAgents
 	/**
 	 * Updates the information all agents in 'completeAgentMap' of which data was returned in 'stateData'. 
 	 * @param completeAgentMap
@@ -244,7 +244,6 @@ public class TrafficMASController {
 		}
 		return agentsMap;
 	}
-	// TODO: Make test for updateAgent
 	/**
 	 * Updates the agent 'agent' with id 'agentID', 'stateData' contains the new information with which the agent is updated. 
 	 * @param roadNetwork
@@ -259,8 +258,9 @@ public class TrafficMASController {
 		Road road 		= roadNetwork.getRoadFromID(roadID);
 		int laneIndex 	= stateData.agentsData.get(agentID).laneIndex;
 		double distance = stateData.agentsData.get(agentID).position;
-		
+	
 		// Update the agent with information
+		System.out.println("New velocity of " + agentID + ": " + velocity );
 		agent.setVelocity(velocity);
 		agent.setRoad(road);
 		agent.setLane(road.getLanes()[laneIndex]);
@@ -290,7 +290,6 @@ public class TrafficMASController {
 	
 	public static StateData nextSimulationState(SimulationModel simulationModel) {
 		long start_time = System.nanoTime();
-		//simulationModel.doTimeStep();
 		long end_time = System.nanoTime();
 		double difference = (end_time - start_time)/1e6;
 		System.out.println("Simulation timestep:"+difference);
