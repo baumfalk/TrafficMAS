@@ -134,7 +134,7 @@ public class TrafficMASController {
 			this.updateMAS(simulationStateData); 
 			view.addMessage("Number of agents in MAS:"+currentAgentMap.size());
 
-			HashMap<Agent,AgentAction> agentActions = this.nextMASState();
+			HashMap<Agent,AgentAction> agentActions = this.nextMASState(simulationStateData.currentTimeStep/1000);
 			view.addMessage("Agent actions: "+agentActions);
 			
 			start_time = System.nanoTime();
@@ -162,11 +162,11 @@ public class TrafficMASController {
 	 * @param currentAgents
 	 * @return a map containing an agent as key and an AgentAction as value.
 	 */
-	public static HashMap<Agent, AgentAction> getAgentActions(HashMap<String, Agent> currentAgents) {
+	public static HashMap<Agent, AgentAction> getAgentActions(int currentTime, HashMap<String, Agent> currentAgents) {
 		
 		HashMap <Agent,AgentAction> actions = new HashMap<Agent, AgentAction>();
 		for(Agent agent : currentAgents.values()) {
-			actions.put(agent, agent.doAction());
+			actions.put(agent, agent.doAction(currentTime));
 		}
 		
 		return actions;
@@ -245,10 +245,10 @@ public class TrafficMASController {
 	 * Not yet completely implemented.	 
 	 * @return 
 	 */
-	private HashMap<Agent, AgentAction> nextMASState() {
+	private HashMap<Agent, AgentAction> nextMASState(int currentTime) {
 		//TODO: Organization sanctions
 		
-		return  getAgentActions(this.currentAgentMap);
+		return  getAgentActions(currentTime, this.currentAgentMap);
 	}
 	
 	/**
@@ -295,7 +295,8 @@ public class TrafficMASController {
 		
 		//TODO review this
 		//TODO review test (expectedArrivalTime etc)
-		double timeLeftOnCurrentRoad 	= agent.getRoad().length/agent.getVelocity();
+		double roadLengthRemaining		= agent.getRoad().length - agent.getDistance();
+		double timeLeftOnCurrentRoad 	= roadLengthRemaining/agent.getVelocity();
 		double routeRemainderLength 	= Route.getRouteRemainderLength(agent.getRoute(), agent.getRoad());
 		double expectedArrivalTime 		= stateData.currentTimeStep/1000 + timeLeftOnCurrentRoad + routeRemainderLength / agent.getMaxComfySpeed();
 		
@@ -378,7 +379,7 @@ public class TrafficMASController {
 		int goalArrivalTime = agentProfileType.goalArrivalTime(currentTime, minimalTravelTime);
 		
 		Node goalNode = routeEdges[routeEdges.length-1].getToNode();
-		Agent agent = agentProfileType.toAgent(Agent.getNextAgentID(), goalNode, routeEdges,  goalArrivalTime, Agent.DEFAULT_MAX_SPEED,currentTime); //TODO: change this default max speed
+		Agent agent = agentProfileType.toAgent(Agent.getNextAgentID(), goalNode, routeEdges,  goalArrivalTime, Agent.DEFAULT_MAX_SPEED); //TODO: change this default max speed
 		agentsAndTimes.put(agent,currentTime*1000); //*1000 because sumo counts in ms, not s.
 	}
 	

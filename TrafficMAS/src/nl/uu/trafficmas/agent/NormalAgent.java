@@ -9,8 +9,8 @@ import nl.uu.trafficmas.roadnetwork.Node;
 
 public class NormalAgent extends Agent {
 
-	public NormalAgent(String agentID, Node goalNode, Edge[] routeEdges, int goalArrivalTime, double maxSpeed, double maxComfySpeed, int currentTime) {
-		super(agentID, goalNode, routeEdges, goalArrivalTime, maxSpeed, maxComfySpeed, currentTime);
+	public NormalAgent(String agentID, Node goalNode, Edge[] routeEdges, int goalArrivalTime, double maxSpeed, double maxComfySpeed) {
+		super(agentID, goalNode, routeEdges, goalArrivalTime, maxSpeed, maxComfySpeed);
 	}
 	
 	@Override

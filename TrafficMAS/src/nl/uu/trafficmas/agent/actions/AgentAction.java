@@ -13,11 +13,11 @@ public enum AgentAction {
 	
 	
 	
-	public double getTime(int currentTime, double meanTravelTimeNextLane, double currentPos, double currentLaneLength, double maxComfySpeed, double routeRemainderLength){ 
+	public double getTime(int currentTime, double meanTravelSpeedNextLane, double currentPos, double currentLaneLength, double maxComfySpeed, double routeRemainderLength){ 
 		double time;
 		switch(this) {
 		case ChangeLane:
-			time = getChangeLaneTime(currentTime, meanTravelTimeNextLane, currentPos, currentLaneLength, maxComfySpeed, routeRemainderLength);
+			time = getChangeLaneTime(currentTime, meanTravelSpeedNextLane, currentPos, currentLaneLength, maxComfySpeed, routeRemainderLength);
 			break;
 		case ChangeRoad:
 			time = getChangeRoadTime();
@@ -89,7 +89,7 @@ public enum AgentAction {
 		return Integer.MAX_VALUE;
 	}
 
-	private double getChangeLaneTime(int currentTime, double meanTravelTimeNextLane, double currentPos, double currentLaneLength, double maxComfySpeed, double routeRemainderLength) {
+	private double getChangeLaneTime(int currentTime, double meanSpeedNextLane, double currentPos, double currentLaneLength, double maxComfySpeed, double routeRemainderLength) {
 		
 		/*
 		 * change lane time (no knowledge about RN)
@@ -101,8 +101,8 @@ public enum AgentAction {
 		// change lane time:
 		
 		double finishTime = currentTime;
-		double meanSpeedNextLane = currentLaneLength/meanTravelTimeNextLane;
-		double timeSpentOnNextLane = (currentLaneLength-currentPos)/meanSpeedNextLane;
+		double meanOrComfySpeedNextLane = Math.min(meanSpeedNextLane,maxComfySpeed);
+		double timeSpentOnNextLane = (currentLaneLength-currentPos)/meanOrComfySpeedNextLane;
 		finishTime += timeSpentOnNextLane;
 		finishTime += routeRemainderLength/maxComfySpeed;
 		

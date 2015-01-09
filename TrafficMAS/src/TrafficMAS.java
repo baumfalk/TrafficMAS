@@ -31,7 +31,7 @@ public class TrafficMAS {
 		double difference = (end_time - start_time)/1e6;
 		System.out.println("inittime:" + difference + "ms");
 		
-		 start_time = System.nanoTime();
+		start_time = System.nanoTime();
 		trafficMas.run(dataModel, simModel, view);
 		end_time = System.nanoTime();
 		difference = (end_time - start_time)/1e6;
