@@ -7,6 +7,7 @@ import nl.uu.trafficmas.organisation.Sanction;
 import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Node;
 import nl.uu.trafficmas.roadnetwork.Road;
+import de.tudresden.ws.container.SumoColor;
 
 public abstract class Agent extends AgentPhysical {
 	private Node goalNode;
@@ -18,7 +19,6 @@ public abstract class Agent extends AgentPhysical {
 	private Edge[] currentRoute;
 	private ArrayList<Double> expectedTravelTimePerRoad;
 	private double maxComfySpeed;
-	private AgentProfileType agentProfileType;
 	private int currentTime;
 	
 	public final static double DEFAULT_MAX_SPEED = 20;
@@ -46,11 +46,7 @@ public abstract class Agent extends AgentPhysical {
 		return Math.max(0,Math.min(1, utility));
 	}
 	
-	public AgentProfileType getAgentType(){
-		return agentProfileType;
-	}
-	
-	public Agent(String agentID,Node goalNode,Edge[] routeEdges, int goalArrivalTime, double maxSpeed, AgentProfileType agentProfileType, double maxComfySpeed, int currentTime){
+	public Agent(String agentID,Node goalNode,Edge[] routeEdges, int goalArrivalTime, double maxSpeed, double maxComfySpeed, int currentTime){
 		super(agentID);
 		this.goalNode 					= goalNode;
 		this.goalArrivalTime 			= goalArrivalTime;
@@ -58,7 +54,6 @@ public abstract class Agent extends AgentPhysical {
 		this.maxComfySpeed 				= maxComfySpeed;
 		this.expectedArrivalTime 		= goalArrivalTime;
 		this.currentRoute 				= routeEdges;
-		this.agentProfileType 			= agentProfileType;
 		this.expectedTravelTimePerRoad 	= new ArrayList<>();
 		this.currentTime				= currentTime;
 		for(Edge edge : routeEdges) {
@@ -168,4 +163,6 @@ public abstract class Agent extends AgentPhysical {
 	public String toString() {
 		return this.getClass().getSimpleName()+" " +agentID;
 	}
+
+	public abstract SumoColor getColor();
 }

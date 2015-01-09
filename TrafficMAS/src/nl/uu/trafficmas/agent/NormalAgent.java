@@ -2,6 +2,7 @@ package nl.uu.trafficmas.agent;
 
 import java.util.ArrayList;
 
+import de.tudresden.ws.container.SumoColor;
 import nl.uu.trafficmas.organisation.Sanction;
 import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Node;
@@ -9,7 +10,7 @@ import nl.uu.trafficmas.roadnetwork.Node;
 public class NormalAgent extends Agent {
 
 	public NormalAgent(String agentID, Node goalNode, Edge[] routeEdges, int goalArrivalTime, double maxSpeed, double maxComfySpeed, int currentTime) {
-		super(agentID, goalNode, routeEdges, goalArrivalTime, maxSpeed, AgentProfileType.Normal,maxComfySpeed, currentTime);
+		super(agentID, goalNode, routeEdges, goalArrivalTime, maxSpeed, maxComfySpeed, currentTime);
 	}
 	
 	@Override
@@ -18,9 +19,15 @@ public class NormalAgent extends Agent {
 		if(arrivalTime == this.getGoalArrivalTime() && sanctionList == null) {
 			utility = 1;
 		} else{
-			utility = (double) (this.getGoalArrivalTime() / (2*arrivalTime));
+			utility = (double) (this.getGoalArrivalTime() / (arrivalTime));
 		}
 		
 		return Math.max(0,Math.min(1, utility));
+	}
+
+	@Override
+	public SumoColor getColor() {
+		//red
+		return new SumoColor(255,0,0,255);
 	}
 }

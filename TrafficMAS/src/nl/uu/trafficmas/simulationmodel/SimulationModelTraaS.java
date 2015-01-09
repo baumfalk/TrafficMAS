@@ -95,13 +95,6 @@ public class SimulationModelTraaS implements SimulationModel {
 	}
 	
 	public static SumoCommand addAgentCommand(Agent agent, String routeID, int tick) {
-		if( agent.getAgentType() == AgentProfileType.Normal){
-			return Vehicle.add(agent.agentID, "Car", routeID, tick, 0.0, Math.min(agent.getMaxComfySpeed(),10), (byte) 0);
-		} else if( agent.getAgentType() == AgentProfileType.OldLady){
-			return Vehicle.add(agent.agentID, "Car", routeID, tick, 0.0, Math.min(agent.getMaxComfySpeed(),10), (byte) 0);
-		} else if( agent.getAgentType() == AgentProfileType.PregnantWoman){
-			return Vehicle.add(agent.agentID, "Car", routeID, tick, 0.0, Math.min(agent.getMaxComfySpeed(),10), (byte) 0);
-		}
 		return Vehicle.add(agent.agentID, "Car", routeID, tick, 0.0, Math.min(agent.getMaxComfySpeed(),10), (byte) 0);
 	}
 	
@@ -117,23 +110,15 @@ public class SimulationModelTraaS implements SimulationModel {
 		
 		try {
 			for( Entry<Agent, Integer> agentPair : agentPairList.entrySet()){
-				cmds.add(addAgentCommand(agentPair.getKey(), "route0", agentPair.getValue()));
-				cmds.add(Vehicle.setLaneChangeMode(agentPair.getKey().agentID, 0b0001000000));
-				cmds.add(Vehicle.setSpeedMode(agentPair.getKey().agentID, 0b00000));
-				cmds.add(Vehicle.setMaxSpeed(agentPair.getKey().agentID, agentPair.getKey().getMaxComfySpeed()));
+				Agent agent = agentPair.getKey();
+				cmds.add(addAgentCommand(agent, "route0", agentPair.getValue()));
+				cmds.add(Vehicle.setLaneChangeMode(agent.agentID, 0b0001000000));
+				cmds.add(Vehicle.setSpeedMode(agent.agentID, 0b00000));
+				cmds.add(Vehicle.setMaxSpeed(agent.agentID, agent.getMaxComfySpeed()));
 				
 				// TODO: Add color property to Agents.
-				if( agentPair.getKey().getAgentType() == AgentProfileType.Normal){
-					// Normal is red
-					cmds.add(Vehicle.setColor(agentPair.getKey().agentID, new SumoColor(255,0,0,255)));
-				} else if( agentPair.getKey().getAgentType() == AgentProfileType.OldLady){
-					// OldLady is green
-					cmds.add(Vehicle.setColor(agentPair.getKey().agentID, new SumoColor(0,255,0,255)));
-				} else if( agentPair.getKey().getAgentType() == AgentProfileType.PregnantWoman){
-					// PregnantWoman is blue
-					cmds.add(Vehicle.setColor(agentPair.getKey().agentID, new SumoColor(0,0,255,255)));
-				}
-				completeAgentMap.put(agentPair.getKey().agentID, agentPair.getKey());
+				cmds.add(Vehicle.setColor(agent.agentID, agent.getColor()));
+				completeAgentMap.put(agent.agentID, agent);
 			}
 	
 			if(agentPairList.size() > 0){
