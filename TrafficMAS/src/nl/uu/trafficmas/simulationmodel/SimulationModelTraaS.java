@@ -4,23 +4,15 @@ import it.polito.appeal.traci.SumoTraciConnection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import nl.uu.trafficmas.agent.Agent;
-import nl.uu.trafficmas.agent.AgentPhysical;
-import nl.uu.trafficmas.agent.AgentProfileType;
 import nl.uu.trafficmas.agent.actions.AgentAction;
-import nl.uu.trafficmas.datamodel.Pair;
-import nl.uu.trafficmas.roadnetwork.Edge;
-import nl.uu.trafficmas.roadnetwork.Lane;
-import nl.uu.trafficmas.roadnetwork.Road;
-import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import de.tudresden.sumo.cmd.Simulation;
 import de.tudresden.sumo.cmd.Vehicle;
+import de.tudresden.sumo.config.Constants;
 import de.tudresden.sumo.util.SumoCommand;
-import de.tudresden.ws.container.SumoColor;
 import de.tudresden.ws.container.SumoStringList;
 
 public class SimulationModelTraaS implements SimulationModel {
@@ -111,16 +103,22 @@ public class SimulationModelTraaS implements SimulationModel {
 	}
 	//TODO: Implement routes.
 	public static HashMap<String, Agent> addAgents(HashMap<Agent, Integer> agentPairList, SumoTraciConnection conn){
-		
 		HashMap<String, Agent> completeAgentMap = new HashMap<String, Agent>();
 		ArrayList<SumoCommand> cmds = new ArrayList<>();
-		for( Entry<Agent, Integer> agentPair : agentPairList.entrySet()){
-			cmds.add(addAgentCommand(agentPair.getKey(), "route0", agentPair.getValue()));
-			cmds.add(Vehicle.setLaneChangeMode(agentPair.getKey().agentID, 0b0001000000));
-			cmds.add(Vehicle.setSpeedMode(agentPair.getKey().agentID, 0b00000));
-			completeAgentMap.put(agentPair.getKey().agentID, agentPair.getKey());
-		}
 		try {
+			for( Entry<Agent, Integer> agentPair : agentPairList.entrySet()){
+				Agent agent = agentPair.getKey();
+				Integer agentSpawnTime = agentPair.getValue();
+				cmds.add(addAgentCommand(agent, "route0", agentSpawnTime));
+				// TODO: what does 0b0001000000 for setLaneChangeMode?
+				cmds.add(Vehicle.setLaneChangeMode(agent.agentID, 0b0001000000));
+				// TODO: what does 0b00000 for setSpeedMode?
+				cmds.add(Vehicle.setSpeedMode(agent.agentID, 0b00000));
+				//subscribe to some variables
+			
+				completeAgentMap.put(agent.agentID, agent);
+			}
+	
 			if(agentPairList.size() > 0){
 				conn.do_jobs_set(cmds);
 			}
@@ -220,45 +218,6 @@ public class SimulationModelTraaS implements SimulationModel {
 			e.printStackTrace();
 		}
 		
-	}
-	
-	@Override
-	public RoadNetwork updateRoadNetwork(RoadNetwork roadNetwork) {
-		return updateRoadNetwork(roadNetwork,conn);
-	}
-	
-	//TODO write a test for this
-	public RoadNetwork updateRoadNetwork(RoadNetwork roadNetwork, SumoTraciConnection conn) {
-		ArrayList<SumoCommand> cmdList = new ArrayList<SumoCommand>();
-		for(Edge edge: roadNetwork.getEdges()) {
-			cmdList.add(de.tudresden.sumo.cmd.Edge.getTraveltime(edge.getID()));
-			for(Lane lane :edge.getRoad().getLanes()) {
-				cmdList.add(de.tudresden.sumo.cmd.Lane.getTraveltime(lane.getID()));
-				cmdList.add(de.tudresden.sumo.cmd.Lane.getLastStepVehicleNumber(lane.getID()));
-			}
-		}
-		ArrayList<Object> responses = null;
-		try {
-			 responses = conn.do_jobs_get(cmdList);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		int currentIndex = 0;
-		for(Edge edge: roadNetwork.getEdges()) {
-			double roadMeanTravelTime = (double) responses.get(currentIndex++);
-			edge.getRoad().setMeanTravelTime(roadMeanTravelTime);
-			for(Lane lane : edge.getRoad().getLanes()) {
-				double laneMeanTravelTime = (double) responses.get(currentIndex++);
-				int laneGetVehicleNumber = (int) responses.get(currentIndex++);
-				//empty lane, then sumo is unreliable
-				if(laneGetVehicleNumber == 0) {
-					laneMeanTravelTime = 0;
-				}
-				lane.setMeanTravelTime(laneMeanTravelTime);	
-			}
-		}
-		
-		return roadNetwork;//TODO update the road network
 	}
 
 	@Override
