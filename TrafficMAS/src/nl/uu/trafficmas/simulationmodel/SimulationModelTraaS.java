@@ -112,40 +112,28 @@ public class SimulationModelTraaS implements SimulationModel {
 	}
 	//TODO: Implement routes.
 	public static HashMap<String, Agent> addAgents(HashMap<Agent, Integer> agentPairList, SumoTraciConnection conn){
-		SumoColor g = new SumoColor(1,0,1,0);
 		HashMap<String, Agent> completeAgentMap = new LinkedHashMap<String, Agent>();
 		ArrayList<SumoCommand> cmds = new ArrayList<>();
-		for( Entry<Agent, Integer> agentPair : agentPairList.entrySet()){
-			cmds.add(addAgentCommand(agentPair.getKey(), "route0", agentPair.getValue()));
-			cmds.add(Vehicle.setLaneChangeMode(agentPair.getKey().agentID, 0b0001000000));
-			cmds.add(Vehicle.setSpeedMode(agentPair.getKey().agentID, 0b00000));
-			cmds.add(Vehicle.setMaxSpeed(agentPair.getKey().agentID, agentPair.getKey().getMaxComfySpeed()));
-			
-			// TODO: Add color property to Agents.
-			if( agentPair.getKey().getAgentType() == AgentProfileType.Normal){
-				// Normal is red
-				cmds.add(Vehicle.setColor(agentPair.getKey().agentID, new SumoColor(255,0,0,255)));
-			} else if( agentPair.getKey().getAgentType() == AgentProfileType.OldLady){
-				// OldLady is green
-				cmds.add(Vehicle.setColor(agentPair.getKey().agentID, new SumoColor(0,255,0,255)));
-			} else if( agentPair.getKey().getAgentType() == AgentProfileType.PregnantWoman){
-				// PregnantWoman is blue
-				cmds.add(Vehicle.setColor(agentPair.getKey().agentID, new SumoColor(0,0,255,255)));
-			}
-			completeAgentMap.put(agentPair.getKey().agentID, agentPair.getKey());
-		}
+		
 		try {
 			for( Entry<Agent, Integer> agentPair : agentPairList.entrySet()){
-				Agent agent = agentPair.getKey();
-				Integer agentSpawnTime = agentPair.getValue();
-				cmds.add(addAgentCommand(agent, "route0", agentSpawnTime));
-				// TODO: what does 0b0001000000 for setLaneChangeMode?
-				cmds.add(Vehicle.setLaneChangeMode(agent.agentID, 0b0001000000));
-				// TODO: what does 0b00000 for setSpeedMode?
-				cmds.add(Vehicle.setSpeedMode(agent.agentID, 0b00000));
-				//subscribe to some variables
-			
-				completeAgentMap.put(agent.agentID, agent);
+				cmds.add(addAgentCommand(agentPair.getKey(), "route0", agentPair.getValue()));
+				cmds.add(Vehicle.setLaneChangeMode(agentPair.getKey().agentID, 0b0001000000));
+				cmds.add(Vehicle.setSpeedMode(agentPair.getKey().agentID, 0b00000));
+				cmds.add(Vehicle.setMaxSpeed(agentPair.getKey().agentID, agentPair.getKey().getMaxComfySpeed()));
+				
+				// TODO: Add color property to Agents.
+				if( agentPair.getKey().getAgentType() == AgentProfileType.Normal){
+					// Normal is red
+					cmds.add(Vehicle.setColor(agentPair.getKey().agentID, new SumoColor(255,0,0,255)));
+				} else if( agentPair.getKey().getAgentType() == AgentProfileType.OldLady){
+					// OldLady is green
+					cmds.add(Vehicle.setColor(agentPair.getKey().agentID, new SumoColor(0,255,0,255)));
+				} else if( agentPair.getKey().getAgentType() == AgentProfileType.PregnantWoman){
+					// PregnantWoman is blue
+					cmds.add(Vehicle.setColor(agentPair.getKey().agentID, new SumoColor(0,0,255,255)));
+				}
+				completeAgentMap.put(agentPair.getKey().agentID, agentPair.getKey());
 			}
 	
 			if(agentPairList.size() > 0){
