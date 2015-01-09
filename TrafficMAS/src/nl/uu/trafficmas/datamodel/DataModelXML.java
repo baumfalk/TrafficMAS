@@ -73,7 +73,7 @@ public class DataModelXML implements DataModel {
 		if(rn.validateRoadNetwork()){
 			return rn;
 		} else{
-			System.out.println("RoadNetwork is unvalid!");
+			System.out.println("RoadNetwork is invalid!");
 			return null;
 		}
 	}

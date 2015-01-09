@@ -94,9 +94,9 @@ public enum AgentAction {
 		/*
 		 * change lane time (no knowledge about RN)
 		 * 
-		 * lane_remainder     rest_route_length
-		 * --------------   + ----------------- + current_time
-		 * next_lane_speed    max_comfy_speed
+		 * lane_remainder       rest_route_length
+		 * --------------   +   ----------------- + current_time
+		 * next_lane_speed      max_comfy_speed
 		 */
 		// change lane time:
 		

@@ -8,7 +8,7 @@ public class InstantiateOrganisationsTest {
 
 	@Test
 	public void instantiateOrganisations() {
-		fail("Not yet implemented");
+		fail("Method not yet implemented");
 	}
 
 }

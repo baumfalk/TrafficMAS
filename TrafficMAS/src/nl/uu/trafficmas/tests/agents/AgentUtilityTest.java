@@ -15,7 +15,7 @@ public class AgentUtilityTest {
 		Edge[] lst = new Edge[0];
 		// goal achieved should be utility 1
 		for(AgentProfileType apt : agentProfileTypes) {
-			Agent agent = apt.toAgent(Agent.getNextAgentID(),null, lst, 10, 10, 0);
+			Agent agent = apt.toAgent(Agent.getNextAgentID(),null, lst, 10, 10);
 			assertEquals(1.0,agent.specificUtility(agent.getGoalArrivalTime(), null),0);
 		}
 	}

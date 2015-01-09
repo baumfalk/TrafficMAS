@@ -167,6 +167,18 @@ public class SimulationModelTraaS implements SimulationModel {
 		simulateAgentActions(actions, conn);
 	}
 	
+	/**
+	 * Sends a list of commands to SUMO. The commands are generated from he hashmap 'actions' and are all actions the vehicle can take.
+	 * The following actions can be send to SUMO:
+	 * 
+	 * ChangeLane,
+	 * ChangeRoad,
+	 * ChangeVelocity5,
+	 * ChangeVelocity10,
+	 * ChangeVelocity20.
+	 * @param actions
+	 * @param conn
+	 */
 	public static void simulateAgentActions(HashMap<Agent, AgentAction> actions, SumoTraciConnection conn){
 		if(actions.size() == 0) {
 			return;
@@ -192,7 +204,7 @@ public class SimulationModelTraaS implements SimulationModel {
 				}
 				break;
 			case ChangeRoad:
-				// TODO
+				// TODO Add changeRoad AgentAction
 				break;
 			case ChangeVelocity5:
 				cmdList.add(Vehicle.slowDown(currentAgent.agentID, currentAgent.getVelocity()+5.0,5));
