@@ -47,6 +47,7 @@ public class TrafficMASController {
 			this.rng = new Random(seed);
 		}
 		view.addMessage("Initializing MAS with seed: "+ seed);
+		
 		///////////////
 		// load data //
 		///////////////
@@ -212,7 +213,6 @@ public class TrafficMASController {
 	 */
 	private  void updateMAS(StateData simulationStateData) {
 		currentAgentMap = TrafficMASController.updateAgents(completeAgentMap, roadNetwork, simulationStateData);
-		assertEquals(currentAgentMap.size(),simulationStateData.agentsData.size()); // TODO: This doesn't do anything, Jetze?
 	}
 	
 	/**
@@ -226,13 +226,12 @@ public class TrafficMASController {
 		return  getAgentActions(this.currentAgentMap);
 	}
 	
-	// TODO: make test for updateAgents
 	/**
-	 * 
+	 * Updates the information all agents in 'completeAgentMap' of which data was returned in 'stateData'. 
 	 * @param completeAgentMap
 	 * @param roadNetwork
 	 * @param stateData
-	 * @return
+	 * @return a map of every agent in the simulation, some of which have been updated.
 	 */
 	public static HashMap<String, Agent> updateAgents(HashMap<String,Agent> completeAgentMap, RoadNetwork roadNetwork, StateData stateData){
 		HashMap<String, Agent> agentsMap = new LinkedHashMap<String, Agent>();
@@ -243,26 +242,25 @@ public class TrafficMASController {
 				agentsMap.put(agentID, agent);
 			}
 		}
-		
 		return agentsMap;
 	}
-	// TODO: Make test for updateAgent
 	/**
-	 * 
+	 * Updates the agent 'agent' with id 'agentID', 'stateData' contains the new information with which the agent is updated. 
 	 * @param roadNetwork
 	 * @param stateData
 	 * @param agentID
 	 * @param agent
 	 */
-	private static void updateAgent(RoadNetwork roadNetwork,
+	public static void updateAgent(RoadNetwork roadNetwork,
 			StateData stateData, String agentID, Agent agent) {
 		double velocity = stateData.agentsData.get(agentID).speed;
 		String roadID 	= stateData.agentsData.get(agentID).roadID;
 		Road road 		= roadNetwork.getRoadFromID(roadID);
 		int laneIndex 	= stateData.agentsData.get(agentID).laneIndex;
 		double distance = stateData.agentsData.get(agentID).position;
-		
+	
 		// Update the agent with information
+		System.out.println("New velocity of " + agentID + ": " + velocity );
 		agent.setVelocity(velocity);
 		agent.setRoad(road);
 		agent.setLane(road.getLanes()[laneIndex]);
@@ -292,7 +290,6 @@ public class TrafficMASController {
 	
 	public static StateData nextSimulationState(SimulationModel simulationModel) {
 		long start_time = System.nanoTime();
-		//simulationModel.doTimeStep();
 		long end_time = System.nanoTime();
 		double difference = (end_time - start_time)/1e6;
 		System.out.println("Simulation timestep:"+difference);
