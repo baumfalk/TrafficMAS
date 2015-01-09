@@ -213,7 +213,7 @@ public class TrafficMASController {
 	 * Updates the MAS with the 'simulationStateData'. Agents, Edges and Lanes are updated.
 	 * @param simulationStateData
 	 */
-	private  void updateMAS(StateData simulationStateData) {
+	private void updateMAS(StateData simulationStateData) {
 		roadNetwork 	= TrafficMASController.updateRoadNetwork(roadNetwork, simulationStateData);
 		currentAgentMap = TrafficMASController.updateAgents(completeAgentMap, roadNetwork, simulationStateData);
 	}
@@ -285,7 +285,6 @@ public class TrafficMASController {
 		double distance = stateData.agentsData.get(agentID).position;
 	
 		// Update the agent with information
-		System.out.println("New velocity of " + agentID + ": " + velocity );
 		agent.setVelocity(velocity);
 		agent.setRoad(road);
 		agent.setLane(road.getLanes()[laneIndex]);
@@ -303,6 +302,11 @@ public class TrafficMASController {
 		agent.setExpectedArrivalTime(expectedArrivalTime);
 	}
 
+	/**
+	 * Calls the method	simulationModel.simulateAgentActions(), if the map 'agentActions' is not empty.
+	 * @param simulationModel
+	 * @param agentActions
+	 */
 	public static void updateSimulation(SimulationModel simulationModel, HashMap<Agent, AgentAction> agentActions) {
 		if(agentActions != null) {
 			simulationModel.simulateAgentActions(agentActions);

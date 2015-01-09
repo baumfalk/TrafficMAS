@@ -9,6 +9,7 @@ import java.util.Random;
 import java.util.Map.Entry;
 
 import nl.uu.trafficmas.agent.Agent;
+import nl.uu.trafficmas.agent.AgentProfileType;
 import nl.uu.trafficmas.controller.TrafficMASController;
 import nl.uu.trafficmas.datamodel.DataModel;
 import nl.uu.trafficmas.datamodel.DataModelXML;
@@ -30,6 +31,10 @@ public class UpdateAgentTest {
 		DataModel dataModel = new DataModelXML("tests/Controller/UpdateAgent/","MASTest.xml");
 		MASData masData = dataModel.getMASData(); 
 		
+		HashMap<AgentProfileType, Double> dicks = dataModel.getAgentProfileTypeDistribution();
+		for(Entry<AgentProfileType, Double> entry : dicks.entrySet()){
+			System.out.println(entry.getKey());
+		}
 		HashMap<String, String> options = new HashMap<String, String>();
 		options.put("e", Integer.toString(masData.simulationLength));
 		options.put("start", "1");
@@ -42,7 +47,7 @@ public class UpdateAgentTest {
 		HashMap<Agent,Integer> agentPairList = TrafficMASController.instantiateAgents(masData, random, routes);
 		HashMap<String, Agent> completeAgentMap = SimulationModelTraaS.addAgents(agentPairList, conn);	
 		StateData stateData = SimulationModelTraaS.getStateData(conn, false);
-		HashMap<String, Agent>updatedAgentMap = TrafficMASController.updateAgents(completeAgentMap, rn, stateData);
+		//HashMap<String, Agent>updatedAgentMap = TrafficMASController.updateAgents(completeAgentMap, rn, stateData);
 
 		// All agents have a velocity of 0.
 		Agent a = completeAgentMap.get("Agent 0");
@@ -55,7 +60,10 @@ public class UpdateAgentTest {
 					TrafficMASController.updateAgent(rn, stateData, a.agentID, a);
 					assertNotEquals(0,a.getVelocity(),0);
 					assertNotNull(a.getRoad());
-					assertNotNull(a.getLane());				
+					assertNotNull(a.getLane());		
+					System.out.println("Expected Arrival Time: " + a.getExpectedArrivalTime()*1000);
+					System.out.println("Current Time: " + stateData.currentTimeStep);
+					assertTrue(a.getExpectedArrivalTime()*1000 > stateData.currentTimeStep);
 					break;
 				}
 			} catch (Exception e) {
