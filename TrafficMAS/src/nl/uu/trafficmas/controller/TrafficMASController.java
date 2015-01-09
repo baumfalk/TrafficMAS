@@ -386,7 +386,7 @@ public class TrafficMASController {
 	 * Selects a certain AgentProfile according to the 'coinflip' (which is determined by an earlier rng value) and the 'agentProfileDistribution'.
 	 * @param coinFlip
 	 * @param agentProfileDistribution
-	 * @return a AgentProfileType, currently either Normal, OldLady or PregnantWoman.
+	 * @return a AgentProfileType, currently either Normal, OldLady or HotShot.
 	 */
 	public static AgentProfileType selectAgentProfileType(double coinFlip, HashMap<AgentProfileType, Double> agentProfileDistribution) {
 		for(Entry<AgentProfileType, Double> entry : agentProfileDistribution.entrySet()) {
