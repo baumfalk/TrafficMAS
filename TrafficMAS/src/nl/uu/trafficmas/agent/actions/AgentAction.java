@@ -13,11 +13,11 @@ public enum AgentAction {
 	
 	
 	
-	public int getTime(int currentTime, double meanTravelTimeNextLane, double currentPos, double laneLength, int currentRoadID, ArrayList<Double> meanTimeForRouteRoads){ 
-		int time;
+	public double getTime(int currentTime, double meanTravelTimeNextLane, double currentPos, double currentLaneLength, double maxComfySpeed, double routeRemainderLength){ 
+		double time;
 		switch(this) {
 		case ChangeLane:
-			time = getChangeLaneTime(currentTime, meanTravelTimeNextLane,currentPos,laneLength,currentRoadID,meanTimeForRouteRoads);
+			time = getChangeLaneTime(currentTime, meanTravelTimeNextLane, currentPos, currentLaneLength, maxComfySpeed, routeRemainderLength);
 			break;
 		case ChangeRoad:
 			time = getChangeRoadTime();
@@ -32,7 +32,7 @@ public enum AgentAction {
 			time = getChangeVelocityTime(20);
 			break;
 		default:
-			time = -1;
+			throw new Error("unsupported action:"+ this);
 		}
 		return time;
 	}
@@ -89,16 +89,23 @@ public enum AgentAction {
 		return Integer.MAX_VALUE;
 	}
 
-	private int getChangeLaneTime(int currentTime, double meanTravelTimeNextLane, double currentPos, double laneLength, int currentRoadID, ArrayList<Double> meanTimeForRouteRoads) {
+	private double getChangeLaneTime(int currentTime, double meanTravelTimeNextLane, double currentPos, double currentLaneLength, double maxComfySpeed, double routeRemainderLength) {
+		
+		/*
+		 * change lane time (no knowledge about RN)
+		 * 
+		 * lane_remainder     rest_route_length
+		 * --------------   + ----------------- + current_time
+		 * next_lane_speed    max_comfy_speed
+		 */
+		// change lane time:
 		
 		double finishTime = currentTime;
-		double meanSpeedNextLane = laneLength/meanTravelTimeNextLane;
-		double timeSpentOnNextLane = (laneLength-currentPos)/meanSpeedNextLane;
+		double meanSpeedNextLane = currentLaneLength/meanTravelTimeNextLane;
+		double timeSpentOnNextLane = (currentLaneLength-currentPos)/meanSpeedNextLane;
 		finishTime += timeSpentOnNextLane;
-		for(int i = currentRoadID; i < meanTimeForRouteRoads.size(); i++) {
-			finishTime += meanTimeForRouteRoads.get(i);
-		}
+		finishTime += routeRemainderLength/maxComfySpeed;
 		
-		return (int) Math.round(finishTime);
+		return finishTime;
 	}
 }

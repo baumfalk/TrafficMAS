@@ -15,7 +15,7 @@ public class OldLadyAgent extends Agent {
 
 
 	@Override
-	public double specificUtility(int arrivalTime, ArrayList<Sanction> sanctionList) {
+	public double specificUtility(double arrivalTime, ArrayList<Sanction> sanctionList) {
 		double utility = 0;
 		utility = (double) (this.getGoalArrivalTime() / (arrivalTime));
 		

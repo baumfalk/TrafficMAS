@@ -13,11 +13,10 @@ public interface SimulationModel {
 	public void doTimeStep();
 	
 	public StateData getNewStateData();
-	public void simulateAgentActions(HashMap<Agent, AgentAction> agentActions);
 	
 	public HashMap<String, Agent> addAgents(HashMap<Agent, Integer> agentPairList);
 	public void addAgent(Agent agent, String routeID, int tick);
 
-	public void prepareAgentActions(HashMap<String, AgentAction> actions, HashMap<String, Agent> currentAgentMap);
+	public void simulateAgentActions(HashMap<Agent, AgentAction> agentActions);
 	public HashMap<String, Agent> updateCurrentAgentMap(HashMap<String, Agent> completeAgentMap, HashMap<String, Agent> oldAgentMap);
 }

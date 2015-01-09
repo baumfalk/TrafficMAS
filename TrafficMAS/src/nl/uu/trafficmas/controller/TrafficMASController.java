@@ -1,6 +1,7 @@
 package nl.uu.trafficmas.controller;
 
 import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -15,6 +16,7 @@ import nl.uu.trafficmas.datamodel.DataModel;
 import nl.uu.trafficmas.datamodel.MASData;
 import nl.uu.trafficmas.organisation.Organisation;
 import nl.uu.trafficmas.roadnetwork.Edge;
+import nl.uu.trafficmas.roadnetwork.Lane;
 import nl.uu.trafficmas.roadnetwork.Node;
 import nl.uu.trafficmas.roadnetwork.Road;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
@@ -212,9 +214,32 @@ public class TrafficMASController {
 	 * @param simulationStateData
 	 */
 	private  void updateMAS(StateData simulationStateData) {
+		roadNetwork 	= TrafficMASController.updateRoadNetwork(roadNetwork, simulationStateData);
 		currentAgentMap = TrafficMASController.updateAgents(completeAgentMap, roadNetwork, simulationStateData);
 	}
 	
+	public static RoadNetwork updateRoadNetwork(RoadNetwork roadNetwork,
+			StateData simulationStateData) {
+		
+		for(Edge edge : roadNetwork.getEdges()) {
+			//simulationStateData.edgesData.
+			double meanTravelTimeEdge = simulationStateData.edgesData.get(edge.getID()).meanTime;
+			double meanSpeedEdge = simulationStateData.edgesData.get(edge.getID()).meanSpeed;
+
+			edge.getRoad().setMeanTravelTime(meanTravelTimeEdge); 
+			edge.getRoad().setMeanSpeedEdge(meanSpeedEdge); 
+			
+			for(Lane lane: edge.getRoad().getLanes()) {
+				double meanTravelTimeLane = simulationStateData.lanesData.get(lane.getID()).meanTime;
+				double meanSpeedLane = simulationStateData.lanesData.get(lane.getID()).meanSpeed;
+
+				lane.setMeanTravelTime(meanTravelTimeLane);
+				lane.setLaneMeanSpeed(meanSpeedLane);
+			}
+		}
+		return roadNetwork;
+	}
+
 	/**
 	 * Calculates the next step for the MAS. Organisations execute their actions, Agent actions are sent to SUMO.
 	 * Not yet completely implemented.	 
@@ -266,20 +291,15 @@ public class TrafficMASController {
 		agent.setLane(road.getLanes()[laneIndex]);
 		
 		agent.setDistance(distance);
-		double expectedArrivalTime = 0;
 		Edge [] route = agent.getRoute();
 		
 		//TODO review this
-		for(Edge edge: route) {
-			if(edge.getRoad().equals(agent.getRoad())) {
-				double distRemains = edge.getRoad().length - agent.getDistance();
-				double averageSpeedEdge = edge.getRoad().length/edge.getRoad().getMeanTravelTime();
-				expectedArrivalTime += distRemains/averageSpeedEdge;
-			}
-			expectedArrivalTime += edge.getRoad().getMeanTravelTime(); 
-		}
+		//TODO review test (expectedArrivalTime etc)
+		double timeLeftOnCurrentRoad 	= agent.getRoad().length/agent.getVelocity();
+		double routeRemainderLength 	= Route.getRouteRemainderLength(agent.getRoute(), agent.getRoad());
+		double expectedArrivalTime 		= stateData.currentTimeStep/1000 + timeLeftOnCurrentRoad + routeRemainderLength / agent.getMaxComfySpeed();
 		
-		agent.setExpectedArrivalTime((int) Math.round(expectedArrivalTime));
+		agent.setExpectedArrivalTime(expectedArrivalTime);
 	}
 
 	public static void updateSimulation(SimulationModel simulationModel, HashMap<Agent, AgentAction> agentActions) {

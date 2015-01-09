@@ -8,7 +8,7 @@ public class Road {
 	public final ArrayList<Lane> laneList;
 	public int priority;
 	private double meanTravelTime;
-
+	private double meanSpeedEdge;
 	public Road(String id, double length, ArrayList<Lane> laneList, int priority) {
 		this.id = id;
 		this.length = length;
@@ -56,5 +56,13 @@ public class Road {
 		}
 		return sb.toString();
 		
+	}
+
+	public double getMeanSpeedEdge() {
+		return meanSpeedEdge;
+	}
+
+	public void setMeanSpeedEdge(double meanSpeedEdge) {
+		this.meanSpeedEdge = meanSpeedEdge;
 	}
 }
