@@ -74,9 +74,6 @@ public class ValidateRoadNetworkTest {
 		assertTrue(rn.validateRoadNetwork());
 		rn.clear();
 		
-		//TODO
-		// Every road must have an unique ID
-		
-		
+		//TODO Every road must have an unique ID
 	}
 }
