@@ -114,9 +114,9 @@ public class SimulationModelTraaS implements SimulationModel {
 				cmds.add(addAgentCommand(agent, "route0", agentPair.getValue()));
 				cmds.add(Vehicle.setLaneChangeMode(agent.agentID, 0b0001000000));
 				cmds.add(Vehicle.setSpeedMode(agent.agentID, 0b00000));
+				// TODO: think of a way to express max comfy speed in a different way
 				cmds.add(Vehicle.setMaxSpeed(agent.agentID, agent.getMaxComfySpeed()));
 				
-				// TODO: Add color property to Agents.
 				cmds.add(Vehicle.setColor(agent.agentID, agent.getColor()));
 				completeAgentMap.put(agent.agentID, agent);
 			}
