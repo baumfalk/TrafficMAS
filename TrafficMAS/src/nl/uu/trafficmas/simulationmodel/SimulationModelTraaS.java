@@ -163,21 +163,21 @@ public class SimulationModelTraaS implements SimulationModel {
 	}
 	
 	@Override
-	public void prepareAgentActions(HashMap<String, AgentAction> actions, HashMap<String, Agent> currentAgentMap) {
-		prepareAgentActions(actions, currentAgentMap, conn);
+	public void simulateAgentActions(HashMap<Agent, AgentAction> actions) {
+		simulateAgentActions(actions, conn);
 	}
 	
-	public static void prepareAgentActions(HashMap<String, AgentAction> actions, HashMap<String, Agent> currentAgentMap, SumoTraciConnection conn){
-		if(actions.size() == 0 && currentAgentMap.size()==0) {
+	public static void simulateAgentActions(HashMap<Agent, AgentAction> actions, SumoTraciConnection conn){
+		if(actions.size() == 0) {
 			return;
 		}
 		
 		ArrayList<SumoCommand> cmdList = new ArrayList<SumoCommand>();
 		
 		
-		for(Map.Entry<String, AgentAction> entry: actions.entrySet()){
+		for(Map.Entry<Agent, AgentAction> entry: actions.entrySet()){
 			
-			Agent currentAgent = currentAgentMap.get(entry.getKey());
+			Agent currentAgent = entry.getKey();
 			byte agentLaneIndex = currentAgent.getLane().laneIndex;
 			int maxLaneIndex = currentAgent.getRoad().laneList.size()-1;
 		
@@ -186,7 +186,7 @@ public class SimulationModelTraaS implements SimulationModel {
 			switch(entry.getValue()) {
 			case ChangeLane:
 				if(agentLaneIndex < maxLaneIndex){
-					cmdList.add(Vehicle.changeLane(entry.getKey(), (byte) (agentLaneIndex+1) , OVERTAKE_DURATION));
+					cmdList.add(Vehicle.changeLane(currentAgent.agentID, (byte) (agentLaneIndex+1) , OVERTAKE_DURATION));
 				} else {
 					//TODO exceptions.
 				}
@@ -195,13 +195,13 @@ public class SimulationModelTraaS implements SimulationModel {
 				// TODO
 				break;
 			case ChangeVelocity5:
-				cmdList.add(Vehicle.slowDown(entry.getKey(), currentAgent.getVelocity()+5.0,5));
+				cmdList.add(Vehicle.slowDown(currentAgent.agentID, currentAgent.getVelocity()+5.0,5));
 				break;
 			case ChangeVelocity10:
-				cmdList.add(Vehicle.slowDown(entry.getKey(), currentAgent.getVelocity()+10.0,10));
+				cmdList.add(Vehicle.slowDown(currentAgent.agentID, currentAgent.getVelocity()+10.0,10));
 				break;
 			case ChangeVelocity20:
-				cmdList.add(Vehicle.slowDown(entry.getKey(), currentAgent.getVelocity()+20.0,15));
+				cmdList.add(Vehicle.slowDown(currentAgent.agentID, currentAgent.getVelocity()+20.0,15));
 				break;
 			default:
 				System.out.println("Error on action name, no action executed");			
@@ -259,10 +259,5 @@ public class SimulationModelTraaS implements SimulationModel {
 		}
 		
 		return stateData;
-	}
-
-	@Override
-	public void simulateAgentActions(HashMap<Agent, AgentAction> agentActions) {
-		
 	}
 }
