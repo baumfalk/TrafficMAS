@@ -95,7 +95,7 @@ public class SimulationModelTraaS implements SimulationModel {
 	}
 	
 	public static SumoCommand addAgentCommand(Agent agent, String routeID, int tick) {
-		return Vehicle.add(agent.agentID, "Car", routeID, tick, 0.0, Math.min(agent.getMaxComfySpeed(),10), (byte) 0);
+		return Vehicle.add(agent.agentID, "Car", routeID, tick, 0.0, Math.min(agent.getMaxComfySpeed(),3), (byte) 0);
 	}
 	
 	@Override
