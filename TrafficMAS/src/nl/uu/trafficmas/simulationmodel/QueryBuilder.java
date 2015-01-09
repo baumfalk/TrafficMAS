@@ -70,7 +70,6 @@ public class QueryBuilder {
 		}
 		cmdList.add(de.tudresden.sumo.cmd.Simulation.getCurrentTime());
 		for(QuerySubject querySubject : querySubjects) {
-			//cmdList.add(querySubject.getIDCountCommand());
 			cmdList.add(querySubject.getIDListCommand());
 		}
 		long start_time = System.nanoTime();
