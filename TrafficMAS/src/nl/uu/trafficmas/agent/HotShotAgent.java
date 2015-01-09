@@ -9,8 +9,8 @@ import nl.uu.trafficmas.roadnetwork.Node;
 
 public class HotShotAgent extends Agent {
 
-	public HotShotAgent(String agentID, Node goalNode, Edge[] route, int goalArrivalTime, double maxSpeed,double maxComfySpeed,int currentTime) {
-		super(agentID, goalNode, route, goalArrivalTime, maxSpeed, maxComfySpeed,currentTime);
+	public HotShotAgent(String agentID, Node goalNode, Edge[] route, int goalArrivalTime, double maxSpeed,double maxComfySpeed) {
+		super(agentID, goalNode, route, goalArrivalTime, maxSpeed, maxComfySpeed);
 	}
 
 	@Override

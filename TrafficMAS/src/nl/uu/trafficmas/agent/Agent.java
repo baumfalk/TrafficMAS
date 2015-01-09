@@ -20,7 +20,6 @@ public abstract class Agent extends AgentPhysical {
 	private Edge[] currentRoute;
 	private ArrayList<Double> expectedTravelTimePerRoad;
 	private double maxComfySpeed;
-	private int currentTime;
 	
 	public final static double DEFAULT_MAX_SPEED = 20;
 	
@@ -47,7 +46,7 @@ public abstract class Agent extends AgentPhysical {
 		return Math.max(0,Math.min(1, utility));
 	}
 	
-	public Agent(String agentID,Node goalNode,Edge[] routeEdges, int goalArrivalTime, double maxSpeed, double maxComfySpeed, int currentTime){
+	public Agent(String agentID,Node goalNode,Edge[] routeEdges, int goalArrivalTime, double maxSpeed, double maxComfySpeed){
 		super(agentID);
 		this.goalNode 					= goalNode;
 		this.goalArrivalTime 			= goalArrivalTime;
@@ -56,7 +55,6 @@ public abstract class Agent extends AgentPhysical {
 		this.expectedArrivalTime 		= goalArrivalTime;
 		this.currentRoute 				= routeEdges;
 		this.expectedTravelTimePerRoad 	= new ArrayList<>();
-		this.currentTime				= currentTime;
 		for(Edge edge : routeEdges) {
 			double time = edge.getRoad().length/maxComfySpeed;
 			expectedTravelTimePerRoad.add(time);
@@ -64,19 +62,12 @@ public abstract class Agent extends AgentPhysical {
 		currentSanctionList 	= new ArrayList<Sanction>();
 	}
 	
-	public int getCurrentTime() {
-		return currentTime;
-	}
-
-	public void setCurrentTime(int currentTime) {
-		this.currentTime = currentTime;
-	}
 	
 	/**
 	 * Returns, according to the utility, the best AgentAction object for a specific agent.
 	 * @return an AgentAction with the highest utility, or if no advantage can be gained from performing an action, null.
 	 */
-	public AgentAction doAction() {
+	public AgentAction doAction(int currentTime) {
 		// Only do an action if it improves our situation
 		double bestUtility 		= utility(expectedArrivalTime,currentSanctionList);
 		AgentAction bestAction 	= null;

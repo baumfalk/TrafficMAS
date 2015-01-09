@@ -8,18 +8,18 @@ public enum AgentProfileType {
 	HotShot,
 	OldLady;
 	
-	public Agent toAgent(String agentID, Node goalNode, Edge[] routeEdges, int goalArrivalTime, double maxSpeed,int currentTime) {
+	public Agent toAgent(String agentID, Node goalNode, Edge[] routeEdges, int goalArrivalTime, double maxSpeed) {
 		Agent agent = null;
 		double maxComfySpeed = this.getMaxComfortableDrivingSpeed(maxSpeed);
 		switch(this) {
 		case Normal:
-			agent = new NormalAgent(agentID, goalNode, routeEdges, goalArrivalTime, maxSpeed,maxComfySpeed,currentTime);
+			agent = new NormalAgent(agentID, goalNode, routeEdges, goalArrivalTime, maxSpeed,maxComfySpeed);
 			break;
 		case OldLady:
-			agent = new OldLadyAgent(agentID, goalNode, routeEdges, goalArrivalTime, maxSpeed,maxComfySpeed,currentTime);
+			agent = new OldLadyAgent(agentID, goalNode, routeEdges, goalArrivalTime, maxSpeed,maxComfySpeed);
 			break;
 		case HotShot:
-			agent = new HotShotAgent(agentID, goalNode, routeEdges, goalArrivalTime, maxSpeed,maxComfySpeed,currentTime);
+			agent = new HotShotAgent(agentID, goalNode, routeEdges, goalArrivalTime, maxSpeed,maxComfySpeed);
 			break;
 		}
 		return agent;
@@ -45,11 +45,11 @@ public enum AgentProfileType {
 		switch(this) {
 		case Normal:
 			// normally we are kinda in a hurry
-			goalArrivalTime =  startTime + minimalTravelTime *2;
+			goalArrivalTime =  startTime + minimalTravelTime;
 			break;
 		case OldLady:
 			// No hurry, my dear
-			goalArrivalTime =  startTime + minimalTravelTime *3;
+			goalArrivalTime =  startTime + minimalTravelTime;
 
 			break;
 		case HotShot:
