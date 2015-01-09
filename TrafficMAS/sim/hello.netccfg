@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo-sim.org/xsd/netconvertConfiguration.xsd">
+<configuration>
 
     <input>
         <node-files value="hello.nod.xml"/>
@@ -11,6 +11,16 @@
         <output-file value="hello.net.xml"/>
     </output>
 
+	<building_defaults>
+		<default.speed value="100"/>	
+	</building_defaults>
+	
+	
+
+	<processing>
+		<no-internal-links value="true"/>
+	</processing>
+    
     <report>
         <verbose value="true"/>
     </report>
