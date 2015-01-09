@@ -15,6 +15,6 @@ public class XMLgetMASDataTest {
 		assertEquals(1000,masData.simulationLength);
 		assertEquals(0.01, masData.spawnProbability, 0.0);
 		assertEquals("ConfigTest.xml",masData.sumoConfigPath);
-		assertEquals(0.05,masData.agentProfileTypeDistribution.get(AgentProfileType.PregnantWoman),0.0);
+		assertEquals(0.05,masData.agentProfileTypeDistribution.get(AgentProfileType.HotShot),0.0);
 	}
 }

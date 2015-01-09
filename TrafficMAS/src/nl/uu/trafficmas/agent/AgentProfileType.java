@@ -5,7 +5,7 @@ import nl.uu.trafficmas.roadnetwork.Node;
 
 public enum AgentProfileType {
 	Normal,
-	PregnantWoman,
+	HotShot,
 	OldLady;
 	
 	public Agent toAgent(String agentID, Node goalNode, Edge[] routeEdges, int goalArrivalTime, double maxSpeed,int currentTime) {
@@ -18,8 +18,8 @@ public enum AgentProfileType {
 		case OldLady:
 			agent = new OldLadyAgent(agentID, goalNode, routeEdges, goalArrivalTime, maxSpeed,maxComfySpeed,currentTime);
 			break;
-		case PregnantWoman:
-			agent = new PregnantWomanAgent(agentID, goalNode, routeEdges, goalArrivalTime, maxSpeed,maxComfySpeed,currentTime);
+		case HotShot:
+			agent = new HotShotAgent(agentID, goalNode, routeEdges, goalArrivalTime, maxSpeed,maxComfySpeed,currentTime);
 			break;
 		}
 		return agent;
@@ -34,7 +34,7 @@ public enum AgentProfileType {
 		case OldLady:
 			maxComfySpeed = maxSpeed * 0.3;
 			break;
-		case PregnantWoman:
+		case HotShot:
 			maxComfySpeed = maxSpeed;
 			break;
 		}
@@ -52,7 +52,7 @@ public enum AgentProfileType {
 			goalArrivalTime =  startTime + minimalTravelTime *3;
 
 			break;
-		case PregnantWoman:
+		case HotShot:
 			//OUTTATHEWAY
 			goalArrivalTime =  startTime + minimalTravelTime;
 		}

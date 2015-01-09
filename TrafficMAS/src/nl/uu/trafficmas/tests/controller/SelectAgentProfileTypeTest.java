@@ -18,7 +18,7 @@ public class SelectAgentProfileTypeTest {
 		double coinFlip = 0.04;
 		
 		AgentProfileType agentType = TrafficMASController.selectAgentProfileType(coinFlip, masData.agentProfileTypeDistribution);
-		assertEquals(AgentProfileType.PregnantWoman,agentType);
+		assertEquals(AgentProfileType.HotShot,agentType);
 		
 		coinFlip = 0.05;
 		agentType = TrafficMASController.selectAgentProfileType(coinFlip, masData.agentProfileTypeDistribution);
