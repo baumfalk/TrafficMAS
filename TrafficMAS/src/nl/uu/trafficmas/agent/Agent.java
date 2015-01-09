@@ -25,6 +25,12 @@ public abstract class Agent extends AgentPhysical {
 	
 	public abstract double specificUtility(int arrivalTime, ArrayList<Sanction> sanctionList);
 	
+	/**
+	 * Calculates and returns the Utility according to 'arrivalTime' and 'sanctionList'
+	 * @param arrivalTime
+	 * @param sanctionList
+	 * @return a double value that is a value between and including 0.0 and 1.0.
+	 */
 	public double utility(int arrivalTime, ArrayList<Sanction> sanctionList) {
 		double utility = 0;
 		if(arrivalTime == this.getGoalArrivalTime() && sanctionList == null) {
@@ -41,7 +47,6 @@ public abstract class Agent extends AgentPhysical {
 	}
 	
 	public AgentProfileType getAgentType(){
-
 		return agentProfileType;
 	}
 	
@@ -70,12 +75,18 @@ public abstract class Agent extends AgentPhysical {
 	public void setCurrentTime(int currentTime) {
 		this.currentTime = currentTime;
 	}
-
+	
+	/**
+	 * Returns, according to the utility, the best AgentAction object for a specific agent.
+	 * @return an AgentAction with the highest utility, or if no advantage can be gained from performing an action, null.
+	 */
 	public AgentAction doAction() {
 		// Only do an action if it improves our situation
 		double bestUtility 		= utility(expectedArrivalTime,currentSanctionList);
 		AgentAction bestAction 	= null;
 		
+		
+		// Set currentRoadID value
 		int currentRoadID = 0;
 		for(;currentRoadID<currentRoute.length;currentRoadID++) {
 			if(currentRoute[currentRoadID].getRoad().id.equals(this.road.id)) {
@@ -83,6 +94,8 @@ public abstract class Agent extends AgentPhysical {
 			}
 		}
 		
+		// Loop through all AgentAction objects and calculate utility for each.
+		// If no action returns a better utility than the one we currently have, bestAction remains null.
 		for(AgentAction action : AgentAction.values()) {
 			int time 						= action.getTime(currentTime, this.lane.getMeanTravelTime(), this.distance, this.road.length, currentRoadID, expectedTravelTimePerRoad);
 			ArrayList<Sanction> sanctions 	= action.getSanctions();
