@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on Thu Dec 18 18:48:59 2014 by SUMO netconvert Version 0.22.0
+<!-- generated on Fri Jan  9 12:06:28 2015 by SUMO netconvert Version 0.22.0
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
@@ -18,6 +18,10 @@
         <no-internal-links value="true"/>
     </processing>
 
+    <building_defaults>
+        <default.speed value="100"/>
+    </building_defaults>
+
     <report>
         <verbose value="true"/>
     </report>
@@ -30,20 +34,20 @@
     <location netOffset="350.00,100.00" convBoundary="0.00,0.00,701.00,100.00" origBoundary="-350.00,-100.00,351.00,0.00" projParameter="!"/>
 
     <edge id="A28Tot350" from="A28H0" to="A28H350" priority="2">
-        <lane id="A28Tot350_0" index="0" speed="13.90" length="350.00" shape="0.00,95.05 335.51,95.05"/>
-        <lane id="A28Tot350_1" index="1" speed="13.90" length="350.00" shape="0.00,98.35 335.51,98.35"/>
+        <lane id="A28Tot350_0" index="0" speed="100.00" length="350.00" shape="0.00,95.05 335.51,95.05"/>
+        <lane id="A28Tot350_1" index="1" speed="100.00" length="350.00" shape="0.00,98.35 335.51,98.35"/>
     </edge>
     <edge id="A28Tot700" from="A28H350" to="A28H700" priority="2">
-        <lane id="A28Tot700_0" index="0" speed="13.90" length="350.00" shape="353.05,95.05 700.00,95.05"/>
-        <lane id="A28Tot700_1" index="1" speed="13.90" length="350.00" shape="353.05,98.35 700.00,98.35"/>
+        <lane id="A28Tot700_0" index="0" speed="100.00" length="350.00" shape="353.05,95.05 700.00,95.05"/>
+        <lane id="A28Tot700_1" index="1" speed="100.00" length="350.00" shape="353.05,98.35 700.00,98.35"/>
     </edge>
     <edge id="A28TotExit" from="A28H700" to="A28Exit" priority="2">
-        <lane id="A28TotExit_0" index="0" speed="13.90" length="1.00" shape="700.00,95.05 701.00,95.05"/>
-        <lane id="A28TotExit_1" index="1" speed="13.90" length="1.00" shape="700.00,98.35 701.00,98.35"/>
+        <lane id="A28TotExit_0" index="0" speed="100.00" length="1.00" shape="700.00,95.05 701.00,95.05"/>
+        <lane id="A28TotExit_1" index="1" speed="100.00" length="1.00" shape="700.00,98.35 701.00,98.35"/>
     </edge>
     <edge id="N42" from="N42Invoeg" to="A28H350" priority="1">
-        <lane id="N42_0" index="0" speed="13.90" length="223.61" shape="152.21,-4.43 337.86,88.40"/>
-        <lane id="N42_1" index="1" speed="13.90" length="223.61" shape="150.74,-1.48 336.39,91.35"/>
+        <lane id="N42_0" index="0" speed="100.00" length="223.61" shape="152.21,-4.43 337.86,88.40"/>
+        <lane id="N42_1" index="1" speed="100.00" length="223.61" shape="150.74,-1.48 336.39,91.35"/>
     </edge>
 
     <junction id="A28Exit" type="unregulated" x="701.00" y="100.00" incLanes="A28TotExit_0 A28TotExit_1" intLanes="" shape="701.00,93.45 701.00,99.95"/>
