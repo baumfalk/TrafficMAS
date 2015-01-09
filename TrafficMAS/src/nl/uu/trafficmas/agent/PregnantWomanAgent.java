@@ -2,6 +2,7 @@ package nl.uu.trafficmas.agent;
 
 import java.util.ArrayList;
 
+import de.tudresden.ws.container.SumoColor;
 import nl.uu.trafficmas.organisation.Sanction;
 import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Node;
@@ -9,7 +10,7 @@ import nl.uu.trafficmas.roadnetwork.Node;
 public class PregnantWomanAgent extends Agent {
 
 	public PregnantWomanAgent(String agentID, Node goalNode, Edge[] route, int goalArrivalTime, double maxSpeed,double maxComfySpeed,int currentTime) {
-		super(agentID, goalNode, route, goalArrivalTime, maxSpeed, AgentProfileType.PregnantWoman, maxComfySpeed,currentTime);
+		super(agentID, goalNode, route, goalArrivalTime, maxSpeed, maxComfySpeed,currentTime);
 	}
 
 	@Override
@@ -23,5 +24,11 @@ public class PregnantWomanAgent extends Agent {
 		
 		
 		return Math.max(0,Math.min(1, utility));
+	}
+
+	@Override
+	public SumoColor getColor() {
+		//blue
+		return new SumoColor(0,0,255,255);
 	}
 }
