@@ -181,7 +181,7 @@ public class SimulationModelTraaS implements SimulationModel {
 	}
 	
 	@Override
-	public void simulateAgentActions(HashMap<Agent, AgentAction> actions) {
+	public void simulateAgentActions(HashMap<Agent, AgentAction> actions) throws Exception {
 		simulateAgentActions(actions, conn);
 	}
 	
@@ -193,11 +193,13 @@ public class SimulationModelTraaS implements SimulationModel {
 	 * ChangeRoad,
 	 * ChangeVelocity5,
 	 * ChangeVelocity10,
-	 * ChangeVelocity20.
+	 * ChangeVelocity20,
+	 * ChangeVelocityMax
 	 * @param actions
 	 * @param conn
+	 * @throws Exception 
 	 */
-	public static void simulateAgentActions(HashMap<Agent, AgentAction> actions, SumoTraciConnection conn){
+	public static void simulateAgentActions(HashMap<Agent, AgentAction> actions, SumoTraciConnection conn) throws Exception{
 		if(actions.size() == 0) {
 			return;
 		}
@@ -225,16 +227,20 @@ public class SimulationModelTraaS implements SimulationModel {
 				// TODO Add changeRoad AgentAction
 				break;
 			case ChangeVelocity5:
-				cmdList.add(Vehicle.slowDown(currentAgent.agentID, currentAgent.getVelocity()+5.0,5));
+				
+				cmdList.add(Vehicle.slowDown(currentAgent.agentID, Math.min(currentAgent.getVelocity()+5.0,currentAgent.getMaxComfySpeed()),5));
 				break;
 			case ChangeVelocity10:
-				cmdList.add(Vehicle.slowDown(currentAgent.agentID, currentAgent.getVelocity()+10.0,10));
+				cmdList.add(Vehicle.slowDown(currentAgent.agentID, Math.min(currentAgent.getVelocity()+10.0,currentAgent.getMaxComfySpeed()),10));
 				break;
 			case ChangeVelocity20:
-				cmdList.add(Vehicle.slowDown(currentAgent.agentID, currentAgent.getVelocity()+20.0,15));
+				cmdList.add(Vehicle.slowDown(currentAgent.agentID, Math.min(currentAgent.getVelocity()+20.0,currentAgent.getMaxComfySpeed()),15));
+				break;
+			case ChangeVelocityMax:
+				cmdList.add(Vehicle.slowDown(currentAgent.agentID, currentAgent.getMaxComfySpeed(),10));
 				break;
 			default:
-				System.out.println("Error on action name, no action executed");			
+				throw new Exception("Error on action name, no action executed");			
 		
 			}
 		}
