@@ -83,10 +83,10 @@ public abstract class Agent extends AgentPhysical {
 				leftLaneSpeed = this.lane.getLeftLane().getLaneMeanSpeed();
 			}
 			
-			double time = action.getTime(currentTime, leftLaneSpeed, this.distance, this.road.length, this.maxComfySpeed, routeRemainderLength);
-			ArrayList<Sanction> sanctions 	= action.getSanctions();
+			double time = action.getTime(currentTime,velocity, leftLaneSpeed, this.distance, this.road.length, this.maxComfySpeed, routeRemainderLength);
+			ArrayList<Sanction> sanctions 	= action.getSanctions(maxComfySpeed, velocity);
 			double newUtility 				= utility(time, sanctions);
-			if(newUtility > bestUtility) {
+			if(newUtility >= bestUtility) {
 				bestAction = action;
 				bestUtility = newUtility; 
 			}

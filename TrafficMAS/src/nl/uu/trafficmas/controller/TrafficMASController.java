@@ -114,8 +114,9 @@ public class TrafficMASController {
 	 * @param dataModel
 	 * @param simulationModel
 	 * @param view
+	 * @throws Exception 
 	 */
-	public void run(DataModel dataModel, SimulationModel simulationModel, TrafficView view) {
+	public void run(DataModel dataModel, SimulationModel simulationModel, TrafficView view) throws Exception {
 		int i = 1;
 		view.addMessage("Starting main loop");
 		while(i++ < masData.simulationLength) {
@@ -195,6 +196,7 @@ public class TrafficMASController {
 		optionValueMap.put("e", Integer.toString(masData.simulationLength));
 		optionValueMap.put("start", "1");
 		optionValueMap.put("quit-on-end", "1");
+
 		simulationModel.initializeWithOptions(optionValueMap);
 		// add the agents
 		
@@ -306,8 +308,9 @@ public class TrafficMASController {
 	 * Calls the method	simulationModel.simulateAgentActions(), if the map 'agentActions' is not empty.
 	 * @param simulationModel
 	 * @param agentActions
+	 * @throws Exception 
 	 */
-	public static void updateSimulation(SimulationModel simulationModel, HashMap<Agent, AgentAction> agentActions) {
+	public static void updateSimulation(SimulationModel simulationModel, HashMap<Agent, AgentAction> agentActions) throws Exception {
 		if(agentActions != null) {
 			simulationModel.simulateAgentActions(agentActions);
 		}
