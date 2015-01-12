@@ -2,9 +2,6 @@ package nl.uu.trafficmas.simulationmodel;
 
 import it.polito.appeal.traci.SumoTraciConnection;
 
-import java.io.IOException;
-import java.net.Socket;
-import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -12,12 +9,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import nl.uu.trafficmas.agent.Agent;
-import nl.uu.trafficmas.agent.AgentProfileType;
 import nl.uu.trafficmas.agent.actions.AgentAction;
 import de.tudresden.sumo.cmd.Simulation;
 import de.tudresden.sumo.cmd.Vehicle;
 import de.tudresden.sumo.util.SumoCommand;
-import de.tudresden.ws.container.SumoColor;
 import de.tudresden.ws.container.SumoStringList;
 
 public class SimulationModelTraaS implements SimulationModel {
@@ -33,22 +28,9 @@ public class SimulationModelTraaS implements SimulationModel {
 		this.sumocfg = sumocfg;
 	}
 	
-	public SimulationModelTraaS(String address, int port) {
-		// TODO Auto-generated constructor stub
-		try {
-			Socket sa = new Socket(address, port);
-			conn = new SumoTraciConnection(sa.getRemoteSocketAddress());
-		} catch (IOException | InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
 	@Override
 	public void initialize() {
-		if(conn == null) {
-			conn = initialize(sumoBin, sumocfg);
-		}
+		conn = initialize(sumoBin, sumocfg);     
 	}
 	public static SumoTraciConnection initialize(String sumoBin, String sumocfg){
 		SumoTraciConnection conn = new SumoTraciConnection(sumoBin, sumocfg);
@@ -65,9 +47,7 @@ public class SimulationModelTraaS implements SimulationModel {
 	
 	@Override
 	public void initializeWithOptions(HashMap<String,String> optionValueMap) {
-		if(conn == null) {
-			conn = initializeWithOptions(optionValueMap, sumoBin, sumocfg);
-		}
+		conn = initializeWithOptions(optionValueMap, sumoBin, sumocfg);
 	}
 	public static SumoTraciConnection initializeWithOptions(HashMap<String,String> optionValueMap, String sumoBin, String sumocfg){
 		SumoTraciConnection conn = new SumoTraciConnection(sumoBin, sumocfg);
@@ -104,6 +84,13 @@ public class SimulationModelTraaS implements SimulationModel {
 		addAgent(agent, routeID, tick, conn);
 	}
 	
+	/**
+	 * Calls the method SimulationModelTraas.addAgentCommand(agent,routeID,tick)
+	 * @param agent
+	 * @param routeID
+	 * @param tick
+	 * @param conn
+	 */
 	public static void addAgent(Agent agent, String routeID, int tick, SumoTraciConnection conn){
 		try {
 			conn.do_job_set(addAgentCommand(agent, routeID, tick));
@@ -112,16 +99,30 @@ public class SimulationModelTraaS implements SimulationModel {
 		}
 	}
 	
+	/**
+	 * Returns the SumoCommand to add a single agent 'agent' at time 'tick' with route 'routeID' 
+	 * and certain default values such as spawn speed and Vehicle Type.
+	 * @param agent
+	 * @param routeID
+	 * @param tick
+	 * @return a SumoCommand to add a single agent.
+	 */
 	public static SumoCommand addAgentCommand(Agent agent, String routeID, int tick) {
 		return Vehicle.add(agent.agentID, "Car", routeID, tick, 0.0, Math.min(agent.getMaxComfySpeed(),3), (byte) 0);
 	}
 	
 	@Override
 	public HashMap<String, Agent> addAgents(HashMap<Agent, Integer> agentPairList) {
-		
 		return addAgents(agentPairList, conn);
 	}
-	//TODO: Implement routes.
+	
+	/**
+	 * Sends a list of commands to spawn Agents to SUMO via connection 'conn'. The agent data and spawn times are provided in 'agentPairList'. 
+	 * Default values depending on the agentProfileType are added, like Color and MaxSpeed.
+	 * @param agentPairList
+	 * @param conn
+	 * @return the HashMap containing all agents that will spawn in the simulation. 
+	 */
 	public static HashMap<String, Agent> addAgents(HashMap<Agent, Integer> agentPairList, SumoTraciConnection conn){
 		HashMap<String, Agent> completeAgentMap = new LinkedHashMap<String, Agent>();
 		ArrayList<SumoCommand> cmds = new ArrayList<>();
@@ -153,6 +154,15 @@ public class SimulationModelTraaS implements SimulationModel {
 	public HashMap<String, Agent> updateCurrentAgentMap(HashMap<String, Agent> completeAgentMap, HashMap<String, Agent> oldAgentMap) {
 		return updateCurrentAgentMap(completeAgentMap, oldAgentMap, conn);
 	}
+	
+	/**
+	 * Updates 'oldAgentMap' to contain only the agents that are currently present in the SUMO application. 
+	 * It uses 'completeAgentMap' to add agents which have just spawned to the map.
+	 * @param completeAgentMap
+	 * @param oldAgentMap
+	 * @param conn
+	 * @return a new HashMap currentAgentMap, which contains all agents currently in the simulation.
+	 */
 	public static HashMap<String, Agent> updateCurrentAgentMap(HashMap<String, Agent> completeAgentMap, HashMap<String, Agent> oldAgentMap, SumoTraciConnection conn){
 		HashMap<String, Agent> currentAgentMap = new HashMap<String, Agent>(oldAgentMap);
 		try {
@@ -186,7 +196,7 @@ public class SimulationModelTraaS implements SimulationModel {
 	}
 	
 	/**
-	 * Sends a list of commands to SUMO. The commands are generated from he hashmap 'actions' and are all actions the vehicle can take.
+	 * Sends a list of commands to SUMO. The commands are generated from the HashMap 'actions' and are all actions the vehicle can take.
 	 * The following actions can be send to SUMO:
 	 * 
 	 * ChangeLane,
@@ -257,6 +267,12 @@ public class SimulationModelTraaS implements SimulationModel {
 		return getStateData(conn,true);
 	}
 
+	/**
+	 * Does a timestep in SUMO if 'timeStep' is true and returns StateData, which contains the most recent information about Edge, Lane and Agent objects.
+	 * @param conn
+	 * @param timeStep
+	 * @return a StateData object which contains 3 HashMaps concerning agent, edge and lane data, and an Integer with the current timestep.
+	 */
 	public static StateData getStateData(SumoTraciConnection conn, boolean timeStep) {
 		StateData stateData = null;
 		QueryBuilder qb = new QueryBuilder();
