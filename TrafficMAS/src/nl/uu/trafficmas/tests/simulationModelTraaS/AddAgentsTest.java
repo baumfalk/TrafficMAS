@@ -1,28 +1,24 @@
 package nl.uu.trafficmas.tests.simulationModelTraaS;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import it.polito.appeal.traci.SumoTraciConnection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Random;
-import java.util.Map.Entry;
 
-import it.polito.appeal.traci.SumoTraciConnection;
 import nl.uu.trafficmas.agent.Agent;
-import nl.uu.trafficmas.agent.AgentProfileType;
-import nl.uu.trafficmas.agent.NormalAgent;
 import nl.uu.trafficmas.controller.TrafficMASController;
 import nl.uu.trafficmas.datamodel.DataModel;
 import nl.uu.trafficmas.datamodel.DataModelXML;
 import nl.uu.trafficmas.datamodel.MASData;
-import nl.uu.trafficmas.datamodel.Pair;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
 import nl.uu.trafficmas.simulationmodel.SimulationModelTraaS;
 
 import org.junit.Test;
 
-import de.tudresden.sumo.cmd.Simulation;
 import de.tudresden.sumo.cmd.Vehicle;
 import de.tudresden.ws.container.SumoStringList;
 
@@ -35,7 +31,7 @@ public class AddAgentsTest {
 		DataModel dataModel = new DataModelXML("tests/SimulationModelTraaS/AddAgents/","MASTest.xml");
 		MASData masData = dataModel.getMASData();
 		
-		HashMap<String, String> options = new HashMap<String, String>();
+		HashMap<String, String> options = new LinkedHashMap<String, String>();
 		options.put("e", Integer.toString(masData.simulationLength));
 		options.put("start", "1");
 		options.put("quit-on-end", "1");
@@ -55,7 +51,7 @@ public class AddAgentsTest {
 				
 				if(i == 80){
 					SumoStringList vehicleIDList = (SumoStringList) conn.do_job_get(Vehicle.getIDList());
-					assertEquals(4,vehicleIDList.size()); // Length is always 1 at this time with this seed.
+					assertEquals(3,vehicleIDList.size()); // Length is always 1 at this time with this seed.
 				}
 			}
 			conn.close();
