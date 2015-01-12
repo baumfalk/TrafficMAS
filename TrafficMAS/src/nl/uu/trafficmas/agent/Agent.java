@@ -96,13 +96,13 @@ public abstract class Agent extends AgentPhysical {
 			action.setUtility(newUtility);
 			actionList.add(action);
 		}
-		
+		// sort the actions by their utility
 		Collections.sort(actionList, new Comparator<AgentAction>() {
 	        public int compare(AgentAction action1, AgentAction action2) {
 	        	return AgentAction.compare(action1, action2);
 	        }
 	    });
-		
+		// only do an action if it is strictly better than doing nothing.
 		if(actionList.get(0).getUtility() > noActionUtility) {
 			bestAction = actionList.get(0);
 		}
