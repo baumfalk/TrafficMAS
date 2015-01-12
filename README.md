@@ -18,10 +18,11 @@ You can test if sumo was installed succesfully by opening a terminal and typing
 >    `sumo`
 
 It should then return something like
->	`SUMO Version 0.22.0  
->	Copyright (C) 2001-2014 DLR and contributors; http://sumo.dlr.de  
->	License GPLv3+: GNU GPL Version 3 or later <http://gnu.org/licenses/gpl.html>  
->	Use --help to get the list of options.`
+
+		SUMO Version 0.22.0
+		Copyright (C) 2001-2014 DLR and contributors; http://sumo.dlr.de
+		License GPLv3+: GNU GPL Version 3 or later <http://gnu.org/licenses/gpl.html>
+		Use --help to get the list of options.`
 
 If it doesn't work, you should add the sumo executable to your path variable. Alternatively,
 you can give the link to the sumo executable as a parameter to the TrafficMAS program.
