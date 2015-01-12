@@ -169,7 +169,6 @@ public class DataModelXML implements DataModel {
 		
 		ArrayList<Lane> lanes = new ArrayList<Lane>();
 		int numberLanesInt = Integer.parseInt(numberLanes);
-		System.out.println("Number of lanes: " + numberLanesInt );
 
 		for (int i = 0; i < numberLanesInt; i++) {
 			lanes.add(new Lane(LaneType.Normal,(byte) i)); //TODO: find some way to encode lanetype in xml
