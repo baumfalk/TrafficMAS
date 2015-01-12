@@ -121,40 +121,45 @@ public class TrafficMASController {
 		int i = 1;
 		view.addMessage("Starting main loop");
 		while(i++ < masData.simulationLength) {
-			long start_time = System.nanoTime();
-			long total_start_time = start_time;
-			StateData simulationStateData = TrafficMASController.nextSimulationState(simulationModel);
-			view.addMessage("+++++++++++++++++++++");
-			long end_time = System.nanoTime();
-			double difference = (end_time - start_time)/1e6;
-
-			view.addMessage("Timestep: "+i);
-			view.addMessage("Simulation timestep: "+simulationStateData.currentTimeStep);
-			view.addMessage("sim next state duration:"+difference+"ms");
-			view.addMessage("Number of agents in sim:"+simulationStateData.agentsData.size());
-
-			this.updateMAS(simulationStateData); 
-			view.addMessage("Number of agents in MAS:"+currentAgentMap.size());
-
-			HashMap<Agent,AgentAction> agentActions = this.nextMASState(simulationStateData.currentTimeStep/1000);
-			view.addMessage("Agent actions: "+agentActions);
-			
-			start_time = System.nanoTime();
-			TrafficMASController.updateSimulation(simulationModel, agentActions);
-			end_time = System.nanoTime();
-			difference = (end_time - start_time)/1e6;
-			view.addMessage("sim update duration:"+difference+"ms");
-
-			TrafficMASController.updateView(view, roadNetwork, currentAgentMap.values(), organisations);
-			end_time = System.nanoTime();
-			difference = (end_time - total_start_time)/1e6;
-			view.addMessage("duration:"+difference+"ms");
-			view.addMessage("+++++++++++++++++++++");
-			
-			view.visualize();
+			doStep(simulationModel, view, i);
 		}
 		
 		TrafficMASController.cleanUp(dataModel, simulationModel, view);
+	}
+
+	public void doStep(SimulationModel simulationModel, TrafficView view, int i)
+			throws Exception {
+		long start_time = System.nanoTime();
+		long total_start_time = start_time;
+		StateData simulationStateData = TrafficMASController.nextSimulationState(simulationModel);
+		view.addMessage("+++++++++++++++++++++");
+		long end_time = System.nanoTime();
+		double difference = (end_time - start_time)/1e6;
+
+		view.addMessage("Timestep: "+i);
+		view.addMessage("Simulation timestep: "+simulationStateData.currentTimeStep);
+		view.addMessage("sim next state duration:"+difference+"ms");
+		view.addMessage("Number of agents in sim:"+simulationStateData.agentsData.size());
+
+		this.updateMAS(simulationStateData); 
+		view.addMessage("Number of agents in MAS:"+currentAgentMap.size());
+
+		HashMap<Agent,AgentAction> agentActions = this.nextMASState(simulationStateData.currentTimeStep/1000);
+		view.addMessage("Agent actions: "+agentActions);
+		
+		start_time = System.nanoTime();
+		TrafficMASController.updateSimulation(simulationModel, agentActions);
+		end_time = System.nanoTime();
+		difference = (end_time - start_time)/1e6;
+		view.addMessage("sim update duration:"+difference+"ms");
+
+		TrafficMASController.updateView(view, roadNetwork, currentAgentMap.values(), organisations);
+		end_time = System.nanoTime();
+		difference = (end_time - total_start_time)/1e6;
+		view.addMessage("duration:"+difference+"ms");
+		view.addMessage("+++++++++++++++++++++");
+		
+		view.visualize();
 	}
 
 	
