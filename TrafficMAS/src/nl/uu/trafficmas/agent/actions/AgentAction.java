@@ -12,6 +12,8 @@ public enum AgentAction {
 	ChangeVelocity20,
 	ChangeVelocityMax;
 	
+	private double utility;
+
 	public double getTime(int currentTime, double currentSpeed, double meanTravelSpeedNextLane, double currentPos, double currentLaneLength, double maxComfySpeed, double routeRemainderLength, double leaderAgentSpeed, double leaderDistance){ 
 		double time;
 		switch(this) {
@@ -140,4 +142,60 @@ public enum AgentAction {
 		
 		return finishTime;
 	}
+
+	public void setUtility(double newUtility) {
+		utility = newUtility;
+	}
+	
+	public double getUtility(){
+		return utility;
+	}
+
+	public static int compare(AgentAction action1, AgentAction action2) {
+		if(action1.getUtility() > action2.getUtility())
+    		return -1;
+    	else if(action1.getUtility() < action2.getUtility()) {
+    		return 1;
+    	} else{
+    		
+    		
+    		if(action1 == AgentAction.ChangeLane) {
+    			if(action2 != AgentAction.ChangeRoad) {
+    				return 1;
+    			} else {
+    				return -1;
+    			}
+    		}
+    		else if(action1 == AgentAction.ChangeRoad) {
+    			return 1;
+    		} 
+    		else if(action1 == AgentAction.ChangeVelocity5) {
+    			if(action2 == AgentAction.ChangeVelocity10 || action2==AgentAction.ChangeVelocity20 || action2==AgentAction.ChangeVelocityMax) {
+    				return 1;
+    			} else{
+    				return -1;
+    			}
+    		}
+    		
+    		else if(action1 == AgentAction.ChangeVelocity10) {
+    			if(action2==AgentAction.ChangeVelocity20 || action2==AgentAction.ChangeVelocityMax) {
+    				return 1;
+    			} else{
+    				return -1;
+    			}
+    		}
+    		
+    		else if(action1 == AgentAction.ChangeVelocity20) {
+    			if(action2==AgentAction.ChangeVelocityMax) {
+    				return 1;
+    			} else{
+    				return -1;
+    			}
+    		}
+    		else if (action1 == AgentAction.ChangeVelocityMax) {
+    			return -1;
+    		}
+    	}
+        return 0;
+    }
 }
