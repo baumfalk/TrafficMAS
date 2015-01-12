@@ -8,6 +8,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+
+import java.io.IOException;
+import java.net.Socket;
+import java.net.SocketAddress;
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.agent.actions.AgentAction;
 import de.tudresden.sumo.cmd.Simulation;
@@ -28,10 +32,24 @@ public class SimulationModelTraaS implements SimulationModel {
 		this.sumocfg = sumocfg;
 	}
 	
+	public SimulationModelTraaS(String address, int port) {
+		// TODO Auto-generated constructor stub
+		try {
+			Socket sa = new Socket(address, port);
+			conn = new SumoTraciConnection(sa.getRemoteSocketAddress());
+		} catch (IOException | InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	@Override
 	public void initialize() {
-		conn = initialize(sumoBin, sumocfg);     
-	}
+		if(conn == null) {
+			conn = initialize(sumoBin, sumocfg);
+		}		
+ 	}	
+	
 	public static SumoTraciConnection initialize(String sumoBin, String sumocfg){
 		SumoTraciConnection conn = new SumoTraciConnection(sumoBin, sumocfg);
 		// Add an extra option.
@@ -47,8 +65,10 @@ public class SimulationModelTraaS implements SimulationModel {
 	
 	@Override
 	public void initializeWithOptions(HashMap<String,String> optionValueMap) {
-		conn = initializeWithOptions(optionValueMap, sumoBin, sumocfg);
-	}
+		if(conn == null) {
+			conn = initializeWithOptions(optionValueMap, sumoBin, sumocfg);
+		}		
+ 	}		
 	public static SumoTraciConnection initializeWithOptions(HashMap<String,String> optionValueMap, String sumoBin, String sumocfg){
 		SumoTraciConnection conn = new SumoTraciConnection(sumoBin, sumocfg);
 		// Add an extra option.

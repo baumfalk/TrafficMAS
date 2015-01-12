@@ -16,7 +16,7 @@ public class HotShotAgent extends Agent {
 	@Override
 	public double specificUtility(double arrivalTime, ArrayList<Sanction> sanctionList) {
 		double utility = 0;
-		utility = (double) (this.getGoalArrivalTime() / (3*arrivalTime));
+		utility = (double) (this.getGoalArrivalTime() / (arrivalTime));
 		
 		return Math.max(0,Math.min(1, utility));
 	}
