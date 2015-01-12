@@ -18,7 +18,7 @@ import org.junit.Test;
 public class SetRoadTest {
 
 	@Test
-	public void test() {
+	public void setRoad() {
 		RoadNetwork rn = DataModelXML.instantiateRoadNetwork("tests/Agent/SetRoad/", "takeOverScenario.nod.xml", "takeOverScenario.edg.xml");
 		ArrayList<Route> routes = DataModelXML.getRoutes(rn, "tests/Agent/SetRoad/", "takeOverScenario.rou.xml");		
 		Road r = rn.getRoadFromID("edge1");

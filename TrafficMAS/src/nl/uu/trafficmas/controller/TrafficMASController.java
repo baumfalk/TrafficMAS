@@ -369,7 +369,7 @@ public class TrafficMASController {
 	 * @param currentTime
 	 * @param coinFlip
 	 */
-	private static void createAgent(ArrayList<Route> routes,
+	public static void createAgent(ArrayList<Route> routes,
 			LinkedHashMap<Agent, Integer> agentsAndTimes,
 			HashMap<AgentProfileType, Double> agentProfileDistribution, int currentTime,
 			double coinFlip) {
