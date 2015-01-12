@@ -139,7 +139,7 @@ public class SimulationModelTraaS implements SimulationModel {
 			for( Entry<Agent, Integer> agentPair : agentPairList.entrySet()){
 				Agent agent = agentPair.getKey();
 				cmds.add(addAgentCommand(agent, "route0", agentPair.getValue()));
-				cmds.add(Vehicle.setLaneChangeMode(agent.agentID, 0b0001000000));
+				cmds.add(Vehicle.setLaneChangeMode(agent.agentID, 0b1001000000));
 				cmds.add(Vehicle.setSpeedMode(agent.agentID, 0b00001));
 				// TODO: think of a way to express max comfy speed in a different way
 				cmds.add(Vehicle.setMaxSpeed(agent.agentID, agent.getMaxComfySpeed()));
