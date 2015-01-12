@@ -38,8 +38,8 @@ public class CreateAgentTest {
 		
 		// There only is one agent.
 		for(Map.Entry<Agent,Integer> entry : agentsAndTimes.entrySet()){
-			a = entry.getKey();
-			assertEquals("Agent 0", a.agentID);
+			a = entry.getKey();			
+			assertTrue(a.agentID.startsWith("Agent "));
 			assertArrayEquals(routes.get(0).getRoute(),a.getRoute());
 			assertNotNull(a.getMaxSpeed());
 			assertTrue(Arrays.asList(rn.getNodes()).contains(a.getGoalNode()));
