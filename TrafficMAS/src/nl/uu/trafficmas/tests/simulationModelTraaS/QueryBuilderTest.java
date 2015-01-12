@@ -32,7 +32,7 @@ public class QueryBuilderTest {
 		DataModel dataModel = new DataModelXML("tests/SimulationModelTraaS/QueryBuilder/","MASTest.xml");
 		MASData masData = dataModel.getMASData(); 
 		
-		HashMap<String, String> options = new HashMap<String, String>();
+		HashMap<String, String> options = new LinkedHashMap<String, String>();
 		options.put("e", Integer.toString(masData.simulationLength));
 		options.put("start", "1");
 		options.put("quit-on-end", "1");
