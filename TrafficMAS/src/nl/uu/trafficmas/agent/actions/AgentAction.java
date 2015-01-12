@@ -89,7 +89,24 @@ public enum AgentAction {
 		return Integer.MAX_VALUE;
 	}
 
-	private double getChangeLaneTime(int currentTime, double meanSpeedNextLane, double currentPos, double currentLaneLength, double maxComfySpeed, double routeRemainderLength) {
+	/**
+	 * 	/*
+	 *	 * change lane time (no knowledge about RN)
+	 *	 * 
+	 *	 * lane_remainder       rest_route_length
+	 *	 * --------------   +   ----------------- + current_time
+	 *	 * next_lane_speed      max_comfy_speed
+	 *	 *
+	 *  /*
+	 * @param currentTime
+	 * @param meanSpeedNextLane
+	 * @param currentPos
+	 * @param currentLaneLength
+	 * @param maxComfySpeed
+	 * @param routeRemainderLength
+	 * @return
+	 */
+	public double getChangeLaneTime(int currentTime, double meanSpeedNextLane, double currentPos, double currentLaneLength, double maxComfySpeed, double routeRemainderLength) {
 		
 		/*
 		 * change lane time (no knowledge about RN)

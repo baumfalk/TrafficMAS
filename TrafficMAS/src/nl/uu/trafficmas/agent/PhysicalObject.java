@@ -11,6 +11,7 @@ public class PhysicalObject {
 	public Road getRoad() {
 		return road;
 	}
+	
 	public void setRoad(Road road) {
 		this.road = road;
 	}

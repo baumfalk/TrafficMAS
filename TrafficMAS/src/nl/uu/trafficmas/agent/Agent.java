@@ -129,6 +129,7 @@ public abstract class Agent extends AgentPhysical {
 	public Edge [] getRoute() {
 		return currentRoute;
 	}
+	
 	@Override
 	public void setRoad(Road road) {
 		super.setRoad(road);
@@ -145,6 +146,7 @@ public abstract class Agent extends AgentPhysical {
 		}
 		currentRoute = tempRoute;
 	}
+
 	
 	public double getMaxComfySpeed() {
 		return maxComfySpeed;
