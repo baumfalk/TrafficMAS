@@ -224,7 +224,9 @@ public class SimulationModelTraaS implements SimulationModel {
 		
 			if(entry.getValue() == null)
 				continue;
-			switch(entry.getValue()) {
+			cmdList.add(entry.getValue().getCommand(currentAgent.agentID, agentLaneIndex, maxLaneIndex,
+					OVERTAKE_DURATION, currentAgent.getVelocity(),currentAgent.getMaxComfySpeed()));
+			/*switch(entry.getValue()) {
 			case ChangeLane:
 				if(agentLaneIndex < maxLaneIndex){
 					cmdList.add(Vehicle.changeLane(currentAgent.agentID, (byte) (agentLaneIndex+1) , OVERTAKE_DURATION));
@@ -235,7 +237,7 @@ public class SimulationModelTraaS implements SimulationModel {
 			case ChangeRoad:
 				// TODO Add changeRoad AgentAction
 				break;
-			case ChangeVelocity5:
+			case ChangeVelocity5Action:
 				
 				cmdList.add(Vehicle.slowDown(currentAgent.agentID, Math.min(currentAgent.getVelocity()+5.0,currentAgent.getMaxComfySpeed()),5));
 				break;
@@ -251,7 +253,7 @@ public class SimulationModelTraaS implements SimulationModel {
 			default:
 				throw new Exception("Error on action name, no action executed");			
 		
-			}
+			}*/
 		}
 		
 	
