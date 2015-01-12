@@ -2,6 +2,7 @@ package nl.uu.trafficmas.tests.agents;
 
 import static org.junit.Assert.*;
 import nl.uu.trafficmas.agent.actions.AgentAction;
+import nl.uu.trafficmas.agent.actions.ChangeLaneAction;
 
 import org.junit.Test;
 
@@ -19,7 +20,8 @@ public class GetChangeLaneTimeTest {
 		// change lane time:
 		
 		
-		AgentAction action = AgentAction.ChangeLane;
-		assertEquals(6,action.getChangeLaneTime(5, 2, 1, 2, 2, 1),0);	
+		ChangeLaneAction action = new ChangeLaneAction(0);
+		
+		assertEquals(6,action.getTime(5, 0, 2, 1, 2, 2, 1, 0, 0),0);
 	}
 }

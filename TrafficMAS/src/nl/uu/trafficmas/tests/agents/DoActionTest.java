@@ -57,11 +57,12 @@ public class DoActionTest {
 		while(i++ < masData.simulationLength){
 			currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, currentAgentMap, conn);
 			stateData = SimulationModelTraaS.getStateData(conn, true);
-			TrafficMASController.updateAgents(completeAgentMap, rn, stateData);
+			currentAgentMap = TrafficMASController.updateAgents(completeAgentMap, rn, stateData);
+			rn = TrafficMASController.updateRoadNetwork(rn, stateData);
 			try {
 				if(currentAgentMap.containsValue(granny) && currentAgentMap.containsValue(hotshot)){
-					AgentAction grannyAction = granny.doAction(stateData.currentTimeStep);
-					AgentAction hotShotAction = hotshot.doAction(stateData.currentTimeStep);
+					AgentAction grannyAction = granny.doAction(stateData.currentTimeStep/1000);
+					AgentAction hotShotAction = hotshot.doAction(stateData.currentTimeStep/1000);
 					assertEquals(null, grannyAction);
 					assertEquals(AgentAction.ChangeLane, hotShotAction);
 				}
