@@ -87,7 +87,7 @@ public class DataModelXML implements DataModel {
 	 */
 	public static HashMap<String,Node> extractNodes(String dir,String nodesXML) {
 		ArrayList<ArrayList<Pair<String,String>>> nodesAttributes = SimpleXMLReader.extractFromXML(dir,nodesXML,"node");
-		HashMap<String,Node>nodes = new HashMap<String,Node>();
+		HashMap<String,Node>nodes = new LinkedHashMap<String,Node>();
 		for(ArrayList<Pair<String,String>> nodeAttributes : nodesAttributes) {
 			String id = null;
 			String x = null;

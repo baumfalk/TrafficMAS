@@ -1,6 +1,9 @@
 package nl.uu.trafficmas.agent;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import nl.uu.trafficmas.agent.actions.AgentAction;
 import nl.uu.trafficmas.organisation.Sanction;
@@ -20,6 +23,8 @@ public abstract class Agent extends AgentPhysical {
 	private Edge[] currentRoute;
 	private ArrayList<Double> expectedTravelTimePerRoad;
 	private double maxComfySpeed;
+	private double leaderAgentSpeed;
+	private double leaderDistance;
 	
 	public final static double DEFAULT_MAX_SPEED = 20;
 	
@@ -69,7 +74,7 @@ public abstract class Agent extends AgentPhysical {
 	 */
 	public AgentAction doAction(int currentTime) {
 		// Only do an action if it improves our situation
-		double bestUtility 		= utility(expectedArrivalTime,currentSanctionList);
+		double noActionUtility	= utility(expectedArrivalTime,currentSanctionList);
 		AgentAction bestAction 	= null;
 		
 		// Set currentRoadID value
@@ -77,20 +82,31 @@ public abstract class Agent extends AgentPhysical {
 		
 		// Loop through all AgentAction objects and calculate utility for each.
 		// If no action returns a better utility than the one we currently have, bestAction remains null.
+		List<AgentAction> actionList = new ArrayList<AgentAction>();
 		for(AgentAction action : AgentAction.values()) {
+			
 			double leftLaneSpeed = 0;
 			if(this.lane.hasLeftLane()) {
 				leftLaneSpeed = this.lane.getLeftLane().getLaneMeanSpeed();
 			}
 			
-			double time = action.getTime(currentTime, leftLaneSpeed, this.distance, this.road.length, this.maxComfySpeed, routeRemainderLength);
-			ArrayList<Sanction> sanctions 	= action.getSanctions();
+			double time = action.getTime(currentTime,velocity, leftLaneSpeed, this.distance, this.road.length, this.maxComfySpeed, routeRemainderLength, this.leaderAgentSpeed, this.leaderDistance);
+			ArrayList<Sanction> sanctions 	= action.getSanctions(maxComfySpeed, velocity);
 			double newUtility 				= utility(time, sanctions);
-			if(newUtility > bestUtility) {
-				bestAction = action;
-				bestUtility = newUtility; 
-			}
+			action.setUtility(newUtility);
+			actionList.add(action);
 		}
+		// sort the actions by their utility
+		Collections.sort(actionList, new Comparator<AgentAction>() {
+	        public int compare(AgentAction action1, AgentAction action2) {
+	        	return AgentAction.compare(action1, action2);
+	        }
+	    });
+		// only do an action if it is strictly better than doing nothing.
+		if(actionList.get(0).getUtility() > noActionUtility) {
+			bestAction = actionList.get(0);
+		}
+		
 		return bestAction;
 	}
 	
@@ -158,4 +174,14 @@ public abstract class Agent extends AgentPhysical {
 	}
 
 	public abstract SumoColor getColor();
+
+	public void setLeader(double leaderAgent, double leaderDistance) {
+		// TODO Auto-generated method stub
+		this.leaderAgentSpeed 	= leaderAgent;
+		this.leaderDistance 	= leaderDistance;
+	}
+	
+	public boolean hasLeader() {
+		return (this.leaderAgentSpeed >=0) && (this.leaderDistance >= 0);
+	}
 }
