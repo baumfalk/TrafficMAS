@@ -59,14 +59,8 @@ public interface SimulationModel {
 	 * ChangeVelocity20.
 	 * @param actions
 	 * @param conn
+	 * @throws Exception 
 	 */
-	public void simulateAgentActions(HashMap<Agent, AgentAction> agentActions);
-	
-	/**
-	 * 
-	 * @param completeAgentMap
-	 * @param oldAgentMap
-	 * @return
-	 */
+	public void simulateAgentActions(HashMap<Agent, AgentAction> agentActions) throws Exception;
 	public HashMap<String, Agent> updateCurrentAgentMap(HashMap<String, Agent> completeAgentMap, HashMap<String, Agent> oldAgentMap);
 }

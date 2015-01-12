@@ -21,6 +21,7 @@ import nl.uu.trafficmas.roadnetwork.Node;
 import nl.uu.trafficmas.roadnetwork.Road;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
+import nl.uu.trafficmas.simulationmodel.AgentData;
 import nl.uu.trafficmas.simulationmodel.SimulationModel;
 import nl.uu.trafficmas.simulationmodel.StateData;
 import nl.uu.trafficmas.view.TrafficView;
@@ -32,7 +33,7 @@ public class TrafficMASController {
 	private ArrayList<Organisation> organisations;
 	private Random rng;
 	
-	private HashMap<String,Agent> completeAgentMap = new HashMap<String, Agent>();
+	private HashMap<String,Agent> completeAgentMap = new LinkedHashMap<String, Agent>();
 
 	private ArrayList<Route> routes;
 	private HashMap<String, Agent> currentAgentMap;
@@ -60,10 +61,10 @@ public class TrafficMASController {
 		///////////////
 		// setup environment
 		
-		this.roadNetwork 	= this.setupRoadNetwork(dataModel);
+		this.roadNetwork 	= TrafficMASController.setupRoadNetwork(dataModel);
 		view.addMessage("Initialized roadnetwork");
 
-		this.routes 		= this.setupRoutes(dataModel,roadNetwork);
+		this.routes 		= TrafficMASController.setupRoutes(dataModel,roadNetwork);
 		view.addMessage("Initialized routes");
 
 		// setup agents & organizations
@@ -79,7 +80,7 @@ public class TrafficMASController {
 		this.completeAgentMap 	= TrafficMASController.setupSimulation(masData, simulationModel, agentsAndTime);
 		view.addMessage("Simulation is set up");
 
-		this.currentAgentMap 	= new HashMap<String, Agent>();
+		this.currentAgentMap 	= new LinkedHashMap<String, Agent>();
 		
 		////////////////
 		// setup view //
@@ -96,7 +97,7 @@ public class TrafficMASController {
 	 * @param dataModel
 	 * @return a RoadNetwork filled with all Edge and Node objects
 	 */
-	private RoadNetwork setupRoadNetwork(DataModel dataModel) {
+	public static RoadNetwork setupRoadNetwork(DataModel dataModel) {
 		return dataModel.instantiateRoadNetwork();
 	}
 	
@@ -105,7 +106,7 @@ public class TrafficMASController {
 	 * @param dataModel
 	 * @return a list of routes which agents can follow.
 	 */
-	private ArrayList<Route> setupRoutes(DataModel dataModel, RoadNetwork roadNetwork) {
+	public static ArrayList<Route> setupRoutes(DataModel dataModel, RoadNetwork roadNetwork) {
 		return dataModel.getRoutes(roadNetwork);
 	}
 
@@ -114,45 +115,51 @@ public class TrafficMASController {
 	 * @param dataModel
 	 * @param simulationModel
 	 * @param view
+	 * @throws Exception 
 	 */
-	public void run(DataModel dataModel, SimulationModel simulationModel, TrafficView view) {
+	public void run(DataModel dataModel, SimulationModel simulationModel, TrafficView view) throws Exception {
 		int i = 1;
 		view.addMessage("Starting main loop");
 		while(i++ < masData.simulationLength) {
-			long start_time = System.nanoTime();
-			long total_start_time = start_time;
-			StateData simulationStateData = TrafficMASController.nextSimulationState(simulationModel);
-			view.addMessage("+++++++++++++++++++++");
-			long end_time = System.nanoTime();
-			double difference = (end_time - start_time)/1e6;
-
-			view.addMessage("Timestep: "+i);
-			view.addMessage("Simulation timestep: "+simulationStateData.currentTimeStep);
-			view.addMessage("sim next state duration:"+difference+"ms");
-			view.addMessage("Number of agents in sim:"+simulationStateData.agentsData.size());
-
-			this.updateMAS(simulationStateData); 
-			view.addMessage("Number of agents in MAS:"+currentAgentMap.size());
-
-			HashMap<Agent,AgentAction> agentActions = this.nextMASState(simulationStateData.currentTimeStep/1000);
-			view.addMessage("Agent actions: "+agentActions);
-			
-			start_time = System.nanoTime();
-			TrafficMASController.updateSimulation(simulationModel, agentActions);
-			end_time = System.nanoTime();
-			difference = (end_time - start_time)/1e6;
-			view.addMessage("sim update duration:"+difference+"ms");
-
-			TrafficMASController.updateView(view, roadNetwork, currentAgentMap.values(), organisations);
-			end_time = System.nanoTime();
-			difference = (end_time - total_start_time)/1e6;
-			view.addMessage("duration:"+difference+"ms");
-			view.addMessage("+++++++++++++++++++++");
-			
-			view.visualize();
+			doStep(simulationModel, view, i);
 		}
 		
 		TrafficMASController.cleanUp(dataModel, simulationModel, view);
+	}
+
+	public void doStep(SimulationModel simulationModel, TrafficView view, int i)
+			throws Exception {
+		long start_time = System.nanoTime();
+		long total_start_time = start_time;
+		StateData simulationStateData = TrafficMASController.nextSimulationState(simulationModel);
+		view.addMessage("+++++++++++++++++++++");
+		long end_time = System.nanoTime();
+		double difference = (end_time - start_time)/1e6;
+
+		view.addMessage("Timestep: "+i);
+		view.addMessage("Simulation timestep: "+simulationStateData.currentTimeStep);
+		view.addMessage("sim next state duration:"+difference+"ms");
+		view.addMessage("Number of agents in sim:"+simulationStateData.agentsData.size());
+
+		this.updateMAS(simulationStateData); 
+		view.addMessage("Number of agents in MAS:"+currentAgentMap.size());
+
+		HashMap<Agent,AgentAction> agentActions = this.nextMASState(simulationStateData.currentTimeStep/1000);
+		view.addMessage("Agent actions: "+agentActions);
+		
+		start_time = System.nanoTime();
+		TrafficMASController.updateSimulation(simulationModel, agentActions);
+		end_time = System.nanoTime();
+		difference = (end_time - start_time)/1e6;
+		view.addMessage("sim update duration:"+difference+"ms");
+
+		TrafficMASController.updateView(view, roadNetwork, currentAgentMap.values(), organisations);
+		end_time = System.nanoTime();
+		difference = (end_time - total_start_time)/1e6;
+		view.addMessage("duration:"+difference+"ms");
+		view.addMessage("+++++++++++++++++++++");
+		
+		view.visualize();
 	}
 
 	
@@ -164,7 +171,7 @@ public class TrafficMASController {
 	 */
 	public static HashMap<Agent, AgentAction> getAgentActions(int currentTime, HashMap<String, Agent> currentAgents) {
 		
-		HashMap <Agent,AgentAction> actions = new HashMap<Agent, AgentAction>();
+		HashMap <Agent,AgentAction> actions = new LinkedHashMap<Agent, AgentAction>();
 		for(Agent agent : currentAgents.values()) {
 			actions.put(agent, agent.doAction(currentTime));
 		}
@@ -191,7 +198,7 @@ public class TrafficMASController {
 	 */
 	public static HashMap<String,Agent> setupSimulation(MASData masData, SimulationModel simulationModel, HashMap<Agent,Integer> agentsAndTime) {
 		// start the simulation
-		HashMap<String, String> optionValueMap = new HashMap<String, String>();
+		HashMap<String, String> optionValueMap = new LinkedHashMap<String, String>();
 		optionValueMap.put("e", Integer.toString(masData.simulationLength));
 		optionValueMap.put("start", "1");
 		optionValueMap.put("quit-on-end", "1");
@@ -263,7 +270,7 @@ public class TrafficMASController {
 		for(String agentID : stateData.agentsData.keySet()) {
 			if(!agentsMap.containsKey(agentID)) {
 				Agent agent = completeAgentMap.get(agentID);
-				updateAgent(roadNetwork, stateData, agentID, agent);
+				updateAgent(roadNetwork, stateData, agentID, agent,completeAgentMap);
 				agentsMap.put(agentID, agent);
 			}
 		}
@@ -277,20 +284,32 @@ public class TrafficMASController {
 	 * @param agent
 	 */
 	public static void updateAgent(RoadNetwork roadNetwork,
-			StateData stateData, String agentID, Agent agent) {
-		double velocity = stateData.agentsData.get(agentID).speed;
-		String roadID 	= stateData.agentsData.get(agentID).roadID;
+			StateData stateData, String agentID, Agent agent, HashMap<String,Agent> completeAgentMap  ) {
+		AgentData agentData 	= stateData.agentsData.get(agentID);
+		double velocity 		= agentData.speed;
+		String roadID 			= agentData.roadID;
+		String leaderID			= agentData.leaderId;
+		Agent leaderAgent		= null;
+		double leaderVelocity	= -1;
+		double leaderDistance	= agentData.leaderDistance;
+		
+		if(leaderDistance >= 0) {
+			leaderAgent = completeAgentMap.get(leaderID);
+			leaderVelocity = leaderAgent.getVelocity();
+		}
+		
 		Road road 		= roadNetwork.getRoadFromID(roadID);
-		int laneIndex 	= stateData.agentsData.get(agentID).laneIndex;
-		double distance = stateData.agentsData.get(agentID).position;
+		
+		int laneIndex 	= agentData.laneIndex;
+		double distance = agentData.position;
 	
 		// Update the agent with information
 		agent.setVelocity(velocity);
 		agent.setRoad(road);
 		agent.setLane(road.getLanes()[laneIndex]);
 		
+		agent.setLeader(leaderVelocity, leaderDistance);
 		agent.setDistance(distance);
-		Edge [] route = agent.getRoute();
 		
 		//TODO review this
 		//TODO review test (expectedArrivalTime etc)
@@ -306,8 +325,9 @@ public class TrafficMASController {
 	 * Calls the method	simulationModel.simulateAgentActions(), if the map 'agentActions' is not empty.
 	 * @param simulationModel
 	 * @param agentActions
+	 * @throws Exception 
 	 */
-	public static void updateSimulation(SimulationModel simulationModel, HashMap<Agent, AgentAction> agentActions) {
+	public static void updateSimulation(SimulationModel simulationModel, HashMap<Agent, AgentAction> agentActions) throws Exception {
 		if(agentActions != null) {
 			simulationModel.simulateAgentActions(agentActions);
 		}

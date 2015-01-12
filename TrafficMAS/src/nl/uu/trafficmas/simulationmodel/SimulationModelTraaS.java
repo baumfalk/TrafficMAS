@@ -24,6 +24,7 @@ public class SimulationModelTraaS implements SimulationModel {
 	SumoTraciConnection conn;
 	String sumocfg;
 	String sumoBin;
+	private Socket sa;
 	public static final int LOOK_AHEAD_DISTANCE = 100;
 	public static final int OVERTAKE_DURATION = 5;
 	
@@ -35,7 +36,7 @@ public class SimulationModelTraaS implements SimulationModel {
 	public SimulationModelTraaS(String address, int port) {
 		// TODO Auto-generated constructor stub
 		try {
-			Socket sa = new Socket(address, port);
+			sa = new Socket(address, port);
 			conn = new SumoTraciConnection(sa.getRemoteSocketAddress());
 		} catch (IOException | InterruptedException e) {
 			// TODO Auto-generated catch block
@@ -87,6 +88,14 @@ public class SimulationModelTraaS implements SimulationModel {
 
 	@Override
 	public void close() {
+		if(sa != null) {
+			try {
+				sa.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		conn.close();
 	}
 	
@@ -151,8 +160,8 @@ public class SimulationModelTraaS implements SimulationModel {
 			for( Entry<Agent, Integer> agentPair : agentPairList.entrySet()){
 				Agent agent = agentPair.getKey();
 				cmds.add(addAgentCommand(agent, "route0", agentPair.getValue()));
-				cmds.add(Vehicle.setLaneChangeMode(agent.agentID, 0b0001000000));
-				cmds.add(Vehicle.setSpeedMode(agent.agentID, 0b00000));
+				cmds.add(Vehicle.setLaneChangeMode(agent.agentID, 0b1001000000));
+				cmds.add(Vehicle.setSpeedMode(agent.agentID, 0b00001));
 				// TODO: think of a way to express max comfy speed in a different way
 				cmds.add(Vehicle.setMaxSpeed(agent.agentID, agent.getMaxComfySpeed()));
 				
@@ -184,7 +193,7 @@ public class SimulationModelTraaS implements SimulationModel {
 	 * @return a new HashMap currentAgentMap, which contains all agents currently in the simulation.
 	 */
 	public static HashMap<String, Agent> updateCurrentAgentMap(HashMap<String, Agent> completeAgentMap, HashMap<String, Agent> oldAgentMap, SumoTraciConnection conn){
-		HashMap<String, Agent> currentAgentMap = new HashMap<String, Agent>(oldAgentMap);
+		HashMap<String, Agent> currentAgentMap = new LinkedHashMap<String, Agent>(oldAgentMap);
 		try {
 			
 			ArrayList<SumoCommand> cmdList = new ArrayList<>();
@@ -211,7 +220,7 @@ public class SimulationModelTraaS implements SimulationModel {
 	}
 	
 	@Override
-	public void simulateAgentActions(HashMap<Agent, AgentAction> actions) {
+	public void simulateAgentActions(HashMap<Agent, AgentAction> actions) throws Exception {
 		simulateAgentActions(actions, conn);
 	}
 	
@@ -223,11 +232,13 @@ public class SimulationModelTraaS implements SimulationModel {
 	 * ChangeRoad,
 	 * ChangeVelocity5,
 	 * ChangeVelocity10,
-	 * ChangeVelocity20.
+	 * ChangeVelocity20,
+	 * ChangeVelocityMax
 	 * @param actions
 	 * @param conn
+	 * @throws Exception 
 	 */
-	public static void simulateAgentActions(HashMap<Agent, AgentAction> actions, SumoTraciConnection conn){
+	public static void simulateAgentActions(HashMap<Agent, AgentAction> actions, SumoTraciConnection conn) throws Exception{
 		if(actions.size() == 0) {
 			return;
 		}
@@ -243,7 +254,9 @@ public class SimulationModelTraaS implements SimulationModel {
 		
 			if(entry.getValue() == null)
 				continue;
-			switch(entry.getValue()) {
+			cmdList.add(entry.getValue().getCommand(currentAgent.agentID, agentLaneIndex, maxLaneIndex,
+					OVERTAKE_DURATION, currentAgent.getVelocity(),currentAgent.getMaxComfySpeed()));
+			/*switch(entry.getValue()) {
 			case ChangeLane:
 				if(agentLaneIndex < maxLaneIndex){
 					cmdList.add(Vehicle.changeLane(currentAgent.agentID, (byte) (agentLaneIndex+1) , OVERTAKE_DURATION));
@@ -254,19 +267,23 @@ public class SimulationModelTraaS implements SimulationModel {
 			case ChangeRoad:
 				// TODO Add changeRoad AgentAction
 				break;
-			case ChangeVelocity5:
-				cmdList.add(Vehicle.slowDown(currentAgent.agentID, currentAgent.getVelocity()+5.0,5));
+			case ChangeVelocity5Action:
+				
+				cmdList.add(Vehicle.slowDown(currentAgent.agentID, Math.min(currentAgent.getVelocity()+5.0,currentAgent.getMaxComfySpeed()),5));
 				break;
 			case ChangeVelocity10:
-				cmdList.add(Vehicle.slowDown(currentAgent.agentID, currentAgent.getVelocity()+10.0,10));
+				cmdList.add(Vehicle.slowDown(currentAgent.agentID, Math.min(currentAgent.getVelocity()+10.0,currentAgent.getMaxComfySpeed()),10));
 				break;
 			case ChangeVelocity20:
-				cmdList.add(Vehicle.slowDown(currentAgent.agentID, currentAgent.getVelocity()+20.0,15));
+				cmdList.add(Vehicle.slowDown(currentAgent.agentID, Math.min(currentAgent.getVelocity()+20.0,currentAgent.getMaxComfySpeed()),15));
+				break;
+			case ChangeVelocityMax:
+				cmdList.add(Vehicle.slowDown(currentAgent.agentID, currentAgent.getMaxComfySpeed(),10));
 				break;
 			default:
-				System.out.println("Error on action name, no action executed");			
+				throw new Exception("Error on action name, no action executed");			
 		
-			}
+			}*/
 		}
 		
 	

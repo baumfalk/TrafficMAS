@@ -8,7 +8,7 @@ import nl.uu.trafficmas.view.TrafficViewConsole;
 
 
 public class TrafficMASExternal {
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		if(args.length < 4) { 
 			System.out.println("At least four arguments needed");
 			System.exit(1);

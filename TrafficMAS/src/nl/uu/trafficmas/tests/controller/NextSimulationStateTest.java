@@ -1,12 +1,12 @@
 package nl.uu.trafficmas.tests.controller;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import it.polito.appeal.traci.SumoTraciConnection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Random;
-import java.util.Map.Entry;
 
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.controller.TrafficMASController;
@@ -15,7 +15,6 @@ import nl.uu.trafficmas.datamodel.DataModelXML;
 import nl.uu.trafficmas.datamodel.MASData;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
-import nl.uu.trafficmas.simulationmodel.AgentData;
 import nl.uu.trafficmas.simulationmodel.SimulationModelTraaS;
 import nl.uu.trafficmas.simulationmodel.StateData;
 
@@ -32,7 +31,7 @@ Random random = new Random(1337);
 		DataModel dataModel = new DataModelXML("tests/SimulationModelTraaS/NextSimulationState/","MASTest.xml");
 		MASData masData = dataModel.getMASData(); 
 		
-		HashMap<String, String> options = new HashMap<String, String>();
+		HashMap<String, String> options = new LinkedHashMap<String, String>();
 		options.put("e", Integer.toString(masData.simulationLength));
 		options.put("start", "1");
 		options.put("quit-on-end", "1");

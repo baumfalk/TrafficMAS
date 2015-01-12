@@ -106,9 +106,9 @@ public class QueryBuilder {
 	}
 
 	private void processResponses(ArrayList<Object> responses) {
-		agentsData 	= new HashMap<>();
-		edgesData 	= new HashMap<>();
-		lanesData 	= new HashMap<>();
+		agentsData 	= new LinkedHashMap<>();
+		edgesData 	= new LinkedHashMap<>();
+		lanesData 	= new LinkedHashMap<>();
 		for(QuerySubject querySubject : querySubjects) {
 			int numberOfFields = querySubjectFields.get(querySubject).size();
 			for(String id : subjectIDs.get(querySubject)) {

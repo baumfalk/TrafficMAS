@@ -1,10 +1,12 @@
 package nl.uu.trafficmas.tests.controller;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 import it.polito.appeal.traci.SumoTraciConnection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.Random;
 
@@ -30,7 +32,7 @@ public class InstantiateAgentsTest {
 		
 		RoadNetwork rn = DataModelXML.instantiateRoadNetwork("tests/Controller/InstantiateAgents/", "NodeTest.xml", "EdgeTest.xml");
 		ArrayList<Route> routes = DataModelXML.getRoutes(rn, "tests/Controller/InstantiateAgents/", "RouteTest.xml");
-		
+
 		HashMap<Agent,Integer> agentPairList = TrafficMASController.instantiateAgents(masData, random, routes);
 		
 		assertNotEquals(agentPairList.size(), 0);

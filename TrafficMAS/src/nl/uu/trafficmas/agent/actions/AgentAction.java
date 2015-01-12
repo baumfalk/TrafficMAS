@@ -2,127 +2,58 @@ package nl.uu.trafficmas.agent.actions;
 
 import java.util.ArrayList;
 
+import de.tudresden.sumo.util.SumoCommand;
 import nl.uu.trafficmas.organisation.Sanction;
 
-public enum AgentAction {
-	ChangeLane,
-	ChangeRoad,
-	ChangeVelocity5,
-	ChangeVelocity10,
-	ChangeVelocity20;
+public abstract class AgentAction {
 	
+	// add new actions here
+	// listed in order of priority (descending)
+	public static final AgentAction ChangeVelocity1		= new ChangeVelocity1Action(1);
+	public static final AgentAction ChangeVelocity5		= new ChangeVelocity5Action(2);
+	public static final AgentAction ChangeVelocity10	= new ChangeVelocity10Action(3);
+	public static final AgentAction ChangeVelocity20	= new ChangeVelocity20Action(4);
+	public static final AgentAction ChangeVelocity50	= new ChangeVelocity50Action(5);
+	public static final AgentAction ChangeLane 			= new ChangeLaneAction(6);
+	public static final AgentAction ChangeRoad 			= new ChangeRoadAction(7);
 	
+	public final int priority;
 	
-	public double getTime(int currentTime, double meanTravelSpeedNextLane, double currentPos, double currentLaneLength, double maxComfySpeed, double routeRemainderLength){ 
-		double time;
-		switch(this) {
-		case ChangeLane:
-			time = getChangeLaneTime(currentTime, meanTravelSpeedNextLane, currentPos, currentLaneLength, maxComfySpeed, routeRemainderLength);
-			break;
-		case ChangeRoad:
-			time = getChangeRoadTime();
-			break;
-		case ChangeVelocity5:
-			time = getChangeVelocityTime(5);
-			break;
-		case ChangeVelocity10:
-			time = getChangeVelocityTime(10);
-			break;
-		case ChangeVelocity20:
-			time = getChangeVelocityTime(20);
-			break;
-		default:
-			throw new Error("unsupported action:"+ this);
-		}
-		return time;
-	}
+	protected double utility;
 
-	public ArrayList<Sanction> getSanctions() {
-		ArrayList<Sanction> sanctions;
-		switch(this) {
-		case ChangeLane:
-			sanctions = getChangeLaneSanctions();
-			break;
-		case ChangeRoad:
-			sanctions = getChangeRoadSanctions();
-			break;
-		case ChangeVelocity5:
-			sanctions = getChangeVelocitySanctions(5);
-			break;
-		case ChangeVelocity10:
-			sanctions = getChangeVelocitySanctions(10);
-			break;
-		case ChangeVelocity20:
-			sanctions = getChangeVelocitySanctions(20);
-			break;
-		default:
-			sanctions = null;
-			break;
-		
-		}
-		return sanctions;
+	public AgentAction(int priority) {
+		this.priority = priority;
 	}
 	
+	public static AgentAction[] values() {
+		// add new actions here
+		AgentAction [] array = {ChangeVelocity1, ChangeVelocity5, ChangeVelocity10,
+				ChangeVelocity20, ChangeVelocity50, ChangeLane, ChangeRoad};
+		return array;
+	}
 	
-	private ArrayList<Sanction> getChangeLaneSanctions() {
-		// TODO Auto-generated method stub
-		return null;
+	public abstract double getTime(int currentTime, double currentSpeed, double meanTravelSpeedNextLane, double currentPos, double currentLaneLength, double maxComfySpeed, double routeRemainderLength, double leaderAgentSpeed, double leaderDistance);
+	
+	public abstract ArrayList<Sanction> getSanctions(double maxComfySpeed, double velocity);
+	
+	public abstract SumoCommand getCommand(String agentID, byte agentLaneIndex, int maxLaneIndex, int overtakeDuration, double d, double e);
+
+	public void setUtility(double newUtility) {
+		utility = newUtility;
+	}
+	
+	public double getUtility(){
+		return utility;
 	}
 
-	private ArrayList<Sanction> getChangeRoadSanctions() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private ArrayList<Sanction> getChangeVelocitySanctions(int speedIncrease) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private int getChangeVelocityTime(int speedIncrease) {
-		// TODO Auto-generated method stub
-		return Integer.MAX_VALUE;
-	}
-
-	private int getChangeRoadTime() {
-		// TODO Auto-generated method stub
-		return Integer.MAX_VALUE;
-	}
-
-	/**
-	 * 	/*
-	 *	 * change lane time (no knowledge about RN)
-	 *	 * 
-	 *	 * lane_remainder       rest_route_length
-	 *	 * --------------   +   ----------------- + current_time
-	 *	 * next_lane_speed      max_comfy_speed
-	 *	 *
-	 *  /*
-	 * @param currentTime
-	 * @param meanSpeedNextLane
-	 * @param currentPos
-	 * @param currentLaneLength
-	 * @param maxComfySpeed
-	 * @param routeRemainderLength
-	 * @return
-	 */
-	public double getChangeLaneTime(int currentTime, double meanSpeedNextLane, double currentPos, double currentLaneLength, double maxComfySpeed, double routeRemainderLength) {
-		
-		/*
-		 * change lane time (no knowledge about RN)
-		 * 
-		 * lane_remainder       rest_route_length
-		 * --------------   +   ----------------- + current_time
-		 * next_lane_speed      max_comfy_speed
-		 */
-		// change lane time:
-		
-		double finishTime = currentTime;
-		double meanOrComfySpeedNextLane = Math.min(meanSpeedNextLane,maxComfySpeed);
-		double timeSpentOnNextLane = (currentLaneLength-currentPos)/meanOrComfySpeedNextLane;
-		finishTime += timeSpentOnNextLane;
-		finishTime += routeRemainderLength/maxComfySpeed;
-		
-		return finishTime;
-	}
+	public static int compare(AgentAction action1, AgentAction action2) {
+		if(action1.getUtility() > action2.getUtility())
+    		return -1;
+    	else if(action1.getUtility() < action2.getUtility()) {
+    		return 1;
+    	} else{
+    		// lower priority => more important
+    		return action1.priority - action2.priority;
+    	}
+    }
 }
