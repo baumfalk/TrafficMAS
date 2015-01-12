@@ -12,7 +12,7 @@ public enum AgentAction {
 	ChangeVelocity20,
 	ChangeVelocityMax;
 	
-	public double getTime(int currentTime, double currentSpeed, double meanTravelSpeedNextLane, double currentPos, double currentLaneLength, double maxComfySpeed, double routeRemainderLength){ 
+	public double getTime(int currentTime, double currentSpeed, double meanTravelSpeedNextLane, double currentPos, double currentLaneLength, double maxComfySpeed, double routeRemainderLength, double leaderAgentSpeed, double leaderDistance){ 
 		double time;
 		switch(this) {
 		case ChangeLane:
@@ -22,16 +22,16 @@ public enum AgentAction {
 			time = getChangeRoadTime();
 			break;
 		case ChangeVelocity5:
-			time = getChangeVelocityTime(5, currentSpeed, currentTime, currentPos, currentLaneLength, maxComfySpeed, routeRemainderLength);
+			time = getChangeVelocityTime(5, currentSpeed, currentTime, currentPos, currentLaneLength, maxComfySpeed, routeRemainderLength,leaderAgentSpeed,leaderDistance);
 			break;
 		case ChangeVelocity10:
-			time = getChangeVelocityTime(10, currentSpeed, currentTime, currentPos, currentLaneLength, maxComfySpeed, routeRemainderLength);
+			time = getChangeVelocityTime(10, currentSpeed, currentTime, currentPos, currentLaneLength, maxComfySpeed, routeRemainderLength,leaderAgentSpeed,leaderDistance);
 			break;
 		case ChangeVelocity20:
-			time = getChangeVelocityTime(20, currentSpeed, currentTime, currentPos, currentLaneLength, maxComfySpeed, routeRemainderLength);
+			time = getChangeVelocityTime(20, currentSpeed, currentTime, currentPos, currentLaneLength, maxComfySpeed, routeRemainderLength,leaderAgentSpeed,leaderDistance);
 			break;
 		case ChangeVelocityMax:
-			time = getChangeVelocityTime(maxComfySpeed-currentSpeed, currentSpeed, currentTime, currentPos, currentLaneLength, maxComfySpeed, routeRemainderLength);
+			time = getChangeVelocityTime(maxComfySpeed-currentSpeed, currentSpeed, currentTime, currentPos, currentLaneLength, maxComfySpeed, routeRemainderLength,leaderAgentSpeed,leaderDistance);
 			break;
 		default:
 			throw new Error("unsupported action:"+ this);
@@ -82,7 +82,7 @@ public enum AgentAction {
 		return null;
 	}
 
-	private double getChangeVelocityTime(double speedIncrease, double currentSpeed, int currentTime, double currentPos, double currentLaneLength, double maxComfySpeed, double routeRemainderLength) {
+	private double getChangeVelocityTime(double speedIncrease, double currentSpeed, int currentTime, double currentPos, double currentLaneLength, double maxComfySpeed, double routeRemainderLength, double leaderAgentSpeed, double leaderDistance) {
 		// TODO also incorporate leader vehicle?
 		/*
 		 * increase velocity time
@@ -90,11 +90,26 @@ public enum AgentAction {
 		 * ------------------------------- + -----------------   + current_time
 		 * (currentSpeed + speedIncrease)     max_comfy_speed
 		 */
-		
+		double laneDistRemaining = (currentLaneLength-currentPos);
 		double finishTime = currentTime;
 		double newSpeed = Math.min(currentSpeed + speedIncrease, maxComfySpeed);
-		double laneDistRemaining = (currentLaneLength-currentPos);
+		//  normally this is the time we spent on a the rest of the lane.
 		double timeSpentOnLane = laneDistRemaining/newSpeed;
+		
+		// but if we have someone in front of us who drives slower...
+		if(leaderAgentSpeed >= 0 && leaderDistance >= 0 && newSpeed > leaderAgentSpeed && laneDistRemaining > leaderDistance) {
+			// new speed is higher than speed of leader
+			// also, distance is smaller than remaining lane distance.
+			// assumption: we can drive distance between us and leader
+			// with our speed. After that it's their speed.
+			// New lane: assume max_comfy_speed
+			
+			double timeSpentDrivingOwnSpeed 	= leaderDistance/newSpeed;
+			double laneDistRemainingForLeader	= laneDistRemaining-leaderDistance;
+			double timeSpentLaneRemainder		= laneDistRemainingForLeader/leaderAgentSpeed; 
+			timeSpentOnLane = timeSpentDrivingOwnSpeed + timeSpentLaneRemainder;
+		}
+		
 		finishTime += timeSpentOnLane;
 		finishTime += routeRemainderLength/maxComfySpeed;
 		return finishTime;

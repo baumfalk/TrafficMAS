@@ -1,12 +1,14 @@
 package nl.uu.trafficmas.tests.controller;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import it.polito.appeal.traci.SumoTraciConnection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
+import java.util.LinkedHashMap;
 import java.util.Map.Entry;
+import java.util.Random;
 
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.controller.TrafficMASController;
@@ -30,7 +32,7 @@ public class UpdateAgentsTest {
 		DataModel dataModel = new DataModelXML("tests/Controller/UpdateAgents/","MASTest.xml");
 		MASData masData = dataModel.getMASData(); 
 		
-		HashMap<String, String> options = new HashMap<String, String>();
+		HashMap<String, String> options = new LinkedHashMap<String, String>();
 		options.put("e", Integer.toString(masData.simulationLength));
 		options.put("start", "1");
 		options.put("quit-on-end", "1");

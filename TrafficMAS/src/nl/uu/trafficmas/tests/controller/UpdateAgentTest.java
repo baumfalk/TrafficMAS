@@ -1,12 +1,15 @@
 package nl.uu.trafficmas.tests.controller;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import it.polito.appeal.traci.SumoTraciConnection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
+import java.util.LinkedHashMap;
 import java.util.Map.Entry;
+import java.util.Random;
 
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.agent.AgentProfileType;
@@ -16,7 +19,6 @@ import nl.uu.trafficmas.datamodel.DataModelXML;
 import nl.uu.trafficmas.datamodel.MASData;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
-import nl.uu.trafficmas.simulationmodel.AgentData;
 import nl.uu.trafficmas.simulationmodel.SimulationModelTraaS;
 import nl.uu.trafficmas.simulationmodel.StateData;
 
@@ -35,7 +37,7 @@ public class UpdateAgentTest {
 		for(Entry<AgentProfileType, Double> entry : dicks.entrySet()){
 			System.out.println(entry.getKey());
 		}
-		HashMap<String, String> options = new HashMap<String, String>();
+		HashMap<String, String> options = new LinkedHashMap<String, String>();
 		options.put("e", Integer.toString(masData.simulationLength));
 		options.put("start", "1");
 		options.put("quit-on-end", "1");
@@ -57,7 +59,7 @@ public class UpdateAgentTest {
 			try {
 				stateData = SimulationModelTraaS.getStateData(conn, true);
 				if(stateData.agentsData.size() > 2) {
-					TrafficMASController.updateAgent(rn, stateData, a.agentID, a);
+					TrafficMASController.updateAgent(rn, stateData, a.agentID, a, completeAgentMap);
 					assertNotEquals(0,a.getVelocity(),0);
 					assertNotNull(a.getRoad());
 					assertNotNull(a.getLane());		

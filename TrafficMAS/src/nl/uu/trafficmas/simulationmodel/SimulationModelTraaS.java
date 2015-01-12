@@ -25,6 +25,7 @@ public class SimulationModelTraaS implements SimulationModel {
 	SumoTraciConnection conn;
 	String sumocfg;
 	String sumoBin;
+	private Socket sa;
 	public static final int LOOK_AHEAD_DISTANCE = 100;
 	public static final int OVERTAKE_DURATION = 5;
 	
@@ -36,7 +37,7 @@ public class SimulationModelTraaS implements SimulationModel {
 	public SimulationModelTraaS(String address, int port) {
 		// TODO Auto-generated constructor stub
 		try {
-			Socket sa = new Socket(address, port);
+			sa = new Socket(address, port);
 			conn = new SumoTraciConnection(sa.getRemoteSocketAddress());
 		} catch (IOException | InterruptedException e) {
 			// TODO Auto-generated catch block
@@ -87,6 +88,14 @@ public class SimulationModelTraaS implements SimulationModel {
 
 	@Override
 	public void close() {
+		if(sa != null) {
+			try {
+				sa.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		conn.close();
 	}
 	
@@ -131,7 +140,7 @@ public class SimulationModelTraaS implements SimulationModel {
 				Agent agent = agentPair.getKey();
 				cmds.add(addAgentCommand(agent, "route0", agentPair.getValue()));
 				cmds.add(Vehicle.setLaneChangeMode(agent.agentID, 0b0001000000));
-				cmds.add(Vehicle.setSpeedMode(agent.agentID, 0b00000));
+				cmds.add(Vehicle.setSpeedMode(agent.agentID, 0b00001));
 				// TODO: think of a way to express max comfy speed in a different way
 				cmds.add(Vehicle.setMaxSpeed(agent.agentID, agent.getMaxComfySpeed()));
 				
@@ -154,7 +163,7 @@ public class SimulationModelTraaS implements SimulationModel {
 		return updateCurrentAgentMap(completeAgentMap, oldAgentMap, conn);
 	}
 	public static HashMap<String, Agent> updateCurrentAgentMap(HashMap<String, Agent> completeAgentMap, HashMap<String, Agent> oldAgentMap, SumoTraciConnection conn){
-		HashMap<String, Agent> currentAgentMap = new HashMap<String, Agent>(oldAgentMap);
+		HashMap<String, Agent> currentAgentMap = new LinkedHashMap<String, Agent>(oldAgentMap);
 		try {
 			
 			ArrayList<SumoCommand> cmdList = new ArrayList<>();
