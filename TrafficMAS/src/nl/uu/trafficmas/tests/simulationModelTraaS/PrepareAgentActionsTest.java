@@ -35,7 +35,7 @@ public class PrepareAgentActionsTest {
 		DataModel dataModel = new DataModelXML("tests/SimulationTraaS/QueryBuilder/","MASTest.xml");
 		MASData masData = dataModel.getMASData();
 		
-		HashMap<String, String> options = new HashMap<String, String>();
+		HashMap<String, String> options = new LinkedHashMap<String, String>();
 		options.put("e", Integer.toString(masData.simulationLength));
 		options.put("start", "1");
 		options.put("quit-on-end", "1");
@@ -46,7 +46,7 @@ public class PrepareAgentActionsTest {
 		
 		HashMap<Agent,Integer> agentPairList = TrafficMASController.instantiateAgents(masData, random, routes);
 		HashMap<String, Agent> completeAgentMap = SimulationModelTraaS.addAgents(agentPairList, conn);
-		HashMap<String, Agent> currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, new HashMap<String, Agent>(), conn);
+		HashMap<String, Agent> currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, new LinkedHashMap<String, Agent>(), conn);
 
 		double agent1Speed = 10.0;
 		SumoColor colorHotShot = new SumoColor(255,0,0,255);
@@ -68,7 +68,7 @@ public class PrepareAgentActionsTest {
 				currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, currentAgentMap, conn);
 			}
 			SimulationModelTraaS.updateAgents(rn, currentAgentMap, conn);
-			HashMap<String, AgentAction> actions = new HashMap<String, AgentAction>();
+			HashMap<String, AgentAction> actions = new LinkedHashMap<String, AgentAction>();
 			
 			// Testing action ChangeLane
 			AgentAction changeLaneAction = AgentAction.ChangeLane;
@@ -98,7 +98,7 @@ public class PrepareAgentActionsTest {
 		Random random = new Random(1337);
 		int simLength = 30;
 
-		HashMap<String, String> options = new HashMap<String, String>();
+		HashMap<String, String> options = new LinkedHashMap<String, String>();
 		options.put("e", Integer.toString(simLength));
 		options.put("start", "1");
 		options.put("quit-on-end", "1");
@@ -113,8 +113,8 @@ public class PrepareAgentActionsTest {
 		double agentSpawnProb = 0.5;
 		HashMap<Agent, Integer> agentPairList = DataModelXML.instantiateAgents(random, routes, simulationLength, agentSpawnProb, dist);
 		HashMap<String, Agent> completeAgentMap = SimulationModelTraaS.addAgents(agentPairList, conn);
-		HashMap<String, Agent> currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, new HashMap<String, Agent>(), conn);
-		HashMap<String, Agent> agentMap = new HashMap<String, Agent>();
+		HashMap<String, Agent> currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, new LinkedHashMap<String, Agent>(), conn);
+		HashMap<String, Agent> agentMap = new LinkedHashMap<String, Agent>();
 		Agent a1 = completeAgentMap.get("Agent 0");
 		Agent a2 = completeAgentMap.get("Agent 1");
 		try {
@@ -132,7 +132,7 @@ public class PrepareAgentActionsTest {
 				currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, currentAgentMap, conn);
 			}
 			SimulationModelTraaS.updateAgents(rn, currentAgentMap, conn);
-			HashMap<String, AgentAction> actions = new HashMap<String, AgentAction>();
+			HashMap<String, AgentAction> actions = new LinkedHashMap<String, AgentAction>();
 			
 			// Check for every action
 			AgentAction changeVelocityAction = AgentAction.ChangeVelocity5;

@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import it.polito.appeal.traci.SumoTraciConnection;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import nl.uu.trafficmas.simulationmodel.SimulationModelTraaS;
 
@@ -16,7 +17,7 @@ public class InitializeWithOptionTest {
 	@Test
 	public void initializeWithOption() {
 		
-		HashMap <String,String> options = new HashMap<>();
+		HashMap <String,String> options = new LinkedHashMap<>();
 		options.put("step-length", "0.1");
 		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options, "sumo", "./tests/SimulationModelTraaS/InitializeWithOption/ConfigTest.xml");
 		try {

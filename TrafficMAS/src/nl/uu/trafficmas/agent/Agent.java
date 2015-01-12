@@ -20,6 +20,8 @@ public abstract class Agent extends AgentPhysical {
 	private Edge[] currentRoute;
 	private ArrayList<Double> expectedTravelTimePerRoad;
 	private double maxComfySpeed;
+	private double leaderAgentSpeed;
+	private double leaderDistance;
 	
 	public final static double DEFAULT_MAX_SPEED = 20;
 	
@@ -83,11 +85,12 @@ public abstract class Agent extends AgentPhysical {
 				leftLaneSpeed = this.lane.getLeftLane().getLaneMeanSpeed();
 			}
 			
-			double time = action.getTime(currentTime,velocity, leftLaneSpeed, this.distance, this.road.length, this.maxComfySpeed, routeRemainderLength);
+			double time = action.getTime(currentTime,velocity, leftLaneSpeed, this.distance, this.road.length, this.maxComfySpeed, routeRemainderLength, this.leaderAgentSpeed, this.leaderDistance);
 			ArrayList<Sanction> sanctions 	= action.getSanctions(maxComfySpeed, velocity);
 			double newUtility 				= utility(time, sanctions);
+			// TODO make a good action ordering on draws.
 			if(newUtility >= bestUtility) {
-				bestAction = action;
+				bestAction 	= action;
 				bestUtility = newUtility; 
 			}
 		}
@@ -156,4 +159,14 @@ public abstract class Agent extends AgentPhysical {
 	}
 
 	public abstract SumoColor getColor();
+
+	public void setLeader(double leaderAgent, double leaderDistance) {
+		// TODO Auto-generated method stub
+		this.leaderAgentSpeed 	= leaderAgent;
+		this.leaderDistance 	= leaderDistance;
+	}
+	
+	public boolean hasLeader() {
+		return (this.leaderAgentSpeed >=0) && (this.leaderDistance >= 0);
+	}
 }
