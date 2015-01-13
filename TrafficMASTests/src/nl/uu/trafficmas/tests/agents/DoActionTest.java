@@ -20,6 +20,9 @@ import nl.uu.trafficmas.simulationmodel.StateData;
 
 import org.junit.Test;
 
+import de.tudresden.sumo.cmd.Vehicle;
+import de.tudresden.ws.container.SumoStringList;
+
 public class DoActionTest {
 
 	@Test
@@ -59,6 +62,10 @@ public class DoActionTest {
 			rn = TrafficMASController.updateRoadNetwork(rn, stateData);
 			try {
 				if(currentAgentMap.containsValue(granny) && currentAgentMap.containsValue(hotshot)){
+					SumoStringList list = (SumoStringList) conn.do_job_get(Vehicle.getRoute(granny.agentID));
+					while(list.iterator().hasNext()){
+						System.out.println(list.iterator().next());
+					}
 					AgentAction grannyAction = granny.doAction(stateData.currentTimeStep/1000);
 					AgentAction hotShotAction = hotshot.doAction(stateData.currentTimeStep/1000);
 					assertEquals(null, grannyAction);

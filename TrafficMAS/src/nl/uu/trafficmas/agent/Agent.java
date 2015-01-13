@@ -1,6 +1,7 @@
 package nl.uu.trafficmas.agent;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -12,6 +13,7 @@ import nl.uu.trafficmas.roadnetwork.Node;
 import nl.uu.trafficmas.roadnetwork.Road;
 import nl.uu.trafficmas.roadnetwork.Route;
 import de.tudresden.ws.container.SumoColor;
+import de.tudresden.ws.container.SumoStringList;
 
 public abstract class Agent extends AgentPhysical {
 	private Node goalNode;
@@ -182,5 +184,14 @@ public abstract class Agent extends AgentPhysical {
 	
 	public boolean hasLeader() {
 		return (this.leaderAgentSpeed >=0) && (this.leaderDistance >= 0);
+	}
+
+	public SumoStringList getRouteStringList() {
+		List<String> list = new ArrayList<String>();
+		for(Edge edge : currentRoute) {
+			list.add(edge.getID());
+		}
+		SumoStringList routeStringList = new SumoStringList(list);
+		return routeStringList;
 	}
 }
