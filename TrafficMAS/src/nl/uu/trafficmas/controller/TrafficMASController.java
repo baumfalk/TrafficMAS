@@ -223,6 +223,13 @@ public class TrafficMASController {
 		currentAgentMap = TrafficMASController.updateAgents(completeAgentMap, roadNetwork, simulationStateData);
 	}
 	
+	/**
+	 * Updates the Road Network 'roadNetwork' with information from 'simulationStateData. 
+	 * For both Road and Lane objects, the meanTravelTime and meanSpeed are updated
+	 * @param roadNetwork
+	 * @param simulationStateData
+	 * @return an updated RoadNetwork object.
+	 */
 	public static RoadNetwork updateRoadNetwork(RoadNetwork roadNetwork,
 			StateData simulationStateData) {
 		

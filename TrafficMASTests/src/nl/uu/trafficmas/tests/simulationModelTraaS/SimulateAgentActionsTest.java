@@ -7,7 +7,7 @@ import org.junit.Test;
 public class SimulateAgentActionsTest {
 
 	@Test
-	public void test() {
+	public void simulateAgentActions() {
 		fail("Not yet implemented");
 	}
 

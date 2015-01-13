@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Random;
 
 import nl.uu.trafficmas.agent.Agent;
+import nl.uu.trafficmas.agent.AgentProfileType;
 import nl.uu.trafficmas.agent.actions.AgentAction;
 import nl.uu.trafficmas.controller.TrafficMASController;
 import nl.uu.trafficmas.datamodel.DataModel;
@@ -27,7 +28,7 @@ public class GetAgentActionsTest {
 	public void test() {
 		Random random = new Random(1337);
 
-		DataModel dataModel = new DataModelXML(System.getProperty("user.dir")+"tests/Controller/GetAgentActions/","MASTest.xml");
+		DataModel dataModel = new DataModelXML(System.getProperty("user.dir")+"/tests/Controller/GetAgentActions/","MASTest.xml");
 		MASData masData = dataModel.getMASData(); 
 		
 		HashMap<String, String> options = new HashMap<String, String>();
@@ -59,7 +60,7 @@ public class GetAgentActionsTest {
 				// The fourth agent will ChangeLane, the rest does not need to take action.
 				if(stateData.currentTimeStep == 12000){
 					for(Map.Entry<Agent, AgentAction> entry : agentActionMap.entrySet()){
-						if(entry.getKey().agentID.equals("Agent 3")){
+						if(entry.getKey().getClass().getSimpleName().equals("HotShotAgent")){
 							assertEquals(AgentAction.ChangeLane,entry.getValue());
 						} else{
 							assertEquals(null,entry.getValue());
