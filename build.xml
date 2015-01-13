@@ -1,0 +1,77 @@
+<project name="TrafficMAS" default="buildAll" basedir=".">
+	<description>
+		For building TrafficMAS, as well as TraaS.
+	</description>
+	<property name="MAS" location="./TrafficMAS"/>
+	<property name="TraaS" location="./TraaS"/>
+	<property name="Tests" location="./TrafficMASTests"/>
+	<property name="buildMAS" location="${MAS}/build"/>
+	<property name="srcMAS" location="${MAS}/src"/>
+	<property name="buildTraaS" location="${TraaS}/build"/>
+	<property name="srcTraaS" location="${TraaS}"/>
+	<property name="srcTests" location="${Tests}/src"/>
+	<property name="outputTests" location="${Tests}/output"/>
+	<target name="initMAS">
+	    <!-- create timestamp-->
+	    <tstamp/>
+	    <mkdir dir="${buildMAS}"/>
+	</target>
+	
+	<target name="initTraaS">
+	    <!-- create timestamp-->
+	    <tstamp/>
+	    <mkdir dir="${buildTraaS}"/>
+	</target>
+	
+	<target name="initTests">
+	    <!-- create timestamp-->
+	    <tstamp/>
+	    <mkdir dir="${outputTests}"/>
+	</target>
+	
+	<path id="TrafficMAS.classpath">
+        <pathelement location="${MAS}/lib/TraaS_javadoc.jar"/>
+        <pathelement location="${MAS}/lib/TraaS_sources.jar"/>
+        <pathelement location="${MAS}/lib/TraaS.jar"/>
+    </path>
+    
+    <path id="TrafficMASTests.classpath">
+        <pathelement location="${Tests}/lib/TraaS_javadoc.jar"/>
+        <pathelement location="${Tests}/lib/TraaS_sources.jar"/>
+        <pathelement location="${Tests}/lib/TraaS.jar"/>
+        <pathelement location="${Tests}/lib/junit.jar"/>
+        <pathelement location="${Tests}/lib/hamcrest-core.jar"/>
+        <pathelement location="${buildMAS}"/>
+    </path>
+    
+	<target name="buildMAS" depends="initMAS">
+	    <javac srcdir="${srcMAS}" destdir="${buildMAS}">
+	        <classpath refid="TrafficMAS.classpath"/>
+	    </javac>
+	</target>
+	
+    <target name="buildTraaS" depends="initTraaS">
+	    <javac srcdir="${srcTraaS}" destdir="${buildTraaS}"/>
+	</target>
+
+	<target name="buildTests" depends="initTests">
+	    <javac srcdir="${srcTests}" destdir="${buildMAS}">
+	        <classpath refid="TrafficMASTests.classpath"/>
+	    </javac>
+	</target>
+		
+	<target name="buildAll" depends="buildMAS,buildTraaS,buildTests"/>
+		
+	<target name="test" depends="buildAll">
+	    <junit fork="yes" printsummary="yes" haltonfailure="no">
+            <jvmarg value="-Duser.dir=${Tests}"/>
+            <formatter type="plain"/>
+            <classpath refid="TrafficMASTests.classpath"/>
+            <batchtest fork="yes" todir="${outputTests}">
+                <fileset dir="${srcTests}">
+                    <include name="**/*Test*.java"/>
+                </fileset>
+            </batchtest>
+        </junit>
+	</target>
+</project>

@@ -2,16 +2,14 @@ package nl.uu.trafficmas.simulationmodel;
 
 import it.polito.appeal.traci.SumoTraciConnection;
 
+import java.io.IOException;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-
-import java.io.IOException;
-import java.net.Socket;
-import java.net.SocketAddress;
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.agent.actions.AgentAction;
 import de.tudresden.sumo.cmd.Simulation;
