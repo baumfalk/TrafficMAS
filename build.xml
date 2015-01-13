@@ -63,7 +63,7 @@
 	<target name="buildAll" depends="buildMAS,buildTraaS,buildTests"/>
 		
 	<target name="test" depends="buildAll">
-	    <junit fork="yes" printsummary="yes" haltonfailure="no">
+	    <junit fork="yes" printsummary="yes" haltonfailure="yes">
             <jvmarg value="-Duser.dir=${Tests}"/>
             <formatter type="plain"/>
             <classpath refid="TrafficMASTests.classpath"/>
