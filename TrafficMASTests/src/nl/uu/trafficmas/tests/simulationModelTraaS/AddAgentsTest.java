@@ -16,6 +16,7 @@ import nl.uu.trafficmas.datamodel.MASData;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
 import nl.uu.trafficmas.simulationmodel.SimulationModelTraaS;
+import nl.uu.trafficmas.simulationmodel.StateData;
 
 import org.junit.Test;
 
@@ -47,11 +48,9 @@ public class AddAgentsTest {
 		try {
 			int i = 0;
 			while(i++ < masData.simulationLength){
-				conn.do_timestep();
-				
-				if(i == 80){
-					SumoStringList vehicleIDList = (SumoStringList) conn.do_job_get(Vehicle.getIDList());
-					assertEquals(3,vehicleIDList.size()); // Length is always 1 at this time with this seed.
+				StateData stateData = SimulationModelTraaS.getStateData(conn, true);				
+				if(i == 8){
+					assertEquals(3,stateData.agentsData.size());
 				}
 			}
 			conn.close();

@@ -3,6 +3,7 @@ package nl.uu.trafficmas.tests.simulationModelTraaS;
 import static org.junit.Assert.assertEquals;
 import it.polito.appeal.traci.SumoTraciConnection;
 import nl.uu.trafficmas.simulationmodel.SimulationModelTraaS;
+import nl.uu.trafficmas.simulationmodel.StateData;
 
 import org.junit.Test;
 
@@ -15,10 +16,9 @@ public class InitializeTest {
 
 		
 		try {
-			SumoTraciConnection conn = SimulationModelTraaS.initialize("sumo", "./tests/SimulationModelTraaS/Initialize/ConfigTest.xml");
-            int simtime = (int) conn.do_job_get(Simulation.getCurrentTime());
-			conn.do_timestep();
-			assertEquals(1000, simtime);
+			SumoTraciConnection conn = SimulationModelTraaS.initialize("sumo", System.getProperty("user.dir")+"/tests/SimulationModelTraaS/Initialize/ConfigTest.xml");
+			StateData stateData = SimulationModelTraaS.getStateData(conn, false);
+			assertEquals(1000, stateData.currentTimeStep);
 
 		} catch (Exception e) {
 			e.printStackTrace();
