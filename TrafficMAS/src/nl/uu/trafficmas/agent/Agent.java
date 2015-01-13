@@ -76,7 +76,6 @@ public abstract class Agent extends AgentPhysical {
 		// Only do an action if it improves our situation
 		double noActionUtility	= utility(expectedArrivalTime,currentSanctionList);
 		AgentAction bestAction 	= null;
-		
 		// Set currentRoadID value
 		double routeRemainderLength = Route.getRouteRemainderLength(this.currentRoute, this.road);
 		

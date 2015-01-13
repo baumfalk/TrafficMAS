@@ -2,11 +2,8 @@ package nl.uu.trafficmas.datamodel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
 
-import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.agent.AgentProfileType;
-import nl.uu.trafficmas.organisation.Organisation;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
 
