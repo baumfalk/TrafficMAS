@@ -29,7 +29,7 @@ public class TrafficMAS {
 		TrafficMASController trafficMas	= new TrafficMASController(dataModel, simModel, view,seed);
 		long end_time = System.nanoTime();
 		double difference = (end_time - start_time)/1e6;
-		System.out.println("inittime:" + difference + "ms");
+		System.out.println("init time:" + difference + "ms");
 		
 		start_time = System.nanoTime();
 		trafficMas.run(dataModel, simModel, view);

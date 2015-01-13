@@ -1,19 +1,10 @@
 package nl.uu.trafficmas.datamodel;
 
-import static org.junit.Assert.*;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Random;
 
-import org.junit.Test;
-
-import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.agent.AgentProfileType;
-import nl.uu.trafficmas.organisation.Organisation;
 import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Lane;
 import nl.uu.trafficmas.roadnetwork.LaneType;
@@ -169,6 +160,7 @@ public class DataModelXML implements DataModel {
 		
 		ArrayList<Lane> lanes = new ArrayList<Lane>();
 		int numberLanesInt = Integer.parseInt(numberLanes);
+
 		for (int i = 0; i < numberLanesInt; i++) {
 			lanes.add(new Lane(LaneType.Normal,(byte) i)); //TODO: find some way to encode lanetype in xml
 			lanes.get(i).setID(id+"_"+i); //TODO: write a test to check this 

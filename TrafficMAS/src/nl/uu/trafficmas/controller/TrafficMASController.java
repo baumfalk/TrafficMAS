@@ -1,7 +1,5 @@
 package nl.uu.trafficmas.controller;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -389,7 +387,7 @@ public class TrafficMASController {
 	 * @param currentTime
 	 * @param coinFlip
 	 */
-	private static void createAgent(ArrayList<Route> routes,
+	public static void createAgent(ArrayList<Route> routes,
 			LinkedHashMap<Agent, Integer> agentsAndTimes,
 			HashMap<AgentProfileType, Double> agentProfileDistribution, int currentTime,
 			double coinFlip) {
