@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/baumfalk/TrafficMAS.svg?branch=master)](https://travis-ci.org/baumfalk/TrafficMAS)
+[![Coverage Status](https://coveralls.io/repos/baumfalk/TrafficMAS/badge.png)](https://coveralls.io/r/baumfalk/TrafficMAS)
+
 # TrafficMAS
 TrafficMAS, the code
 
