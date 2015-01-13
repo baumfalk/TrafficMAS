@@ -31,7 +31,7 @@ public class UpdateAgentTest {
 	public void updateAgent() {
 		Random random = new Random(1337);
 		
-		DataModel dataModel = new DataModelXML("tests/Controller/UpdateAgent/","MASTest.xml");
+		DataModel dataModel = new DataModelXML(System.getProperty("user.dir")+"/tests/Controller/UpdateAgent/","MASTest.xml");
 		MASData masData = dataModel.getMASData(); 
 		
 		HashMap<String, String> options = new LinkedHashMap<String, String>();
@@ -39,9 +39,9 @@ public class UpdateAgentTest {
 		options.put("start", "1");
 		options.put("quit-on-end", "1");
 		
-		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options,"sumo", "./tests/Controller/UpdateAgent/ConfigTest.xml");				
-		RoadNetwork rn = DataModelXML.instantiateRoadNetwork("tests/Controller/UpdateAgent/", "NodeTest.xml", "EdgeTest.xml");
-		ArrayList<Route> routes = DataModelXML.getRoutes(rn, "tests/Controller/UpdateAgent/", "RouteTest.xml");
+		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options,"sumo", System.getProperty("user.dir")+"/tests/Controller/UpdateAgent/ConfigTest.xml");				
+		RoadNetwork rn = DataModelXML.instantiateRoadNetwork(System.getProperty("user.dir")+"/tests/Controller/UpdateAgent/", "NodeTest.xml", "EdgeTest.xml");
+		ArrayList<Route> routes = DataModelXML.getRoutes(rn, System.getProperty("user.dir")+"/tests/Controller/UpdateAgent/", "RouteTest.xml");
 		
 		HashMap<Agent,Integer> agentPairList = TrafficMASController.instantiateAgents(masData, random, routes);
 		HashMap<String, Agent> completeAgentMap = SimulationModelTraaS.addAgents(agentPairList, conn);	

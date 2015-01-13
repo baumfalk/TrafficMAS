@@ -18,8 +18,8 @@ public class XMLExtractEdgeTest {
 
 	@Test
 	public void extractEdge() {
-		HashMap<String,Node> nodes = DataModelXML.extractNodes("tests/XML/ExtractEdge/","NodeTest2.xml");
-		ArrayList<ArrayList<Pair<String,String>>> edgesAttributes = SimpleXMLReader.extractFromXML("tests/XML/ExtractEdge/", "EdgeTest2.xml","edge");
+		HashMap<String,Node> nodes = DataModelXML.extractNodes(System.getProperty("user.dir")+"/tests/XML/ExtractEdge/","NodeTest2.xml");
+		ArrayList<ArrayList<Pair<String,String>>> edgesAttributes = SimpleXMLReader.extractFromXML(System.getProperty("user.dir")+"/tests/XML/ExtractEdge/", "EdgeTest2.xml","edge");
 		ArrayList<Edge> edges = new ArrayList<Edge>();
 		
 		DataModelXML.extractEdge(edges, edgesAttributes.get(0), nodes);
