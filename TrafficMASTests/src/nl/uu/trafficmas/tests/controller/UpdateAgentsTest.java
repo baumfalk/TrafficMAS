@@ -37,7 +37,7 @@ public class UpdateAgentsTest {
 		options.put("start", "1");
 		options.put("quit-on-end", "1");
 		
-		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options,"sumo", "./tests/Controller/UpdateAgent/ConfigTest.xml");				
+		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options,"sumo", System.getProperty("user.dir")+"/tests/Controller/UpdateAgent/ConfigTest.xml");				
 		RoadNetwork rn = DataModelXML.instantiateRoadNetwork(System.getProperty("user.dir")+"/tests/Controller/UpdateAgent/", "NodeTest.xml", "EdgeTest.xml");
 		ArrayList<Route> routes = DataModelXML.getRoutes(rn, System.getProperty("user.dir")+"/tests/Controller/UpdateAgent/", "RouteTest.xml");
 		

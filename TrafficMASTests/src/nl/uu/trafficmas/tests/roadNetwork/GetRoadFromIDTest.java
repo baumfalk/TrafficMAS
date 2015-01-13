@@ -11,7 +11,7 @@ public class GetRoadFromIDTest {
 
 	@Test
 	public void getRoadFromID() {
-		RoadNetwork rn = DataModelXML.instantiateRoadNetwork("./tests/RoadNetwork/", "NodeTest.xml", "EdgeTest.xml");
+		RoadNetwork rn = DataModelXML.instantiateRoadNetwork(System.getProperty("user.dir")+"/tests/RoadNetwork/", "NodeTest.xml", "EdgeTest.xml");
 		Road r = rn.getRoadFromID("A28Tot350");
 		assertEquals("A28Tot350", r.id);
 		assertEquals(2, r.laneList.size());

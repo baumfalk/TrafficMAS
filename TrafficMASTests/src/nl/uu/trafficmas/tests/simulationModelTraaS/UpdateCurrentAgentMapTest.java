@@ -16,6 +16,7 @@ import nl.uu.trafficmas.datamodel.MASData;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
 import nl.uu.trafficmas.simulationmodel.SimulationModelTraaS;
+import nl.uu.trafficmas.simulationmodel.StateData;
 
 import org.junit.Test;
 
@@ -33,7 +34,7 @@ public class UpdateCurrentAgentMapTest {
 		options.put("start", "1");
 		options.put("quit-on-end", "1");
 		
-		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options,"sumo", "./tests/SimulationModelTraaS/UpdateCurrentAgentMap/ConfigTest.xml");				
+		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options,"sumo", System.getProperty("user.dir")+"/tests/SimulationModelTraaS/UpdateCurrentAgentMap/ConfigTest.xml");				
 		RoadNetwork rn = DataModelXML.instantiateRoadNetwork(System.getProperty("user.dir")+"/tests/SimulationModelTraaS/UpdateCurrentAgentMap/", "NodeTest.xml", "EdgeTest.xml");
 		ArrayList<Route> routes = DataModelXML.getRoutes(rn, System.getProperty("user.dir")+"/tests/SimulationModelTraaS/UpdateCurrentAgentMap/", "RouteTest.xml");
 		
@@ -43,12 +44,11 @@ public class UpdateCurrentAgentMapTest {
 	
 		try {
 			int i = 0;
-			while (i < masData.simulationLength) {
-				conn.do_timestep();
-				i++;
+			while (i++ < masData.simulationLength) {
+				SimulationModelTraaS.getStateData(conn, true);
 				currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, currentAgentMap, conn);
 			}
-			assertEquals(6, currentAgentMap.size());
+			assertEquals(4, currentAgentMap.size());
 			
 			
 		
