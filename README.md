@@ -1,18 +1,20 @@
+[![Build Status](https://travis-ci.org/baumfalk/TrafficMAS.svg?branch=master)](https://travis-ci.org/baumfalk/TrafficMAS)
+[![Coverage Status](https://coveralls.io/repos/baumfalk/TrafficMAS/badge.png)](https://coveralls.io/r/baumfalk/TrafficMAS)
+
 # TrafficMAS
 TrafficMAS, the code
 
 ##How to install##
 ###Install SUMO###
 In general: see the [SUMO wiki](http://sumo.dlr.de/wiki/Installing) about installing SUMO
-+ Windows
-Get SUMO binaries from [DLR.de](http://www.dlr.de/ts/en/desktopdefault.aspx/tabid-9883/16931_read-41000/).
-+ Linux
-You can do 
->	`apt-get install sumo`
-
-but note that these versions are often very out of date. A good alternative would be to compile from source.
-+ OSX
-Unfortunately, you need to compile OSX by hand, something we didn't succeed in.
++ Windows  
+    Get SUMO binaries from [DLR.de](http://www.dlr.de/ts/en/desktopdefault.aspx/tabid-9883/16931_read-41000/).
++ Linux  
+    You can do 
+    >	`apt-get install sumo`
+    but note that these versions are often very out of date. A good alternative would be to compile from source.
++ OSX  
+    Unfortunately, you need to compile OSX by hand, something we didn't succeed in.
 
 You can test if sumo was installed succesfully by opening a terminal and typing
 >    `sumo`

@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Random;
 
 import nl.uu.trafficmas.agent.Agent;
+import nl.uu.trafficmas.agent.AgentProfileType;
 import nl.uu.trafficmas.agent.actions.AgentAction;
 import nl.uu.trafficmas.controller.TrafficMASController;
 import nl.uu.trafficmas.datamodel.DataModel;
@@ -27,7 +28,7 @@ public class GetAgentActionsTest {
 	public void test() {
 		Random random = new Random(1337);
 
-		DataModel dataModel = new DataModelXML(System.getProperty("user.dir")+"tests/Controller/GetAgentActions/","MASTest.xml");
+		DataModel dataModel = new DataModelXML(System.getProperty("user.dir")+"/tests/Controller/GetAgentActions/","MASTest.xml");
 		MASData masData = dataModel.getMASData(); 
 		
 		HashMap<String, String> options = new HashMap<String, String>();
@@ -35,9 +36,9 @@ public class GetAgentActionsTest {
 		options.put("start", "1");
 		options.put("quit-on-end", "1");
 		
-		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options,"sumo", "./tests/Controller/GetAgentActions/ConfigTest.xml");				
-		RoadNetwork rn = DataModelXML.instantiateRoadNetwork("tests/Controller/GetAgentActions/", "NodeTest.xml", "EdgeTest.xml");
-		ArrayList<Route> routes = DataModelXML.getRoutes(rn, "tests/Controller/GetAgentActions/", "RouteTest.xml");
+		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options,"sumo", System.getProperty("user.dir")+"/tests/Controller/GetAgentActions/ConfigTest.xml");				
+		RoadNetwork rn = DataModelXML.instantiateRoadNetwork(System.getProperty("user.dir")+"/tests/Controller/GetAgentActions/", "NodeTest.xml", "EdgeTest.xml");
+		ArrayList<Route> routes = DataModelXML.getRoutes(rn, System.getProperty("user.dir")+"/tests/Controller/GetAgentActions/", "RouteTest.xml");
 		
 		HashMap<Agent,Integer> agentPairList = TrafficMASController.instantiateAgents(masData, random, routes);
 		HashMap<String, Agent> completeAgentMap = SimulationModelTraaS.addAgents(agentPairList, conn);	
@@ -59,7 +60,7 @@ public class GetAgentActionsTest {
 				// The fourth agent will ChangeLane, the rest does not need to take action.
 				if(stateData.currentTimeStep == 12000){
 					for(Map.Entry<Agent, AgentAction> entry : agentActionMap.entrySet()){
-						if(entry.getKey().agentID.equals("Agent 3")){
+						if(entry.getKey().getClass().getSimpleName().equals("HotShotAgent")){
 							assertEquals(AgentAction.ChangeLane,entry.getValue());
 						} else{
 							assertEquals(null,entry.getValue());

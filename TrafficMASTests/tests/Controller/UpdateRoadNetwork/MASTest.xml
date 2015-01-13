@@ -4,5 +4,5 @@
     <nodes value="NodeTest.xml"/>
     <agentprofiles value="AgentProfileTypesTest.xml"/>
     <sumoconfig value = "ConfigTest.xml"/>
-    <routes value = "RouteTest.xml" />
+    <routes value="RouteTest.xml"/>
 </mas>

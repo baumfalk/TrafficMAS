@@ -8,6 +8,7 @@ import it.polito.appeal.traci.SumoTraciConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
@@ -33,41 +34,35 @@ public class UpdateAgentTest {
 		DataModel dataModel = new DataModelXML(System.getProperty("user.dir")+"/tests/Controller/UpdateAgent/","MASTest.xml");
 		MASData masData = dataModel.getMASData(); 
 		
-		HashMap<AgentProfileType, Double> dicks = dataModel.getAgentProfileTypeDistribution();
-		for(Entry<AgentProfileType, Double> entry : dicks.entrySet()){
-			System.out.println(entry.getKey());
-		}
 		HashMap<String, String> options = new LinkedHashMap<String, String>();
 		options.put("e", Integer.toString(masData.simulationLength));
 		options.put("start", "1");
 		options.put("quit-on-end", "1");
 		
-		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options,"sumo", "./tests/Controller/UpdateAgent/ConfigTest.xml");				
+		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options,"sumo", System.getProperty("user.dir")+"/tests/Controller/UpdateAgent/ConfigTest.xml");				
 		RoadNetwork rn = DataModelXML.instantiateRoadNetwork(System.getProperty("user.dir")+"/tests/Controller/UpdateAgent/", "NodeTest.xml", "EdgeTest.xml");
 		ArrayList<Route> routes = DataModelXML.getRoutes(rn, System.getProperty("user.dir")+"/tests/Controller/UpdateAgent/", "RouteTest.xml");
 		
 		HashMap<Agent,Integer> agentPairList = TrafficMASController.instantiateAgents(masData, random, routes);
 		HashMap<String, Agent> completeAgentMap = SimulationModelTraaS.addAgents(agentPairList, conn);	
 		StateData stateData = SimulationModelTraaS.getStateData(conn, false);
-		//HashMap<String, Agent>updatedAgentMap = TrafficMASController.updateAgents(completeAgentMap, rn, stateData);
-
-		// All agents have a velocity of 0.
-		Agent a = completeAgentMap.get("Agent 0");
-		
+		HashMap<String, Agent> currentAgentMap = new HashMap<String, Agent>();
+	
 		int i = 0;
 		while(i++ < masData.simulationLength){
 			try {
-				stateData = SimulationModelTraaS.getStateData(conn, true);
-				if(stateData.agentsData.size() > 2) {
-					TrafficMASController.updateAgent(rn, stateData, a.agentID, a, completeAgentMap);
-					assertNotEquals(0,a.getVelocity(),0);
-					assertNotNull(a.getRoad());
-					assertNotNull(a.getLane());		
-					System.out.println("Expected Arrival Time: " + a.getExpectedArrivalTime()*1000);
-					System.out.println("Current Time: " + stateData.currentTimeStep);
-					assertTrue(a.getExpectedArrivalTime()*1000 > stateData.currentTimeStep);
-					break;
+				if(stateData.agentsData.size() == 2) {
+					for(Map.Entry<String, Agent> entry : currentAgentMap.entrySet()){
+						TrafficMASController.updateAgent(rn, stateData, entry.getValue().agentID, entry.getValue(), completeAgentMap);
+						assertNotEquals(0,entry.getValue().getVelocity(),0);
+						assertNotNull(entry.getValue().getRoad());
+						assertNotNull(entry.getValue().getLane());		
+						assertTrue(entry.getValue().getExpectedArrivalTime()*1000 > stateData.currentTimeStep/1000);
+					}
 				}
+				stateData = SimulationModelTraaS.getStateData(conn, true);
+				currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, currentAgentMap, conn);
+
 			} catch (Exception e) {
 				e.printStackTrace();
 			}	
