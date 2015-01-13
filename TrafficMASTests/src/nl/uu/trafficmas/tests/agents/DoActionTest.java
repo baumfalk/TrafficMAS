@@ -25,7 +25,7 @@ public class DoActionTest {
 	@Test
 	public void doAction() {
 		Random random = new Random(1337);
-		System.out.println(System.getProperty("user.dir")+"/tests/Agent/DoAction/");
+
 		DataModel dataModel = new DataModelXML(System.getProperty("user.dir")+"/tests/Agent/DoAction/","MASTest.xml");
 		MASData masData = dataModel.getMASData(); 
 		

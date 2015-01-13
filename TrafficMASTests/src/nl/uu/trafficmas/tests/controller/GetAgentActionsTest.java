@@ -26,8 +26,8 @@ public class GetAgentActionsTest {
 	@Test
 	public void test() {
 		Random random = new Random(1337);
-		
-		DataModel dataModel = new DataModelXML("tests/Controller/GetAgentActions/","MASTest.xml");
+
+		DataModel dataModel = new DataModelXML(System.getProperty("user.dir")+"tests/Controller/GetAgentActions/","MASTest.xml");
 		MASData masData = dataModel.getMASData(); 
 		
 		HashMap<String, String> options = new HashMap<String, String>();
