@@ -1,6 +1,7 @@
 package nl.uu.trafficmas.agent;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -12,6 +13,7 @@ import nl.uu.trafficmas.roadnetwork.Node;
 import nl.uu.trafficmas.roadnetwork.Road;
 import nl.uu.trafficmas.roadnetwork.Route;
 import de.tudresden.ws.container.SumoColor;
+import de.tudresden.ws.container.SumoStringList;
 
 public abstract class Agent extends AgentPhysical {
 	private Node goalNode;
@@ -20,7 +22,8 @@ public abstract class Agent extends AgentPhysical {
 	
 	private double expectedArrivalTime;
 	private ArrayList<Sanction> currentSanctionList;
-	private Edge[] currentRoute;
+	private String currentRouteID;
+	private Edge[] currentRouteEdges;
 	private ArrayList<Double> expectedTravelTimePerRoad;
 	private double maxComfySpeed;
 	private double leaderAgentSpeed;
@@ -51,16 +54,17 @@ public abstract class Agent extends AgentPhysical {
 		return Math.max(0,Math.min(1, utility));
 	}
 	
-	public Agent(String agentID,Node goalNode,Edge[] routeEdges, int goalArrivalTime, double maxSpeed, double maxComfySpeed){
+	public Agent(String agentID,Node goalNode,Route route, int goalArrivalTime, double maxSpeed, double maxComfySpeed){
 		super(agentID);
 		this.goalNode 					= goalNode;
 		this.goalArrivalTime 			= goalArrivalTime;
 		this.maxSpeed					= maxSpeed;
 		this.maxComfySpeed 				= maxComfySpeed;
 		this.expectedArrivalTime 		= goalArrivalTime;
-		this.currentRoute 				= routeEdges;
+		this.currentRouteID				= route.routeID;
+		this.currentRouteEdges 			= route.getRoute();
 		this.expectedTravelTimePerRoad 	= new ArrayList<>();
-		for(Edge edge : routeEdges) {
+		for(Edge edge : route.getRoute()) {
 			double time = edge.getRoad().length/maxComfySpeed;
 			expectedTravelTimePerRoad.add(time);
 		}
@@ -77,7 +81,7 @@ public abstract class Agent extends AgentPhysical {
 		double noActionUtility	= utility(expectedArrivalTime,currentSanctionList);
 		AgentAction bestAction 	= null;
 		// Set currentRoadID value
-		double routeRemainderLength = Route.getRouteRemainderLength(this.currentRoute, this.road);
+		double routeRemainderLength = Route.getRouteRemainderLength(this.currentRouteEdges, this.road);
 		
 		// Loop through all AgentAction objects and calculate utility for each.
 		// If no action returns a better utility than the one we currently have, bestAction remains null.
@@ -141,25 +145,29 @@ public abstract class Agent extends AgentPhysical {
 		this.currentSanctionList = currentSanctionList;
 	}
 	
-	public Edge [] getRoute() {
-		return currentRoute;
+	public Edge[] getRoute() {
+		return currentRouteEdges;
+	}
+	
+	public String getRouteID(){
+		return currentRouteID;
 	}
 	
 	@Override
 	public void setRoad(Road road) {
 		super.setRoad(road);
 		int currentRoadID = 0;
-		for(;currentRoadID<currentRoute.length;currentRoadID++) {
-			if(this.road.id.equals(currentRoute[currentRoadID].getRoad().id)) {
+		for(;currentRoadID<currentRouteEdges.length;currentRoadID++) {
+			if(this.road.id.equals(currentRouteEdges[currentRoadID].getRoad().id)) {
 				break;
 			}
 		}
 		//update the currentRoute
-		Edge[] tempRoute = new Edge[currentRoute.length-currentRoadID];
-		for(int i=currentRoadID; i<currentRoute.length;i++) {
-			tempRoute[i-currentRoadID] = currentRoute[i];
+		Edge[] tempRoute = new Edge[currentRouteEdges.length-currentRoadID];
+		for(int i=currentRoadID; i<currentRouteEdges.length;i++) {
+			tempRoute[i-currentRoadID] = currentRouteEdges[i];
 		}
-		currentRoute = tempRoute;
+		currentRouteEdges = tempRoute;
 	}
 
 	
@@ -182,5 +190,14 @@ public abstract class Agent extends AgentPhysical {
 	
 	public boolean hasLeader() {
 		return (this.leaderAgentSpeed >=0) && (this.leaderDistance >= 0);
+	}
+
+	public SumoStringList getRouteStringList() {
+		List<String> list = new ArrayList<String>();
+		for(Edge edge : currentRouteEdges) {
+			list.add(edge.getID());
+		}
+		SumoStringList routeStringList = new SumoStringList(list);
+		return routeStringList;
 	}
 }

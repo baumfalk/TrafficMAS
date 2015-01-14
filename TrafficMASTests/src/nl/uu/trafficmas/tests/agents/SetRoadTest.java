@@ -22,7 +22,7 @@ public class SetRoadTest {
 		ArrayList<Route> routes = DataModelXML.getRoutes(rn, System.getProperty("user.dir")+"/tests/Agent/SetRoad/", "takeOverScenario.rou.xml");		
 		Road r = rn.getRoadFromID("edge1");
 		
-		Agent a = new NormalAgent("Agent1", rn.getNodes()[2], routes.get(0).getRoute(), 6000, 70.0, 70.0);
+		Agent a = new NormalAgent("Agent1", rn.getNodes()[2], routes.get(0), 6000, 70.0, 70.0);
 		// Route consists of 3 roads now.
 		assertEquals(3,a.getRoute().length);
 		
