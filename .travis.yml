@@ -4,7 +4,7 @@ before_install:
     - sudo apt-get install -y libgdal1h libgdal-dev g++ libxerces-c3.1 libxerces-c-dev libicu-dev libproj-dev libfox-1.6-dev libgl1-mesa-dev libglu1-mesa-dev python 
     - wget http://www.dlr.de/ts/en/Portaldata/16/Resources/sumo/sumo-src-0.22.0.zip
     - unzip ./sumo-src-0.22.0.zip
-    - cd ./sumo-src-0.22.0
+    - cd ./sumo-0.22.0
     - ./configure
     - make
     - sudo make install
