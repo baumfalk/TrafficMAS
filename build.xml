@@ -72,7 +72,7 @@
 	    </java>
 	</target>
 		
-	<target name="test" depends="buildMAS">
+	<target name="test" depends="buildAll">
 	    <junit fork="yes" printsummary="yes" haltonfailure="yes">
             <jvmarg value="-Duser.dir=${Tests}"/>
             <formatter type="plain"/>
