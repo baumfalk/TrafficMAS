@@ -6,7 +6,8 @@ cache:
     - /home/travis/opt
     - ./sumo-0.22.0
 before_install:
-    - sh ./script/ci/installSumo.sh
+    - pwd
+    - sh ./baumfalk/TrafficMASinstallSumo.sh
     
 after_failure:
     - cat TrafficMASTests/output/*
