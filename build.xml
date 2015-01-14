@@ -46,17 +46,17 @@
     </path>
     
 	<target name="buildMAS" depends="initMAS">
-	    <javac debug="true" debuglevel="lines,vars,source" srcdir="${srcMAS}" destdir="${buildMAS}">
+	    <javac debug="true" srcdir="${srcMAS}" destdir="${buildMAS}">
 	        <classpath refid="TrafficMAS.classpath"/>
 	    </javac>
 	</target>
 	
     <target name="buildTraaS" depends="initTraaS">
-	    <javac debug="true" debuglevel="lines,vars,source" srcdir="${srcTraaS}" destdir="${buildTraaS}"/>
+	    <javac debug="true" srcdir="${srcTraaS}" destdir="${buildTraaS}"/>
 	</target>
 
 	<target name="buildTests" depends="initTests">
-	    <javac debug="true" debuglevel="lines,vars,source" srcdir="${srcTests}" destdir="${buildMAS}">
+	    <javac debug="true" srcdir="${srcTests}" destdir="${buildMAS}">
 	        <classpath refid="TrafficMASTests.classpath"/>
 	    </javac>
 	</target>
@@ -72,7 +72,7 @@
 	    </java>
 	</target>
 		
-	<target name="test" depends="buildAll">
+	<target name="test" depends="buildMAS">
 	    <junit fork="yes" printsummary="yes" haltonfailure="yes">
             <jvmarg value="-Duser.dir=${Tests}"/>
             <formatter type="plain"/>
