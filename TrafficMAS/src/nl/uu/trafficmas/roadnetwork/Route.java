@@ -6,6 +6,10 @@ public class Route {
 	public final String routeID;
 	private ArrayList<Edge> route;
 	
+	public String getRouteID(){
+		return routeID;
+	}
+	
 	public Route(String routeID,ArrayList<Edge> route) {
 		this.routeID = routeID;
 		this.route = route;

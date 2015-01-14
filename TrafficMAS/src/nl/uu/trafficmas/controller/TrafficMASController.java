@@ -361,7 +361,9 @@ public class TrafficMASController {
 	}
 	
 	/**
-	 * Generates a Map of Agents and their respective starting times according to 'masData', each agent is also assigned a route from 'routes'.
+	 * Generates a Map of Agents and their respective starting times according to 'masData'. 
+	 * An agent will be spawned on each route with chance masData.spawnProbability if > 0.
+	 * Otherwise the individual spawn probabilities of the routes will be used.
 	 * Randomness is determined by 'rng'.  
 	 * @param masData
 	 * @param rng
@@ -435,7 +437,7 @@ public class TrafficMASController {
 		int goalArrivalTime = agentProfileType.goalArrivalTime(currentTime, minimalTravelTime);
 		
 		Node goalNode = routeEdges[routeEdges.length-1].getToNode();
-		Agent agent = agentProfileType.toAgent(Agent.getNextAgentID(), goalNode, routeEdges,  goalArrivalTime, Agent.DEFAULT_MAX_SPEED); //TODO: change this default max speed
+		Agent agent = agentProfileType.toAgent(Agent.getNextAgentID(), goalNode, route,  goalArrivalTime, Agent.DEFAULT_MAX_SPEED); //TODO: change this default max speed
 		agentsAndTimes.put(agent,currentTime*1000); //*1000 because sumo counts in ms, not s.
 	}
 	

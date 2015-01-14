@@ -6,11 +6,12 @@ import de.tudresden.ws.container.SumoColor;
 import nl.uu.trafficmas.organisation.Sanction;
 import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Node;
+import nl.uu.trafficmas.roadnetwork.Route;
 
 public class NormalAgent extends Agent {
 
-	public NormalAgent(String agentID, Node goalNode, Edge[] routeEdges, int goalArrivalTime, double maxSpeed, double maxComfySpeed) {
-		super(agentID, goalNode, routeEdges, goalArrivalTime, maxSpeed, maxComfySpeed);
+	public NormalAgent(String agentID, Node goalNode, Route route, int goalArrivalTime, double maxSpeed, double maxComfySpeed) {
+		super(agentID, goalNode, route, goalArrivalTime, maxSpeed, maxComfySpeed);
 	}
 	
 	@Override
