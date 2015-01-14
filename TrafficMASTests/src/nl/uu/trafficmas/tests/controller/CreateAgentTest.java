@@ -30,7 +30,7 @@ public class CreateAgentTest {
 		LinkedHashMap<Agent, Integer> agentsAndTimes =  new LinkedHashMap<Agent, Integer>();
 		assertEquals(0, agentsAndTimes.size());
 		
-		TrafficMASController.createAgent(routes, agentsAndTimes, masData.agentProfileTypeDistribution, 2, 0.5);
+		TrafficMASController.createAgent(routes.get(0), agentsAndTimes, masData.agentProfileTypeDistribution, 2, 0.5);
 		
 		assertEquals(1, agentsAndTimes.size());
 		Agent a;

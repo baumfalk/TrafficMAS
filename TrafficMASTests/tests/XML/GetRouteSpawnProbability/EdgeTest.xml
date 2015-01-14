@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edges xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <edge from="A28H0" id="A28Tot350" to="A28H350" numLanes="2" priority="2" />
+    <edge from="A28H01" id="A28Tot3501" to="A28H3501" numLanes="2" priority="2" />
+    <edge from="A28H02" id="A28Tot3502" to="A28H3502" numLanes="2" priority="2" />
+    <edge from="A28H03" id="A28Tot3503" to="A28H3503" numLanes="2" priority="2" />
+    <edge from="A28H04" id="A28Tot3504" to="A28H3504" numLanes="2" priority="2" />
+    <edge from="A28H05" id="A28Tot3505" to="A28H3505" numLanes="2" priority="2" />	
+</edges>

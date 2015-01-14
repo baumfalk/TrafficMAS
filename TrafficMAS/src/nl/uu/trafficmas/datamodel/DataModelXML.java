@@ -214,7 +214,33 @@ public class DataModelXML implements DataModel {
 		return 0;
 	}
 	
-
+	@Override
+	public LinkedHashMap<String, Double> getRouteSpawnProbability() {
+		return getRouteSpawnProbability(dir,routesXML);
+	}
+	
+	public static LinkedHashMap<String, Double> getRouteSpawnProbability(String dir, String routesXML) {
+		ArrayList<ArrayList<Pair<String, String>>> routeSpawnProbabilities = SimpleXMLReader.extractFromXML(dir, routesXML,"route");
+		LinkedHashMap<String, Double> routeIdAndProbability = new LinkedHashMap<String, Double>();
+		for(ArrayList<Pair<String, String>> attributes : routeSpawnProbabilities) {
+			String routeID = null;
+			String spawnProbabilityString = null;
+			for(Pair<String, String> attribute : attributes) {
+				switch(attribute.first) {
+				case "id":
+					routeID = attribute.second;
+					break;
+				case "spawn-probability":
+					spawnProbabilityString = attribute.second;
+					break;
+				}
+			}
+			Double spawnProbability = Double.parseDouble(spawnProbabilityString);
+			routeIdAndProbability.put(routeID, spawnProbability);
+		}
+		return routeIdAndProbability;
+	}
+	
 	@Override
 	public LinkedHashMap<AgentProfileType, Double> getAgentProfileTypeDistribution() {
 		return getAgentProfileTypeDistribution(dir,agentProfilesXML);
@@ -320,7 +346,7 @@ public class DataModelXML implements DataModel {
 
 	@Override
 	public MASData getMASData() {
-		return getMASData(dir, masXML, sumoConfigXML, agentProfilesXML);
+		return getMASData(dir, masXML, sumoConfigXML, agentProfilesXML, routesXML);
 	}
 	
 	/**
@@ -332,13 +358,13 @@ public class DataModelXML implements DataModel {
 	 * @param agentProfilesXML
 	 * @return the MASData data structure
 	 */
-	public static MASData getMASData(String dir, String masXML, String sumoConfigXML, String agentProfilesXML){
+	public static MASData getMASData(String dir, String masXML, String sumoConfigXML, String agentProfilesXML, String routesXML){
 		int simulationLength 		= DataModelXML.simulationLength(dir, masXML);
 		String sumoConfigPath 		= sumoConfigXML;
 		double spawnProbability 	= DataModelXML.getAgentSpawnProbability(dir, agentProfilesXML);
 		HashMap<AgentProfileType,Double> agentProfileTypeDistribution = DataModelXML.getAgentProfileTypeDistribution(dir, agentProfilesXML);
-		
-		return new MASData(simulationLength, sumoConfigPath, spawnProbability, agentProfileTypeDistribution);
+		HashMap<String, Double> routeIdAndProbability = DataModelXML.getRouteSpawnProbability(dir, routesXML);
+		return new MASData(simulationLength, sumoConfigPath, spawnProbability, agentProfileTypeDistribution, routeIdAndProbability);
 	}
 
 	@Override

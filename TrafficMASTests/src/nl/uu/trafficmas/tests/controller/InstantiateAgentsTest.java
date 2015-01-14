@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import it.polito.appeal.traci.SumoTraciConnection;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
@@ -23,6 +24,8 @@ import org.junit.Test;
 
 public class InstantiateAgentsTest {
 
+	//TODO: Make test for new instantiateAgent functionality (Spawning agents on every route.)
+
 	@Test
 	public void instantiateAgents() {
 		Random random = new Random(1337);
@@ -39,7 +42,7 @@ public class InstantiateAgentsTest {
 		
 		for(Entry<Agent, Integer> pair : agentPairList.entrySet()) {
 			assertNotNull(pair.getKey());
-			assertNotEquals((int)pair.getValue(),0);
+			assertNotEquals(0,(int)pair.getValue());
 		}
 		
 	}

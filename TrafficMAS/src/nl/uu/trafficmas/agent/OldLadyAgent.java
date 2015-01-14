@@ -6,10 +6,11 @@ import de.tudresden.ws.container.SumoColor;
 import nl.uu.trafficmas.organisation.Sanction;
 import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Node;
+import nl.uu.trafficmas.roadnetwork.Route;
 
 public class OldLadyAgent extends Agent {
 
-	public OldLadyAgent(String agentID, Node goalNode, Edge[] route, int goalArrivalTime, double maxSpeed,double maxComfySpeed) {
+	public OldLadyAgent(String agentID, Node goalNode, Route route, int goalArrivalTime, double maxSpeed,double maxComfySpeed) {
 		super(agentID, goalNode, route, goalArrivalTime, maxSpeed, maxComfySpeed);
 	}
 
