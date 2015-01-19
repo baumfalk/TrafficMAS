@@ -1,8 +1,14 @@
 package nl.uu.trafficmas.datamodel;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import nl.uu.trafficmas.agent.AgentProfileType;
 import nl.uu.trafficmas.roadnetwork.Edge;
@@ -12,6 +18,11 @@ import nl.uu.trafficmas.roadnetwork.Node;
 import nl.uu.trafficmas.roadnetwork.Road;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 public class DataModelXML implements DataModel {
 
@@ -27,13 +38,25 @@ public class DataModelXML implements DataModel {
 		
 	}
 	
-	public DataModelXML(String dir, String masXML)  {
+	public DataModelXML(String dir, String masXML) throws SAXException, IOException, ParserConfigurationException  {
 		setup(dir,masXML);
 	}
 	
-	private void setup(String dir, String masXML) {
+	private void setup(String dir, String masXML) throws SAXException, IOException, ParserConfigurationException {
 		this.dir = dir;
 		this.masXML = masXML;
+		
+		File fXmlFile = new File(dir+masXML);
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		Document doc = dBuilder.parse(fXmlFile);
+	 
+		//optional, but recommended
+		//read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+		doc.getDocumentElement().normalize();
+	 
+		System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+		
 		nodesXML = SimpleXMLReader.extractFromXML(dir,masXML,"nodes").get(0).get(0).second;
 		edgesXML = SimpleXMLReader.extractFromXML(dir,masXML,"edges").get(0).get(0).second;
 		routesXML = SimpleXMLReader.extractFromXML(dir,masXML,"routes").get(0).get(0).second; 
@@ -43,7 +66,13 @@ public class DataModelXML implements DataModel {
 
 	@Override
 	public RoadNetwork instantiateRoadNetwork() {
-		return instantiateRoadNetwork(this.dir,this.nodesXML,this.edgesXML);
+		try {
+			return instantiateRoadNetwork(this.dir,this.nodesXML,this.edgesXML);
+		} catch (SAXException | IOException | ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	/**
@@ -54,8 +83,11 @@ public class DataModelXML implements DataModel {
 	 * @param nodesXML
 	 * @param edgesXML
 	 * @return a RoadNetwork, if the RoadNetwork is not correctly validated, this method will return null.
+	 * @throws ParserConfigurationException 
+	 * @throws IOException 
+	 * @throws SAXException 
 	 */
-	public static RoadNetwork instantiateRoadNetwork(String dir, String nodesXML, String edgesXML) {
+	public static RoadNetwork instantiateRoadNetwork(String dir, String nodesXML, String edgesXML) throws SAXException, IOException, ParserConfigurationException {
 		HashMap<String,Node> nodes = extractNodes(dir,nodesXML);
 		ArrayList<Node> nodeList = new ArrayList<Node>(nodes.values());
 		ArrayList<Edge> edges = extractEdges(dir, edgesXML,nodes);
@@ -112,10 +144,37 @@ public class DataModelXML implements DataModel {
 	 * @param edgesXML
 	 * @param nodes 
 	 * @return a List containing all Edge objects.
+	 * @throws IOException 
+	 * @throws SAXException 
+	 * @throws ParserConfigurationException 
 	 */
-	public static ArrayList<Edge> extractEdges(String dir, String edgesXML,HashMap<String,Node> nodes) {
+	public static ArrayList<Edge> extractEdges(String dir, String edgesXML,HashMap<String,Node> nodes) throws SAXException, IOException, ParserConfigurationException {
+		File fXmlFile = new File(dir+edgesXML);
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		Document doc = dBuilder.parse(fXmlFile);
+		
+		//optional, but recommended
+		//read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+		doc.getDocumentElement().normalize();
+	 
+		System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+		
+		NodeList edges2= doc.getElementsByTagName("edge");
+		for (int i = 0; i < edges2.getLength(); i++) {
+			org.w3c.dom.Node n = edges2.item(i);
+			NamedNodeMap attr = n.getAttributes();
+			for (int j = 0; j < attr.getLength(); j++) {
+				System.out.println(attr.item(j).getNodeName());
+				System.out.println(attr.item(j).getTextContent());
+			}
+		}
+		
 		ArrayList<ArrayList<Pair<String,String>>> edgesAttributes = SimpleXMLReader.extractFromXML(dir, edgesXML,"edge");
 		ArrayList<Edge> edges = new ArrayList<Edge>();
+		
+		
+		
 		for(ArrayList<Pair<String,String>> edgeAttributes : edgesAttributes) {
 			extractEdge(edges, edgeAttributes,nodes);
 		}
