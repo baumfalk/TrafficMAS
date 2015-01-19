@@ -235,7 +235,10 @@ public class DataModelXML implements DataModel {
 					break;
 				}
 			}
-			Double spawnProbability = Double.parseDouble(spawnProbabilityString);
+			double spawnProbability = 0;
+			if(spawnProbabilityString != null) {
+				spawnProbability = Double.parseDouble(spawnProbabilityString);
+			}
 			routeIdAndProbability.put(routeID, spawnProbability);
 		}
 		return routeIdAndProbability;
