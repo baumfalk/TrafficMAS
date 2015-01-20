@@ -14,6 +14,7 @@ public class AddEdgeTest {
 	@Test
 	public void addEdge() {
 		RoadNetwork rn = new RoadNetwork();
+		
 		Node n = new Node("test",5,5);
 		Road r = new Road("r",5.0,null,1);
 		rn.addNode(n);

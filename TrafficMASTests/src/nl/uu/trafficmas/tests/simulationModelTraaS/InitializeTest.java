@@ -13,17 +13,12 @@ public class InitializeTest {
 
 	@Test
 	public void initialize() {
-
 		
-		try {
-			SumoTraciConnection conn = SimulationModelTraaS.initialize("sumo", System.getProperty("user.dir")+"/tests/SimulationModelTraaS/Initialize/ConfigTest.xml");
-			StateData stateData = SimulationModelTraaS.getStateData(conn, false);
-			assertEquals(1000, stateData.currentTimeStep);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
+		String sumocfg = System.getProperty("user.dir")+"/tests/SimulationModelTraaS/Initialize/ConfigTest.xml";
+		SumoTraciConnection conn = SimulationModelTraaS.initialize("sumo", sumocfg);
+		boolean timeStep = false;
+		StateData stateData = SimulationModelTraaS.getStateData(conn, timeStep);
+		assertEquals(1000, stateData.currentTimeStep);
 	}
 
 }

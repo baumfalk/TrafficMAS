@@ -15,8 +15,8 @@ public class AgentUtilityTest {
 
 	@Test
 	public void agentUtility() {
-		AgentProfileType[] agentProfileTypes = AgentProfileType.values();
-		ArrayList<Edge> lst = new ArrayList<Edge>();
+		AgentProfileType[] agentProfileTypes 	= AgentProfileType.values();
+		ArrayList<Edge> lst 					= new ArrayList<Edge>();
 		Route route = new Route("route0", lst);
 		// goal achieved should be utility 1
 		for(AgentProfileType apt : agentProfileTypes) {

@@ -19,9 +19,7 @@ public class GetChangeLaneTimeTest {
 		 */
 		// change lane time:
 		
-		
 		ChangeLaneAction action = new ChangeLaneAction(0);
-		
 		assertEquals(6,action.getTime(5, 0, 2, 1, 2, 2, 1, 0, 0),0);
 	}
 }

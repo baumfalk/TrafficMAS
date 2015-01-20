@@ -4,12 +4,15 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import it.polito.appeal.traci.SumoTraciConnection;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.Random;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.controller.TrafficMASController;
@@ -21,20 +24,24 @@ import nl.uu.trafficmas.roadnetwork.Route;
 import nl.uu.trafficmas.simulationmodel.SimulationModelTraaS;
 
 import org.junit.Test;
+import org.xml.sax.SAXException;
 
 public class InstantiateAgentsTest {
 
 	//TODO: Make test for new instantiateAgent functionality (Spawning agents on every route.)
 
 	@Test
-	public void instantiateAgents() {
+	public void instantiateAgents() throws SAXException, IOException, ParserConfigurationException {
 		Random random = new Random(1337);
 	
-		DataModel dataModel = new DataModelXML(System.getProperty("user.dir")+"/tests/Controller/InstantiateAgents/","MASTest.xml");
-		MASData masData = dataModel.getMASData();
+		String dir 		= System.getProperty("user.dir")+"/tests/Controller/InstantiateAgents/";
+		String masXML 	= "MASTest.xml";
 		
-		RoadNetwork rn = DataModelXML.instantiateRoadNetwork(System.getProperty("user.dir")+"/tests/Controller/InstantiateAgents/", "NodeTest.xml", "EdgeTest.xml");
-		ArrayList<Route> routes = DataModelXML.getRoutes(rn, System.getProperty("user.dir")+"/tests/Controller/InstantiateAgents/", "RouteTest.xml");
+		DataModel dataModel = new DataModelXML(dir,masXML);
+		MASData masData 	= dataModel.getMASData();
+		
+		RoadNetwork rn 			= dataModel.instantiateRoadNetwork();
+		ArrayList<Route> routes = dataModel.getRoutes(rn);
 
 		HashMap<Agent,Integer> agentPairList = TrafficMASController.instantiateAgents(masData, random, routes);
 		

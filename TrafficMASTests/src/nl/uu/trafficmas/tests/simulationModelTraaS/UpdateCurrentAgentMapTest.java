@@ -3,10 +3,13 @@ package nl.uu.trafficmas.tests.simulationModelTraaS;
 import static org.junit.Assert.assertEquals;
 import it.polito.appeal.traci.SumoTraciConnection;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Random;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.controller.TrafficMASController;
@@ -19,33 +22,38 @@ import nl.uu.trafficmas.simulationmodel.SimulationModelTraaS;
 import nl.uu.trafficmas.simulationmodel.StateData;
 
 import org.junit.Test;
+import org.xml.sax.SAXException;
 
 public class UpdateCurrentAgentMapTest {
 
 	@Test
-	public void updateCurrentAgentMap() {
-		Random random = new Random(1337);
+	public void updateCurrentAgentMap() throws SAXException, IOException, ParserConfigurationException {
+		Random random 	= new Random(1337);
+		String dir 		= System.getProperty("user.dir")+"/tests/SimulationModelTraaS/UpdateCurrentAgentMap/";
+		String sumocfg 	= System.getProperty("user.dir")+"/tests/SimulationModelTraaS/UpdateCurrentAgentMap/ConfigTest.xml";
+		String masXML 	= "MASTest.xml";
 		
-		DataModel dataModel = new DataModelXML(System.getProperty("user.dir")+"/tests/SimulationModelTraaS/UpdateCurrentAgentMap/","MASTest.xml");
-		MASData masData = dataModel.getMASData();
+		DataModel dataModel = new DataModelXML(dir,masXML);
+		MASData masData		= dataModel.getMASData();
 		
 		HashMap<String, String> options = new LinkedHashMap<String, String>();
 		options.put("e", Integer.toString(masData.simulationLength));
 		options.put("start", "1");
 		options.put("quit-on-end", "1");
 		
-		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options,"sumo", System.getProperty("user.dir")+"/tests/SimulationModelTraaS/UpdateCurrentAgentMap/ConfigTest.xml");				
-		RoadNetwork rn = DataModelXML.instantiateRoadNetwork(System.getProperty("user.dir")+"/tests/SimulationModelTraaS/UpdateCurrentAgentMap/", "NodeTest.xml", "EdgeTest.xml");
-		ArrayList<Route> routes = DataModelXML.getRoutes(rn, System.getProperty("user.dir")+"/tests/SimulationModelTraaS/UpdateCurrentAgentMap/", "RouteTest.xml");
+		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options,"sumo", sumocfg);				
+		RoadNetwork rn = dataModel.instantiateRoadNetwork();
+		ArrayList<Route> routes = dataModel.getRoutes(rn);
 		
-		HashMap<Agent,Integer> agentPairList = TrafficMASController.instantiateAgents(masData, random, routes);
+		HashMap<Agent,Integer> agentPairList 	= TrafficMASController.instantiateAgents(masData, random, routes);
 		HashMap<String, Agent> completeAgentMap = SimulationModelTraaS.addAgents(agentPairList, conn);
-		HashMap<String, Agent> currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, new LinkedHashMap<String, Agent>(), conn);
+		HashMap<String, Agent> currentAgentMap 	= SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, new LinkedHashMap<String, Agent>(), conn);
 	
 		try {
 			int i = 0;
 			while (i++ < masData.simulationLength) {
-				SimulationModelTraaS.getStateData(conn, true);
+				boolean timeStep = true;
+				SimulationModelTraaS.getStateData(conn, timeStep);
 				currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, currentAgentMap, conn);
 			}
 			assertEquals(4, currentAgentMap.size());

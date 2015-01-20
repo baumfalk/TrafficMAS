@@ -14,6 +14,7 @@ public class AddNodesTest {
 	@Test
 	public void addNodes() {
 		RoadNetwork rn = new RoadNetwork();
+		
 		Node n1 = new Node("n1",0,0);
 		Node n2 = new Node("n2",0,0);
 		

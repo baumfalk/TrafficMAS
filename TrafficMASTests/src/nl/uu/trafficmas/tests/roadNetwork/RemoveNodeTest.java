@@ -10,8 +10,8 @@ public class RemoveNodeTest {
 
 	@Test
 	public void removeNode() {
-		RoadNetwork rn = new RoadNetwork();
-		Node n = new Node("test",0,0);
+		RoadNetwork rn 	= new RoadNetwork();
+		Node n 			= new Node("test",0,0);
 		rn.addNode(n);
 		rn.removeNode(n);
 		assertEquals(rn.getNodes().length, 0);

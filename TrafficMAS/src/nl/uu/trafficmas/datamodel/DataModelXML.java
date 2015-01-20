@@ -26,53 +26,44 @@ import org.xml.sax.SAXException;
 
 public class DataModelXML implements DataModel {
 
-	private String dir; 
-	private String masXML;
-	private String nodesXML;
-	private String routesXML;
-	private String edgesXML;
-	private String agentProfilesXML;
-	private String sumoConfigXML;
-	
-	public DataModelXML() {
-		
-	}
-	
+	private Document masDoc;
+	private Document nodesDoc;
+	private Document edgesDoc;
+	private Document routesDoc;
+	private Document agentProfilesDoc;
+
 	public DataModelXML(String dir, String masXML) throws SAXException, IOException, ParserConfigurationException  {
 		setup(dir,masXML);
 	}
 	
 	private void setup(String dir, String masXML) throws SAXException, IOException, ParserConfigurationException {
-		this.dir = dir;
-		this.masXML = masXML;
+		masDoc = DataModelXML.loadDocument(dir, masXML);
 		
-		File fXmlFile = new File(dir+masXML);
-		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-		Document doc = dBuilder.parse(fXmlFile);
-	 
-		//optional, but recommended
-		//read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+		String nodesXML 			= masDoc.getDocumentElement().getElementsByTagName("nodes").item(0).getAttributes().getNamedItem("value").getTextContent();
+		String edgesXML 			= masDoc.getDocumentElement().getElementsByTagName("edges").item(0).getAttributes().getNamedItem("value").getTextContent();
+		String routesXML 			= masDoc.getDocumentElement().getElementsByTagName("routes").item(0).getAttributes().getNamedItem("value").getTextContent();
+		String agentProfilesXML 	= masDoc.getDocumentElement().getElementsByTagName("agentprofiles").item(0).getAttributes().getNamedItem("value").getTextContent();
+		
+		nodesDoc			= DataModelXML.loadDocument(dir, nodesXML);
+		edgesDoc			= DataModelXML.loadDocument(dir, edgesXML);
+		routesDoc			= DataModelXML.loadDocument(dir, routesXML);
+		agentProfilesDoc	= DataModelXML.loadDocument(dir, agentProfilesXML);
+
+	}
+
+	public static Document loadDocument(String dir, String xml)
+			throws ParserConfigurationException, SAXException, IOException {
+		File fXmlFile 						= new File(dir+xml);
+		DocumentBuilderFactory dbFactory 	= DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder 			= dbFactory.newDocumentBuilder();
+		Document doc 						= dBuilder.parse(fXmlFile);
 		doc.getDocumentElement().normalize();
-	 
-		System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
-		
-		nodesXML = SimpleXMLReader.extractFromXML(dir,masXML,"nodes").get(0).get(0).second;
-		edgesXML = SimpleXMLReader.extractFromXML(dir,masXML,"edges").get(0).get(0).second;
-		routesXML = SimpleXMLReader.extractFromXML(dir,masXML,"routes").get(0).get(0).second; 
-		agentProfilesXML = SimpleXMLReader.extractFromXML(dir,masXML,"agentprofiles").get(0).get(0).second;
-		sumoConfigXML = dir+SimpleXMLReader.extractFromXML(dir,masXML, "sumoconfig").get(0).get(0).second;
+		return doc;
 	}
 
 	@Override
 	public RoadNetwork instantiateRoadNetwork() {
-		try {
-			return instantiateRoadNetwork(this.dir,this.nodesXML,this.edgesXML);
-		} catch (SAXException | IOException | ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+		return instantiateRoadNetwork(this.nodesDoc, this.edgesDoc);
 	}
 	
 	/**
@@ -87,16 +78,15 @@ public class DataModelXML implements DataModel {
 	 * @throws IOException 
 	 * @throws SAXException 
 	 */
-	public static RoadNetwork instantiateRoadNetwork(String dir, String nodesXML, String edgesXML) throws SAXException, IOException, ParserConfigurationException {
-		HashMap<String,Node> nodes = extractNodes(dir,nodesXML);
-		ArrayList<Node> nodeList = new ArrayList<Node>(nodes.values());
-		ArrayList<Edge> edges = extractEdges(dir, edgesXML,nodes);
+	public static RoadNetwork instantiateRoadNetwork(Document nodeDoc, Document edgeDoc) {
+		HashMap<String,Node> nodes 	= DataModelXML.extractNodes(nodeDoc);
+		ArrayList<Node> nodeList 	= new ArrayList<Node>(nodes.values());
+		ArrayList<Edge> edges 		= extractEdges(edgeDoc,nodes);
 		
 		RoadNetwork rn = new RoadNetwork(nodeList, edges);
 		if(rn.validateRoadNetwork()){
 			return rn;
 		} else{
-			System.out.println("RoadNetwork is invalid!");
 			return null;
 		}
 	}
@@ -107,27 +97,20 @@ public class DataModelXML implements DataModel {
 	 * @param dir
 	 * @param nodesXML
 	 * @return a map with all Node objects.
+	 * @throws ParserConfigurationException 
+	 * @throws IOException 
+	 * @throws SAXException 
 	 */
-	public static HashMap<String,Node> extractNodes(String dir,String nodesXML) {
-		ArrayList<ArrayList<Pair<String,String>>> nodesAttributes = SimpleXMLReader.extractFromXML(dir,nodesXML,"node");
+	public static HashMap<String,Node> extractNodes(Document nodeDoc) {
+		NodeList nodeList = nodeDoc.getDocumentElement().getElementsByTagName("node");
+		
 		HashMap<String,Node>nodes = new LinkedHashMap<String,Node>();
-		for(ArrayList<Pair<String,String>> nodeAttributes : nodesAttributes) {
-			String id = null;
-			String x = null;
-			String y = null;
-			for(Pair<String,String> attr : nodeAttributes) {
-				switch(attr.first) {
-				case "id":
-					id = attr.second;
-					break;
-				case "x":
-					x = attr.second;
-					break;
-				case "y":
-					y = attr.second;
-					break;
-				}
-			}
+		for (int i = 0; i < nodeList.getLength(); i++) {
+			org.w3c.dom.Node n 		= nodeList.item(i);
+			NamedNodeMap attributes = n.getAttributes();
+			String id 				= attributes.getNamedItem("id").getTextContent();
+			String x 				= attributes.getNamedItem("x").getTextContent();
+			String y 				= attributes.getNamedItem("y").getTextContent();
 			
 			Node node = new Node(id,Double.parseDouble(x),Double.parseDouble(y));
 			nodes.put(id,node);
@@ -148,35 +131,14 @@ public class DataModelXML implements DataModel {
 	 * @throws SAXException 
 	 * @throws ParserConfigurationException 
 	 */
-	public static ArrayList<Edge> extractEdges(String dir, String edgesXML,HashMap<String,Node> nodes) throws SAXException, IOException, ParserConfigurationException {
-		File fXmlFile = new File(dir+edgesXML);
-		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-		Document doc = dBuilder.parse(fXmlFile);
-		
-		//optional, but recommended
-		//read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
-		doc.getDocumentElement().normalize();
-	 
-		System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
-		
-		NodeList edges2= doc.getElementsByTagName("edge");
-		for (int i = 0; i < edges2.getLength(); i++) {
-			org.w3c.dom.Node n = edges2.item(i);
-			NamedNodeMap attr = n.getAttributes();
-			for (int j = 0; j < attr.getLength(); j++) {
-				System.out.println(attr.item(j).getNodeName());
-				System.out.println(attr.item(j).getTextContent());
-			}
-		}
-		
-		ArrayList<ArrayList<Pair<String,String>>> edgesAttributes = SimpleXMLReader.extractFromXML(dir, edgesXML,"edge");
+	public static ArrayList<Edge> extractEdges(Document edgeDoc, HashMap<String,Node> nodes) {
+		NodeList edgeList= edgeDoc.getElementsByTagName("edge");
 		ArrayList<Edge> edges = new ArrayList<Edge>();
-		
-		
-		
-		for(ArrayList<Pair<String,String>> edgeAttributes : edgesAttributes) {
-			extractEdge(edges, edgeAttributes,nodes);
+
+		for (int i = 0; i < edgeList.getLength(); i++) {
+			org.w3c.dom.Node n 	= edgeList.item(i);
+			NamedNodeMap attr 	= n.getAttributes();
+			extractEdge(edges, attr,nodes);
 		}
 		
 		return edges;
@@ -186,36 +148,17 @@ public class DataModelXML implements DataModel {
 	 * Extracts the values from 'edgeAttributes' 
 	 * and uses the appropriate Node objects from 'nodes' to add an Edge object to the list 'edges'.
 	 * @param edges
-	 * @param edgeAttributes
+	 * @param attr
 	 * @param nodes
 	 */
 	public static void extractEdge(ArrayList<Edge> edges,
-			ArrayList<Pair<String, String>> edgeAttributes,
+			NamedNodeMap attr,
 			HashMap<String,Node> nodes) {
-		String from 		= null;
-		String to 			= null;
-		String id 			= null;
-		String numberLanes 	= null;
-		String priority		= null;		
-		for(Pair<String,String> attr : edgeAttributes) {
-			switch(attr.first){
-			case "from":
-				from = attr.second;
-				break;
-			case "to":
-				to = attr.second;
-				break;
-			case "id":
-				id = attr.second;
-				break;
-			case "numLanes":
-				numberLanes = attr.second;
-				break;
-			case "priority":
-				priority = attr.second;
-				break;
-			}
-		}
+		String from 		= attr.getNamedItem("from").getTextContent();
+		String to 			= attr.getNamedItem("to").getTextContent();
+		String id 			= attr.getNamedItem("id").getTextContent();
+		String numberLanes 	= attr.getNamedItem("numLanes").getTextContent();
+		String priority		= attr.getNamedItem("priority").getTextContent();		
 		
 		ArrayList<Lane> lanes = new ArrayList<Lane>();
 		int numberLanesInt = Integer.parseInt(numberLanes);
@@ -231,8 +174,8 @@ public class DataModelXML implements DataModel {
 			}
 		}
 		
-		Node fromNode = nodes.get(from);
-		Node toNode = nodes.get(to);
+		Node fromNode 	= nodes.get(from);
+		Node toNode 	= nodes.get(to);
 		
 		double distance = Node.nodeDistance(fromNode, toNode);
 		
@@ -243,13 +186,8 @@ public class DataModelXML implements DataModel {
 	}
 	
 	@Override
-	public String getSumoConfigPath() {
-		return sumoConfigXML;
-	}
-
-	@Override
 	public double getAgentSpawnProbability() {
-		return getAgentSpawnProbability(dir,agentProfilesXML);
+		return getAgentSpawnProbability(this.agentProfilesDoc);
 	}
 	
 	/**
@@ -259,53 +197,48 @@ public class DataModelXML implements DataModel {
 	 * @param dir
 	 * @param agentProfilesXML
 	 * @return a value between 0 and 1, including 0 and 1.
+	 * @throws ParserConfigurationException 
+	 * @throws IOException 
+	 * @throws SAXException 
 	 */
-	public static double getAgentSpawnProbability(String dir, String agentProfilesXML) {
-		ArrayList<ArrayList<Pair<String, String>>> agentsAttributes = SimpleXMLReader.extractFromXML(dir, agentProfilesXML,"agents");
+	public static double getAgentSpawnProbability(Document agentProfileDoc) {
+		NamedNodeMap attributes = agentProfileDoc.getElementsByTagName("agents").item(0).getAttributes();
+		String spawnProbString = attributes.getNamedItem("spawn-probability").getTextContent();
 		
-		for (Pair<String,String> attribute : agentsAttributes.get(0)) {
-			switch(attribute.first) {
-			case "spawn-probability":
-				return Double.parseDouble(agentsAttributes.get(0).get(0).second);
-			}
-		}
 		
-		return 0;
+		return Double.parseDouble(spawnProbString) ;
 	}
 	
 	@Override
-	public LinkedHashMap<String, Double> getRouteSpawnProbability() {
-		return getRouteSpawnProbability(dir,routesXML);
+	public HashMap<String, Double> getRouteSpawnProbability() {
+		return getRouteSpawnProbability(this.routesDoc);
 	}
 	
-	public static LinkedHashMap<String, Double> getRouteSpawnProbability(String dir, String routesXML) {
-		ArrayList<ArrayList<Pair<String, String>>> routeSpawnProbabilities = SimpleXMLReader.extractFromXML(dir, routesXML,"route");
-		LinkedHashMap<String, Double> routeIdAndProbability = new LinkedHashMap<String, Double>();
-		for(ArrayList<Pair<String, String>> attributes : routeSpawnProbabilities) {
-			String routeID = null;
-			String spawnProbabilityString = null;
-			for(Pair<String, String> attribute : attributes) {
-				switch(attribute.first) {
-				case "id":
-					routeID = attribute.second;
-					break;
-				case "spawn-probability":
-					spawnProbabilityString = attribute.second;
-					break;
-				}
-			}
+	public static HashMap<String, Double> getRouteSpawnProbability(Document routesDoc){
+		NodeList routeList = routesDoc.getElementsByTagName("route");
+		HashMap<String, Double> routeIdAndProbability = new LinkedHashMap<String, Double>();
+		
+		for (int i = 0; i < routeList.getLength(); i++) {
+			org.w3c.dom.Node n = routeList.item(i);
+			NamedNodeMap attr = n.getAttributes();
+			String routeID = attr.getNamedItem("id").getTextContent();
+			org.w3c.dom.Node spawnAttr = attr.getNamedItem("spawn-probability");
+			String spawnProbabilityString = (spawnAttr != null) ? spawnAttr.getTextContent() : null;
+
 			double spawnProbability = 0;
+
 			if(spawnProbabilityString != null) {
 				spawnProbability = Double.parseDouble(spawnProbabilityString);
 			}
 			routeIdAndProbability.put(routeID, spawnProbability);
 		}
+		
 		return routeIdAndProbability;
 	}
 	
 	@Override
 	public LinkedHashMap<AgentProfileType, Double> getAgentProfileTypeDistribution() {
-		return getAgentProfileTypeDistribution(dir,agentProfilesXML);
+		return getAgentProfileTypeDistribution(this.agentProfilesDoc);
 	}
 	
 	/**
@@ -314,33 +247,30 @@ public class DataModelXML implements DataModel {
 	 * @param dir
 	 * @param agentProfilesXML
 	 * @return a map containing the AgentProfile and the chance of it occurring in a value between 0 and 1.
+	 * @throws IOException 
+	 * @throws SAXException 
+	 * @throws ParserConfigurationException 
 	 */
-	public static LinkedHashMap<AgentProfileType, Double> getAgentProfileTypeDistribution(String dir, String agentProfilesXML) {
-		ArrayList<ArrayList<Pair<String, String>>> agentAttributes = SimpleXMLReader.extractFromXML(dir, agentProfilesXML,"agent");
+	public static LinkedHashMap<AgentProfileType, Double> getAgentProfileTypeDistribution(Document agentProfileDoc) {
+		NodeList agentList = agentProfileDoc.getElementsByTagName("agent");
 		LinkedHashMap<AgentProfileType, Double> agentTypeAndDist = new LinkedHashMap<AgentProfileType, Double>();
-		for(ArrayList<Pair<String, String>> attributes : agentAttributes) {
-			String type = null;
-			String dist = null;
-			for(Pair<String, String> attribute : attributes) {
-				switch(attribute.first) {
-				case "role":
-					type = attribute.second;
-				case "dist":
-					dist = attribute.second;
-				}
-			}
-			
+		
+		for (int i = 0; i < agentList.getLength(); i++) {
+			org.w3c.dom.Node n = agentList.item(i);
+			NamedNodeMap attr = n.getAttributes();
+			String type = attr.getNamedItem("role").getTextContent();
+			String dist = attr.getNamedItem("dist").getTextContent();
+
 			AgentProfileType agentType = AgentProfileType.valueOf(type);
 			double distVal = Double.parseDouble(dist);
 			agentTypeAndDist.put(agentType, distVal);
 		}
-		
 		return agentTypeAndDist;
 	}
 
 	@Override
 	public int getSimulationLength() {
-		return simulationLength(dir, masXML);
+		return simulationLength(this.masDoc);
 	}
 	
 	/**
@@ -349,25 +279,20 @@ public class DataModelXML implements DataModel {
 	 * @param dir
 	 * @param masXML
 	 * @return an Integer with the time in seconds concerning how long SUMO will run.
+	 * @throws ParserConfigurationException 
+	 * @throws IOException 
+	 * @throws SAXException 
 	 */
-	public static int simulationLength(String dir, String masXML) {
-		ArrayList<ArrayList<Pair<String, String>>> masAttributes = SimpleXMLReader.extractFromXML(dir,masXML,"mas");
-		int simulationLength = 0;
-		for(ArrayList<Pair<String, String>> attributes : masAttributes ) {
-			for(Pair<String, String> attribute: attributes) {
-				switch(attribute.first) {
-				case "simulationlength":
-					simulationLength =  Integer.parseInt(attribute.second);
-					break;
-				}
-			}
-		}
-		return simulationLength;
+	public static int simulationLength(Document masDoc) {
+		NamedNodeMap attributes = masDoc.getElementsByTagName("mas").item(0).getAttributes();
+		String simulationLengthString = attributes.getNamedItem("simulationlength").getTextContent();
+
+		return Integer.parseInt(simulationLengthString);
 	}
 	
 	@Override
 	public ArrayList<Route> getRoutes(RoadNetwork rn) {
-		return getRoutes(rn,dir,routesXML);
+		return getRoutes(rn,this.routesDoc);
 	}
 	
 	/**
@@ -377,28 +302,26 @@ public class DataModelXML implements DataModel {
 	 * @param dir
 	 * @param routesXML
 	 * @return an ArrayList of Route objects
+	 * @throws ParserConfigurationException 
+	 * @throws IOException 
+	 * @throws SAXException 
 	 */
-	public static ArrayList<Route> getRoutes(RoadNetwork rn, String dir, String routesXML) {
-		ArrayList<ArrayList<Pair<String, String>>> routesAttributes = SimpleXMLReader.extractFromXML(dir,routesXML,"route");
+	public static ArrayList<Route> getRoutes(RoadNetwork rn, Document routesDoc) {
+		NodeList routeList = routesDoc.getElementsByTagName("route");
 		ArrayList<Route> routes = new ArrayList<Route>();
-		for(ArrayList<Pair<String, String>> routeAttributes : routesAttributes) {
-			String id= null;
+
+		for (int i = 0; i < routeList.getLength(); i++) {
+			org.w3c.dom.Node n = routeList.item(i);
+			NamedNodeMap attr = n.getAttributes();
+			String id= attr.getNamedItem("id").getTextContent();
+			String edgesString= attr.getNamedItem("edges").getTextContent();
 			ArrayList<Edge> edges = new ArrayList<Edge>();
-			String edgesString = null;
-			for(Pair<String, String> attribute: routeAttributes) {
-				switch(attribute.first) {
-				case "id":
-					id = attribute.second;
-					break;
-				case "edges":
-					edgesString = attribute.second;
-					String[] edgesSplitted = edgesString.split(" ");
-					for(String roadID : edgesSplitted) {
-						edges.add(rn.getEdge(roadID));
-					}
-					break;
-				}
+
+			String[] edgesSplitted = edgesString.split(" ");
+			for(String roadID : edgesSplitted) {
+				edges.add(rn.getEdge(roadID));
 			}
+			
 			Route route = new Route(id,edges);
 			routes.add(route);
 		}
@@ -408,7 +331,7 @@ public class DataModelXML implements DataModel {
 
 	@Override
 	public MASData getMASData() {
-		return getMASData(dir, masXML, sumoConfigXML, agentProfilesXML, routesXML);
+		return getMASData(this.masDoc, this.agentProfilesDoc, this.routesDoc);
 	}
 	
 	/**
@@ -419,14 +342,16 @@ public class DataModelXML implements DataModel {
 	 * @param sumoConfigXML
 	 * @param agentProfilesXML
 	 * @return the MASData data structure
+	 * @throws IOException 
+	 * @throws SAXException 
+	 * @throws ParserConfigurationException 
 	 */
-	public static MASData getMASData(String dir, String masXML, String sumoConfigXML, String agentProfilesXML, String routesXML){
-		int simulationLength 		= DataModelXML.simulationLength(dir, masXML);
-		String sumoConfigPath 		= sumoConfigXML;
-		double spawnProbability 	= DataModelXML.getAgentSpawnProbability(dir, agentProfilesXML);
-		HashMap<AgentProfileType,Double> agentProfileTypeDistribution = DataModelXML.getAgentProfileTypeDistribution(dir, agentProfilesXML);
-		HashMap<String, Double> routeIdAndProbability = DataModelXML.getRouteSpawnProbability(dir, routesXML);
-		return new MASData(simulationLength, sumoConfigPath, spawnProbability, agentProfileTypeDistribution, routeIdAndProbability);
+	public static MASData getMASData(Document masDoc, Document agentProfilesDoc, Document routesDoc) {
+		int simulationLength 		= DataModelXML.simulationLength(masDoc);
+		double spawnProbability 	= DataModelXML.getAgentSpawnProbability(agentProfilesDoc);
+		HashMap<AgentProfileType,Double> agentProfileTypeDistribution = DataModelXML.getAgentProfileTypeDistribution(agentProfilesDoc);
+		HashMap<String, Double> routeIdAndProbability = DataModelXML.getRouteSpawnProbability(routesDoc);
+		return new MASData(simulationLength, spawnProbability, agentProfileTypeDistribution, routeIdAndProbability);
 	}
 
 	@Override
@@ -434,5 +359,4 @@ public class DataModelXML implements DataModel {
 		// TODO Auto-generated method stub
 		
 	}
-	
 }

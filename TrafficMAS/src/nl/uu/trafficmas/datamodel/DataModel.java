@@ -2,7 +2,6 @@ package nl.uu.trafficmas.datamodel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 
 import nl.uu.trafficmas.agent.AgentProfileType;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
@@ -21,11 +20,7 @@ public interface DataModel {
 	 */
 	public MASData 	getMASData();
 	
-	/**
-	 * Returns the path to the sumoConfig XML file, which is needed by SUMO.
-	 * @return path to sumoConfig XML file.
-	 */
-	public String getSumoConfigPath();
+	
 	/**
 	 * Returns the probability of an agent spawning each tick.
 	 * @return a value between 0 and 1, including 0 and 1.
@@ -60,5 +55,5 @@ public interface DataModel {
 	 * Not yet implemented
 	 * @return
 	 */
-	public LinkedHashMap<String, Double> getRouteSpawnProbability();
+	public HashMap<String, Double> getRouteSpawnProbability();
 }

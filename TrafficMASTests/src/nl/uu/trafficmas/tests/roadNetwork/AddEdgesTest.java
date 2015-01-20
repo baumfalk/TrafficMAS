@@ -16,6 +16,7 @@ public class AddEdgesTest {
 	@Test
 	public void addEdges() {
 		RoadNetwork rn = new RoadNetwork();
+		
 		Node n1 = new Node("n1",0,0);
 		Node n2 = new Node("n2",0,0);
 		Road r1 = new Road("r1",5.0,null,1);
@@ -24,6 +25,7 @@ public class AddEdgesTest {
 		Edge edge1 = new Edge(n1,n1,r1);
 		Edge edge2 = new Edge(n1,n2,r2);
 		Edge edge3 = new Edge(n2, n2, r2);
+		
 		ArrayList<Edge> edges = new ArrayList<Edge>();
 		edges.add(edge1);
 		edges.add(edge2);

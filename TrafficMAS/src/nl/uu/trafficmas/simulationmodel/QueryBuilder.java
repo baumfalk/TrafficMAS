@@ -72,12 +72,7 @@ public class QueryBuilder {
 		for(QuerySubject querySubject : querySubjects) {
 			cmdList.add(querySubject.getIDListCommand());
 		}
-		long start_time = System.nanoTime();
-		
 		ArrayList<Object> responses = conn.do_jobs_get(cmdList);
-		long end_time = System.nanoTime();
-		double difference = (end_time - start_time)/1e6;
-		System.out.println("Querybuilder: get id lists " + difference );
 		cmdList.clear();
 		
 		// first response is null/or subscribed events
@@ -93,11 +88,7 @@ public class QueryBuilder {
 
 		
 		// get new responses
-		start_time = System.nanoTime();
 		responses = conn.do_jobs_get(cmdList);
-		end_time = System.nanoTime();
-		difference = (end_time - start_time)/1e6;
-		System.out.println("Querybuilder: get stuff " + difference );
 		processResponses(responses);
 		assert(responses.isEmpty());
 		

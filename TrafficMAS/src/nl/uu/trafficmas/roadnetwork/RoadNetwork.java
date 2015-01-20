@@ -78,7 +78,6 @@ public class RoadNetwork {
 				return edge.getRoad();
 			}
 		}
-		System.out.println("Failed to find road from ID");
 		return null;
 	}
 	

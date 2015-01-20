@@ -151,13 +151,11 @@ public class TrafficMASController {
 		difference = (end_time - start_time)/1e6;
 		view.addMessage("sim update duration:"+difference+"ms");
 
-		TrafficMASController.updateView(view, roadNetwork, currentAgentMap.values(), organisations);
+		//TrafficMASController.updateView(view, roadNetwork, currentAgentMap.values(), organisations);
 		end_time = System.nanoTime();
 		difference = (end_time - total_start_time)/1e6;
 		view.addMessage("duration:"+difference+"ms");
 		view.addMessage("+++++++++++++++++++++");
-		
-		view.visualize();
 	}
 
 	
@@ -339,10 +337,6 @@ public class TrafficMASController {
 	}
 	
 	public static StateData nextSimulationState(SimulationModel simulationModel) {
-		long start_time = System.nanoTime();
-		long end_time = System.nanoTime();
-		double difference = (end_time - start_time)/1e6;
-		System.out.println("Simulation timestep:"+difference);
 		// do step and get new data
 		return simulationModel.getNewStateData();
 	}
