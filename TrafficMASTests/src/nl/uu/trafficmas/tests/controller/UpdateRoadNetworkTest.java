@@ -1,18 +1,17 @@
 package nl.uu.trafficmas.tests.controller;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import it.polito.appeal.traci.SumoTraciConnection;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import nl.uu.trafficmas.agent.Agent;
-import nl.uu.trafficmas.agent.actions.AgentAction;
 import nl.uu.trafficmas.controller.TrafficMASController;
 import nl.uu.trafficmas.datamodel.DataModel;
 import nl.uu.trafficmas.datamodel.DataModelXML;

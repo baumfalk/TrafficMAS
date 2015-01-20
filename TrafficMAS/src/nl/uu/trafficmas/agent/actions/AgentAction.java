@@ -2,7 +2,6 @@ package nl.uu.trafficmas.agent.actions;
 
 import java.util.ArrayList;
 
-import de.tudresden.sumo.util.SumoCommand;
 import nl.uu.trafficmas.organisation.Sanction;
 
 public abstract class AgentAction {
@@ -36,8 +35,6 @@ public abstract class AgentAction {
 	
 	public abstract ArrayList<Sanction> getSanctions(double maxComfySpeed, double velocity);
 	
-	public abstract SumoCommand getCommand(String agentID, byte agentLaneIndex, int maxLaneIndex, int overtakeDuration, double d, double e);
-
 	public void setUtility(double newUtility) {
 		utility = newUtility;
 	}

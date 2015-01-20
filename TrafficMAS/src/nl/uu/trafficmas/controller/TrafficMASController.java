@@ -376,9 +376,10 @@ public class TrafficMASController {
 		// TODO adapt InstantiateAgentsTest
 		// TODO write test for Vehicle.setRoute .
 		HashMap<AgentProfileType, Double> agentProfileDistribution = masData.agentProfileTypeDistribution;
-		for (int currentTime = 1; currentTime <= simulationLength; currentTime++) {
-			double coinFlip = rng.nextDouble();
-			if(agentSpawnProbability == 0.0){
+
+		if(agentSpawnProbability == 0.0){
+			for (int currentTime = 1; currentTime <= simulationLength; currentTime++) {
+				double coinFlip = rng.nextDouble();
 				int i =0;
 				for(Entry<String, Double> entry : masData.routeIdAndProbability.entrySet()){
 					if(coinFlip < entry.getValue()){
@@ -387,7 +388,12 @@ public class TrafficMASController {
 						i++;
 					}
 				}
-			} else{
+			
+			}
+			
+		} else{
+			for (int currentTime = 1; currentTime <= simulationLength; currentTime++) {
+				double coinFlip = rng.nextDouble();
 				if(coinFlip < agentSpawnProbability) {
 					int i =0;
 					for(Entry<String, Double> entry : masData.routeIdAndProbability.entrySet()){
@@ -402,8 +408,8 @@ public class TrafficMASController {
 					*/
 				}
 			}
-		
 		}
+		
 		return agentsAndTimes;
 	}
 	

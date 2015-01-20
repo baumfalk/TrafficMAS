@@ -6,7 +6,7 @@ import nl.uu.trafficmas.organisation.Sanction;
 import de.tudresden.sumo.cmd.Vehicle;
 import de.tudresden.sumo.util.SumoCommand;
 
-public class ChangeLaneAction extends AgentAction {
+public class ChangeLaneAction extends SumoAgentAction {
 
 	public ChangeLaneAction(int priority) {
 		super(priority);

@@ -1,6 +1,6 @@
 package nl.uu.trafficmas.tests.simulationModelTraaS;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import it.polito.appeal.traci.SumoTraciConnection;
 
 import java.io.IOException;
@@ -17,7 +17,6 @@ import nl.uu.trafficmas.controller.TrafficMASController;
 import nl.uu.trafficmas.datamodel.DataModel;
 import nl.uu.trafficmas.datamodel.DataModelXML;
 import nl.uu.trafficmas.datamodel.MASData;
-import nl.uu.trafficmas.roadnetwork.Road;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
 import nl.uu.trafficmas.simulationmodel.SimulationModelTraaS;

@@ -2,11 +2,11 @@ package nl.uu.trafficmas.agent.actions;
 
 import java.util.ArrayList;
 
+import nl.uu.trafficmas.organisation.Sanction;
 import de.tudresden.sumo.cmd.Vehicle;
 import de.tudresden.sumo.util.SumoCommand;
-import nl.uu.trafficmas.organisation.Sanction;
 
-public class ChangeVelocityAction extends AgentAction {
+public class ChangeVelocityAction extends SumoAgentAction {
 
 	public ChangeVelocityAction(int priority) {
 		super(priority);

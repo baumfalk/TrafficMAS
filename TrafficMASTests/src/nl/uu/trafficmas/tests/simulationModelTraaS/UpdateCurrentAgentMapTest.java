@@ -19,7 +19,6 @@ import nl.uu.trafficmas.datamodel.MASData;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
 import nl.uu.trafficmas.simulationmodel.SimulationModelTraaS;
-import nl.uu.trafficmas.simulationmodel.StateData;
 
 import org.junit.Test;
 import org.xml.sax.SAXException;

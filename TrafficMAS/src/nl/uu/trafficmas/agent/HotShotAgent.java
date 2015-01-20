@@ -7,7 +7,7 @@ import nl.uu.trafficmas.roadnetwork.Node;
 import nl.uu.trafficmas.roadnetwork.Route;
 import de.tudresden.ws.container.SumoColor;
 
-public class HotShotAgent extends Agent {
+public class HotShotAgent extends AgentSumo {
 
 	public HotShotAgent(String agentID, Node goalNode, Route route, int goalArrivalTime, double maxSpeed,double maxComfySpeed) {
 		super(agentID, goalNode, route, goalArrivalTime, maxSpeed, maxComfySpeed);

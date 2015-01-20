@@ -10,13 +10,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Random;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import nl.uu.trafficmas.agent.Agent;
-import nl.uu.trafficmas.agent.AgentProfileType;
 import nl.uu.trafficmas.controller.TrafficMASController;
 import nl.uu.trafficmas.datamodel.DataModel;
 import nl.uu.trafficmas.datamodel.DataModelXML;

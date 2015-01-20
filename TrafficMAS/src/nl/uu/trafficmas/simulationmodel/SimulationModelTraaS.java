@@ -11,7 +11,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import nl.uu.trafficmas.agent.Agent;
+import nl.uu.trafficmas.agent.AgentSumo;
 import nl.uu.trafficmas.agent.actions.AgentAction;
+import nl.uu.trafficmas.agent.actions.SumoAgentAction;
 import de.tudresden.sumo.cmd.Simulation;
 import de.tudresden.sumo.cmd.Vehicle;
 import de.tudresden.sumo.util.SumoCommand;
@@ -164,7 +166,7 @@ public class SimulationModelTraaS implements SimulationModel {
 				// TODO: think of a way to express max comfy speed in a different way
 				cmds.add(Vehicle.setMaxSpeed(agent.agentID, agent.getMaxComfySpeed()));
 				
-				cmds.add(Vehicle.setColor(agent.agentID, agent.getColor()));
+				cmds.add(Vehicle.setColor(agent.agentID, ((AgentSumo) agent).getColor()));
 				completeAgentMap.put(agent.agentID, agent);
 			}
 	
@@ -248,12 +250,14 @@ public class SimulationModelTraaS implements SimulationModel {
 		for(Map.Entry<Agent, AgentAction> entry: actions.entrySet()){
 			
 			Agent currentAgent = entry.getKey();
+			SumoAgentAction action = (SumoAgentAction) entry.getValue();
+
 			byte agentLaneIndex = currentAgent.getLane().laneIndex;
 			int maxLaneIndex = currentAgent.getRoad().laneList.size()-1;
 		
-			if(entry.getValue() == null)
+			if(action == null)
 				continue;
-			cmdList.add(entry.getValue().getCommand(currentAgent.agentID, agentLaneIndex, maxLaneIndex,
+			cmdList.add(action.getCommand(currentAgent.agentID, agentLaneIndex, maxLaneIndex,
 					OVERTAKE_DURATION, currentAgent.getVelocity(),currentAgent.getMaxComfySpeed()));
 		}
 		

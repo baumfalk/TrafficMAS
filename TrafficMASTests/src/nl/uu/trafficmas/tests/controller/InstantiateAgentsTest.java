@@ -2,13 +2,10 @@ package nl.uu.trafficmas.tests.controller;
 
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
-import it.polito.appeal.traci.SumoTraciConnection;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.Random;
 
@@ -21,7 +18,6 @@ import nl.uu.trafficmas.datamodel.DataModelXML;
 import nl.uu.trafficmas.datamodel.MASData;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
-import nl.uu.trafficmas.simulationmodel.SimulationModelTraaS;
 
 import org.junit.Test;
 import org.xml.sax.SAXException;

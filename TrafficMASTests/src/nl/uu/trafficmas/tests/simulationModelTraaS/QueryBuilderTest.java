@@ -1,6 +1,6 @@
 package nl.uu.trafficmas.tests.simulationModelTraaS;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 import it.polito.appeal.traci.SumoTraciConnection;
 
 import java.io.IOException;
@@ -13,7 +13,6 @@ import java.util.Random;
 import javax.xml.parsers.ParserConfigurationException;
 
 import nl.uu.trafficmas.agent.Agent;
-import nl.uu.trafficmas.agent.AgentProfileType;
 import nl.uu.trafficmas.controller.TrafficMASController;
 import nl.uu.trafficmas.datamodel.DataModel;
 import nl.uu.trafficmas.datamodel.DataModelXML;

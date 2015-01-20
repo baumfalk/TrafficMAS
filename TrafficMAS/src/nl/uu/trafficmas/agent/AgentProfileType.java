@@ -1,6 +1,5 @@
 package nl.uu.trafficmas.agent;
 
-import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Node;
 import nl.uu.trafficmas.roadnetwork.Route;
 

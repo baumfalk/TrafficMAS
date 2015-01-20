@@ -7,8 +7,6 @@ import nl.uu.trafficmas.simulationmodel.StateData;
 
 import org.junit.Test;
 
-import de.tudresden.sumo.cmd.Simulation;
-
 public class InitializeTest {
 
 	@Test

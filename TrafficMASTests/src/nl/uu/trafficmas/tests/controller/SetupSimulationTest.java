@@ -1,11 +1,10 @@
 package nl.uu.trafficmas.tests.controller;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map.Entry;
 import java.util.Random;
 
 import javax.xml.parsers.ParserConfigurationException;

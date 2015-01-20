@@ -24,9 +24,6 @@ import nl.uu.trafficmas.simulationmodel.StateData;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-import de.tudresden.sumo.cmd.Vehicle;
-import de.tudresden.ws.container.SumoStringList;
-
 public class AddAgentsTest {
 
 	@Test

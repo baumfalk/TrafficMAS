@@ -1,7 +1,6 @@
 package nl.uu.trafficmas.tests.agents;
 
-import static org.junit.Assert.*;
-import nl.uu.trafficmas.agent.actions.AgentAction;
+import static org.junit.Assert.assertEquals;
 import nl.uu.trafficmas.agent.actions.ChangeLaneAction;
 
 import org.junit.Test;
