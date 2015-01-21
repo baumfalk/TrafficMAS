@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -200,10 +201,10 @@ public class SimulationModelTraaS implements SimulationModel {
 			ArrayList<SumoCommand> cmdList = new ArrayList<>();
 			cmdList.add(Simulation.getArrivedIDList());
 			cmdList.add(Simulation.getDepartedIDList());
-			ArrayList<Object> responses = conn.do_jobs_get(cmdList);
+			LinkedList<Object> responses = conn.do_jobs_get(cmdList);
 			
-			SumoStringList departedVehicleIDList = (SumoStringList) responses.get(0);
-			SumoStringList arrivedVehicleIDList = (SumoStringList) responses.get(1);			
+			SumoStringList departedVehicleIDList = (SumoStringList) responses.remove();
+			SumoStringList arrivedVehicleIDList = (SumoStringList) responses.remove();			
 			
 			for(String departedVehicleID: departedVehicleIDList){
 				currentAgentMap.remove(departedVehicleID);
