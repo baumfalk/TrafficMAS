@@ -143,7 +143,6 @@ public class TrafficMASController {
 		view.addMessage("Number of agents in MAS:"+currentAgentMap.size());
 
 		HashMap<Agent,AgentAction> agentActions = this.nextMASState(simulationStateData.currentTimeStep/1000);
-		view.addMessage("Agent actions: "+agentActions);
 		
 		start_time = System.nanoTime();
 		TrafficMASController.updateSimulation(simulationModel, agentActions);
@@ -151,7 +150,7 @@ public class TrafficMASController {
 		difference = (end_time - start_time)/1e6;
 		view.addMessage("sim update duration:"+difference+"ms");
 
-		//TrafficMASController.updateView(view, roadNetwork, currentAgentMap.values(), organisations);
+		TrafficMASController.updateView(view, roadNetwork, currentAgentMap.values(), organisations);
 		end_time = System.nanoTime();
 		difference = (end_time - total_start_time)/1e6;
 		view.addMessage("duration:"+difference+"ms");

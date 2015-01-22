@@ -6,7 +6,10 @@
         <net-file value="NetworkTest.xml"/>
         <route-files value="RouteTest2.xml"/>
     </input>
-
+	<time>
+        <begin value="0"/>
+        <end value="700"/>
+    </time>
     <gui_only>
         <gui-settings-file value="SettingsTest.xml"/>
     </gui_only>

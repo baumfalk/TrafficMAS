@@ -13,7 +13,7 @@ public class LinkedListVSArrayList {
 	@Test
 	public void test() {
 		
-		int size = (int) 1e6*4;
+		int size = (int) 1e5*4;
 		List<Integer> list1 = new ArrayList<Integer>();
 		LinkedList<Integer> list2 = new LinkedList<Integer>();
 		List<Integer> list3 = new ArrayList<Integer>(size);
