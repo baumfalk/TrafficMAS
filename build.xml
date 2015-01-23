@@ -22,7 +22,6 @@
 	<target name="initTraaS">
 	    <!-- create timestamp-->
 	    <tstamp/>
-	    <mkdir dir="${buildTraaS}"/>
 	</target>
 	
 	<target name="initTests">
