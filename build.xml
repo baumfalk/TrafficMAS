@@ -5,7 +5,7 @@
 	<property name="MAS" location="./TrafficMAS"/>
 	<property name="Tests" location="./TrafficMASTests"/>
 	
-	<property name="buildMAS" location="${MAS}/build"/>
+	<property name="buildMAS" location="${MAS}/bin"/>
 	<property name="srcMAS" location="${MAS}/src"/>
 	<property name="libMAS" location="${MAS}/lib"/>
 	
