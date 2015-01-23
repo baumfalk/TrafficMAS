@@ -68,7 +68,7 @@
 	    </javac>
 	</target>
 		
-	<target name="buildAll" depends="buildMAS,buildTraaS,buildTests"/>
+	<target name="buildAll" depends="buildTraaS,buildMAS,buildTests"/>
 	<target name="run" depends="buildMAS">
 	    <java classname="TrafficMAS">
 	        <arg value="${MAS}/sim/"/>
