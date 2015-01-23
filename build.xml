@@ -3,14 +3,16 @@
 		For building TrafficMAS, as well as TraaS.
 	</description>
 	<property name="MAS" location="./TrafficMAS"/>
-	<property name="TraaS" location="./TraaS"/>
 	<property name="Tests" location="./TrafficMASTests"/>
+	
 	<property name="buildMAS" location="${MAS}/build"/>
 	<property name="srcMAS" location="${MAS}/src"/>
-	<property name="buildTraaS" location="${TraaS}/build"/>
-	<property name="srcTraaS" location="${TraaS}"/>
+	<property name="libMAS" location="${MAS}/lib"/>
+	
 	<property name="srcTests" location="${Tests}/src"/>
 	<property name="outputTests" location="${Tests}/output"/>
+	<property name="libTests" location="${Tests}/lib"/>
+	
 	<target name="initMAS">
 	    <!-- create timestamp-->
 	    <tstamp/>
@@ -30,16 +32,16 @@
 	</target>
 	
 	<path id="TrafficMAS.classpath">
-        <pathelement location="${MAS}/lib/TraaS_javadoc.jar"/>
-        <pathelement location="${MAS}/lib/TraaS_sources.jar"/>
-        <pathelement location="${MAS}/lib/TraaS.jar"/>
+        <pathelement location="${libMAS}/TraaS_javadoc.jar"/>
+        <pathelement location="${libMAS}/TraaS_sources.jar"/>
+        <pathelement location="${libMAS}/TraaS.jar"/>
         <pathelement location="${buildMAS}"/>
     </path>
     
     <path id="TrafficMASTests.classpath">
-        <pathelement location="${MAS}/lib/TraaS_javadoc.jar"/>
-        <pathelement location="${MAS}/lib/TraaS_sources.jar"/>
-        <pathelement location="${MAS}/lib/TraaS.jar"/>
+        <pathelement location="${libTests}/TraaS_javadoc.jar"/>
+        <pathelement location="${libTests}/TraaS_sources.jar"/>
+        <pathelement location="${libTests}/TraaS.jar"/>
         <pathelement location="${Tests}/lib/junit.jar"/>
         <pathelement location="${Tests}/lib/hamcrest-core.jar"/>
         <pathelement location="${buildMAS}"/>
@@ -52,7 +54,12 @@
 	</target>
 	
     <target name="buildTraaS" depends="initTraaS">
-	    <javac debug="true" srcdir="${srcTraaS}" destdir="${buildTraaS}"/>
+	    <ant dir ="./TraaS" antfile="build.xml" target="dist"  inheritAll="false"/>		
+		<copy file="./TraaS/dist/lib/latest/TraaS.jar" tofile="${libMAS}/TraaS.jar"/>
+		<copy file="./TraaS/dist/lib/latest/TraaS_sources.jar" tofile="${libMAS}/TraaS_sources.jar"/>
+		<copy file="./TraaS/dist/lib/latest/TraaS.jar" tofile="${libTests}/TraaS.jar"/>
+		<copy file="./TraaS/dist/lib/latest/TraaS_sources.jar" tofile="${libTests}/TraaS_sources.jar"/>
+		<ant dir ="./TraaS" antfile="build.xml" target="clean"  inheritAll="false"/>
 	</target>
 
 	<target name="buildTests" depends="initTests">
@@ -67,6 +74,7 @@
 	        <arg value="${MAS}/sim/"/>
 	        <arg value="hello.mas.xml"/>
 	        <arg value="sumo"/>
+			<arg value="hello.sumocfg"/>
             <arg value="1337"/>
 	        <classpath refid="TrafficMASTests.classpath"/>
 	    </java>
@@ -84,4 +92,10 @@
             </batchtest>
         </junit>
 	</target>
+	
+	<target name="clean" description="clean up" >
+	    <!-- Delete the ${build} and ${dist} directory trees -->
+	    <delete dir="${buildMAS}"/>
+		<delete dir="${Tests}/bin"/>
+  </target>
 </project>
