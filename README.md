@@ -14,7 +14,18 @@ In general: see the [SUMO wiki](http://sumo.dlr.de/wiki/Installing) about instal
     >	`apt-get install sumo`
     but note that these versions are often very out of date. A good alternative would be to compile from source.
 + OSX  
-    Unfortunately, you need to compile OSX by hand, something we didn't succeed in.
+	SUMO needs to be compiled from source on OS X. We succeeded in doing it by following these instructions:
+	+	1. Install [Homebrew](http://brew.sh/)
+	+	2. Install [XQuartz](http://xquartz.macosforge.org/landing/), you need this for the GUI at least, regular SUMO might work without. 
+	+	3. Download [SUMO source](http://www.dlr.de/ts/en/desktopdefault.aspx/tabid-9883/16931_read-41000/)
+	+	4. Use Homebrew to install the following dependencies: fox (only for GUI), gdal, proj, xerces-c.
+			This can be done by running `brew install xerces-c gdal proj fox`
+	+	5. Set the following flags through the environment variables:  
+			`export CXXFLAGS="-I/opt/X11/include"`  
+			`export LDFLAGS="-framework OpenGL -framework GLUT -L/usr/X11/lib -L/usr/X11R6/lib -lpython2.7"`
+	+	6. Now run `./configure --with-python` in the folder where you downloaded the source.
+	+	7. Finally run `make` to compile and `make install` to set paths to the binairies.
+
 
 You can test if sumo was installed succesfully by opening a terminal and typing
 >    `sumo`
