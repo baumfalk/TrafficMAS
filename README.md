@@ -45,8 +45,16 @@ The easiest way is to use Eclipse:
 
 1. Clone the code  
 2. Create a new workspace in the cloned folder  
-3. New > Add Project. Use TrafficMAS as name, so Eclipse can automatically set things up for you.  
-4. Done!  
+3. New > Add Project. Use TrafficMAS as name, so Eclipse can automatically set things up for you. 
+4. Go to 'window' and at 'show view' select ant. 
+5. An ant window should have popped up on the right, click on "Add buildfile" (the ant icon with the green '+' symbol) 
+6. Run the buildfile by clicking the run button in the ant window.
+7. Right click (RMB) the project, select 'properties' and go to 'builders'. 
+8. Select import and browse to the build.xml file located in /TrafficMAS
+9. Now the latest TraaS.jar has been build into the /lib directory!
+10. Right click the TrafficMAS project, "Properties > Java Build Path, go to the Libraries tab.
+11. Select the TraaS.jar file and press edit. Now select the recently build TraaS.jar in /lib.
+12. Done!  
 
 If you also want to run our tests, do the following
 1. Add JUnit4 to the libraries. The easiest way to do this is by RMB > New JUnit test, and have Eclipse
@@ -56,9 +64,9 @@ add the JUnit library itself.
 ###Running The Code###
 If you are using Eclipse, you can easily run the code.
   
-1. Press the Run button. You'll get the message `At least three arguments needed`  
+1. Press the Run button. You'll get the message `At least four arguments needed`  
 2. Now click the small triangle next to the Run button.  
-3. In the arguments tab, add the parameters. The first parameter is the main directory, the second is the main TrafficMAS, the third one is the location for sumo(-gui) and the fourth parameter is the seed. For example `./sim/ hello.mas.xml sumo 1337` states that the main directory is `./sim`, that the TrafficMAS config file is `hello.mas.xml`, the path for sumo is `sumo` (because it was added to the path variable. If not, we would have written something like `/usr/bin/sumo` or `C:\sumo\sumo.exe`) and that the seed the program will use is `1337`. If you want to also see a graphical interface for sumo, replace `sumo` with `sumo-gui`.  
+3. In the arguments tab, add the parameters. The first parameter is the main directory, the second is the main TrafficMAS, the third one is the location for sumo(-gui) and the fourth parameter is the seed. For example `./sim/ hello.mas.xml sumo hello.sumocfg 1337` states that the main directory is `./sim`, that the TrafficMAS config file is `hello.mas.xml`, the path for sumo is `sumo` (because it was added to the path variable. If not, we would have written something like `/usr/bin/sumo` or `C:\sumo\sumo.exe`), that the sumo config file is `hello.sumocfg` and that the seed the program will use is `1337`. If you want to also see a graphical interface for sumo, replace `sumo` with `sumo-gui`.  
 4. If you now press the Run button again, you should see output in the console screen (and a sumo gui if you used that as a parameter).
 
 ###Changing the program behavior###
