@@ -1,8 +1,8 @@
-<project name="TrafficMAS" default="build" basedir="."
+<project name="TrafficMASTests" default="build" basedir="."
 	 xmlns:if="ant:if"
 >
 	<description>
-		For building TrafficMAS, as well as TraaS.
+		For building TrafficMASTests, as well as TraaS.
 	</description>
 	<property name="TraaS" location="../TraaS"/>
 	<property name="TraaSLatest" location="${TraaS}/dist/lib/latest"/>
