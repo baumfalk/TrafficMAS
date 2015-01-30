@@ -168,6 +168,9 @@ public class TrafficMASController {
 		
 		HashMap <Agent,AgentAction> actions = new LinkedHashMap<Agent, AgentAction>();
 		for(Agent agent : currentAgents.values()) {
+			if(agent.getRoad() == null) {
+				continue;
+			}
 			actions.put(agent, agent.doAction(currentTime));
 		}
 		
@@ -301,26 +304,28 @@ public class TrafficMASController {
 		}
 		
 		Road road 		= roadNetwork.getRoadFromID(roadID);
-		
 		int laneIndex 	= agentData.laneIndex;
 		double distance = agentData.position;
 	
 		// Update the agent with information
 		agent.setVelocity(velocity);
 		agent.setRoad(road);
-		agent.setLane(road.getLanes()[laneIndex]);
-		
-		agent.setLeader(leaderVelocity, leaderDistance);
-		agent.setDistance(distance);
-		
-		//TODO review this
-		//TODO review test (expectedArrivalTime etc)
-		double roadLengthRemaining		= agent.getRoad().length - agent.getDistance();
-		double timeLeftOnCurrentRoad 	= roadLengthRemaining/agent.getVelocity();
-		double routeRemainderLength 	= Route.getRouteRemainderLength(agent.getRoute(), agent.getRoad());
-		double expectedArrivalTime 		= stateData.currentTimeStep/1000 + timeLeftOnCurrentRoad + routeRemainderLength / agent.getMaxComfySpeed();
-		
-		agent.setExpectedArrivalTime(expectedArrivalTime);
+
+		if(road != null) {
+			agent.setLane(road.getLanes()[laneIndex]);
+			
+			agent.setLeader(leaderVelocity, leaderDistance);
+			agent.setDistance(distance);
+			
+			//TODO review this
+			//TODO review test (expectedArrivalTime etc)
+			double roadLengthRemaining		= agent.getRoad().length - agent.getDistance();
+			double timeLeftOnCurrentRoad 	= roadLengthRemaining/agent.getVelocity();
+			double routeRemainderLength 	= Route.getRouteRemainderLength(agent.getRoute(), agent.getRoad());
+			double expectedArrivalTime 		= stateData.currentTimeStep/1000 + timeLeftOnCurrentRoad + routeRemainderLength / agent.getMaxComfySpeed();
+			
+			agent.setExpectedArrivalTime(expectedArrivalTime);
+		}
 	}
 
 	/**

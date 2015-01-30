@@ -153,6 +153,8 @@ public abstract class Agent extends AgentPhysical {
 	@Override
 	public void setRoad(Road road) {
 		super.setRoad(road);
+		if(road == null)
+			return;
 		int currentRoadID = 0;
 		for(;currentRoadID<currentRouteEdges.length;currentRoadID++) {
 			if(this.road.id.equals(currentRouteEdges[currentRoadID].getRoad().id)) {
