@@ -25,6 +25,7 @@ public abstract class Agent extends AgentPhysical {
 	private double maxComfySpeed;
 	private double leaderAgentSpeed;
 	private double leaderDistance;
+	public String reroutedEdge;
 	
 	public final static double DEFAULT_MAX_SPEED = 20;
 	
@@ -83,12 +84,11 @@ public abstract class Agent extends AgentPhysical {
 		// Loop through all AgentAction objects and calculate utility for each.
 		// If no action returns a better utility than the one we currently have, bestAction remains null.
 		List<AgentAction> actionList = new ArrayList<AgentAction>();
+		double leftLaneSpeed = 0;
+		if(this.lane.hasLeftLane()) {
+			leftLaneSpeed = this.lane.getLeftLane().getLaneMeanSpeed();
+		}
 		for(AgentAction action : AgentAction.values()) {
-			
-			double leftLaneSpeed = 0;
-			if(this.lane.hasLeftLane()) {
-				leftLaneSpeed = this.lane.getLeftLane().getLaneMeanSpeed();
-			}
 			
 			double time = action.getTime(currentTime,velocity, leftLaneSpeed, this.distance, this.road.length, this.maxComfySpeed, routeRemainderLength, this.leaderAgentSpeed, this.leaderDistance);
 			ArrayList<Sanction> sanctions 	= action.getSanctions(maxComfySpeed, velocity);
@@ -115,6 +115,10 @@ public abstract class Agent extends AgentPhysical {
 	}
 	public void setGoalNode(Node goalNode) {
 		this.goalNode = goalNode;
+	}
+	
+	public void setReroutedEdge(String edgeID){
+		this.reroutedEdge = edgeID;
 	}
 	
 	public int getGoalArrivalTime() {

@@ -2,7 +2,9 @@ package nl.uu.trafficmas.agent.actions;
 
 import java.util.ArrayList;
 
+import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.organisation.Sanction;
+import de.tudresden.sumo.cmd.Vehicle;
 import de.tudresden.sumo.util.SumoCommand;
 
 public class ChangeRoadAction extends SumoAgentAction {
@@ -27,12 +29,10 @@ public class ChangeRoadAction extends SumoAgentAction {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
 	@Override
-	public SumoCommand getCommand(String agentID, byte agentLaneIndex,
-			int maxLaneIndex, int overtakeDuration, double d, double e) {
-		// TODO Auto-generated method stub
+	public SumoCommand getCommand(Agent currentAgent) {
+		// TODO Generate route based on reroutedEdge
 		return null;
 	}
-
 }

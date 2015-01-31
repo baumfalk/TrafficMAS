@@ -1,5 +1,6 @@
 package nl.uu.trafficmas.agent.actions;
 
+import nl.uu.trafficmas.agent.Agent;
 import de.tudresden.sumo.util.SumoCommand;
 
 public abstract class SumoAgentAction extends AgentAction {
@@ -8,6 +9,6 @@ public abstract class SumoAgentAction extends AgentAction {
 		super(priority);
 	}
 	
-	public abstract SumoCommand getCommand(String agentID, byte agentLaneIndex, int maxLaneIndex, int overtakeDuration, double d, double e);
+	public abstract SumoCommand getCommand(Agent agent);
 
 }

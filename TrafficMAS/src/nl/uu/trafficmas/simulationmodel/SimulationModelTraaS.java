@@ -252,14 +252,10 @@ public class SimulationModelTraaS implements SimulationModel {
 			
 			Agent currentAgent = entry.getKey();
 			SumoAgentAction action = (SumoAgentAction) entry.getValue();
-
-			byte agentLaneIndex = currentAgent.getLane().laneIndex;
-			int maxLaneIndex = currentAgent.getRoad().laneList.size()-1;
 		
 			if(action == null)
 				continue;
-			cmdList.add(action.getCommand(currentAgent.agentID, agentLaneIndex, maxLaneIndex,
-					OVERTAKE_DURATION, currentAgent.getVelocity(),currentAgent.getMaxComfySpeed()));
+			cmdList.add(action.getCommand(currentAgent));
 		}
 		
 	

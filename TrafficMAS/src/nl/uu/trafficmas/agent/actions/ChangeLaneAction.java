@@ -2,11 +2,13 @@ package nl.uu.trafficmas.agent.actions;
 
 import java.util.ArrayList;
 
+import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.organisation.Sanction;
 import de.tudresden.sumo.cmd.Vehicle;
 import de.tudresden.sumo.util.SumoCommand;
 
 public class ChangeLaneAction extends SumoAgentAction {
+	public static final int OVERTAKE_DURATION = 5;
 
 	public ChangeLaneAction(int priority) {
 		super(priority);
@@ -45,14 +47,15 @@ public class ChangeLaneAction extends SumoAgentAction {
 	}
 
 	@Override
-	public SumoCommand getCommand(String agentID, byte agentLaneIndex,
-			int maxLaneIndex, int overtakeDuration, double d, double e) {
+	public SumoCommand getCommand(Agent currentAgent) {
+		byte agentLaneIndex = currentAgent.getLane().laneIndex;
+		int maxLaneIndex = currentAgent.getRoad().laneList.size()-1;
 		// cannot change
 		if( agentLaneIndex >= maxLaneIndex) {
 			return null;
 		}
 			
-		return Vehicle.changeLane(agentID, (byte) (agentLaneIndex+1) , overtakeDuration);
+		return Vehicle.changeLane(currentAgent.agentID, (byte) (agentLaneIndex+1) , OVERTAKE_DURATION);
 	}
 
 }
