@@ -2,6 +2,7 @@ package nl.uu.trafficmas.agent.actions;
 
 import java.util.ArrayList;
 
+import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.organisation.Sanction;
 import de.tudresden.sumo.cmd.Vehicle;
 import de.tudresden.sumo.util.SumoCommand;
@@ -58,9 +59,10 @@ public class ChangeVelocityAction extends SumoAgentAction {
 	}
 
 	@Override
-	public SumoCommand getCommand(String agentID, byte agentLaneIndex,
-			int maxLaneIndex, int overtakeDuration, double d, double e) {
-		return Vehicle.slowDown(agentID, Math.min(d+speedIncrease,e),Math.min((int)speedIncrease,20));
+	public SumoCommand getCommand(Agent currentAgent) {
+		double d = currentAgent.getVelocity();
+		double e = currentAgent.getMaxComfySpeed();
+		return Vehicle.slowDown(currentAgent.agentID, Math.min(d+speedIncrease,e),Math.min((int)speedIncrease,20));
 	}
 
 }

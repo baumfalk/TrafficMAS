@@ -575,8 +575,7 @@ public class Vehicle {
 	 */
 
 	public static SumoCommand setRoute(String vehID, SumoStringList edgeList){
-		Object[] array = new Object[]{edgeList};
-		return new SumoCommand(Constants.CMD_SET_VEHICLE_VARIABLE, Constants.VAR_ROUTE, vehID, array);
+		return new SumoCommand(Constants.CMD_SET_VEHICLE_VARIABLE, Constants.VAR_ROUTE, vehID, edgeList);
 	}
 	
 	/**

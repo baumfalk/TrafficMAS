@@ -1,6 +1,7 @@
 package nl.uu.trafficmas.agent;
 
 import nl.uu.trafficmas.roadnetwork.Node;
+import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
 
 public enum AgentProfileType {
@@ -8,18 +9,18 @@ public enum AgentProfileType {
 	HotShot,
 	OldLady;
 	
-	public Agent toAgent(String agentID, Node goalNode, Route route, int goalArrivalTime, double maxSpeed) {
+	public Agent toAgent(String agentID, Node goalNode, Route route, RoadNetwork roadNetwork, int goalArrivalTime, double maxSpeed) {
 		Agent agent = null;
 		double maxComfySpeed = this.getMaxComfortableDrivingSpeed(maxSpeed);
 		switch(this) {
 		case Normal:
-			agent = new NormalAgent(agentID, goalNode, route, goalArrivalTime, maxSpeed,maxComfySpeed);
+			agent = new NormalAgent(agentID, goalNode, route, roadNetwork, goalArrivalTime, maxSpeed,maxComfySpeed);
 			break;
 		case OldLady:
-			agent = new OldLadyAgent(agentID, goalNode, route, goalArrivalTime, maxSpeed,maxComfySpeed);
+			agent = new OldLadyAgent(agentID, goalNode, route, roadNetwork, goalArrivalTime, maxSpeed,maxComfySpeed);
 			break;
 		case HotShot:
-			agent = new HotShotAgent(agentID, goalNode, route, goalArrivalTime, maxSpeed,maxComfySpeed);
+			agent = new HotShotAgent(agentID, goalNode, route, roadNetwork, goalArrivalTime, maxSpeed,maxComfySpeed);
 			break;
 		}
 		return agent;

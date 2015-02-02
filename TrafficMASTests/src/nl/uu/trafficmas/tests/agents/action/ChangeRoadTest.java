@@ -1,17 +1,21 @@
-package nl.uu.trafficmas.tests.simulationModelTraaS;
+package nl.uu.trafficmas.tests.agents.action;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import it.polito.appeal.traci.SumoTraciConnection;
 
+import java.awt.List;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import nl.uu.trafficmas.agent.Agent;
+import nl.uu.trafficmas.agent.actions.AgentAction;
 import nl.uu.trafficmas.controller.TrafficMASController;
 import nl.uu.trafficmas.datamodel.DataModel;
 import nl.uu.trafficmas.datamodel.DataModelXML;
@@ -19,17 +23,21 @@ import nl.uu.trafficmas.datamodel.MASData;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
 import nl.uu.trafficmas.simulationmodel.SimulationModelTraaS;
+import nl.uu.trafficmas.simulationmodel.StateData;
 
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-public class UpdateCurrentAgentMapTest {
+import de.tudresden.sumo.cmd.Vehicle;
+import de.tudresden.ws.container.SumoStringList;
+
+public class ChangeRoadTest {
 
 	@Test
-	public void updateCurrentAgentMap() throws SAXException, IOException, ParserConfigurationException {
+	public void changeRoad() throws SAXException, IOException, ParserConfigurationException {
 		Random random 	= new Random(1337);
-		String dir 		= System.getProperty("user.dir")+"/tests/SimulationModelTraaS/UpdateCurrentAgentMap/";
-		String sumocfg 	= System.getProperty("user.dir")+"/tests/SimulationModelTraaS/UpdateCurrentAgentMap/ConfigTest.xml";
+		String dir 		= System.getProperty("user.dir")+"/tests/AgentActions/ChangeRoad/";
+		String sumocfg 	= System.getProperty("user.dir")+"/tests/AgentActions/ChangeRoad/ConfigTest.xml";
 		String masXML 	= "MASTest.xml";
 		
 		DataModel dataModel = new DataModelXML(dir,masXML);
@@ -50,17 +58,38 @@ public class UpdateCurrentAgentMapTest {
 	
 		try {
 			int i = 0;
+			ArrayList<Agent> newRouteAgents = new ArrayList<Agent>();
+			ArrayList<String> newRoute = new ArrayList<String>();
+			newRoute.add("edge0");
+			newRoute.add("edge1");
+			newRoute.add("edge2");
 			while (i++ < masData.simulationLength) {
-				boolean timeStep = true;
-				SimulationModelTraaS.getStateData(conn, timeStep);
 				currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, currentAgentMap, conn);
+				StateData stateData 		= SimulationModelTraaS.getStateData(conn, true);
+				currentAgentMap = TrafficMASController.updateAgents(completeAgentMap, rn, stateData);
+				rn = TrafficMASController.updateRoadNetwork(rn, stateData);
+				// Change the route of the first two agents
+				if(i==10){
+					HashMap<Agent, AgentAction> actions = new HashMap<Agent, AgentAction>();
+					for(Entry<String, Agent> entry : currentAgentMap.entrySet()){
+						actions.put(entry.getValue(), AgentAction.ChangeRoad);
+						newRouteAgents.add(entry.getValue());
+						entry.getValue().setRoute(newRoute);
+					}
+					SimulationModelTraaS.simulateAgentActions(actions, conn);
+				}
+
+				// Check if both agents have taken the alternate route.
+				if(i==50){
+					for(Agent agent : newRouteAgents){
+						assertEquals("edge1", agent.getRoad().id);
+					}
+				}
+
 			}
-			assertEquals(4, currentAgentMap.size());
-			
-			
-		
+
 		} catch (Exception e) {
 			e.printStackTrace();
-		}		
+		}
 	}
 }

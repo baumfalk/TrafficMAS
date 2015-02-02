@@ -10,6 +10,7 @@ import nl.uu.trafficmas.organisation.Sanction;
 import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Node;
 import nl.uu.trafficmas.roadnetwork.Road;
+import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
 
 public abstract class Agent extends AgentPhysical {
@@ -25,6 +26,7 @@ public abstract class Agent extends AgentPhysical {
 	private double maxComfySpeed;
 	private double leaderAgentSpeed;
 	private double leaderDistance;
+	private RoadNetwork roadNetwork;
 	
 	public final static double DEFAULT_MAX_SPEED = 20;
 	
@@ -51,7 +53,7 @@ public abstract class Agent extends AgentPhysical {
 		return Math.max(0,Math.min(1, utility));
 	}
 	
-	public Agent(String agentID,Node goalNode,Route route, int goalArrivalTime, double maxSpeed, double maxComfySpeed){
+	public Agent(String agentID,Node goalNode,Route route, RoadNetwork roadNetwork, int goalArrivalTime, double maxSpeed, double maxComfySpeed){
 		super(agentID);
 		this.goalNode 					= goalNode;
 		this.goalArrivalTime 			= goalArrivalTime;
@@ -60,6 +62,7 @@ public abstract class Agent extends AgentPhysical {
 		this.expectedArrivalTime 		= goalArrivalTime;
 		this.currentRouteID				= route.routeID;
 		this.currentRouteEdges 			= route.getRoute();
+		this.roadNetwork				= roadNetwork;
 		this.expectedTravelTimePerRoad 	= new ArrayList<>();
 		for(Edge edge : route.getRoute()) {
 			double time = edge.getRoad().length/maxComfySpeed;
@@ -83,12 +86,11 @@ public abstract class Agent extends AgentPhysical {
 		// Loop through all AgentAction objects and calculate utility for each.
 		// If no action returns a better utility than the one we currently have, bestAction remains null.
 		List<AgentAction> actionList = new ArrayList<AgentAction>();
+		double leftLaneSpeed = 0;
+		if(this.lane.hasLeftLane()) {
+			leftLaneSpeed = this.lane.getLeftLane().getLaneMeanSpeed();
+		}
 		for(AgentAction action : AgentAction.values()) {
-			
-			double leftLaneSpeed = 0;
-			if(this.lane.hasLeftLane()) {
-				leftLaneSpeed = this.lane.getLeftLane().getLaneMeanSpeed();
-			}
 			
 			double time = action.getTime(currentTime,velocity, leftLaneSpeed, this.distance, this.road.length, this.maxComfySpeed, routeRemainderLength, this.leaderAgentSpeed, this.leaderDistance);
 			ArrayList<Sanction> sanctions 	= action.getSanctions(maxComfySpeed, velocity);
@@ -169,6 +171,12 @@ public abstract class Agent extends AgentPhysical {
 		currentRouteEdges = tempRoute;
 	}
 
+	public void setRoute(ArrayList<String> newRoute){
+		this.currentRouteEdges = new Edge[newRoute.size()];
+		for(int i=0; i<newRoute.size();i++){
+			this.currentRouteEdges[i] = roadNetwork.getEdge(newRoute.get(i));
+		}
+	}
 	
 	public double getMaxComfySpeed() {
 		return maxComfySpeed;

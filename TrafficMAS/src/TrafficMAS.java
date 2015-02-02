@@ -37,6 +37,5 @@ public class TrafficMAS {
 		end_time = System.nanoTime();
 		difference = (end_time - start_time)/1e6;
 		System.out.println("run time:" + difference + "ms");
-
 	}
 }

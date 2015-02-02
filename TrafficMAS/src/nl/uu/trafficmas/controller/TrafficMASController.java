@@ -66,7 +66,7 @@ public class TrafficMASController {
 		view.addMessage("Initialized routes");
 
 		// setup agents & organizations
-		this.agentsAndTime 	= TrafficMASController.instantiateAgents(masData, rng, routes);
+		this.agentsAndTime 	= TrafficMASController.instantiateAgents(masData, rng, routes, null);
 		view.addMessage("Generated agent spawn times");
 
 		this.organisations 	= TrafficMASController.instantiateOrganisations(masData);
@@ -366,9 +366,10 @@ public class TrafficMASController {
 	 * @param masData
 	 * @param rng
 	 * @param routes
+	 * @param roadNetwork TODO
 	 * @return a LinkedHashMap which contains all agents who will spawn during the simulation, and their respective spawn times, in order. 
 	 */
-	public static HashMap<Agent, Integer> instantiateAgents(MASData masData, Random rng, ArrayList<Route> routes){
+	public static HashMap<Agent, Integer> instantiateAgents(MASData masData, Random rng, ArrayList<Route> routes, RoadNetwork roadNetwork){
 		LinkedHashMap<Agent, Integer> agentsAndTimes = new LinkedHashMap<Agent, Integer>();
 		int simulationLength = masData.simulationLength;
 		
@@ -388,7 +389,7 @@ public class TrafficMASController {
 				for(Entry<String, Double> entry : masData.routeIdAndProbability.entrySet()){
 					if(coinFlip < entry.getValue()){
 						coinFlip = rng.nextDouble();
-						createAgent(routes.get(i), agentsAndTimes, agentProfileDistribution, currentTime, coinFlip);
+						createAgent(routes.get(i), agentsAndTimes, agentProfileDistribution, roadNetwork, currentTime, coinFlip);
 						i++;
 					}
 				}
@@ -402,7 +403,7 @@ public class TrafficMASController {
 					int i =0;
 					for(Entry<String, Double> entry : masData.routeIdAndProbability.entrySet()){
 						coinFlip = rng.nextDouble();
-						createAgent(routes.get(i), agentsAndTimes, agentProfileDistribution, currentTime, coinFlip);
+						createAgent(routes.get(i), agentsAndTimes, agentProfileDistribution, roadNetwork, currentTime, coinFlip);
 						i++;
 					}
 					/*
@@ -429,8 +430,8 @@ public class TrafficMASController {
 	 */
 	public static void createAgent(Route route,
 			LinkedHashMap<Agent, Integer> agentsAndTimes,
-			HashMap<AgentProfileType, Double> agentProfileDistribution, int currentTime,
-			double coinFlip) {
+			HashMap<AgentProfileType, Double> agentProfileDistribution, RoadNetwork roadNetwork,
+			int currentTime, double coinFlip) {
 		AgentProfileType agentProfileType = selectAgentProfileType(coinFlip, agentProfileDistribution);
 		int minimalTravelTime = 0;
 		Edge[] routeEdges = route.getRoute();
@@ -441,7 +442,7 @@ public class TrafficMASController {
 		int goalArrivalTime = agentProfileType.goalArrivalTime(currentTime, minimalTravelTime);
 		
 		Node goalNode = routeEdges[routeEdges.length-1].getToNode();
-		Agent agent = agentProfileType.toAgent(Agent.getNextAgentID(), goalNode, route,  goalArrivalTime, Agent.DEFAULT_MAX_SPEED); //TODO: change this default max speed
+		Agent agent = agentProfileType.toAgent(Agent.getNextAgentID(), goalNode, route, roadNetwork, goalArrivalTime, Agent.DEFAULT_MAX_SPEED); //TODO: change this default max speed
 		agentsAndTimes.put(agent,currentTime*1000); //*1000 because sumo counts in ms, not s.
 	}
 	
