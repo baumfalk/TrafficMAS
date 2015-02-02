@@ -20,7 +20,7 @@ public class AgentUtilityTest {
 		Route route = new Route("route0", lst);
 		// goal achieved should be utility 1
 		for(AgentProfileType apt : agentProfileTypes) {
-			Agent agent = apt.toAgent(Agent.getNextAgentID(),null, route, 10, 10);
+			Agent agent = apt.toAgent(Agent.getNextAgentID(),null, route, null, 10, 10);
 			assertEquals(1.0,agent.specificUtility(agent.getGoalArrivalTime(), null),0);
 		}
 	}

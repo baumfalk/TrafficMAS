@@ -4,13 +4,14 @@ import java.util.ArrayList;
 
 import nl.uu.trafficmas.organisation.Sanction;
 import nl.uu.trafficmas.roadnetwork.Node;
+import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
 import de.tudresden.ws.container.SumoColor;
 
 public class HotShotAgent extends AgentSumo {
 
-	public HotShotAgent(String agentID, Node goalNode, Route route, int goalArrivalTime, double maxSpeed,double maxComfySpeed) {
-		super(agentID, goalNode, route, goalArrivalTime, maxSpeed, maxComfySpeed);
+	public HotShotAgent(String agentID, Node goalNode, Route route, RoadNetwork roadNetwork, int goalArrivalTime, double maxSpeed,double maxComfySpeed) {
+		super(agentID, goalNode, route, roadNetwork, goalArrivalTime, maxSpeed, maxComfySpeed);
 	}
 
 	@Override

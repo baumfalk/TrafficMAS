@@ -48,7 +48,7 @@ Random random = new Random(1337);
 		RoadNetwork rn 			= dataModel.instantiateRoadNetwork();
 		ArrayList<Route> routes = dataModel.getRoutes(rn);
 		
-		HashMap<Agent,Integer> agentPairList = TrafficMASController.instantiateAgents(masData, random, routes);
+		HashMap<Agent,Integer> agentPairList = TrafficMASController.instantiateAgents(masData, random, routes, rn);
 		SimulationModelTraaS.addAgents(agentPairList, conn);
 		
 		boolean timeStep = false;

@@ -23,6 +23,7 @@ import nl.uu.trafficmas.datamodel.MASData;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
 import nl.uu.trafficmas.simulationmodel.SimulationModelTraaS;
+import nl.uu.trafficmas.simulationmodel.StateData;
 
 import org.junit.Test;
 import org.xml.sax.SAXException;
@@ -34,7 +35,6 @@ public class ChangeRoadTest {
 
 	@Test
 	public void changeRoad() throws SAXException, IOException, ParserConfigurationException {
-		//fail("not implemented");
 		Random random 	= new Random(1337);
 		String dir 		= System.getProperty("user.dir")+"/tests/AgentActions/ChangeRoad/";
 		String sumocfg 	= System.getProperty("user.dir")+"/tests/AgentActions/ChangeRoad/ConfigTest.xml";
@@ -52,31 +52,40 @@ public class ChangeRoadTest {
 		RoadNetwork rn = dataModel.instantiateRoadNetwork();
 		ArrayList<Route> routes = dataModel.getRoutes(rn);
 		
-		HashMap<Agent,Integer> agentPairList 	= TrafficMASController.instantiateAgents(masData, random, routes);
+		HashMap<Agent,Integer> agentPairList 	= TrafficMASController.instantiateAgents(masData, random, routes, rn);
 		HashMap<String, Agent> completeAgentMap = SimulationModelTraaS.addAgents(agentPairList, conn);
 		HashMap<String, Agent> currentAgentMap 	= SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, new LinkedHashMap<String, Agent>(), conn);
 	
 		try {
 			int i = 0;
+			ArrayList<Agent> newRouteAgents = new ArrayList<Agent>();
+			ArrayList<String> newRoute = new ArrayList<String>();
+			newRoute.add("edge0");
+			newRoute.add("edge1");
+			newRoute.add("edge2");
 			while (i++ < masData.simulationLength) {
-				boolean timeStep = true;
-				SimulationModelTraaS.getStateData(conn, timeStep);
 				currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, currentAgentMap, conn);
-				
-				SumoStringList route = new SumoStringList();
-				
-				//route.add("edge3");
-				//route.add("edge0");
+				StateData stateData 		= SimulationModelTraaS.getStateData(conn, true);
+				currentAgentMap = TrafficMASController.updateAgents(completeAgentMap, rn, stateData);
+				rn = TrafficMASController.updateRoadNetwork(rn, stateData);
+				// Change the route of the first two agents
 				if(i==10){
 					HashMap<Agent, AgentAction> actions = new HashMap<Agent, AgentAction>();
 					for(Entry<String, Agent> entry : currentAgentMap.entrySet()){
-						route = (SumoStringList) conn.do_job_get(Vehicle.getRoute(entry.getValue().agentID));
-						System.out.println(route.get(0));
-						conn.do_job_set(Vehicle.setRoute(entry.getValue().agentID, route));
-						
+						actions.put(entry.getValue(), AgentAction.ChangeRoad);
+						newRouteAgents.add(entry.getValue());
+						entry.getValue().setRoute(newRoute);
 					}
 					SimulationModelTraaS.simulateAgentActions(actions, conn);
 				}
+
+				// Check if both agents have taken the alternate route.
+				if(i==50){
+					for(Agent agent : newRouteAgents){
+						assertEquals("edge1", agent.getRoad().id);
+					}
+				}
+
 			}
 
 		} catch (Exception e) {

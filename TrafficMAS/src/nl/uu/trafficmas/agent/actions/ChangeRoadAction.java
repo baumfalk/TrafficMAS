@@ -4,8 +4,10 @@ import java.util.ArrayList;
 
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.organisation.Sanction;
+import nl.uu.trafficmas.roadnetwork.Edge;
 import de.tudresden.sumo.cmd.Vehicle;
 import de.tudresden.sumo.util.SumoCommand;
+import de.tudresden.ws.container.SumoStringList;
 
 public class ChangeRoadAction extends SumoAgentAction {
 
@@ -32,7 +34,25 @@ public class ChangeRoadAction extends SumoAgentAction {
 	
 	@Override
 	public SumoCommand getCommand(Agent currentAgent) {
-		// TODO Generate route based on reroutedEdge
-		return null;
+		generateNewRoute(currentAgent);
+		SumoStringList route = new SumoStringList();
+		for(Edge edge : currentAgent.getRoute()){
+			route.add(edge.getID());
+		}
+		return Vehicle.setRoute(currentAgent.agentID, route);
+	}
+	
+	public void generateNewRoute(Agent currentAgent){
+		/*
+		 * ArrayList<String> newRoute = new ArrayList<String>();
+		 * 
+		 * 
+		 * 
+		 * A* algorithm goes here, generates a new route and returns a list of edge ID's
+		 * 
+		 * 
+		 * 
+		 * currentAgent.setRoute(newRoute);
+		 */	
 	}
 }
