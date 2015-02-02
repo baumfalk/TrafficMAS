@@ -30,10 +30,9 @@
 		 		</uptodate>
  			</and>		    
 		</condition>
-	 	<echo if:set="noTraaSCompile"> No update needed</echo>
 	 </target>
 		
- 	<target name="buildTraaS" depends="checkforchanges" unless="noTraaSCompile">
+ 	<target name="buildTraaS">
  		<ant dir ="${TraaS}" antfile="build.xml" target="dist"  inheritAll="false"/>		
 		<copy file="${TraaSLatest}/TraaS.jar" tofile="lib/TraaS.jar"/>
 		<copy file="${TraaSLatest}/TraaS_sources.jar" tofile="lib/TraaS_sources.jar"/>

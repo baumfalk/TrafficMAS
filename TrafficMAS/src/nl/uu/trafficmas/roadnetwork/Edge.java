@@ -29,6 +29,23 @@ public class Edge {
 	
 	@Override 
 	public String toString() {
-		return from+" --> "+to+"\r\n"+road;
+		return from+" to "+to+"\r\n";
+	}
+	
+	@Override
+	public boolean equals(Object edge)  {
+		if(!(edge instanceof Edge))
+			return false;
+		Edge castEdge = (Edge) edge;
+		if(!this.getID().equals(castEdge.getID())) {
+			return false;
+		} 
+		if(!this.getFromNode().equals(castEdge.getFromNode())) {
+			return false;
+		} 
+		if(!this.getToNode().equals(castEdge.getToNode())) {
+			return false;
+		}
+		return true ;	
 	}
 }

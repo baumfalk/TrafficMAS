@@ -1,21 +1,24 @@
 package nl.uu.trafficmas.roadnetwork;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class RoadNetwork {
-	private ArrayList<Node> nodes;
-	private ArrayList<Edge> edges;
-	
+	private Set<Node> nodes;
+	private Set<Edge> edges;
+	private Map<Node,Map<Node,Edge>> nodesEdgeLinks;
 	public RoadNetwork() {
-		nodes = new ArrayList<Node>();
-		edges = new ArrayList<Edge>();
+		nodes = new HashSet<Node>();
+		edges = new HashSet<Edge>();
+		nodesEdgeLinks = new HashMap<Node, Map<Node,Edge>>();
 	}
 	
 	public RoadNetwork(ArrayList<Node> nodeList, ArrayList<Edge> edgeList) {
-		this.nodes = new ArrayList<Node>();
-		this.edges = new ArrayList<Edge>();
+		this();
 		addNodes(nodeList);
 		addEdges(edgeList);
 	}
@@ -40,12 +43,15 @@ public class RoadNetwork {
 	}
 	
 	public void addNode(Node node) {
-		nodes.add(node);
+		if(!nodes.contains(node)) {
+			nodes.add(node);
+			nodesEdgeLinks.put(node, new HashMap<Node, Edge>());
+		}
 	}
 	
 	public void addNodes(ArrayList<Node> newNodes){
 		for(int i = 0; i < newNodes.size(); i++){
-			nodes.add(newNodes.get(i));
+			this.addNode(newNodes.get(i));
 		}
 	}
 	
@@ -54,11 +60,18 @@ public class RoadNetwork {
 	}
 	
 	public void addEdge(Edge edge) {
-		edges.add(edge);
+		Node from = edge.getFromNode();
+		Node to = edge.getToNode();
+		Road road = edge.getRoad();
+		this.addEdge(from,to,road);
 	}
 	
 	public void addEdge(Node from, Node to, Road road) {
-		edges.add(new Edge(from,to,road));
+		Edge edge = new Edge(from,to,road);
+		edges.add(edge);
+		addNode(from);
+		addNode(to);
+		nodesEdgeLinks.get(from).put(to, edge);
 	}
 	
 	public void addEdges(ArrayList<Edge> newEdges){
@@ -81,8 +94,7 @@ public class RoadNetwork {
 		return null;
 	}
 	
-	public boolean validateRoadNetwork(){
-
+	public boolean validateRoadNetwork() {
 		ArrayList<Road> roads = new ArrayList<Road>();
 		
 		// Check for duplicate nodes
@@ -117,7 +129,6 @@ public class RoadNetwork {
 			return false;
 		}
 		
-		
 		// If none of the conditions are met, the RoadNetwork is valid.
 		return true;
 	}
@@ -125,5 +136,36 @@ public class RoadNetwork {
 	public void clear(){
 		edges.clear();
 		nodes.clear();
+	}
+
+	public Set<Node> getSuccessors(Node q) {
+		return RoadNetwork.getSuccessors(q,edges);
+	}
+	
+	public static Set<Node> getSuccessors(Node q, Set<Edge> edges) {
+		Set<Node> successors = new HashSet<Node>();
+		for(Edge edge: edges) {
+			if(edge.getFromNode().equals(q)) {
+				successors.add(edge.getToNode());
+			}
+		}
+		
+		return successors;
+	}
+
+	public static Edge createSimpleEdge(RoadNetwork rn, Node from, Node to1, String roadName) {
+		Lane l = new Lane(LaneType.Normal, (byte) 0);
+		List<Lane> laneList = new ArrayList<Lane>();
+		laneList.add(l);
+		
+		Road r = new Road(roadName, Node.nodeDistance(from, to1), laneList, 0);
+		Edge edge = new Edge(from, to1, r);	
+		rn.addEdge(edge);
+		return edge;
+	}
+
+	public Edge getEdge(Node q, Node successor) {
+		// TODO Auto-generated method stub
+		return nodesEdgeLinks.get(q).get(successor);
 	}
 }
