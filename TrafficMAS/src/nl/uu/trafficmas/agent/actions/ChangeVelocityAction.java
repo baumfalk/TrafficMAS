@@ -19,7 +19,7 @@ public class ChangeVelocityAction extends SumoAgentAction {
 			double meanTravelSpeedNextLane, double currentPos,
 			double currentLaneLength, double maxComfySpeed,
 			double routeRemainderLength, double leaderAgentSpeed,
-			double leaderDistance) {
+			double leaderDistance, Agent agent) {
 		/*
 		 * increase velocity time
 		 * lane_remainder                     rest_route_length

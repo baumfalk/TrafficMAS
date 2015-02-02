@@ -2,6 +2,7 @@ package nl.uu.trafficmas.agent.actions;
 
 import java.util.ArrayList;
 
+import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.organisation.Sanction;
 
 public abstract class AgentAction {
@@ -14,7 +15,7 @@ public abstract class AgentAction {
 	public static final AgentAction ChangeVelocity20	= new ChangeVelocity20Action(4);
 	public static final AgentAction ChangeVelocity50	= new ChangeVelocity50Action(5);
 	public static final AgentAction ChangeLane 			= new ChangeLaneAction(6);
-	public static final AgentAction ChangeRoad 			= new ChangeRoadAction(7);
+	public static final AgentAction ChangeRoute 		= new ChangeRouteAction(7);
 	
 	public final int priority;
 	
@@ -27,11 +28,11 @@ public abstract class AgentAction {
 	public static AgentAction[] values() {
 		// add new actions here
 		AgentAction [] array = {ChangeVelocity1, ChangeVelocity5, ChangeVelocity10,
-				ChangeVelocity20, ChangeVelocity50, ChangeLane, ChangeRoad};
+				ChangeVelocity20, ChangeVelocity50, ChangeLane, ChangeRoute};
 		return array;
 	}
 	
-	public abstract double getTime(int currentTime, double currentSpeed, double meanTravelSpeedNextLane, double currentPos, double currentLaneLength, double maxComfySpeed, double routeRemainderLength, double leaderAgentSpeed, double leaderDistance);
+	public abstract double getTime(int currentTime, double currentSpeed, double meanTravelSpeedNextLane, double currentPos, double currentLaneLength, double maxComfySpeed, double routeRemainderLength, double leaderAgentSpeed, double leaderDistance, Agent agent);
 	
 	public abstract ArrayList<Sanction> getSanctions(double maxComfySpeed, double velocity);
 	
@@ -53,4 +54,5 @@ public abstract class AgentAction {
     		return action1.priority - action2.priority;
     	}
     }
+
 }

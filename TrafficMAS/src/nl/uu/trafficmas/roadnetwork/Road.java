@@ -1,6 +1,5 @@
 package nl.uu.trafficmas.roadnetwork;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Road {

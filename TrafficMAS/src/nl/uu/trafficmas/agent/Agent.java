@@ -27,6 +27,7 @@ public abstract class Agent extends AgentPhysical {
 	private double leaderAgentSpeed;
 	private double leaderDistance;
 	private RoadNetwork roadNetwork;
+	private List<String> possibleNewRoute;
 	
 	public final static double DEFAULT_MAX_SPEED = 20;
 	
@@ -92,7 +93,7 @@ public abstract class Agent extends AgentPhysical {
 		}
 		for(AgentAction action : AgentAction.values()) {
 			
-			double time = action.getTime(currentTime,velocity, leftLaneSpeed, this.distance, this.road.length, this.maxComfySpeed, routeRemainderLength, this.leaderAgentSpeed, this.leaderDistance);
+			double time = action.getTime(currentTime,velocity, leftLaneSpeed, this.distance, this.road.length, this.maxComfySpeed, routeRemainderLength, this.leaderAgentSpeed, this.leaderDistance,this);
 			ArrayList<Sanction> sanctions 	= action.getSanctions(maxComfySpeed, velocity);
 			double newUtility 				= utility(time, sanctions);
 			action.setUtility(newUtility);
@@ -171,7 +172,7 @@ public abstract class Agent extends AgentPhysical {
 		currentRouteEdges = tempRoute;
 	}
 
-	public void setRoute(ArrayList<String> newRoute){
+	public void setRoute(List<String> newRoute){
 		this.currentRouteEdges = new Edge[newRoute.size()];
 		for(int i=0; i<newRoute.size();i++){
 			this.currentRouteEdges[i] = roadNetwork.getEdge(newRoute.get(i));
@@ -203,5 +204,17 @@ public abstract class Agent extends AgentPhysical {
 			list.add(edge.getID());
 		}
 		return list;
+	}
+	
+	public RoadNetwork getRoadNetwork() {
+		return roadNetwork;
+	}
+
+	public void setPossibleNewRoute(List<String> newRoute) {
+		possibleNewRoute = newRoute;
+	}
+
+	public List<String> getPossibleNewRoute() {
+		return possibleNewRoute;
 	}
 }

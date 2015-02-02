@@ -19,7 +19,7 @@ public class ChangeLaneAction extends SumoAgentAction {
 			double meanTravelSpeedNextLane, double currentPos,
 			double currentLaneLength, double maxComfySpeed,
 			double routeRemainderLength, double leaderAgentSpeed,
-			double leaderDistance) {
+			double leaderDistance, Agent agent) {
 		/*
 		 * change lane time (no knowledge about RN)
 		 * 

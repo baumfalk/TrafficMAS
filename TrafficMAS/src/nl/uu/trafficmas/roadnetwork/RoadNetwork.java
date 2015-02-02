@@ -168,4 +168,13 @@ public class RoadNetwork {
 		// TODO Auto-generated method stub
 		return nodesEdgeLinks.get(q).get(successor);
 	}
+
+	public Map<String, Double> getAverageTravelTime() {
+		// TODO Auto-generated method stub
+		Map<String,Double> averageTravelTime = new HashMap<String, Double>();
+		for(Edge edge : edges) {
+			averageTravelTime.put(edge.getID(), edge.getRoad().getMeanTravelTime());
+		}
+		return averageTravelTime;
+	}
 }
