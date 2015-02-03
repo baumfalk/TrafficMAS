@@ -1,7 +1,5 @@
 package nl.uu.trafficmas.tests.misc;
 
-import static org.junit.Assert.fail;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;

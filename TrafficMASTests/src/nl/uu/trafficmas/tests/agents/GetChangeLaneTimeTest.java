@@ -16,6 +16,7 @@ import nl.uu.trafficmas.datamodel.DataModel;
 import nl.uu.trafficmas.datamodel.DataModelXML;
 import nl.uu.trafficmas.datamodel.MASData;
 import nl.uu.trafficmas.roadnetwork.Edge;
+import nl.uu.trafficmas.roadnetwork.Lane;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
 
@@ -44,6 +45,9 @@ public class GetChangeLaneTimeTest {
 		
 		for(Edge e : rn.getEdges()) {
 			e.getRoad().setMeanTravelTime(0.5);
+			for(Lane lane : e.getRoad().getLanes()) {
+				lane.setMeanTravelTime(0.5);
+			}
 		}
 		ArrayList<Route> routes 	= dataModel.getRoutes(rn);
 		

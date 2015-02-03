@@ -49,13 +49,13 @@ public class ChangeVelocityAction extends SumoAgentAction {
 		}
 		
 		finishTime += timeSpentOnLane;
-		Map<String,Double>averageTravelTime = agent.getRoadNetwork().getAverageTravelTime();
+		Map<String,Double>roadBestLaneAverageTime = agent.getRoadNetwork().getRoadBestLaneAverageTravelTime();
 		Edge[] route = agent.getRoute();
 		for(Edge edge : route) {
 			if(edge.getRoad().equals(agent.getRoad())) {
 				continue;
 			}
-			finishTime += averageTravelTime.get(edge.getID());
+			finishTime += roadBestLaneAverageTime.get(edge.getID());
 		}
 		
 		return finishTime;

@@ -166,16 +166,28 @@ public class RoadNetwork {
 	}
 
 	public Edge getEdge(Node q, Node successor) {
-		// TODO Auto-generated method stub
 		return nodesEdgeLinks.get(q).get(successor);
 	}
 
 	public Map<String, Double> getAverageTravelTime() {
-		// TODO Auto-generated method stub
 		Map<String,Double> averageTravelTime = new HashMap<String, Double>();
 		for(Edge edge : edges) {
 			averageTravelTime.put(edge.getID(), edge.getRoad().getMeanTravelTime());
 		}
 		return averageTravelTime;
+	}
+
+	public Map<String, Double> getRoadBestLaneAverageTravelTime() {
+		Map<String,Double> roadBestLaneAverageTravelTime = new HashMap<String, Double>();
+		for(Edge edge : edges) {
+			double lowestTravelTime = Double.MAX_VALUE;
+			for(Lane lane : edge.getRoad().getLanes()) {
+				if(lane.getMeanTravelTime() < lowestTravelTime) {
+					lowestTravelTime = lane.getMeanTravelTime(); 
+				}
+			}
+			roadBestLaneAverageTravelTime.put(edge.getID(), lowestTravelTime);
+		}
+		return roadBestLaneAverageTravelTime;
 	}
 }
