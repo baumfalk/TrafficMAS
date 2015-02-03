@@ -67,9 +67,9 @@ public class ChangeVelocityAction extends SumoAgentAction {
 
 	@Override
 	public SumoCommand getCommand(Agent currentAgent) {
-		double d = currentAgent.getVelocity();
-		double e = currentAgent.getMaxComfySpeed();
-		return Vehicle.slowDown(currentAgent.agentID, Math.min(d+speedIncrease,e),Math.min((int)speedIncrease,20));
+		double velocity = currentAgent.getVelocity();
+		double maxComfySpeed = currentAgent.getMaxComfySpeed();
+		return Vehicle.setMaxSpeed(currentAgent.agentID, Math.min(velocity+speedIncrease, maxComfySpeed));
 	}
 
 }
