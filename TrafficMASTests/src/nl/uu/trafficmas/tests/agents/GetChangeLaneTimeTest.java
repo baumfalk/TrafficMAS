@@ -54,7 +54,9 @@ public class GetChangeLaneTimeTest {
 		HashMap<Agent,Integer> agentPairList 	= TrafficMASController.instantiateAgents(masData, random, routes, rn);
 		ChangeLaneAction action = new ChangeLaneAction(0);
 		for(Agent agent : agentPairList.keySet()) {
-			assertEquals(6,action.getTime(5, 0, 2, 1, 2, 2, 1, 0, 0,agent),0);
+			agent.setRoad(rn.getEdges()[0].getRoad());
+			System.out.println(agent);
+			assertEquals(5.5,action.getTime(5, 0, 2, 1, 2, 2, 1, 0, 0,agent),0);
 		}
 	}
 }

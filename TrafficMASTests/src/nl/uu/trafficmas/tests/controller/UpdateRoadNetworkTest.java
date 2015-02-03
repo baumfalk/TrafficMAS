@@ -71,7 +71,7 @@ public class UpdateRoadNetworkTest {
 					assertEquals(13.9, r.laneList.get(1).getLaneMeanSpeed(),0 );
 					
 					// And thus meanTravelTime on that same lane should be 0 
-					assertEquals(0, r.laneList.get(1).getMeanTravelTime(),0);
+					assertEquals(r.length/r.laneList.get(1).getLaneMeanSpeed(), r.laneList.get(1).getMeanTravelTime(),0);
 
 				}
 				
