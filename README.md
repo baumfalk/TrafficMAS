@@ -17,6 +17,7 @@ In general: see the [SUMO wiki](http://sumo.dlr.de/wiki/Installing) about instal
 	SUMO needs to be compiled from source on OS X. We succeeded in doing it by following these instructions:
 	+	1. Install [Homebrew](http://brew.sh/)
 	+	2. Install [XQuartz](http://xquartz.macosforge.org/landing/), you need this for the GUI at least, regular SUMO might work without. 
+		+ At this point you can try to run this script for automatic install: http://pastebin.com/G206kgbh
 	+	3. Download [SUMO source](http://www.dlr.de/ts/en/desktopdefault.aspx/tabid-9883/16931_read-41000/)
 	+	4. Use Homebrew to install the following dependencies: fox (only for GUI), gdal, proj, xerces-c.
 			This can be done by running `brew install xerces-c gdal proj fox`
