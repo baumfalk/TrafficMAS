@@ -40,6 +40,9 @@ public class ChangeLaneAction extends SumoAgentAction {
 		Map<String,Double>averageTravelTime = agent.getRoadNetwork().getAverageTravelTime();
 		Edge[] route = agent.getRoute();
 		for(Edge edge : route) {
+			if(edge.getRoad().equals(agent.getRoad())) {
+				continue;
+			}
 			finishTime += averageTravelTime.get(edge.getID());
 		}
 		
