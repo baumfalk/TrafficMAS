@@ -33,7 +33,7 @@ public enum AgentProfileType {
 			maxComfySpeed = maxSpeed * 0.6;
 			break;
 		case OldLady:
-			maxComfySpeed = maxSpeed * 0.3;
+			maxComfySpeed = maxSpeed * 0.1;
 			break;
 		case HotShot:
 			maxComfySpeed = maxSpeed;
