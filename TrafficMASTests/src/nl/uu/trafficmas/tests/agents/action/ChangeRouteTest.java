@@ -1,14 +1,12 @@
 package nl.uu.trafficmas.tests.agents.action;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import it.polito.appeal.traci.SumoTraciConnection;
 
-import java.awt.List;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
@@ -27,9 +25,6 @@ import nl.uu.trafficmas.simulationmodel.StateData;
 
 import org.junit.Test;
 import org.xml.sax.SAXException;
-
-import de.tudresden.sumo.cmd.Vehicle;
-import de.tudresden.ws.container.SumoStringList;
 
 public class ChangeRouteTest {
 

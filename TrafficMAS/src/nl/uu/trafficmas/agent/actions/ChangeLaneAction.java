@@ -1,11 +1,11 @@
 package nl.uu.trafficmas.agent.actions;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.organisation.Sanction;
 import nl.uu.trafficmas.roadnetwork.Edge;
+import nl.uu.trafficmas.roadnetwork.Route;
 import de.tudresden.sumo.cmd.Vehicle;
 import de.tudresden.sumo.util.SumoCommand;
 
@@ -37,14 +37,9 @@ public class ChangeLaneAction extends SumoAgentAction {
 		double timeSpentOnNextLane = laneDistRemaining/meanOrComfySpeedNextLane;
 		finishTime += timeSpentOnNextLane;
 		
-		Map<String,Double>averageTravelTime = agent.getRoadNetwork().getAverageTravelTime();
+		
 		Edge[] route = agent.getRoute();
-		for(Edge edge : route) {
-			if(edge.getRoad().equals(agent.getRoad())) {
-				continue;
-			}
-			finishTime += averageTravelTime.get(edge.getID());
-		}
+		finishTime += Route.getRouteRemainderTime(route, agent.getRoadNetwork(), agent.getRoad(), agent.getMaxComfySpeed());
 		
 		return finishTime;
 	}

@@ -1,7 +1,6 @@
 package nl.uu.trafficmas.tests.roadNetwork;
 
-import static org.junit.Assert.*;
-import nl.uu.trafficmas.roadnetwork.Edge;
+import static org.junit.Assert.assertNotNull;
 import nl.uu.trafficmas.roadnetwork.Node;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 

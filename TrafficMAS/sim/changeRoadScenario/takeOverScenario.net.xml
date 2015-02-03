@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 02/03/15 12:07:38 by SUMO netconvert Version 0.21.0
+<!-- generated on 02/03/15 15:25:04 by SUMO netconvert Version 0.21.0
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo-sim.org/xsd/netconvertConfiguration.xsd">
@@ -22,60 +22,44 @@
     <location netOffset="350.00,0.00" convBoundary="0.00,0.00,700.00,50.00" origBoundary="-350.00,0.00,350.00,50.00" projParameter="!"/>
 
     <edge id=":n2_0" function="internal">
-        <lane id=":n2_0_0" index="0" speed="13.90" length="3.86" shape="348.51,-4.95 352.78,-4.95"/>
-        <lane id=":n2_0_1" index="1" speed="13.90" length="3.86" shape="348.51,-1.65 351.95,-1.65"/>
+        <lane id=":n2_0_0" index="0" speed="13.90" length="3.45" shape="348.51,-1.65 351.95,-1.65"/>
     </edge>
-    <edge id=":n2_2" function="internal">
-        <lane id=":n2_2_0" index="0" speed="13.90" length="4.18" shape="348.51,-1.65 352.65,-4.44"/>
-        <lane id=":n2_2_1" index="1" speed="13.90" length="4.18" shape="348.51,-1.65 351.85,-1.24"/>
+    <edge id=":n2_1" function="internal">
+        <lane id=":n2_1_0" index="0" speed="13.90" length="3.37" shape="348.51,-1.65 351.85,-1.24"/>
     </edge>
     <edge id=":n3_0" function="internal">
-        <lane id=":n3_0_0" index="0" speed="13.90" length="1.82" shape="549.35,44.74 550.24,44.70"/>
-        <lane id=":n3_0_1" index="1" speed="13.90" length="1.82" shape="548.55,47.94 551.29,47.83"/>
+        <lane id=":n3_0_0" index="0" speed="13.90" length="0.89" shape="549.48,48.17 550.38,48.14"/>
     </edge>
 
     <edge id="edge0" from="n1" to="n2" priority="1">
-        <lane id="edge0_0" index="0" speed="13.90" length="348.51" shape="0.00,-4.95 348.51,-4.95"/>
-        <lane id="edge0_1" index="1" speed="13.90" length="348.51" shape="0.00,-1.65 348.51,-1.65"/>
+        <lane id="edge0_0" index="0" speed="13.90" length="348.51" shape="0.00,-1.65 348.51,-1.65"/>
     </edge>
     <edge id="edge1" from="n2" to="n3" priority="1">
-        <lane id="edge1_0" index="0" speed="13.90" length="202.75" shape="352.65,-4.44 549.35,44.74"/>
-        <lane id="edge1_1" index="1" speed="13.90" length="202.75" shape="351.85,-1.24 548.55,47.94"/>
+        <lane id="edge1_0" index="0" speed="13.90" length="203.72" shape="351.85,-1.24 549.48,48.17"/>
     </edge>
     <edge id="edge2" from="n3" to="n4" priority="1">
-        <lane id="edge2_0" index="0" speed="13.90" length="156.21" shape="550.24,44.70 698.43,-4.70"/>
-        <lane id="edge2_1" index="1" speed="13.90" length="156.21" shape="551.29,47.83 699.49,-1.57"/>
+        <lane id="edge2_0" index="0" speed="13.90" length="157.17" shape="550.38,48.14 699.48,-1.57"/>
     </edge>
     <edge id="edge3" from="n2" to="n4" priority="1">
-        <lane id="edge3_0" index="0" speed="13.90" length="346.54" shape="352.78,-4.95 698.35,-4.95"/>
-        <lane id="edge3_1" index="1" speed="13.90" length="346.54" shape="351.95,-1.65 699.45,-1.65"/>
+        <lane id="edge3_0" index="0" speed="13.90" length="347.50" shape="351.95,-1.65 699.45,-1.65"/>
     </edge>
 
-    <junction id="n1" type="unregulated" x="0.00" y="0.00" incLanes="" intLanes="" shape="-0.00,-0.05 -0.00,-6.55"/>
-    <junction id="n2" type="priority" x="350.00" y="0.00" incLanes="edge0_0 edge0_1" intLanes=":n2_0_0 :n2_0_1 :n2_2_0 :n2_2_1" shape="351.46,0.31 353.04,-5.99 348.51,-6.55 348.51,-0.05">
-        <request index="0" response="0000" foes="0000" cont="0"/>
-        <request index="1" response="0000" foes="0000" cont="0"/>
-        <request index="2" response="0000" foes="0000" cont="0"/>
-        <request index="3" response="0000" foes="0000" cont="0"/>
-    </junction>
-    <junction id="n3" type="priority" x="550.00" y="50.00" incLanes="edge1_0 edge1_1" intLanes=":n3_0_0 :n3_0_1" shape="551.79,49.35 549.74,43.18 548.16,49.49">
+    <junction id="n1" type="unregulated" x="0.00" y="0.00" incLanes="" intLanes="" shape="-0.00,-0.05 -0.00,-3.25"/>
+    <junction id="n2" type="priority" x="350.00" y="0.00" incLanes="edge0_0" intLanes=":n2_0_0 :n2_1_0" shape="351.46,0.31 352.24,-2.79 348.51,-3.25 348.51,-0.05">
         <request index="0" response="00" foes="00" cont="0"/>
         <request index="1" response="00" foes="00" cont="0"/>
     </junction>
-    <junction id="n4" type="unregulated" x="700.00" y="0.00" incLanes="edge3_0 edge3_1 edge2_0 edge2_1" intLanes="" shape="700.00,-6.55 700.00,-0.05 697.93,-6.21 699.98,-0.05"/>
+    <junction id="n3" type="priority" x="550.00" y="50.00" incLanes="edge1_0" intLanes=":n3_0_0" shape="550.88,49.65 549.87,46.62 549.09,49.72">
+        <request index="0" response="0" foes="0" cont="0"/>
+    </junction>
+    <junction id="n4" type="unregulated" x="700.00" y="0.00" incLanes="edge3_0 edge2_0" intLanes="" shape="700.00,-3.25 700.00,-0.05 698.97,-3.08 699.98,-0.05"/>
 
     <connection from="edge0" to="edge3" fromLane="0" toLane="0" via=":n2_0_0" dir="s" state="M"/>
-    <connection from="edge0" to="edge3" fromLane="1" toLane="1" via=":n2_0_1" dir="s" state="M"/>
-    <connection from="edge0" to="edge1" fromLane="1" toLane="0" via=":n2_2_0" dir="s" state="M"/>
-    <connection from="edge0" to="edge1" fromLane="1" toLane="1" via=":n2_2_1" dir="s" state="M"/>
+    <connection from="edge0" to="edge1" fromLane="0" toLane="0" via=":n2_1_0" dir="s" state="M"/>
     <connection from="edge1" to="edge2" fromLane="0" toLane="0" via=":n3_0_0" dir="s" state="M"/>
-    <connection from="edge1" to="edge2" fromLane="1" toLane="1" via=":n3_0_1" dir="s" state="M"/>
 
     <connection from=":n2_0" to="edge3" fromLane="0" toLane="0" dir="s" state="M"/>
-    <connection from=":n2_0" to="edge3" fromLane="1" toLane="1" dir="s" state="M"/>
-    <connection from=":n2_2" to="edge1" fromLane="0" toLane="0" dir="s" state="M"/>
-    <connection from=":n2_2" to="edge1" fromLane="1" toLane="1" dir="s" state="M"/>
+    <connection from=":n2_1" to="edge1" fromLane="0" toLane="0" dir="s" state="M"/>
     <connection from=":n3_0" to="edge2" fromLane="0" toLane="0" dir="s" state="M"/>
-    <connection from=":n3_0" to="edge2" fromLane="1" toLane="1" dir="s" state="M"/>
 
 </net>

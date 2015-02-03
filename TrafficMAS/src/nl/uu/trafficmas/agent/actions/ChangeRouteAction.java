@@ -9,6 +9,7 @@ import nl.uu.trafficmas.organisation.Sanction;
 import nl.uu.trafficmas.roadnetwork.AStar;
 import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Node;
+import nl.uu.trafficmas.roadnetwork.Route;
 import de.tudresden.sumo.cmd.Vehicle;
 import de.tudresden.sumo.util.SumoCommand;
 import de.tudresden.ws.container.SumoStringList;
@@ -26,9 +27,9 @@ public class ChangeRouteAction extends SumoAgentAction {
 			double routeRemainderLength, double leaderAgentSpeed,
 			double leaderDistance, Agent agent) {
 		Node nearestNode = agent.getRoute()[0].getToNode();
-		Map<String,Double>averageTravelTime = agent.getRoadNetwork().getAverageTravelTime();
+		Map<String,Double>roadBestLaneAverageTime = agent.getRoadNetwork().getRoadBestLaneAverageTravelTime();
 		
-		List<String> newRoute = AStar.findShortestPath(nearestNode, agent.getGoalNode(), agent.getRoadNetwork(), averageTravelTime, agent.getMaxComfySpeed());
+		List<String> newRoute = AStar.findShortestPath(nearestNode, agent.getGoalNode(), agent.getRoadNetwork(), roadBestLaneAverageTime, agent.getMaxComfySpeed());
 		
 		// no possible route
 		if(newRoute == null) {
@@ -45,15 +46,18 @@ public class ChangeRouteAction extends SumoAgentAction {
 		 * current_speed      
 		 */
 		
-		double totalTime = currentTime;
-		totalTime += (currentLaneLength-currentPos)/currentSpeed;
+		double finishTime = currentTime;
+		finishTime += (currentLaneLength-currentPos)/currentSpeed;
+		Edge [] route = new Edge[newRoute.size()];
+		int i = 0;
 		for(String edgeID : newRoute) {
-			if(edgeID.equals(agent.getRoad().id)) {
-				continue;
-			}
-			totalTime += averageTravelTime.get(edgeID);
+			route[i] = agent.getRoadNetwork().getEdge(edgeID);
+			i++;
 		}
-		return totalTime;
+		
+		finishTime += Route.getRouteRemainderTime(route, agent.getRoadNetwork(), agent.getRoad(), agent.getMaxComfySpeed());
+		
+		return finishTime;
 	}
 
 	@Override

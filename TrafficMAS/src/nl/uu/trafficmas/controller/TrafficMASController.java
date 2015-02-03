@@ -324,14 +324,9 @@ public class TrafficMASController {
 			double timeLeftOnCurrentRoad 	= roadLengthRemaining/agent.getVelocity();
 			double expectedArrivalTime 		= stateData.currentTimeStep/1000 + timeLeftOnCurrentRoad;
 			
-			Map<String,Double>averageTravelTime = agent.getRoadNetwork().getAverageTravelTime();
 			Edge[] route = agent.getRoute();
-			for(Edge edge : route) {
-				if(edge.getRoad().equals(agent.getRoad())) {
-					continue;
-				}
-				expectedArrivalTime += averageTravelTime.get(edge.getID());
-			}
+			
+			expectedArrivalTime += Route.getRouteRemainderTime(route, roadNetwork, agent.getRoad(), agent.getMaxComfySpeed());
 			
 			agent.setExpectedArrivalTime(expectedArrivalTime);
 		}

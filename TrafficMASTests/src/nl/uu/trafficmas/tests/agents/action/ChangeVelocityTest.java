@@ -1,14 +1,14 @@
 package nl.uu.trafficmas.tests.agents.action;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import it.polito.appeal.traci.SumoTraciConnection;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Random;
 import java.util.Map.Entry;
+import java.util.Random;
 
 import javax.xml.parsers.ParserConfigurationException;
 

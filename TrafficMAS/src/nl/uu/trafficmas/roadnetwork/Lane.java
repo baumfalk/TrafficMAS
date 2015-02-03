@@ -51,7 +51,6 @@ public class Lane implements BruteState {
 		return laneMeanTravelTime;
 	}
 	public void setMeanTravelTime(double laneMeanTravelTime) {
-		// TODO Auto-generated method stub
 		this.laneMeanTravelTime = laneMeanTravelTime;
 	}
 
