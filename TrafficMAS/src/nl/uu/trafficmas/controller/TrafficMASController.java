@@ -409,17 +409,10 @@ public class TrafficMASController {
 			for (int currentTime = 1; currentTime <= simulationLength; currentTime++) {
 				double coinFlip = rng.nextDouble();
 				if(coinFlip < agentSpawnProbability) {
-					int i =0;
-					for(Entry<String, Double> entry : masData.routeIdAndProbability.entrySet()){
+					for(Route route : routes){
 						coinFlip = rng.nextDouble();
-						createAgent(routes.get(i), agentsAndTimes, agentProfileDistribution, roadNetwork, currentTime, coinFlip);
-						i++;
+						createAgent(route, agentsAndTimes, agentProfileDistribution, roadNetwork, currentTime, coinFlip);
 					}
-					/*
-					coinFlip = rng.nextDouble();
-					Route route = pickRoute(coinFlip, agentSpawnProbability, masData.routeIdAndProbability);
-					createAgent(route, agentsAndTimes, agentProfileDistribution, currentTime, coinFlip);
-					*/
 				}
 			}
 		}
