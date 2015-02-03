@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
@@ -143,7 +144,7 @@ public class TrafficMASController {
 		view.addMessage("Number of agents in MAS:"+currentAgentMap.size());
 
 		HashMap<Agent,AgentAction> agentActions = this.nextMASState(simulationStateData.currentTimeStep/1000);
-		
+		//view.addMessage(agentActions.toString());
 		start_time = System.nanoTime();
 		TrafficMASController.updateSimulation(simulationModel, agentActions);
 		end_time = System.nanoTime();
@@ -321,8 +322,16 @@ public class TrafficMASController {
 			//TODO review test (expectedArrivalTime etc)
 			double roadLengthRemaining		= agent.getRoad().length - agent.getDistance();
 			double timeLeftOnCurrentRoad 	= roadLengthRemaining/agent.getVelocity();
-			double routeRemainderLength 	= Route.getRouteRemainderLength(agent.getRoute(), agent.getRoad());
-			double expectedArrivalTime 		= stateData.currentTimeStep/1000 + timeLeftOnCurrentRoad + routeRemainderLength / agent.getMaxComfySpeed();
+			double expectedArrivalTime 		= stateData.currentTimeStep/1000 + timeLeftOnCurrentRoad;
+			
+			Map<String,Double>averageTravelTime = agent.getRoadNetwork().getAverageTravelTime();
+			Edge[] route = agent.getRoute();
+			for(Edge edge : route) {
+				if(edge.getRoad().equals(agent.getRoad())) {
+					continue;
+				}
+				expectedArrivalTime += averageTravelTime.get(edge.getID());
+			}
 			
 			agent.setExpectedArrivalTime(expectedArrivalTime);
 		}

@@ -25,10 +25,16 @@ public class ChangeRouteAction extends SumoAgentAction {
 			double currentLaneLength, double maxComfySpeed,
 			double routeRemainderLength, double leaderAgentSpeed,
 			double leaderDistance, Agent agent) {
-		Node nearestNode = agent.getRoute()[0].getFromNode();
+		Node nearestNode = agent.getRoute()[0].getToNode();
 		Map<String,Double>averageTravelTime = agent.getRoadNetwork().getAverageTravelTime();
 		
 		List<String> newRoute = AStar.findShortestPath(nearestNode, agent.getGoalNode(), agent.getRoadNetwork(), averageTravelTime, agent.getMaxComfySpeed());
+		
+		// no possible route
+		if(newRoute == null) {
+			return Double.MAX_VALUE;
+		}
+		newRoute.add(0, agent.getRoute()[0].getID());
 		agent.setPossibleNewRoute(newRoute);
 		
 		/*
@@ -42,6 +48,9 @@ public class ChangeRouteAction extends SumoAgentAction {
 		double totalTime = currentTime;
 		totalTime += (currentLaneLength-currentPos)/currentSpeed;
 		for(String edgeID : newRoute) {
+			if(edgeID.equals(agent.getRoad().id)) {
+				continue;
+			}
 			totalTime += averageTravelTime.get(edgeID);
 		}
 		return totalTime;
