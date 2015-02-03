@@ -68,15 +68,17 @@ public class RoadNetwork {
 	
 	public void addEdge(Node from, Node to, Road road) {
 		Edge edge = new Edge(from,to,road);
-		edges.add(edge);
-		addNode(from);
-		addNode(to);
-		nodesEdgeLinks.get(from).put(to, edge);
+		if(!edges.contains(edge)) {
+			edges.add(edge);
+			addNode(from);
+			addNode(to);
+			nodesEdgeLinks.get(from).put(to, edge);
+		}
 	}
 	
 	public void addEdges(ArrayList<Edge> newEdges){
 		for(int i = 0; i < newEdges.size(); i++){
-			edges.add(newEdges.get(i));
+			addEdge(newEdges.get(i));
 		}
 	}
 	
@@ -85,7 +87,6 @@ public class RoadNetwork {
 	}
 	
 	public Road getRoadFromID(String roadID){
-
 		for(Edge edge: edges){
 			if (edge.getRoad().id.equals(roadID)){
 				return edge.getRoad();

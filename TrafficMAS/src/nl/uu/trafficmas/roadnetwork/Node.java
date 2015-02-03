@@ -25,4 +25,9 @@ public class Node {
 	public String toString() {
 		return name;
 	}
+	
+	@Override
+	public int hashCode() {
+		return (int) (Integer.valueOf(this.name.charAt(0))+x*1000+y*100);
+	}
 }

@@ -29,23 +29,25 @@ public class Edge {
 	
 	@Override 
 	public String toString() {
-		return from+" to "+to+"\r\n";
+		return from+" to "+to;
 	}
 	
 	@Override
-	public boolean equals(Object edge)  {
-		if(!(edge instanceof Edge))
-			return false;
-		Edge castEdge = (Edge) edge;
-		if(!this.getID().equals(castEdge.getID())) {
-			return false;
-		} 
-		if(!this.getFromNode().equals(castEdge.getFromNode())) {
-			return false;
-		} 
-		if(!this.getToNode().equals(castEdge.getToNode())) {
-			return false;
-		}
-		return true ;	
+	public boolean equals(Object other) {
+		if (other == null) return false;
+		if (other == this) return true;
+		if(!(other instanceof Edge))	return false;
+		Edge castEdge = (Edge) other;
+		
+		if(!( this.getID().equals(castEdge.getID()))) return false;
+		if(!this.getFromNode().equals(castEdge.getFromNode())) return false;
+		if(!this.getToNode().equals(castEdge.getToNode())) return false;
+		
+		return this.getID().equals(castEdge.getID());
 	}
+	
+	@Override
+	public int hashCode() {
+        return Integer.valueOf(this.getID().charAt(0));
+    }
 }

@@ -3,6 +3,8 @@ package nl.uu.trafficmas.tests.roadNetwork;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Node;
@@ -32,10 +34,15 @@ public class AddEdgesTest {
 		edges.add(edge3);
 
 		rn.addEdges(edges);
+		Set<Edge> edgeSet = new HashSet<Edge>();
+		for(Edge e: rn.getEdges()) {
+			edgeSet.add(e);
+		}
+		
 		assertEquals(rn.getEdges().length, 3);
-		assertEquals(rn.getEdges()[0], edge1);
-		assertEquals(rn.getEdges()[1], edge2);
-		assertEquals(rn.getEdges()[2], edge3);
+		assertEquals(true, edgeSet.contains(edge1));
+		assertEquals(true, edgeSet.contains(edge2));
+		assertEquals(true, edgeSet.contains(edge3));
 	
 	}
 }

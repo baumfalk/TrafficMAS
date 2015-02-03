@@ -20,9 +20,9 @@ public class RemoveEdgeTest {
 		
 		Edge edge = new Edge(n,n,r);
 		rn.addEdge(edge);
-		assertEquals(rn.getEdges().length, 1);
+		assertEquals(1,rn.getEdges().length);
 		rn.removeEdge(edge);
-		assertEquals(rn.getEdges().length, 0);
+		assertEquals(0,rn.getEdges().length);
 	}
 
 }
