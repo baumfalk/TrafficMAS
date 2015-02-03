@@ -6,6 +6,7 @@ import java.util.Map;
 
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.organisation.Sanction;
+import nl.uu.trafficmas.roadnetwork.AStar;
 import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Node;
 import de.tudresden.sumo.cmd.Vehicle;

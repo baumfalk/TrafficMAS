@@ -1,9 +1,11 @@
 package nl.uu.trafficmas.agent.actions;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.organisation.Sanction;
+import nl.uu.trafficmas.roadnetwork.Edge;
 import de.tudresden.sumo.cmd.Vehicle;
 import de.tudresden.sumo.util.SumoCommand;
 
@@ -22,9 +24,9 @@ public class ChangeVelocityAction extends SumoAgentAction {
 			double leaderDistance, Agent agent) {
 		/*
 		 * increase velocity time
-		 * lane_remainder                     rest_route_length
-		 * ------------------------------- + -----------------   + current_time
-		 * (currentSpeed + speedIncrease)     max_comfy_speed
+		 * lane_remainder                     
+		 * ------------------------------- + time on each road on the remaining route + current_time
+		 * (currentSpeed + speedIncrease)     
 		 */
 		double laneDistRemaining = (currentLaneLength-currentPos);
 		double finishTime = currentTime;
@@ -47,7 +49,12 @@ public class ChangeVelocityAction extends SumoAgentAction {
 		}
 		
 		finishTime += timeSpentOnLane;
-		finishTime += routeRemainderLength/maxComfySpeed;
+		Map<String,Double>averageTravelTime = agent.getRoadNetwork().getAverageTravelTime();
+		Edge[] route = agent.getRoute();
+		for(Edge edge : route) {
+			finishTime += averageTravelTime.get(edge.getID());
+		}
+		
 		return finishTime;
 	}
 

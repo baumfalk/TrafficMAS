@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import nl.uu.trafficmas.agent.actions.AStar;
+import nl.uu.trafficmas.roadnetwork.AStar;
 import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Lane;
 import nl.uu.trafficmas.roadnetwork.LaneType;

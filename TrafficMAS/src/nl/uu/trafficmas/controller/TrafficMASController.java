@@ -66,7 +66,7 @@ public class TrafficMASController {
 		view.addMessage("Initialized routes");
 
 		// setup agents & organizations
-		this.agentsAndTime 	= TrafficMASController.instantiateAgents(masData, rng, routes, null);
+		this.agentsAndTime 	= TrafficMASController.instantiateAgents(masData, rng, routes, roadNetwork);
 		view.addMessage("Generated agent spawn times");
 
 		this.organisations 	= TrafficMASController.instantiateOrganisations(masData);

@@ -1,4 +1,4 @@
-package nl.uu.trafficmas.agent.actions;
+package nl.uu.trafficmas.roadnetwork;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,10 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import nl.uu.trafficmas.roadnetwork.Edge;
-import nl.uu.trafficmas.roadnetwork.Node;
-import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 
 public class AStar {
 	public static List<String> findShortestPath(Node startNode, Node finalNode, RoadNetwork roadNetwork, Map<String, Double> averageTravelTime, double maxSpeed){
