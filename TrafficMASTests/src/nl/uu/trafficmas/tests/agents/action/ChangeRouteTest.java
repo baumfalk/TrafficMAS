@@ -36,8 +36,8 @@ public class ChangeRouteTest {
 	@Test
 	public void changeRoute() throws SAXException, IOException, ParserConfigurationException {
 		Random random 	= new Random(1337);
-		String dir 		= System.getProperty("user.dir")+"/tests/AgentActions/ChangeRoad/";
-		String sumocfg 	= System.getProperty("user.dir")+"/tests/AgentActions/ChangeRoad/ConfigTest.xml";
+		String dir 		= System.getProperty("user.dir")+"/tests/AgentActions/ChangeRoute/";
+		String sumocfg 	= System.getProperty("user.dir")+"/tests/AgentActions/ChangeRoute/ConfigTest.xml";
 		String masXML 	= "MASTest.xml";
 		
 		DataModel dataModel = new DataModelXML(dir,masXML);
