@@ -185,6 +185,22 @@ public class DataModelXML implements DataModel {
 		edges.add(n);
 	}
 	
+	public HashMap<String, HashMap<AgentProfileType, Double>> getAgentSpawnInformation(){
+		return getAgentSpawnInformation(this.agentProfilesDoc);
+	}
+	
+	/**
+	 * TODO: Document
+	 * @param agentProfileXML
+	 * @return
+	 */
+	public static HashMap<String, HashMap<AgentProfileType, Double>> getAgentSpawnInformation(Document agentProfileXML){
+		// TODO: alles toch lol
+		
+		
+		return null;
+	}
+	
 	@Override
 	public double getAgentSpawnProbability() {
 		return getAgentSpawnProbability(this.agentProfilesDoc);
