@@ -8,12 +8,14 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import nl.uu.trafficmas.agent.Agent;
+import nl.uu.trafficmas.agent.AgentProfileType;
 import nl.uu.trafficmas.controller.TrafficMASController;
 import nl.uu.trafficmas.datamodel.DataModel;
 import nl.uu.trafficmas.datamodel.DataModelXML;
@@ -29,7 +31,7 @@ public class CreateAgentTest {
 
 	@Test
 	public void createAgent() throws SAXException, IOException, ParserConfigurationException {
-		String dir = System.getProperty("user.dir")+"/tests/Controller/InstantiateAgents/";
+		String dir = System.getProperty("user.dir")+"/tests/Controller/CreateAgent/";
 		
 		String masXML 		= "MASTest.xml";
 		DataModel dataModel = new DataModelXML(dir,masXML);
@@ -38,9 +40,10 @@ public class CreateAgentTest {
 		
 		ArrayList<Route> routes 						= dataModel.getRoutes(rn);
 		LinkedHashMap<Agent, Integer> agentsAndTimes 	=  new LinkedHashMap<Agent, Integer>();
+		HashMap<String,LinkedHashMap<AgentProfileType, Double>> routeAgentTypeSpawnDist = masData.routeAgentTypeSpawnDist;
 		assertEquals(0, agentsAndTimes.size());
 		
-		TrafficMASController.createAgent(routes.get(0), agentsAndTimes, masData.agentProfileTypeDistribution, rn, 2, 0.5);
+		TrafficMASController.createAgent(routes.get(0), agentsAndTimes, routeAgentTypeSpawnDist.get(routes.get(0).routeID), rn, 2, 0.5);
 		
 		assertEquals(1, agentsAndTimes.size());
 		Agent a;

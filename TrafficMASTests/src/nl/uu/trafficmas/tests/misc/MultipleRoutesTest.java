@@ -1,14 +1,14 @@
-package nl.uu.trafficmas.tests.agents.action;
+package nl.uu.trafficmas.tests.misc;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import it.polito.appeal.traci.SumoTraciConnection;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Map.Entry;
 import java.util.Random;
+import java.util.Map.Entry;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -26,14 +26,13 @@ import nl.uu.trafficmas.simulationmodel.StateData;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-public class ChangeLaneTest {
+public class MultipleRoutesTest {
 
 	@Test
-	public void test() throws SAXException, IOException, ParserConfigurationException {
-		//fail("Not implemented");
+	public void multipleRoutes() throws SAXException, IOException, ParserConfigurationException {
 		Random random 	= new Random(1337);
-		String dir 		= System.getProperty("user.dir")+"/tests/AgentActions/ChangeLane/";
-		String sumocfg 	= System.getProperty("user.dir")+"/tests/AgentActions/ChangeLane/ConfigTest.xml";
+		String dir 		= System.getProperty("user.dir")+"/tests/Misc/MultipleRoutes/";
+		String sumocfg 	= System.getProperty("user.dir")+"/tests/Misc/MultipleRoutes/ConfigTest.xml";
 		String masXML 	= "MASTest.xml";
 		
 		DataModel dataModel = new DataModelXML(dir,masXML);
@@ -54,29 +53,11 @@ public class ChangeLaneTest {
 	
 		try {
 			int i = 0;
-			ArrayList<Agent> changeLaneAgents = new ArrayList<Agent>();
 			while (i++ < masData.simulationLength) {
 				currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, currentAgentMap, conn);
 				StateData stateData 		= SimulationModelTraaS.getStateData(conn, true);
 				currentAgentMap = TrafficMASController.updateAgents(completeAgentMap, rn, stateData);
 				rn = TrafficMASController.updateRoadNetwork(rn, stateData);
-
-				if(i==18){
-					HashMap<Agent, AgentAction> actions = new HashMap<Agent, AgentAction>();
-					for(Entry<String, Agent> entry : currentAgentMap.entrySet()){
-						if(entry.getValue().getClass().getSimpleName().equals("NormalAgent")){
-							actions.put(entry.getValue(), AgentAction.ChangeLane);
-						}
-						changeLaneAgents.add(entry.getValue());
-					}
-					SimulationModelTraaS.simulateAgentActions(actions, conn);
-				}
-				if(i==81){
-					// Agent 3 is still in the simulation
-					assertTrue(currentAgentMap.containsValue(changeLaneAgents.get(0)));
-					// While Agent 4 is gone since it has done an overtaking action.
-					assertTrue(!currentAgentMap.containsValue(changeLaneAgents.get(1)));
-				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
