@@ -23,17 +23,21 @@ public class SelectAgentProfileTypeTest {
 		String masXML = "MASTest.xml";
 		DataModel dataModel = new DataModelXML(dir,masXML);
 		MASData masData = dataModel.getMASData();
-		double coinFlip = 0.04;
+		AgentProfileType agentType;
+		double coinFlip;
 		
-		AgentProfileType agentType = TrafficMASController.selectAgentProfileType(coinFlip, masData.agentProfileTypeDistribution);
+		coinFlip = 0.10;
+		agentType = TrafficMASController.selectAgentProfileType(coinFlip, masData.routeAgentTypeSpawnDist.get("route0"));
 		assertEquals(AgentProfileType.HotShot,agentType);
 		
-		coinFlip = 0.05;
-		agentType = TrafficMASController.selectAgentProfileType(coinFlip, masData.agentProfileTypeDistribution);
+		coinFlip = 0.30;
+		agentType = TrafficMASController.selectAgentProfileType(coinFlip, masData.routeAgentTypeSpawnDist.get("route0"));
+		assertEquals(AgentProfileType.Normal,agentType);
+		
+		coinFlip = 0.80;
+		agentType = TrafficMASController.selectAgentProfileType(coinFlip, masData.routeAgentTypeSpawnDist.get("route0"));
 		assertEquals(AgentProfileType.OldLady,agentType);
 		
-		coinFlip = 0.95;
-		agentType = TrafficMASController.selectAgentProfileType(coinFlip, masData.agentProfileTypeDistribution);
-		assertEquals(AgentProfileType.Normal,agentType);
+		
 	}
 }

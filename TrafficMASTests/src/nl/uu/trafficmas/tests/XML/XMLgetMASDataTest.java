@@ -26,7 +26,6 @@ public class XMLgetMASDataTest {
 		MASData masData = dataModel.getMASData();
 		assertEquals(1000,masData.simulationLength);
 		assertEquals(0.01, masData.spawnProbability, 0.0);
-		assertEquals(0.05,masData.agentProfileTypeDistribution.get(AgentProfileType.HotShot),0.0);
-		assertEquals(0.4, masData.routeIdAndProbability.get("route0"),0);
+		assertEquals(0.05,masData.routeAgentTypeSpawnDist.get("route0").get(AgentProfileType.HotShot),0.0);
 	}
 }

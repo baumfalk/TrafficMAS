@@ -384,34 +384,29 @@ public class TrafficMASController {
 		
 		// If spawnProbability is 0.0, the spawn probabilities of the roads is checked. 
 		// Otherwise, the spawn probability is the same for every road.
-		double agentSpawnProbability = masData.spawnProbability;
+		double agentSpawnProbability 	= masData.spawnProbability;
+		boolean multipleRoutes			= masData.multipleRoutes;
 		
-		
-		// TODO adapt InstantiateAgentsTest
-		// TODO write test for Vehicle.setRoute .
-		HashMap<AgentProfileType, Double> agentProfileDistribution = masData.agentProfileTypeDistribution;
+		HashMap<String, LinkedHashMap<AgentProfileType, Double>> routeAgentTypeSpawnDist = masData.routeAgentTypeSpawnDist;
 
-		if(agentSpawnProbability == 0.0){
+		
+		if(multipleRoutes){
 			for (int currentTime = 1; currentTime <= simulationLength; currentTime++) {
 				double coinFlip = rng.nextDouble();
-				int i =0;
-				for(Entry<String, Double> entry : masData.routeIdAndProbability.entrySet()){
-					if(coinFlip < entry.getValue()){
+				for(Route route : routes){ 
+					if(coinFlip < agentSpawnProbability){
 						coinFlip = rng.nextDouble();
-						createAgent(routes.get(i), agentsAndTimes, agentProfileDistribution, roadNetwork, currentTime, coinFlip);
-						i++;
+						createAgent(route, agentsAndTimes, routeAgentTypeSpawnDist.get(route.routeID), roadNetwork, currentTime, coinFlip);
 					}
 				}
-			
 			}
-			
 		} else{
 			for (int currentTime = 1; currentTime <= simulationLength; currentTime++) {
 				double coinFlip = rng.nextDouble();
 				if(coinFlip < agentSpawnProbability) {
 					for(Route route : routes){
 						coinFlip = rng.nextDouble();
-						createAgent(route, agentsAndTimes, agentProfileDistribution, roadNetwork, currentTime, coinFlip);
+						createAgent(route, agentsAndTimes, routeAgentTypeSpawnDist.get("all"), roadNetwork, currentTime, coinFlip);
 					}
 				}
 			}
@@ -432,7 +427,7 @@ public class TrafficMASController {
 	 */
 	public static void createAgent(Route route,
 			LinkedHashMap<Agent, Integer> agentsAndTimes,
-			HashMap<AgentProfileType, Double> agentProfileDistribution, RoadNetwork roadNetwork,
+			LinkedHashMap<AgentProfileType, Double> agentProfileDistribution, RoadNetwork roadNetwork,
 			int currentTime, double coinFlip) {
 		AgentProfileType agentProfileType = selectAgentProfileType(coinFlip, agentProfileDistribution);
 		int minimalTravelTime = 0;
@@ -454,7 +449,7 @@ public class TrafficMASController {
 	 * @param agentProfileDistribution
 	 * @return a AgentProfileType, currently either Normal, OldLady or HotShot.
 	 */
-	public static AgentProfileType selectAgentProfileType(double coinFlip, HashMap<AgentProfileType, Double> agentProfileDistribution) {
+	public static AgentProfileType selectAgentProfileType(double coinFlip, LinkedHashMap<AgentProfileType, Double> agentProfileDistribution) {
 		for(Entry<AgentProfileType, Double> entry : agentProfileDistribution.entrySet()) {
 			if(coinFlip < entry.getValue()) {
 				return entry.getKey();

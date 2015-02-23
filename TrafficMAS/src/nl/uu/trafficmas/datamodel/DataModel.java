@@ -2,6 +2,7 @@ package nl.uu.trafficmas.datamodel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import nl.uu.trafficmas.agent.AgentProfileType;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
@@ -55,5 +56,11 @@ public interface DataModel {
 	 * Not yet implemented
 	 * @return
 	 */
-	public HashMap<String, Double> getRouteSpawnProbability();
+	public HashMap<String, LinkedHashMap<AgentProfileType, Double>> getRoutesAgentTypeSpawnProbabilities();
+	
+	/**
+	 * Returns a boolean value which indicates if agents have individual spawn rates for each route.
+	 * @return true if agents have individual spawn probabilities on each route.
+	 */
+	public boolean getMultipleRoutesValue();
 }

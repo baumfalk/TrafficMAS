@@ -36,7 +36,7 @@ public class GetChangeLaneTimeTest {
 		// change lane time:
 		Random random = new Random(1337);
 
-		String dir 			= System.getProperty("user.dir")+"/tests/Agent/DoAction/";
+		String dir 			= System.getProperty("user.dir")+"/tests/Agent/GetChangeLaneTime/";
 		DataModel dataModel = new DataModelXML(dir,"MASTest.xml");
 		MASData masData 	= dataModel.getMASData(); 
 		

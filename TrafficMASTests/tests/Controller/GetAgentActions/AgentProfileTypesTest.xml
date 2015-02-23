@@ -1,5 +1,4 @@
-<agents spawn-probability ="0.7">
-	<agent role="HotShot" dist="0.2"/>
-	<agent role="OldLady" dist="0.8"/>
-	<!--<agent role="Normal" dist="0.75"/>-->
+<agents spawn-probability="0.7" multiple-routes="false">
+    <route id="route1" HotShot="0.30" OldLady="0.30" Normal="0.40"/>
+    <route id="all" HotShot="0.2" OldLady="0.8"/>
 </agents>

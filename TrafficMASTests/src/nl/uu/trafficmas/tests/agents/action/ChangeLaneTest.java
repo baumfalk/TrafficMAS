@@ -74,9 +74,9 @@ public class ChangeLaneTest {
 				}
 				if(i==81){
 					// Agent 3 is still in the simulation
-					assertTrue(currentAgentMap.containsValue(changeLaneAgents.get(3)));
+					assertTrue(currentAgentMap.containsValue(changeLaneAgents.get(0)));
 					// While Agent 4 is gone since it has done an overtaking action.
-					assertTrue(!currentAgentMap.containsValue(changeLaneAgents.get(4)));
+					assertTrue(!currentAgentMap.containsValue(changeLaneAgents.get(1)));
 				}
 			}
 		} catch (Exception e) {

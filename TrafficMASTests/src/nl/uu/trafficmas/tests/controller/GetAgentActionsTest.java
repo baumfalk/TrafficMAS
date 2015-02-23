@@ -12,6 +12,7 @@ import java.util.Random;
 import javax.xml.parsers.ParserConfigurationException;
 
 import nl.uu.trafficmas.agent.Agent;
+import nl.uu.trafficmas.agent.AgentProfileType;
 import nl.uu.trafficmas.agent.actions.AgentAction;
 import nl.uu.trafficmas.controller.TrafficMASController;
 import nl.uu.trafficmas.datamodel.DataModel;
@@ -43,7 +44,7 @@ public class GetAgentActionsTest {
 		
 		SumoTraciConnection conn 	= SimulationModelTraaS.initializeWithOptions(options,"sumo", System.getProperty("user.dir")+"/tests/Controller/GetAgentActions/ConfigTest.xml");				
 		RoadNetwork rn 				= dataModel.instantiateRoadNetwork();
-		ArrayList<Route> routes 	= dataModel.getRoutes(rn);
+		ArrayList<Route> routes 	= dataModel.getRoutes(rn); 
 		
 		HashMap<Agent,Integer> agentPairList	= TrafficMASController.instantiateAgents(masData, random, routes, rn);
 		HashMap<String, Agent> completeAgentMap	= SimulationModelTraaS.addAgents(agentPairList, conn);	
