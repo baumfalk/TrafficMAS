@@ -26,7 +26,7 @@ public interface DataModel {
 	 * Returns the probability of an agent spawning each tick.
 	 * @return a value between 0 and 1, including 0 and 1.
 	 */
-	public double getAgentSpawnProbability();
+	public LinkedHashMap<String, Double> getAgentSpawnProbability();
 	
 	/**
 	 * Extracts the simulation length from the MAS.XML file.

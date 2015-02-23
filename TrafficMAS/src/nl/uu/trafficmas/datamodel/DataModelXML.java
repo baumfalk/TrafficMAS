@@ -228,7 +228,7 @@ public class DataModelXML implements DataModel {
 	}
 	
 	@Override
-	public double getAgentSpawnProbability() {
+	public LinkedHashMap<String, Double> getAgentSpawnProbability() {
 		return getAgentSpawnProbability(this.agentProfilesDoc);
 	}
 	
@@ -243,10 +243,17 @@ public class DataModelXML implements DataModel {
 	 * @throws IOException 
 	 * @throws SAXException 
 	 */
-	public static double getAgentSpawnProbability(Document agentProfileDoc) {
-		NamedNodeMap attributes = agentProfileDoc.getElementsByTagName("agents").item(0).getAttributes();
-		String spawnProbString = attributes.getNamedItem("spawn-probability").getTextContent();
-		return Double.parseDouble(spawnProbString) ;
+	public static LinkedHashMap<String, Double> getAgentSpawnProbability(Document agentProfileDoc) {
+		LinkedHashMap<String, Double> agentSpawnProbabilities = new LinkedHashMap<String, Double>();
+		NodeList routeList= agentProfileDoc.getElementsByTagName("route");
+		for(int i=0;i<routeList.getLength(); i++){
+			org.w3c.dom.Node n 		= routeList.item(i);
+			NamedNodeMap attributes = n.getAttributes();
+			String id 				= attributes.getNamedItem("id").getTextContent();
+			String spawnProb		= attributes.getNamedItem("spawn-probability").getTextContent();
+			agentSpawnProbabilities.put(id, Double.parseDouble(spawnProb));
+		}		
+		return agentSpawnProbabilities;
 	}
 	
 	@Override
@@ -360,11 +367,11 @@ public class DataModelXML implements DataModel {
 	 * @throws ParserConfigurationException 
 	 */
 	public static MASData getMASData(Document masDoc, Document agentProfilesDoc, Document routesDoc) {
-		int simulationLength 		= DataModelXML.simulationLength(masDoc);
-		double spawnProbability 	= DataModelXML.getAgentSpawnProbability(agentProfilesDoc);
-		boolean multipleRoutes 		= DataModelXML.getMultipleRoutesValue(agentProfilesDoc);
-		HashMap<String, LinkedHashMap<AgentProfileType,Double>> routeAgentTypeSpawnProbabilityMap = DataModelXML.getRoutesAgentTypeSpawnProbabilities(agentProfilesDoc);
-		return new MASData(simulationLength, spawnProbability, multipleRoutes, routeAgentTypeSpawnProbabilityMap);
+		int simulationLength 							= DataModelXML.simulationLength(masDoc);
+		boolean multipleRoutes 							= DataModelXML.getMultipleRoutesValue(agentProfilesDoc);
+		LinkedHashMap<String, Double> spawnProbabilities 	= DataModelXML.getAgentSpawnProbability(agentProfilesDoc);
+		HashMap<String, LinkedHashMap<AgentProfileType,Double>> routeAgentTypeSpawnProbabilityMap 	= DataModelXML.getRoutesAgentTypeSpawnProbabilities(agentProfilesDoc);
+		return new MASData(simulationLength, spawnProbabilities, multipleRoutes, routeAgentTypeSpawnProbabilityMap);
 	}
 
 	@Override

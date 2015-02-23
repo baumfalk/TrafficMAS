@@ -384,7 +384,7 @@ public class TrafficMASController {
 		
 		// If spawnProbability is 0.0, the spawn probabilities of the roads is checked. 
 		// Otherwise, the spawn probability is the same for every road.
-		double agentSpawnProbability 	= masData.spawnProbability;
+		LinkedHashMap<String,Double> agentSpawnProbabilities 	= masData.spawnProbabilities;
 		boolean multipleRoutes			= masData.multipleRoutes;
 		
 		HashMap<String, LinkedHashMap<AgentProfileType, Double>> routeAgentTypeSpawnDist = masData.routeAgentTypeSpawnDist;
@@ -394,7 +394,7 @@ public class TrafficMASController {
 			for (int currentTime = 1; currentTime <= simulationLength; currentTime++) {
 				double coinFlip = rng.nextDouble();
 				for(Route route : routes){ 
-					if(coinFlip < agentSpawnProbability){
+					if(coinFlip < agentSpawnProbabilities.get(route.routeID)){
 						coinFlip = rng.nextDouble();
 						createAgent(route, agentsAndTimes, routeAgentTypeSpawnDist.get(route.routeID), roadNetwork, currentTime, coinFlip);
 					}
@@ -403,7 +403,7 @@ public class TrafficMASController {
 		} else{
 			for (int currentTime = 1; currentTime <= simulationLength; currentTime++) {
 				double coinFlip = rng.nextDouble();
-				if(coinFlip < agentSpawnProbability) {
+				if(coinFlip < agentSpawnProbabilities.get("all")) {
 					for(Route route : routes){
 						coinFlip = rng.nextDouble();
 						createAgent(route, agentsAndTimes, routeAgentTypeSpawnDist.get("all"), roadNetwork, currentTime, coinFlip);
