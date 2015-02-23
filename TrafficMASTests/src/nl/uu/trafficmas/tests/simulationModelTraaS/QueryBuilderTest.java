@@ -62,7 +62,7 @@ public class QueryBuilderTest {
 				for(Entry<String, AgentData> val : stateData.agentsData.entrySet()) {
 					assertNotNull(val.getValue().laneIndex);
 					assertNotNull(val.getValue().position);
-					assertNotNull(val.getValue().speed);
+					assertNotNull(val.getValue().velocity);
 				}
 			}
 		}

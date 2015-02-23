@@ -292,7 +292,7 @@ public class TrafficMASController {
 	public static void updateAgent(RoadNetwork roadNetwork,
 			StateData stateData, String agentID, Agent agent, HashMap<String,Agent> completeAgentMap  ) {
 		AgentData agentData 	= stateData.agentsData.get(agentID);
-		double velocity 		= agentData.speed;
+		double velocity 		= agentData.velocity;
 		String roadID 			= agentData.roadID;
 		String leaderID			= agentData.leaderId;
 		Agent leaderAgent		= null;

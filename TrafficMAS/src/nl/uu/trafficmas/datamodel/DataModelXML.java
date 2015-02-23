@@ -5,12 +5,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import nl.uu.trafficmas.agent.AgentProfileType;
+import nl.uu.trafficmas.norm.NormScheme;
 import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Lane;
 import nl.uu.trafficmas.roadnetwork.LaneType;
@@ -358,5 +360,9 @@ public class DataModelXML implements DataModel {
 	public void close() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public static Map<String, NormScheme> getNorms(Document normsDoc) {
+		return null;
 	}
 }

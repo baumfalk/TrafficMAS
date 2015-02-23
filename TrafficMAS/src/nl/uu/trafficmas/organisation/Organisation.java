@@ -3,6 +3,8 @@ package nl.uu.trafficmas.organisation;
 import java.util.ArrayList;
 import java.util.List;
 
+import nl.uu.trafficmas.norm.NormInstantiation;
+import nl.uu.trafficmas.norm.NormScheme;
 import nl.uu.trafficmas.roadnetwork.Sensor;
 
 public class Organisation {

@@ -1,8 +1,11 @@
-package nl.uu.trafficmas.organisation;
+package nl.uu.trafficmas.norm;
 
 import java.util.List;
 
 import nl.uu.trafficmas.agent.Agent;
+import nl.uu.trafficmas.organisation.BruteState;
+import nl.uu.trafficmas.organisation.Sanction;
+import nl.uu.trafficmas.organisation.SanctionType;
 
 public class NormInstantiation {
 	private NormScheme ns;

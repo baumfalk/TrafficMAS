@@ -6,7 +6,7 @@ public class AgentData implements Data {
 	public final String leaderId;
 	public final double leaderDistance;
 	public final double position;
-	public final double speed;
+	public final double velocity;
 	public final String roadID;
 	public final int laneIndex;
 
@@ -21,7 +21,7 @@ public class AgentData implements Data {
 			leaderDistance = (double) leader[1];
 		}
 		this.position 	= position;
-		this.speed		= speed;
+		this.velocity		= speed;
 		this.roadID 	= roadID;
 		this.laneIndex 	= laneIndex;
 	}
@@ -30,7 +30,7 @@ public class AgentData implements Data {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("ID: "+ id+"\r\n");
-		sb.append("Speed: "+ speed+"\r\n");
+		sb.append("Speed: "+ velocity+"\r\n");
 		sb.append("Position: "+ position+"\r\n");
 		sb.append("roadID: "+ roadID+"\r\n");
 		sb.append("laneIndex: "+ laneIndex+"\r\n");
