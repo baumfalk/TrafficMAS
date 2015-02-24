@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 
 import de.tudresden.sumo.config.Constants;
@@ -64,7 +65,7 @@ public class QueryBuilder {
 	
 	public void executeQuery(SumoTraciConnection conn) throws Exception {
 		// for what subjects do we need to get info?
-		ArrayList<SumoCommand> cmdList = new ArrayList<SumoCommand>();
+		List<SumoCommand> cmdList = new ArrayList<SumoCommand>();
 		if(timeStep) {
 			cmdList.add(new SumoCommand(Constants.CMD_SIMSTEP2, 0));
 		}
@@ -72,12 +73,7 @@ public class QueryBuilder {
 		for(QuerySubject querySubject : querySubjects) {
 			cmdList.add(querySubject.getIDListCommand());
 		}
-		long start_time = System.nanoTime();
-		
-		ArrayList<Object> responses = conn.do_jobs_get(cmdList);
-		long end_time = System.nanoTime();
-		double difference = (end_time - start_time)/1e6;
-		System.out.println("Querybuilder: get id lists " + difference );
+		LinkedList<Object> responses = conn.do_jobs_get(cmdList);
 		cmdList.clear();
 		
 		// first response is null/or subscribed events
@@ -93,11 +89,7 @@ public class QueryBuilder {
 
 		
 		// get new responses
-		start_time = System.nanoTime();
 		responses = conn.do_jobs_get(cmdList);
-		end_time = System.nanoTime();
-		difference = (end_time - start_time)/1e6;
-		System.out.println("Querybuilder: get stuff " + difference );
 		processResponses(responses);
 		assert(responses.isEmpty());
 		
@@ -105,7 +97,7 @@ public class QueryBuilder {
 		querySubjects.clear();
 	}
 
-	private void processResponses(ArrayList<Object> responses) {
+	private void processResponses(LinkedList<Object> responses) {
 		agentsData 	= new LinkedHashMap<>();
 		edgesData 	= new LinkedHashMap<>();
 		lanesData 	= new LinkedHashMap<>();
@@ -133,13 +125,13 @@ public class QueryBuilder {
 		}
 	}
 
-	private void generateQueries(ArrayList<SumoCommand> cmdList,
-			ArrayList<Object> responses) throws Exception {
+	private void generateQueries(List<SumoCommand> cmdList,
+			LinkedList<Object> responses) throws Exception {
 		// how many ids are there for each subject,
 		// and what field do we need to retrieve for each id?
 		for(QuerySubject querySubject : querySubjects) {
 			//SumoStringList s				= (SumoStringList) responses.remove(0);
-			SumoStringList subList 	= (SumoStringList) responses.remove(0);
+			SumoStringList subList 	= (SumoStringList) responses.remove();
 			List<String> idList = new ArrayList<String>(subList);
 			subjectIDs.put(querySubject, idList);
 			// prepare queries

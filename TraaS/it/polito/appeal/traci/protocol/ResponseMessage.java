@@ -83,7 +83,6 @@ public class ResponseMessage {
 		
 		byte[] buffer = new byte[totalLen];
 		dis.readFully(buffer);
-		
 		Storage s = new Storage(buffer);
 		
 		while (s.validPos()) {

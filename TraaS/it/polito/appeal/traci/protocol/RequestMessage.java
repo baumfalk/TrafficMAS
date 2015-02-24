@@ -72,23 +72,13 @@ public class RequestMessage {
 		}
 
 		Checksum checksum = null;
-//		if (log.isDebugEnabled()) {
-//			checksum = new CRC32();
-//			log.debug("sending a message " + totalLen + " bytes long");
-//			
-//		}
-		
 		dos.writeInt(totalLen);
-
 
 		for (Command cmd : commands) {
 			Storage s = new Storage();
 			cmd.writeRawTo(s);
 			writeStorage(s, dos, checksum);
 		}
-
-//		if (log.isDebugEnabled())
-//			log.debug("message checksum (without len) = " + checksum.getValue());
 	}
 
 	private void writeStorage(Storage storage, OutputStream os, Checksum checksum)

@@ -7,11 +7,14 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import nl.uu.trafficmas.agent.Agent;
+import nl.uu.trafficmas.agent.AgentSumo;
 import nl.uu.trafficmas.agent.actions.AgentAction;
+import nl.uu.trafficmas.agent.actions.SumoAgentAction;
 import de.tudresden.sumo.cmd.Simulation;
 import de.tudresden.sumo.cmd.Vehicle;
 import de.tudresden.sumo.util.SumoCommand;
@@ -157,13 +160,13 @@ public class SimulationModelTraaS implements SimulationModel {
 		try {
 			for( Entry<Agent, Integer> agentPair : agentPairList.entrySet()){
 				Agent agent = agentPair.getKey();
-				cmds.add(addAgentCommand(agent, "route0", agentPair.getValue()));
+				cmds.add(addAgentCommand(agent, agent.getRouteID(), agentPair.getValue()));
+				//cmds.add(Vehicle.setRoute(agent.agentID, agent.getRouteStringList()));
 				cmds.add(Vehicle.setLaneChangeMode(agent.agentID, 0b1001000000));
 				cmds.add(Vehicle.setSpeedMode(agent.agentID, 0b00001));
 				// TODO: think of a way to express max comfy speed in a different way
 				cmds.add(Vehicle.setMaxSpeed(agent.agentID, agent.getMaxComfySpeed()));
-				
-				cmds.add(Vehicle.setColor(agent.agentID, agent.getColor()));
+				cmds.add(Vehicle.setColor(agent.agentID, ((AgentSumo) agent).getColor()));
 				completeAgentMap.put(agent.agentID, agent);
 			}
 	
@@ -197,10 +200,10 @@ public class SimulationModelTraaS implements SimulationModel {
 			ArrayList<SumoCommand> cmdList = new ArrayList<>();
 			cmdList.add(Simulation.getArrivedIDList());
 			cmdList.add(Simulation.getDepartedIDList());
-			ArrayList<Object> responses = conn.do_jobs_get(cmdList);
+			LinkedList<Object> responses = conn.do_jobs_get(cmdList);
 			
-			SumoStringList departedVehicleIDList = (SumoStringList) responses.get(0);
-			SumoStringList arrivedVehicleIDList = (SumoStringList) responses.get(1);			
+			SumoStringList departedVehicleIDList = (SumoStringList) responses.remove();
+			SumoStringList arrivedVehicleIDList = (SumoStringList) responses.remove();			
 			
 			for(String departedVehicleID: departedVehicleIDList){
 				currentAgentMap.remove(departedVehicleID);
@@ -247,13 +250,11 @@ public class SimulationModelTraaS implements SimulationModel {
 		for(Map.Entry<Agent, AgentAction> entry: actions.entrySet()){
 			
 			Agent currentAgent = entry.getKey();
-			byte agentLaneIndex = currentAgent.getLane().laneIndex;
-			int maxLaneIndex = currentAgent.getRoad().laneList.size()-1;
+			SumoAgentAction action = (SumoAgentAction) entry.getValue();
 		
-			if(entry.getValue() == null)
+			if(action == null)
 				continue;
-			cmdList.add(entry.getValue().getCommand(currentAgent.agentID, agentLaneIndex, maxLaneIndex,
-					OVERTAKE_DURATION, currentAgent.getVelocity(),currentAgent.getMaxComfySpeed()));
+			cmdList.add(action.getCommand(currentAgent));
 		}
 		
 	
@@ -299,9 +300,10 @@ public class SimulationModelTraaS implements SimulationModel {
 	
 			qb.addQueryField(QuerySubject.Edge, QueryField.MeanSpeed);
 			qb.addQueryField(QuerySubject.Edge, QueryField.MeanTime);
-			qb.addQueryField(QuerySubject.Edge, QueryField.MeanTime);
-
+			
+			qb.addQueryField(QuerySubject.Lane, QueryField.MeanTime);
 			qb.addQueryField(QuerySubject.Lane, QueryField.MeanSpeed);
+			
 			qb.addQueryField(QuerySubject.Lane, QueryField.EdgeId);
 
 			qb.executeQuery(conn);

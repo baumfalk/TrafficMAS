@@ -1,6 +1,8 @@
 package nl.uu.trafficmas.tests.roadNetwork;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 
@@ -33,7 +35,8 @@ public class ValidateRoadNetworkTest {
 		// No duplicate nodes
 		rn.addNode(n1);
 		rn.addNode(n1);
-		assertFalse(rn.validateRoadNetwork());
+		assertTrue(rn.validateRoadNetwork());
+		assertEquals(1,rn.getNodes().length);
 		rn.removeNode(n1);
 		assertTrue(rn.validateRoadNetwork());
 		rn.clear();
@@ -43,7 +46,7 @@ public class ValidateRoadNetworkTest {
 		rn.addNode(n2);
 		rn.addEdge(e2);
 		rn.addEdge(e2);
-		assertFalse(rn.validateRoadNetwork());
+		assertTrue(rn.validateRoadNetwork());
 		rn.removeEdge(e2);
 		assertTrue(rn.validateRoadNetwork());
 		rn.clear();
@@ -58,7 +61,7 @@ public class ValidateRoadNetworkTest {
 		
 		// An edge goes from and to nodes that are present in the RoadNetwork
 		rn.addEdge(e2);
-		assertFalse(rn.validateRoadNetwork());
+		assertTrue(rn.validateRoadNetwork());
 		rn.addNode(n1);
 		rn.addNode(n2);
 		assertTrue(rn.validateRoadNetwork());

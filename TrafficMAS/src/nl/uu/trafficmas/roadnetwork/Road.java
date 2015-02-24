@@ -1,18 +1,18 @@
 package nl.uu.trafficmas.roadnetwork;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class Road {
 	public final String id;
 	public final double length;
-	public final ArrayList<Lane> laneList;
+	public final List<Lane> laneList;
 	public int priority;
 	private double meanTravelTime;
 	private double meanSpeedEdge;
-	public Road(String id, double length, ArrayList<Lane> laneList, int priority) {
+	public Road(String id, double length, List<Lane> laneList2, int priority) {
 		this.id = id;
 		this.length = length;
-		this.laneList = laneList;
+		this.laneList = laneList2;
 		this.priority = priority;
 		this.meanTravelTime = Double.MAX_VALUE;
 	}

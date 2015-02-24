@@ -1,10 +1,15 @@
 package nl.uu.trafficmas.roadnetwork;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class Route {
 	public final String routeID;
 	private ArrayList<Edge> route;
+	
+	public String getRouteID(){
+		return routeID;
+	}
 	
 	public Route(String routeID,ArrayList<Edge> route) {
 		this.routeID = routeID;
@@ -43,4 +48,19 @@ public class Route {
 
 		return length;
 	}
+	
+	public static double getRouteRemainderTime(Edge[] route, RoadNetwork roadNetwork, Road currentRoad,  double agentMaxCompfySpeed) {
+		Map<String,Double>roadBestLaneAverageTime = roadNetwork.getRoadBestLaneAverageTravelTime();
+		double expectedArrivalTime = 0;
+		for(Edge edge : route) {
+			if(edge.getRoad().equals(currentRoad)) {
+				continue;
+			}
+			double roadTimeMaxSpeed = edge.getRoad().length/agentMaxCompfySpeed;
+			expectedArrivalTime += Math.max(roadBestLaneAverageTime.get(edge.getID()),roadTimeMaxSpeed);
+		}
+		
+		return expectedArrivalTime;
+	}
+	
 }

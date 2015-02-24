@@ -2,15 +2,16 @@ package nl.uu.trafficmas.agent;
 
 import java.util.ArrayList;
 
-import de.tudresden.ws.container.SumoColor;
 import nl.uu.trafficmas.organisation.Sanction;
-import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Node;
+import nl.uu.trafficmas.roadnetwork.RoadNetwork;
+import nl.uu.trafficmas.roadnetwork.Route;
+import de.tudresden.ws.container.SumoColor;
 
-public class NormalAgent extends Agent {
+public class NormalAgent extends AgentSumo {
 
-	public NormalAgent(String agentID, Node goalNode, Edge[] routeEdges, int goalArrivalTime, double maxSpeed, double maxComfySpeed) {
-		super(agentID, goalNode, routeEdges, goalArrivalTime, maxSpeed, maxComfySpeed);
+	public NormalAgent(String agentID, Node goalNode, Route route, RoadNetwork roadNetwork, int goalArrivalTime, double maxSpeed, double maxComfySpeed) {
+		super(agentID, goalNode, route, roadNetwork, goalArrivalTime, maxSpeed, maxComfySpeed);
 	}
 	
 	@Override

@@ -29,6 +29,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import de.tudresden.sumo.cmd.Vehicle;
@@ -72,8 +73,6 @@ public class SumoTraciConnection {
 				while ((strLine = br.readLine()) != null)   {
 					
 					if(strLine.contains("Error:") && !strLine.contains("peer shutdown")){System.err.println (strLine);}
-					//else{System.out.println (strLine);}
-					
 				  }	
 				
 			} catch (IOException e) {
@@ -309,7 +308,7 @@ public class SumoTraciConnection {
 		
 	}
 	
-	public synchronized void do_jobs_set(ArrayList<SumoCommand> cmdList) throws Exception{
+	public synchronized void do_jobs_set(List<SumoCommand> cmdList) throws Exception{
 		
 		// just do nothing on an empty list
 		if(cmdList.size() == 0) 
@@ -320,7 +319,9 @@ public class SumoTraciConnection {
 		
 		
 		
-		try {this.cp.do_jobs_set(cmdList);}
+		try {
+			this.cp.do_jobs_set(cmdList);
+		}
 		catch (Exception e) {
 			closeAndDontCareAboutInterruptedException();
 			throw e;
@@ -336,6 +337,7 @@ public class SumoTraciConnection {
 		
 		try {
 			output = this.cp.do_job_get(cmd);
+			
 		}
 		catch (Exception e) {
 			closeAndDontCareAboutInterruptedException();
@@ -345,12 +347,12 @@ public class SumoTraciConnection {
 		return output;
 	}
 	
-	public synchronized ArrayList<Object> do_jobs_get(ArrayList<SumoCommand> cmdList) throws Exception{
+	public synchronized LinkedList<Object> do_jobs_get(List<SumoCommand> cmdList) throws Exception{
 			
 		// just return empty list on an empty list
 		if(cmdList.size() == 0) 
-			return new ArrayList<Object>();
-		ArrayList<Object> output = null;
+			return new LinkedList <Object>();
+		LinkedList<Object> output = null;
 		if (isClosed())
 			throw new IllegalStateException("connection is closed");
 		

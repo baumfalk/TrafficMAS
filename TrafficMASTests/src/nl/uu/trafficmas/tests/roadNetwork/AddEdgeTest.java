@@ -1,7 +1,10 @@
 package nl.uu.trafficmas.tests.roadNetwork;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+
+import java.util.HashSet;
+import java.util.Set;
+
 import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Node;
 import nl.uu.trafficmas.roadnetwork.Road;
@@ -14,18 +17,27 @@ public class AddEdgeTest {
 	@Test
 	public void addEdge() {
 		RoadNetwork rn = new RoadNetwork();
-		Node n = new Node("test",5,5);
-		Road r = new Road("r",5.0,null,1);
-		rn.addNode(n);
-		Edge edge = new Edge(n,n,r);
+		
+		Node node = new Node("test",5,5);
+		Road road = new Road("r",5.0,null,1);
+		rn.addNode(node);
+		Edge edge = new Edge(node,node,road);
 		rn.addEdge(edge);
-		assertEquals(rn.getEdges().length, 1);
+		assertEquals(1,rn.getEdges().length);
 		assertEquals(rn.getEdges()[0], edge);
 		
-		Node n2 = new Node("test2",5,5);
-		rn.addEdge(n, n2, r);	
+		Node node2 = new Node("test2",5,5);
+		rn.addEdge(node, node2, road);	
+		
+		Set<Edge> edgeSet = new HashSet<Edge>();
+		for(Edge e: rn.getEdges()) {
+			edgeSet.add(e);
+		}
+		
 		assertEquals(rn.getEdges().length, 2);
-		assertNotEquals(rn.getEdges()[1], edge);
+		
+		assertEquals(true, edgeSet.contains(edge));
+		assertEquals(true, edgeSet.contains(new Edge(node, node2, road)));
 	}
 
 }

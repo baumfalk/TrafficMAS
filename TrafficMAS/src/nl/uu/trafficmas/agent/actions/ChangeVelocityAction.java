@@ -2,11 +2,14 @@ package nl.uu.trafficmas.agent.actions;
 
 import java.util.ArrayList;
 
+import nl.uu.trafficmas.agent.Agent;
+import nl.uu.trafficmas.organisation.Sanction;
+import nl.uu.trafficmas.roadnetwork.Edge;
+import nl.uu.trafficmas.roadnetwork.Route;
 import de.tudresden.sumo.cmd.Vehicle;
 import de.tudresden.sumo.util.SumoCommand;
-import nl.uu.trafficmas.organisation.Sanction;
 
-public class ChangeVelocityAction extends AgentAction {
+public class ChangeVelocityAction extends SumoAgentAction {
 
 	public ChangeVelocityAction(int priority) {
 		super(priority);
@@ -18,12 +21,12 @@ public class ChangeVelocityAction extends AgentAction {
 			double meanTravelSpeedNextLane, double currentPos,
 			double currentLaneLength, double maxComfySpeed,
 			double routeRemainderLength, double leaderAgentSpeed,
-			double leaderDistance) {
+			double leaderDistance, Agent agent) {
 		/*
 		 * increase velocity time
-		 * lane_remainder                     rest_route_length
-		 * ------------------------------- + -----------------   + current_time
-		 * (currentSpeed + speedIncrease)     max_comfy_speed
+		 * lane_remainder                     
+		 * ------------------------------- + time on each road on the remaining route + current_time
+		 * (currentSpeed + speedIncrease)     
 		 */
 		double laneDistRemaining = (currentLaneLength-currentPos);
 		double finishTime = currentTime;
@@ -46,7 +49,9 @@ public class ChangeVelocityAction extends AgentAction {
 		}
 		
 		finishTime += timeSpentOnLane;
-		finishTime += routeRemainderLength/maxComfySpeed;
+		Edge[] route = agent.getRoute();
+		finishTime += Route.getRouteRemainderTime(route, agent.getRoadNetwork(), agent.getRoad(), agent.getMaxComfySpeed());
+		
 		return finishTime;
 	}
 
@@ -58,9 +63,10 @@ public class ChangeVelocityAction extends AgentAction {
 	}
 
 	@Override
-	public SumoCommand getCommand(String agentID, byte agentLaneIndex,
-			int maxLaneIndex, int overtakeDuration, double d, double e) {
-		return Vehicle.slowDown(agentID, Math.min(d+speedIncrease,e),Math.min((int)speedIncrease,20));
+	public SumoCommand getCommand(Agent currentAgent) {
+		double velocity = currentAgent.getVelocity();
+		double maxComfySpeed = currentAgent.getMaxComfySpeed();
+		return Vehicle.setMaxSpeed(currentAgent.agentID, Math.min(velocity+speedIncrease, maxComfySpeed));
 	}
 
 }
