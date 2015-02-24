@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nl.uu.trafficmas.norm.MergeNormScheme;
+import nl.uu.trafficmas.roadnetwork.Node;
+import nl.uu.trafficmas.roadnetwork.Road;
+import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.simulationmodel.AgentData;
 
 import org.junit.Test;
@@ -32,54 +35,8 @@ public class MergeNormTest {
 		fail("Not implemented yet");
 	}
 	
-	@Test
-	public void calcTestWithDecel() {
-		
-		double c_zero_pos 	= 10;
-		double c_one_pos 	= 20;
-		double c_zero_v		= (80/3.6);
-		double c_one_v		= (100/3.6);
-		double c_one_v_new	= c_one_v;
-		double c_one_a		= -5;
-		double lambda_sigma = 0.01;
-		double lambda_goal	= 2;
-		System.out.println("Current speed car zero: "+ c_zero_v);
-		System.out.println("Current speed car one: "+ c_one_v);
-		
-		
-		System.out.println("Starting estimation");
-		
-		for(int i = (int) c_one_v; i > 0; i--) {
-			System.out.println("Speed:"+i+" Lambda="+calcLambda(c_zero_v,c_one_v,i,c_zero_pos,c_one_pos,c_one_a));
-		}
-
-		int attempt = 1;
-		double lambda = 0;
-		do
-		{
-			lambda = calcLambda(c_zero_v,c_one_v,c_one_v_new,c_zero_pos,c_one_pos,c_one_a);
-			System.out.println("Attempt #"+attempt+ " v': " +c_one_v_new);
-			System.out.println("Lambda:"+calcLambda(c_zero_v,c_one_v,c_one_v_new,c_zero_pos,c_one_pos,c_one_a) );
-			System.out.println("Lambda with infinite decel:"+calcLambda(c_zero_v,c_one_v,c_one_v_new,c_zero_pos,c_one_pos,Double.NEGATIVE_INFINITY) );
-			attempt++;
-			if(lambda < lambda_goal - lambda_sigma) {
-				c_one_v_new = (c_zero_v+c_one_v_new)/2;
-			} else if(lambda > lambda_goal + lambda_sigma) {
-				c_one_v_new = (c_one_v+c_one_v_new)/2;
-			}
-		}while(lambda < lambda_goal - lambda_sigma || lambda > lambda_goal + lambda_sigma );
-		
-		System.out.println("Speed for car one with " +lambda+ " seconds before collission at merge point: "+c_one_v_new+"m/s");
-		System.out.println("New speed in km/h: " +c_one_v_new*3.6);
-		System.out.println("Difference:" + (c_one_v_new-c_one_v));
-		
-		fail("Not implemented yet");
-	}
-	
-	
-	
 	public double calcLambda(double v0, double v1, double vprime, double s0, double s1, double a1 ) {
-		
+		System.out.println("CalcLambdaFunction\nv0:"+v0+"\nv1:"+v1+"\nvprime:"+vprime+"\ns0:"+s0+"\ns1:"+s1+"\na1:"+a1);
 		double decelTime = (vprime - v1)/a1;
 		double decelAvrgSpeed = (v1+vprime)/2;
 		double decelDist = decelAvrgSpeed * decelTime;
@@ -94,70 +51,80 @@ public class MergeNormTest {
 		
 		double lambda = diffDist/diffVel;
 		
-		
+		System.out.println("\t deceltime:"+decelTime);
+		System.out.println("\t decelAvrgSpeed:"+ decelAvrgSpeed);
+		System.out.println("\t decelDist:"+ decelDist);
+		System.out.println("\t distAfterDecel:"+ distAfterDecel);
+		System.out.println("\t c0TravelTime:"+ c0TravelTime);
+		System.out.println("\t timeAfterDecel:"+ timeAfterDecel);
+		System.out.println("\t distNewSpeed:"+ distNewSpeed);
+		System.out.println("\t diffDist:"+ diffDist);
+		System.out.println("\t diffVel:"+ diffVel);
+		System.out.println("\t lambda:"+lambda);
+		System.out.println();
 		return lambda;
 	}
 	
 	@Test
 	public void test() {
+		
+		
+		RoadNetwork rn = new RoadNetwork();
+		Node n1 		= new Node("n1",0,0);
+		Node crossing 	= new Node("crossing",100,0);
+		Node n2 		= new Node("n2",0,-50);
+		Node exit 		= new Node("exit",200,0);
+		Road r1 = new Road("n1_crossing",100,null,1);
+		Road r2 = new Road("n2_crossing",100,null,1);
+		Road r3 = new Road("crossing_exit",50,null,1);
+
+		rn.addEdge(n1, crossing, r1);
+		rn.addEdge(n2, crossing, r2);
+		rn.addEdge(crossing, exit, r3);
+
 		List<AgentData>mainList = new ArrayList<AgentData>();
 		
-		int positionMainCar 	= 9;
-		int speedMainCar 		= 8;
+		int positionMainCar 	= 25;
+		int speedMainCar 		= 22;
 		int laneIndexMainCar 	= 0;
 		
-		mainList.add(new AgentData("main_1", null, positionMainCar, speedMainCar, null, laneIndexMainCar));
+		mainList.add(new AgentData("main_1", null, positionMainCar, speedMainCar, r1.id, laneIndexMainCar));
 		
 		positionMainCar 	= 1;
-		speedMainCar 		= 8;
+		speedMainCar 		= 50;
 		laneIndexMainCar 	= 0;
 		
-		mainList.add(new AgentData("main_2", null, positionMainCar, speedMainCar, null, laneIndexMainCar));
+		mainList.add(new AgentData("main_2", null, positionMainCar, speedMainCar, r1.id, laneIndexMainCar));
 
 		
 		List<AgentData>rampList = new ArrayList<AgentData>();
-		int positionRampCar 	= 6;
-		int speedRampCar 		= 5;
+		int positionRampCar 	= 50;
+		int speedRampCar 		= 30;
 		int laneIndexRampCar 	= 0;
 
-		rampList.add(new AgentData("merge_1", null, positionRampCar, speedRampCar, null, laneIndexRampCar));
+		rampList.add(new AgentData("merge_1", null, positionRampCar, speedRampCar, r2.id, laneIndexRampCar));
 
 		positionRampCar 	= 3;
 		speedRampCar 		= 55;
 		laneIndexRampCar 	= 0;
 
-		rampList.add(new AgentData("merge_2", null, positionRampCar, speedRampCar, null, laneIndexRampCar));
+		rampList.add(new AgentData("merge_2", null, positionRampCar, speedRampCar, r2.id, laneIndexRampCar));
 		
-		int mainSensorEnd = 10; // mainroad is 20 long before merge
-		int rampSensorEnd = 10; // ramp road is 10 long before merge
-
-		List<AgentData> outputList = MergeNormScheme.mergeTrafficStreams(mainList, rampList, mainSensorEnd, rampSensorEnd);
+		
+		
+		double mainRoadLength 	= r1.length; 
+		double rampLength 		= r2.length;
+		
+		List<AgentData> outputList = MergeNormScheme.mergeTrafficStreams(mainList, rampList, mainRoadLength, rampLength);
 		for(AgentData agentdata : outputList) {
 			System.out.println(agentdata.id);
 		}
 		
-		
-		
-//		
-//		double distanceBetween = 2;//at least 2m between cars
-//		for(int i=0;i<outputList.size();i++) {
-//			if(i!= outputList.size()-1) {
-//				AgentData agentFirst 	= outputList.get(i);
-//				AgentData agentSecond 	= outputList.get(i+1);
-//				
-//				double agentFirstTime  = 0;
-//				if(agentFirst.id.contains("main")) {
-//					agentFirstTime = (mainSensorEnd-agentFirst.position)/agentFirst.velocity;
-//				} else {
-//					agentFirstTime = (rampSensorEnd-agentFirst.position)/agentFirst.velocity;
-//				}
-//				double agentSecondPosAtPrevMerge = agentSecond.position+(agentFirstTime*agentSecond.velocity);
-//				if(agentSecond.id.contains("main")) {
-//					
-//				}
-//				//speed: at least 2m between agentFirst and agentSecond when agentFirst starts its merge
-//			}
-//		}
+		List<Double> speeds=MergeNormScheme.calculateNewSpeeds(outputList, rn);
+		for(int i = 0; i< speeds.size();i++) {
+			AgentData agentData = outputList.get(i);
+			System.out.println("Car: "+agentData.id+",curSpeed:"+agentData.velocity +", newVel:"+speeds.get(i));
+		}
 		
 		fail("Not yet implemented");
 	}

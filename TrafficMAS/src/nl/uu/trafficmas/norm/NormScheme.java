@@ -5,6 +5,7 @@ import java.util.List;
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.organisation.Expression;
 import nl.uu.trafficmas.organisation.Sanction;
+import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Sensor;
 
 public abstract class NormScheme {
@@ -17,12 +18,10 @@ public abstract class NormScheme {
 		this.sensorList = sensorList;
 	}
 	
-	public abstract List<NormInstantiation> instantiateNorms(List<Agent> agents);
+	public abstract List<NormInstantiation> instantiateNorms(List<Agent> agents,RoadNetwork rn);
 	
 	
 	public abstract boolean checkCondition();
 	
-	protected abstract void runAlgorithm();
-	
-	
+	protected abstract void runAlgorithm(RoadNetwork rn);
 }

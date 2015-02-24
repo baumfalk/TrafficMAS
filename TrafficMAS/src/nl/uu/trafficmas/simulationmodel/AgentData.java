@@ -20,10 +20,10 @@ public class AgentData implements Data {
 			leaderId = (String) leader[0];
 			leaderDistance = (double) leader[1];
 		}
-		this.position 	= position;
-		this.velocity		= speed;
-		this.roadID 	= roadID;
-		this.laneIndex 	= laneIndex;
+		this.position 			= position;
+		this.velocity			= speed;
+		this.roadID 			= roadID;
+		this.laneIndex 			= laneIndex;
 	}
 	
 	@Override
