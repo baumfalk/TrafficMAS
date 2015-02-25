@@ -5,7 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import nl.uu.trafficmas.agent.Agent;
-import nl.uu.trafficmas.organisation.Sanction;
+import nl.uu.trafficmas.norm.NormInstantiation;
+import nl.uu.trafficmas.norm.Sanction;
 import nl.uu.trafficmas.roadnetwork.AStar;
 import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Node;
@@ -62,7 +63,7 @@ public class ChangeRouteAction extends SumoAgentAction {
 
 	@Override
 	public ArrayList<Sanction> getSanctions(double maxComfySpeed,
-			double velocity) {
+			double velocity, List<NormInstantiation> normInst) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -5,11 +5,12 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 import de.tudresden.sumo.util.SumoCommand;
+import de.tudresden.ws.container.SumoStringList;
 
 public enum QuerySubject {
 	Vehicle,
 	Lane,
-	Edge;
+	Edge, Sensor;
 
 	public SumoCommand getIDCountCommand() {
 		SumoCommand cmd = null;
@@ -22,6 +23,9 @@ public enum QuerySubject {
 			break;
 		case Vehicle:
 			cmd = de.tudresden.sumo.cmd.Vehicle.getIDCount();
+			break;
+		case Sensor:
+			cmd = de.tudresden.sumo.cmd.ArealDetector.getIDCount();
 			break;
 		}
 		return cmd;
@@ -38,6 +42,9 @@ public enum QuerySubject {
 			break;
 		case Vehicle:
 			cmd = de.tudresden.sumo.cmd.Vehicle.getIDList();
+			break;
+		case Sensor:
+			cmd = de.tudresden.sumo.cmd.ArealDetector.getIDList();
 			break;
 		}
 		return cmd;
@@ -95,6 +102,14 @@ public enum QuerySubject {
 				throw new Exception(this+" cannot handle " + queryField);
 			}
 			break;
+		case Sensor:
+			switch(queryField) {
+			case VehicleIDList:
+				cmd = de.tudresden.sumo.cmd.ArealDetector.getLastStepVehicleIDs(id);
+				break;
+			default:
+				throw new Exception(this+" cannot handle " + queryField);
+			}
 		}
 		return cmd;
 	}
@@ -102,18 +117,18 @@ public enum QuerySubject {
 	public Data toData(LinkedHashSet<QueryField> linkedHashSet,
 			List<Object> subList, String id) {
 		Data data = null;
-		String [] 	edgeId 			= new String[1];
-		int	   [] 	laneIndex		= new int[1];
-		Object [][] leadingVehicle 	= new Object[1][2];
-		double [] 	meanSpeed 		= new double[1];
-		double [] 	meanTime 		= new double[1];
-		double [] 	position 		= new double[1];
-		double [] 	speed			= new double[1];
-		
+		String [] 	edgeId 				= new String[1];
+		int	   [] 	laneIndex			= new int[1];
+		Object [][] leadingVehicle 		= new Object[1][2];
+		double [] 	meanSpeed 			= new double[1];
+		double [] 	meanTime 			= new double[1];
+		double [] 	position 			= new double[1];
+		double [] 	speed				= new double[1];
+		SumoStringList [] vehicleList	= new SumoStringList[1];
 		Iterator<QueryField> queryFieldIt = linkedHashSet.iterator();
 		Iterator<Object> responseIt = subList.iterator();
 		parseResponses(edgeId, leadingVehicle, meanSpeed, meanTime,
-				position, speed, laneIndex, queryFieldIt,responseIt);
+				position, speed, laneIndex,vehicleList, queryFieldIt,responseIt);
 		switch (this) {
 		case Edge:
 			data = new EdgeData(id, meanSpeed[0],meanTime[0]);
@@ -124,6 +139,11 @@ public enum QuerySubject {
 		case Vehicle:
 			data = new AgentData(id, leadingVehicle[0], position[0], speed[0],edgeId[0],laneIndex[0]);
 			break;
+		case Sensor:
+			String [] vehicleIds = new String[vehicleList[0].size()];
+			vehicleList[0].toArray(vehicleIds);
+			data = new SensorData(id,vehicleIds);
+			break;
 		}
 		
 		return data;
@@ -131,7 +151,7 @@ public enum QuerySubject {
 
 	private void parseResponses(String[] edgeId, Object[][] leadingVehicle,
 			double[] meanSpeed, double[] meanTime, double[] position,
-			double[] speed, int [] laneIndex, Iterator<QueryField> queryFieldIt,
+			double[] speed, int [] laneIndex, SumoStringList [] vehicleList, Iterator<QueryField> queryFieldIt,
 			Iterator<Object> responseIt) {
 		while(queryFieldIt.hasNext() && responseIt.hasNext()) {
 			QueryField queryField = queryFieldIt.next();
@@ -157,6 +177,9 @@ public enum QuerySubject {
 				break;
 			case LaneIndex:
 				laneIndex[0] = (int) response;
+				break;
+			case VehicleIDList:
+				vehicleList[0] = (SumoStringList) response;
 				break;
 			}
 		}

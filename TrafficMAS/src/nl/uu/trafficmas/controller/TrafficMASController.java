@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
@@ -13,6 +14,8 @@ import nl.uu.trafficmas.agent.AgentProfileType;
 import nl.uu.trafficmas.agent.actions.AgentAction;
 import nl.uu.trafficmas.datamodel.DataModel;
 import nl.uu.trafficmas.datamodel.MASData;
+import nl.uu.trafficmas.norm.NormInstantiation;
+import nl.uu.trafficmas.norm.Sanction;
 import nl.uu.trafficmas.organisation.Organisation;
 import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Lane;
@@ -20,7 +23,9 @@ import nl.uu.trafficmas.roadnetwork.Node;
 import nl.uu.trafficmas.roadnetwork.Road;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
+import nl.uu.trafficmas.roadnetwork.Sensor;
 import nl.uu.trafficmas.simulationmodel.AgentData;
+import nl.uu.trafficmas.simulationmodel.SensorData;
 import nl.uu.trafficmas.simulationmodel.SimulationModel;
 import nl.uu.trafficmas.simulationmodel.StateData;
 import nl.uu.trafficmas.view.TrafficView;
@@ -80,7 +85,6 @@ public class TrafficMASController {
 		view.addMessage("Simulation is set up");
 
 		this.currentAgentMap 	= new LinkedHashMap<String, Agent>();
-		
 		////////////////
 		// setup view //
 		////////////////
@@ -159,25 +163,51 @@ public class TrafficMASController {
 	}
 
 	
+	/**
+	 * Calculates the next step for the MAS. Organisations execute their actions, Agent actions are sent to SUMO.
+	 * Not yet completely implemented.	 
+	 * @return 
+	 */
+	private HashMap<Agent, AgentAction> nextMASState(int currentTime) {
+		//TODO: Organization sanctions
+		
+		// get org sanctions
+		Map<Agent,List<Sanction>> sanctions 				= TrafficMASController.getOrgSanctions(this.organisations);
+		// get org new norm instantiations
+		Map<Agent,List<NormInstantiation>> normInst			= TrafficMASController.getNormInstantiations(this.organisations);
+		
+		// get org norm clears
+		Map<Agent,List<NormInstantiation>> clearedNormInst	= TrafficMASController.getClearedNormInst(this.organisations);
+	
+		
+		return  TrafficMASController.getAgentActions(currentTime, this.currentAgentMap,sanctions,normInst,clearedNormInst);
+	}
+
 	// TODO: Write test for this function
 	/**
 	 * Generates a map containing the best actions for every Agent alive at that timestep.
 	 * @param currentAgents
+	 * @param clearedNormInst 
+	 * @param normInst 
+	 * @param sanctions 
 	 * @return a map containing an agent as key and an AgentAction as value.
 	 */
-	public static HashMap<Agent, AgentAction> getAgentActions(int currentTime, HashMap<String, Agent> currentAgents) {
+	public static HashMap<Agent, AgentAction> getAgentActions(int currentTime, Map<String, Agent> currentAgents, Map<Agent, List<Sanction>> sanctions, Map<Agent, List<NormInstantiation>> normInst, Map<Agent, List<NormInstantiation>> clearedNormInst) {
 		
 		HashMap <Agent,AgentAction> actions = new LinkedHashMap<Agent, AgentAction>();
 		for(Agent agent : currentAgents.values()) {
 			if(agent.getRoad() == null) {
 				continue;
 			}
-			actions.put(agent, agent.doAction(currentTime));
+			List<Sanction> agentSanc 				= (sanctions!= null && sanctions.containsKey(agent)) ? (sanctions.get(agent)) : null;
+			List<NormInstantiation> agentInst 		= (normInst != null && normInst.containsKey(agent)) ? (normInst.get(agent)) : null;
+			List<NormInstantiation> agentClearInst	= (clearedNormInst!= null && clearedNormInst.containsKey(agent)) ? (clearedNormInst.get(agent)) : null;
+			
+			actions.put(agent, agent.doAction(currentTime,agentSanc,agentInst,agentClearInst));
 		}
 		
 		return actions;
 	}
-	
 
 	/**
 	 * This function uses dataModel.getMASData() to return  the MASData.
@@ -216,14 +246,35 @@ public class TrafficMASController {
 	}
 	
 	/**
-	 * Updates the MAS with the 'simulationStateData'. Agents, Edges and Lanes are updated.
+	 * Updates the MAS with the 'simulationStateData'. Agents, Edges and Lanes and Orgs are updated.
 	 * @param simulationStateData
 	 */
 	private void updateMAS(StateData simulationStateData) {
 		roadNetwork 	= TrafficMASController.updateRoadNetwork(roadNetwork, simulationStateData);
 		currentAgentMap = TrafficMASController.updateAgents(completeAgentMap, roadNetwork, simulationStateData);
+		organisations	= TrafficMASController.updateOrganisations(organisations, simulationStateData);
 	}
 	
+	public static ArrayList<Organisation> updateOrganisations(
+			ArrayList<Organisation> organisations,
+			StateData simulationStateData) {
+		if(organisations == null) 
+			return null;
+		
+		// update the sensors with the sensordata
+		for(Organisation org : organisations) {
+			for(Sensor sensor : org.getSensors()) {
+				SensorData sd = simulationStateData.sensorData.get(sensor.id);
+				for(String agentID : sd.vehicleIDs) {
+					sd.addAgentData(agentID, simulationStateData.agentsData.get(agentID));
+				}
+				sensor.updateSensorData(simulationStateData.sensorData.get(sensor.id));
+			}
+		}
+		
+		return organisations;
+	}
+
 	/**
 	 * Updates the Road Network 'roadNetwork' with information from 'simulationStateData. 
 	 * For both Road and Lane objects, the meanTravelTime and meanSpeed are updated
@@ -253,17 +304,71 @@ public class TrafficMASController {
 		return roadNetwork;
 	}
 
-	/**
-	 * Calculates the next step for the MAS. Organisations execute their actions, Agent actions are sent to SUMO.
-	 * Not yet completely implemented.	 
-	 * @return 
-	 */
-	private HashMap<Agent, AgentAction> nextMASState(int currentTime) {
-		//TODO: Organization sanctions
+	public static Map<Agent, List<Sanction>> getOrgSanctions(
+			ArrayList<Organisation> organisations) {
+		// TODO Auto-generated method stub
+		Map<Agent, List<Sanction>> agentSanctions = new HashMap<Agent, List<Sanction>>(); 
+		if(organisations == null)
+			return agentSanctions;
+		for(Organisation org : organisations) {
+			// get all sanctions the org found
+			List<Sanction> sancList= org.getNewSanctions();
+			// distribute the sanctions to the relevant agents.
+			for(Sanction s : sancList) {
+				if(!agentSanctions.containsKey(s.getAgent())) {
+					List<Sanction> sl = new  ArrayList<Sanction>();
+					agentSanctions.put(s.getAgent(), sl);
+				}
+				agentSanctions.get(s.getAgent()).add(s);
+			}
+		}
 		
-		return  getAgentActions(currentTime, this.currentAgentMap);
+		return agentSanctions;
 	}
 	
+	public static Map<Agent, List<NormInstantiation>> getNormInstantiations(
+			ArrayList<Organisation> organisations) {
+		// TODO Auto-generated method stub
+		Map<Agent, List<NormInstantiation>> agentNorms = new HashMap<Agent, List<NormInstantiation>>(); 
+		if(organisations == null)
+			return agentNorms;
+		for(Organisation org : organisations) {
+			// get all sanctions the org found
+			List<NormInstantiation> normList= org.getNewNormInstantiations();
+			// distribute the sanctions to the relevant agents.
+			for(NormInstantiation norm : normList) {
+				if(!agentNorms.containsKey(norm.getAgent())) {
+					List<NormInstantiation> nl = new  ArrayList<NormInstantiation>();
+					agentNorms.put(norm.getAgent(), nl);
+				}
+				agentNorms.get(norm.getAgent()).add(norm);
+			}
+		}
+		
+		return agentNorms;
+	}
+
+	public static Map<Agent, List<NormInstantiation>> getClearedNormInst(
+			ArrayList<Organisation> organisations) {
+		Map<Agent, List<NormInstantiation>> agentClearedNorms = new HashMap<Agent, List<NormInstantiation>>(); 
+		if(organisations == null)
+			return agentClearedNorms;
+		for(Organisation org : organisations) {
+			// get all sanctions the org found
+			List<NormInstantiation> clearedNormList= org.getClearedNormInstantiations();
+			// distribute the sanctions to the relevant agents.
+			for(NormInstantiation norm : clearedNormList) {
+				if(!agentClearedNorms.containsKey(norm.getAgent())) {
+					List<NormInstantiation> nl = new  ArrayList<NormInstantiation>();
+					agentClearedNorms.put(norm.getAgent(), nl);
+				}
+				agentClearedNorms.get(norm.getAgent()).add(norm);
+			}
+		}
+		
+		return agentClearedNorms;
+	}
+
 	/**
 	 * Updates the information all agents in 'completeAgentMap' of which data was returned in 'stateData'. 
 	 * @param completeAgentMap

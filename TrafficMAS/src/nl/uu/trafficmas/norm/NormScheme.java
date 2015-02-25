@@ -4,7 +4,6 @@ import java.util.List;
 
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.organisation.Expression;
-import nl.uu.trafficmas.organisation.Sanction;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Sensor;
 

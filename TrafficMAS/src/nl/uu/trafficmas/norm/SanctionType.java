@@ -1,4 +1,4 @@
-package nl.uu.trafficmas.organisation;
+package nl.uu.trafficmas.norm;
 
 public enum SanctionType {
 	LowFine,

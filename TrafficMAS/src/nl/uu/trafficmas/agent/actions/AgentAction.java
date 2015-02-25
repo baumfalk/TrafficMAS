@@ -1,9 +1,11 @@
 package nl.uu.trafficmas.agent.actions;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import nl.uu.trafficmas.agent.Agent;
-import nl.uu.trafficmas.organisation.Sanction;
+import nl.uu.trafficmas.norm.NormInstantiation;
+import nl.uu.trafficmas.norm.Sanction;
 
 public abstract class AgentAction {
 	
@@ -34,7 +36,7 @@ public abstract class AgentAction {
 	
 	public abstract double getTime(int currentTime, double currentSpeed, double meanTravelSpeedNextLane, double currentPos, double currentLaneLength, double maxComfySpeed, double routeRemainderLength, double leaderAgentSpeed, double leaderDistance, Agent agent);
 	
-	public abstract ArrayList<Sanction> getSanctions(double maxComfySpeed, double velocity);
+	public abstract ArrayList<Sanction> getSanctions(double maxComfySpeed, double velocity, List<NormInstantiation> normInst);
 	
 	public void setUtility(double newUtility) {
 		utility = newUtility;

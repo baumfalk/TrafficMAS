@@ -1,8 +1,8 @@
 package nl.uu.trafficmas.agent;
 
-import java.util.ArrayList;
+import java.util.List;
 
-import nl.uu.trafficmas.organisation.Sanction;
+import nl.uu.trafficmas.norm.Sanction;
 import nl.uu.trafficmas.roadnetwork.Node;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
@@ -16,7 +16,7 @@ public class OldLadyAgent extends AgentSumo {
 
 
 	@Override
-	public double specificUtility(double arrivalTime, ArrayList<Sanction> sanctionList) {
+	public double specificUtility(double arrivalTime, List<Sanction> sanctionList) {
 		double utility = 0;
 		utility = (double) (this.getGoalArrivalTime() / (arrivalTime));
 		

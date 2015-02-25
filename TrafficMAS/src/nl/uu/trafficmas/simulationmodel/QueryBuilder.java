@@ -20,10 +20,12 @@ public class QueryBuilder {
 	private LinkedHashMap<QuerySubject,
 		List<String>> 						subjectIDs;
 	
-	private StateData 					stateData;
-	private HashMap<String,AgentData> 	agentsData;
-	private HashMap<String,EdgeData> 	edgesData;
-	private HashMap<String,LaneData> 	lanesData;
+	private StateData 							stateData;
+	private HashMap<String,AgentData> 			agentsData;
+	private HashMap<String,EdgeData> 			edgesData;
+	private HashMap<String,LaneData> 			lanesData;
+	private LinkedHashMap<String, SensorData> 	sensorData;
+
 	private boolean timeStep;
 	
 	public QueryBuilder() {
@@ -93,7 +95,7 @@ public class QueryBuilder {
 		processResponses(responses);
 		assert(responses.isEmpty());
 		
-		stateData = new StateData(agentsData, edgesData, lanesData, currentTimeStep);
+		stateData = new StateData(agentsData, edgesData, lanesData, sensorData, currentTimeStep);
 		querySubjects.clear();
 	}
 
@@ -101,6 +103,7 @@ public class QueryBuilder {
 		agentsData 	= new LinkedHashMap<>();
 		edgesData 	= new LinkedHashMap<>();
 		lanesData 	= new LinkedHashMap<>();
+		sensorData	= new LinkedHashMap<>();
 		for(QuerySubject querySubject : querySubjects) {
 			int numberOfFields = querySubjectFields.get(querySubject).size();
 			for(String id : subjectIDs.get(querySubject)) {
@@ -117,6 +120,9 @@ public class QueryBuilder {
 					break;
 				case Vehicle:
 					agentsData.put(id, (AgentData) data);
+					break;
+				case Sensor:
+					sensorData.put(id, (SensorData) data);
 					break;
 				}
 				

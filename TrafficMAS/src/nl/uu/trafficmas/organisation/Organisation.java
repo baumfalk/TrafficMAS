@@ -5,6 +5,7 @@ import java.util.List;
 
 import nl.uu.trafficmas.norm.NormInstantiation;
 import nl.uu.trafficmas.norm.NormScheme;
+import nl.uu.trafficmas.norm.Sanction;
 import nl.uu.trafficmas.roadnetwork.Sensor;
 
 public class Organisation {
@@ -63,5 +64,16 @@ public class Organisation {
 	}
 	public void setInstitutionalStates(ArrayList<InstitutionalState> institutionalStates) {
 		this.institutionalStates = institutionalStates;
+	}
+	public List<Sanction> getNewSanctions() {
+		return null;
+	}
+	public List<NormInstantiation> getNewNormInstantiations() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public List<NormInstantiation> getClearedNormInstantiations() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

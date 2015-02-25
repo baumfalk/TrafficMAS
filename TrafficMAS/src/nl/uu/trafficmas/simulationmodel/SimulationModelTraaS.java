@@ -290,6 +290,7 @@ public class SimulationModelTraaS implements SimulationModel {
 		qb.addQuerySubject(QuerySubject.Vehicle);
 		qb.addQuerySubject(QuerySubject.Edge);
 		qb.addQuerySubject(QuerySubject.Lane);
+		qb.addQuerySubject(QuerySubject.Sensor);
 
 		try {
 			qb.addQueryField(QuerySubject.Vehicle, QueryField.Position);
@@ -303,9 +304,10 @@ public class SimulationModelTraaS implements SimulationModel {
 			
 			qb.addQueryField(QuerySubject.Lane, QueryField.MeanTime);
 			qb.addQueryField(QuerySubject.Lane, QueryField.MeanSpeed);
-			
 			qb.addQueryField(QuerySubject.Lane, QueryField.EdgeId);
 
+			qb.addQueryField(QuerySubject.Sensor, QueryField.VehicleIDList);
+			
 			qb.executeQuery(conn);
 			stateData = qb.getStateData();
 		} catch (Exception e1) {

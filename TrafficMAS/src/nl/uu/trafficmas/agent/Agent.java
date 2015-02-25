@@ -6,7 +6,8 @@ import java.util.Comparator;
 import java.util.List;
 
 import nl.uu.trafficmas.agent.actions.AgentAction;
-import nl.uu.trafficmas.organisation.Sanction;
+import nl.uu.trafficmas.norm.NormInstantiation;
+import nl.uu.trafficmas.norm.Sanction;
 import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Node;
 import nl.uu.trafficmas.roadnetwork.Road;
@@ -14,24 +15,27 @@ import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
 
 public abstract class Agent extends AgentPhysical {
-	private Node goalNode;
-	private int goalArrivalTime;
-	protected final double maxSpeed;
+	private Node 					goalNode;
+	private int 					goalArrivalTime;
+	protected final double 			maxSpeed;
 	
-	private double expectedArrivalTime;
-	private ArrayList<Sanction> currentSanctionList;
-	private String currentRouteID;
-	private Edge[] currentRouteEdges;
-	private ArrayList<Double> expectedTravelTimePerRoad;
-	private double maxComfySpeed;
-	private double leaderAgentSpeed;
-	private double leaderDistance;
-	private RoadNetwork roadNetwork;
-	private List<String> possibleNewRoute;
+	private double 					expectedArrivalTime;
+	private List<Sanction> 			currentSanctionList;
+	private List<NormInstantiation> currentNormInstList;
+	
+	private String 					currentRouteID;
+	private Edge[] 					currentRouteEdges;
+	private ArrayList<Double> 		expectedTravelTimePerRoad;
+	private double 					maxComfySpeed;
+	
+	private double 					leaderAgentSpeed;
+	private double 					leaderDistance;
+	private RoadNetwork 			roadNetwork;
+	private List<String> 			possibleNewRoute;
 	
 	public final static double DEFAULT_MAX_SPEED = 20;
 	
-	public abstract double specificUtility(double time, ArrayList<Sanction> sanctionList);
+	public abstract double specificUtility(double time, List<Sanction> sanctionList);
 	
 	/**
 	 * Calculates and returns the Utility according to 'arrivalTime' and 'sanctionList'
@@ -39,7 +43,7 @@ public abstract class Agent extends AgentPhysical {
 	 * @param sanctionList
 	 * @return a double value that is a value between and including 0.0 and 1.0.
 	 */
-	public double utility(double time, ArrayList<Sanction> sanctionList) {
+	public double utility(double time, List<Sanction> sanctionList) {
 		double utility = 0;
 		if(Math.round(time) == Math.round(this.getGoalArrivalTime()) && sanctionList == null) {
 			utility = 1;
@@ -69,15 +73,28 @@ public abstract class Agent extends AgentPhysical {
 			double time = edge.getRoad().length/maxComfySpeed;
 			expectedTravelTimePerRoad.add(time);
 		}
-		currentSanctionList 	= new ArrayList<Sanction>();
+		currentSanctionList = new ArrayList<Sanction>();
+		currentNormInstList	= new ArrayList<NormInstantiation>();	
 	}
 	
 	
 	/**
 	 * Returns, according to the utility, the best AgentAction object for a specific agent.
+	 * @param agentClearInst 
+	 * @param agentInst 
+	 * @param agentSanc 
 	 * @return an AgentAction with the highest utility, or if no advantage can be gained from performing an action, null.
 	 */
-	public AgentAction doAction(int currentTime) {
+	public AgentAction doAction(int currentTime, List<Sanction> agentSanc, List<NormInstantiation> agentInst, List<NormInstantiation> agentClearInst) {
+		
+		// add the achieved sanctions
+		if(agentSanc != null)
+			currentSanctionList.addAll(agentSanc);
+		if(agentClearInst!= null)
+			currentNormInstList.removeAll(agentClearInst);
+		if(agentInst != null)
+			currentNormInstList.addAll(agentInst);
+		
 		// Only do an action if it improves our situation
 		double noActionUtility	= utility(expectedArrivalTime,currentSanctionList);
 		AgentAction bestAction 	= null;
@@ -93,8 +110,8 @@ public abstract class Agent extends AgentPhysical {
 		}
 		for(AgentAction action : AgentAction.values()) {
 			
-			double time = action.getTime(currentTime,velocity, leftLaneSpeed, this.distance, this.road.length, this.maxComfySpeed, routeRemainderLength, this.leaderAgentSpeed, this.leaderDistance,this);
-			ArrayList<Sanction> sanctions 	= action.getSanctions(maxComfySpeed, velocity);
+			double time 					= action.getTime(currentTime,velocity, leftLaneSpeed, this.distance, this.road.length, this.maxComfySpeed, routeRemainderLength, this.leaderAgentSpeed, this.leaderDistance,this);
+			ArrayList<Sanction> sanctions 	= action.getSanctions(maxComfySpeed, velocity,currentNormInstList);
 			double newUtility 				= utility(time, sanctions);
 			action.setUtility(newUtility);
 			actionList.add(action);
@@ -138,7 +155,7 @@ public abstract class Agent extends AgentPhysical {
 		this.expectedArrivalTime = expectedArrivalTime2;
 	}
 
-	public ArrayList<Sanction> getCurrentSanctionList() {
+	public List<Sanction> getCurrentSanctionList() {
 		return currentSanctionList;
 	}
 	public void setCurrentSanctionList(ArrayList<Sanction> currentSanctionList) {
