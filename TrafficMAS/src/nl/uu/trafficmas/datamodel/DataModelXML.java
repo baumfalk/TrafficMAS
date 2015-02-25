@@ -51,6 +51,7 @@ public class DataModelXML implements DataModel {
 		edgesDoc			= DataModelXML.loadDocument(dir, edgesXML);
 		routesDoc			= DataModelXML.loadDocument(dir, routesXML);
 		agentProfilesDoc	= DataModelXML.loadDocument(dir, agentProfilesXML);
+		sensorsDoc			= null;
 		
 		NodeList sensorNodes		= masDoc.getDocumentElement().getElementsByTagName("sensors");
 		if(sensorNodes.getLength()>0){
@@ -71,7 +72,11 @@ public class DataModelXML implements DataModel {
 
 	@Override
 	public RoadNetwork instantiateRoadNetwork() {
-		return instantiateRoadNetwork(this.nodesDoc, this.edgesDoc);
+		if(sensorsDoc == null){
+			return instantiateRoadNetwork(this.nodesDoc, this.edgesDoc);
+		} else {
+			return instantiateRoadNetwork(this.nodesDoc, this.edgesDoc, this.sensorsDoc);
+		}
 	}
 	
 	/**
@@ -92,6 +97,25 @@ public class DataModelXML implements DataModel {
 		ArrayList<Edge> edges 		= extractEdges(edgeDoc,nodes);
 		
 		RoadNetwork rn = new RoadNetwork(nodeList, edges);
+		
+		if(rn.validateRoadNetwork()){
+			return rn;
+		} else{
+			return null;
+		}
+	}
+	
+	public static RoadNetwork instantiateRoadNetwork(Document nodeDoc, Document edgeDoc, Document sensorDoc) {
+		HashMap<String,Node> nodes 	= DataModelXML.extractNodes(nodeDoc);
+		ArrayList<Node> nodeList 	= new ArrayList<Node>(nodes.values());
+		ArrayList<Edge> edges 		= extractEdges(edgeDoc,nodes);
+		
+		RoadNetwork rn = new RoadNetwork(nodeList, edges);
+		
+		// Add sensors to the road network.
+		HashMap<String,Sensor> sensors = DataModelXML.getSensors(rn, sensorDoc);
+		rn.addSensors(sensors);
+
 		if(rn.validateRoadNetwork()){
 			return rn;
 		} else{

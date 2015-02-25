@@ -8,6 +8,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import nl.uu.trafficmas.datamodel.DataModelXML;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
+import nl.uu.trafficmas.roadnetwork.Sensor;
 
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -27,5 +28,19 @@ public class XMLRoadNetworkTest {
 		
 		assertEquals(rn.getNodes().length,2);
 		assertEquals(rn.getEdges().length,1);
+		
+		String sensorXML 	= "SensorTest.xml";
+		
+		Document sensorDoc 	= DataModelXML.loadDocument(dir, sensorXML);
+		
+		rn = DataModelXML.instantiateRoadNetwork(nodeDoc, edgeDoc, sensorDoc);
+		
+		Sensor sensor = rn.getSensors()[0];
+		
+		assertEquals("A28_350_lane0_0",								sensor.getId());
+		assertEquals(10,											sensor.getLength(),0.0);
+		assertEquals(25, 											sensor.getFrequency());
+		assertEquals(300,											sensor.getPosition(),0.0);
+		assertEquals(rn.getRoadFromID("A28Tot350").laneList.get(0), sensor.getLane());
 	}
 }
