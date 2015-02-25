@@ -31,7 +31,6 @@ public class MergingTest {
 
 	@Test
 	public void test() throws SAXException, IOException, ParserConfigurationException {
-		Random random 	= new Random(1337);
 		String dir 		= System.getProperty("user.dir")+"/tests/Misc/MergingTest/";
 		String sumocfg 	= System.getProperty("user.dir")+"/tests/Misc/MergingTest/hello.sumocfg";
 		String masXML 	= "hello.mas.xml";
@@ -55,7 +54,7 @@ public class MergingTest {
 		TrafficMASController.createAgent(routes.get(0), agentsAndTimes, agentProfileDistribution, rn, 1, .5);
 		TrafficMASController.createAgent(routes.get(0), agentsAndTimes, agentProfileDistribution, rn, 3, .5);
 		TrafficMASController.createAgent(routes.get(0), agentsAndTimes, agentProfileDistribution, rn, 8, .5);
-
+		
 		
 		// Route1 is the ramp road
 		TrafficMASController.createAgent(routes.get(1), agentsAndTimes, agentProfileDistribution, rn, 10, .5);
