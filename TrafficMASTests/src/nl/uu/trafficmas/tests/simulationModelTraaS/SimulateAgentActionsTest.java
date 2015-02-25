@@ -62,7 +62,7 @@ public class SimulateAgentActionsTest {
 
 				currentAgentMap = TrafficMASController.updateAgents(completeAgentMap, rn, stateData);
 				rn 				= TrafficMASController.updateRoadNetwork(rn, stateData);
-				actions 		= TrafficMASController.getAgentActions(stateData.currentTimeStep/1000, currentAgentMap);
+				actions 		= TrafficMASController.getAgentActions(stateData.currentTimeStep/1000, currentAgentMap,null,null,null);
 				
 				SimulationModelTraaS.simulateAgentActions(actions, conn);
 				int laneIndexes =0 ;

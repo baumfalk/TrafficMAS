@@ -1,35 +1,22 @@
 package nl.uu.trafficmas.organisation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import nl.uu.trafficmas.norm.NormInstantiation;
 import nl.uu.trafficmas.norm.NormScheme;
 import nl.uu.trafficmas.norm.Sanction;
 import nl.uu.trafficmas.roadnetwork.Sensor;
+import nl.uu.trafficmas.simulationmodel.AgentData;
 
 public class Organisation {
 	private ArrayList<NormScheme> normSchemes;
 	private ArrayList<NormInstantiation> normInstantiations;
 	private ArrayList<Sensor> sensors;
-	private ArrayList<BruteState> bruteStates;
+	private Map<String,AgentData> currentOrgKnowledge;
 	private ArrayList<InstitutionalState> institutionalStates;
-	
-	private List<BruteState>readSensors(List<Sensor> sn){
-		return null;
-	}
-	private List<BruteState >updateBeliefs(List<BruteState> oldBF, List<BruteState> newBF) {
-		return null;
-	}
-	private List<NormInstantiation> instantiateNorms(List<BruteState> bf, List<NormScheme> ns, List<NormInstantiation> ni) {
-		return null;
-	}
-	private List<NormInstantiation> clearNorms(List<BruteState> bf, List<BruteState> ni) {
-		return null;
-	}
-	private List<NormInstantiation> enforceNorms(List<BruteState> bf, List<NormInstantiation> ni) {
-		return null;
-	}
 	
 	public ArrayList<NormScheme> getNormSchemes() {
 		return normSchemes;
@@ -52,13 +39,6 @@ public class Organisation {
 		this.sensors = sensors;
 	}
 	
-	public ArrayList<BruteState> getBruteStates() {
-		return bruteStates;
-	}
-	public void setBruteStates(ArrayList<BruteState> bruteStates) {
-		this.bruteStates = bruteStates;
-	}
-	
 	public ArrayList<InstitutionalState> getInstitutionalStates() {
 		return institutionalStates;
 	}
@@ -66,6 +46,9 @@ public class Organisation {
 		this.institutionalStates = institutionalStates;
 	}
 	public List<Sanction> getNewSanctions() {
+		for(NormInstantiation ni : normInstantiations) {
+
+		}
 		return null;
 	}
 	public List<NormInstantiation> getNewNormInstantiations() {
@@ -75,5 +58,20 @@ public class Organisation {
 	public List<NormInstantiation> getClearedNormInstantiations() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	public void readSensors() {
+		currentOrgKnowledge = new HashMap<String,AgentData>();
+		for(Sensor s : sensors) {
+			for(AgentData ad : s.readSensor()) {
+				if(currentOrgKnowledge.containsKey(ad.id)) {
+					System.out.println("Org.readsensors: agent " + ad.id + " was already located by a sensor!");
+					
+					AgentData oldAD = currentOrgKnowledge.get(ad.id);
+					System.out.println("Its old road:"+ oldAD.roadID + ", lane:"+ (oldAD.laneIndex) + " and pos:" + oldAD.position);
+					System.out.println("Its new road:"+ ad.roadID + ", lane:"+ (ad.laneIndex) + " and pos:" + ad.position);
+				}
+				currentOrgKnowledge.put(ad.id, ad);
+			}
+		}
 	}
 }

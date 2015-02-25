@@ -66,8 +66,8 @@ public class DoActionTest {
 			rn = TrafficMASController.updateRoadNetwork(rn, stateData);
 			try {
 				if(currentAgentMap.containsValue(granny) && currentAgentMap.containsValue(hotshot)){
-					AgentAction grannyAction 	= granny.doAction(stateData.currentTimeStep/1000);
-					AgentAction hotShotAction 	= hotshot.doAction(stateData.currentTimeStep/1000);
+					AgentAction grannyAction 	= granny.doAction(stateData.currentTimeStep/1000,null,null,null);
+					AgentAction hotShotAction 	= hotshot.doAction(stateData.currentTimeStep/1000,null,null,null);
 					assertEquals(null, grannyAction);
 					assertEquals(AgentAction.ChangeLane, hotShotAction);
 				}

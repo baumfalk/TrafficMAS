@@ -13,6 +13,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import nl.uu.trafficmas.agent.AgentProfileType;
 import nl.uu.trafficmas.norm.NormScheme;
+import nl.uu.trafficmas.organisation.Organisation;
 import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Lane;
 import nl.uu.trafficmas.roadnetwork.LaneType;
@@ -20,6 +21,7 @@ import nl.uu.trafficmas.roadnetwork.Node;
 import nl.uu.trafficmas.roadnetwork.Road;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
+import nl.uu.trafficmas.roadnetwork.Sensor;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -363,6 +365,17 @@ public class DataModelXML implements DataModel {
 	}
 
 	public static Map<String, NormScheme> getNorms(Document normsDoc) {
+		return null;
+	}
+
+	public static Map<String, Organisation> instantiateOrganisations(
+			Document orgsDoc, Document normsDoc, Document sensorsDoc) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static Map<String, Sensor> getSensors(Document sensorsDoc) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 }

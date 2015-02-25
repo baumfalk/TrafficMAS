@@ -16,7 +16,7 @@ public class MergeNormScheme extends NormScheme {
 	private Sensor rampSensor;
 	private Sensor mergeSensor;
 	private List<AgentData> outputList;
-
+	private static int count = 0;
 	/**
 	 * first sensor: main road
 	 * second sensor: ramp
@@ -24,7 +24,7 @@ public class MergeNormScheme extends NormScheme {
 	 * @param sensorList the list of the sensors, used to determine how to merge.
 	 */
 	public MergeNormScheme(List<Sensor> sensorList) {
-		super(sensorList);
+		super("MergeNormScheme"+(++count),sensorList);
 		mainSensor 	= sensorList.get(0);
 		rampSensor 	= sensorList.get(1);
 		mergeSensor	= sensorList.get(2);
@@ -36,8 +36,6 @@ public class MergeNormScheme extends NormScheme {
 		this.runAlgorithm(rn);
 		
 		// determine based on the order the speed for the other cars in front of 
-		
-		
 		return null;
 	}
 

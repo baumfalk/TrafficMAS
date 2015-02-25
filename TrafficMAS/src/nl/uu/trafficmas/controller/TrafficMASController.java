@@ -147,7 +147,7 @@ public class TrafficMASController {
 		this.updateMAS(simulationStateData); 
 		view.addMessage("Number of agents in MAS:"+currentAgentMap.size());
 
-		HashMap<Agent,AgentAction> agentActions = this.nextMASState(simulationStateData.currentTimeStep/1000);
+		HashMap<Agent,AgentAction> agentActions = nextMASState(simulationStateData.currentTimeStep/1000,currentAgentMap,organisations);
 		//view.addMessage(agentActions.toString());
 		start_time = System.nanoTime();
 		TrafficMASController.updateSimulation(simulationModel, agentActions);
@@ -163,24 +163,29 @@ public class TrafficMASController {
 	}
 
 	
+	public static StateData nextSimulationState(SimulationModel simulationModel) {
+		// do step and get new data
+		return simulationModel.getNewStateData();
+	}
+
 	/**
 	 * Calculates the next step for the MAS. Organisations execute their actions, Agent actions are sent to SUMO.
 	 * Not yet completely implemented.	 
 	 * @return 
 	 */
-	private HashMap<Agent, AgentAction> nextMASState(int currentTime) {
+	public static HashMap<Agent, AgentAction> nextMASState(int currentTime, Map<String,Agent>currentAgentMap, List<Organisation> organisations) {
 		//TODO: Organization sanctions
 		
 		// get org sanctions
-		Map<Agent,List<Sanction>> sanctions 				= TrafficMASController.getOrgSanctions(this.organisations);
+		Map<Agent,List<Sanction>> sanctions 				= TrafficMASController.getOrgSanctions(organisations);
 		// get org new norm instantiations
-		Map<Agent,List<NormInstantiation>> normInst			= TrafficMASController.getNormInstantiations(this.organisations);
+		Map<Agent,List<NormInstantiation>> normInst			= TrafficMASController.getNormInstantiations(organisations);
 		
 		// get org norm clears
-		Map<Agent,List<NormInstantiation>> clearedNormInst	= TrafficMASController.getClearedNormInst(this.organisations);
+		Map<Agent,List<NormInstantiation>> clearedNormInst	= TrafficMASController.getClearedNormInst(organisations);
 	
 		
-		return  TrafficMASController.getAgentActions(currentTime, this.currentAgentMap,sanctions,normInst,clearedNormInst);
+		return  TrafficMASController.getAgentActions(currentTime, currentAgentMap,sanctions,normInst,clearedNormInst);
 	}
 
 	// TODO: Write test for this function
@@ -263,6 +268,7 @@ public class TrafficMASController {
 		
 		// update the sensors with the sensordata
 		for(Organisation org : organisations) {
+			
 			for(Sensor sensor : org.getSensors()) {
 				SensorData sd = simulationStateData.sensorData.get(sensor.id);
 				for(String agentID : sd.vehicleIDs) {
@@ -270,6 +276,7 @@ public class TrafficMASController {
 				}
 				sensor.updateSensorData(simulationStateData.sensorData.get(sensor.id));
 			}
+			org.readSensors();
 		}
 		
 		return organisations;
@@ -305,12 +312,12 @@ public class TrafficMASController {
 	}
 
 	public static Map<Agent, List<Sanction>> getOrgSanctions(
-			ArrayList<Organisation> organisations) {
+			List<Organisation> organisations2) {
 		// TODO Auto-generated method stub
 		Map<Agent, List<Sanction>> agentSanctions = new HashMap<Agent, List<Sanction>>(); 
-		if(organisations == null)
+		if(organisations2 == null)
 			return agentSanctions;
-		for(Organisation org : organisations) {
+		for(Organisation org : organisations2) {
 			// get all sanctions the org found
 			List<Sanction> sancList= org.getNewSanctions();
 			// distribute the sanctions to the relevant agents.
@@ -327,7 +334,7 @@ public class TrafficMASController {
 	}
 	
 	public static Map<Agent, List<NormInstantiation>> getNormInstantiations(
-			ArrayList<Organisation> organisations) {
+			List<Organisation> organisations) {
 		// TODO Auto-generated method stub
 		Map<Agent, List<NormInstantiation>> agentNorms = new HashMap<Agent, List<NormInstantiation>>(); 
 		if(organisations == null)
@@ -349,7 +356,7 @@ public class TrafficMASController {
 	}
 
 	public static Map<Agent, List<NormInstantiation>> getClearedNormInst(
-			ArrayList<Organisation> organisations) {
+			List<Organisation> organisations) {
 		Map<Agent, List<NormInstantiation>> agentClearedNorms = new HashMap<Agent, List<NormInstantiation>>(); 
 		if(organisations == null)
 			return agentClearedNorms;
@@ -447,11 +454,6 @@ public class TrafficMASController {
 		if(agentActions != null) {
 			simulationModel.simulateAgentActions(agentActions);
 		}
-	}
-	
-	public static StateData nextSimulationState(SimulationModel simulationModel) {
-		// do step and get new data
-		return simulationModel.getNewStateData();
 	}
 	
 	public static void updateView(TrafficView view, RoadNetwork roadNetwork, Collection<Agent> currentAgents, Collection<Organisation> organisations ) {

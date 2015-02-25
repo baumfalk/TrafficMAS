@@ -75,7 +75,7 @@ public class XMLOrganisations {
 		
 		Set<NormScheme> normSet = new HashSet<NormScheme>(normList.values());
 		for(Organisation org : organisations.values()) {
-			Set<NormScheme> orgNorms = new HashSet<NormScheme>(org.getNorms().values());
+			Set<NormScheme> orgNorms = new HashSet<NormScheme>(org.getNormSchemes());
 			assertEquals(true,normSet.containsAll(orgNorms));
 		}
 	}

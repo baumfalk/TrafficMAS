@@ -59,7 +59,7 @@ public class GetAgentActionsTest {
 
 			currentAgentMap = TrafficMASController.updateAgents(completeAgentMap, rn, stateData);
 			rn 				= TrafficMASController.updateRoadNetwork(rn, stateData);
-			agentActionMap 	= TrafficMASController.getAgentActions(stateData.currentTimeStep/1000, currentAgentMap);
+			agentActionMap 	= TrafficMASController.getAgentActions(stateData.currentTimeStep/1000, currentAgentMap,null,null,null);
 			
 			try {
 				// The fourth agent will ChangeLane, the rest does not need to take action.

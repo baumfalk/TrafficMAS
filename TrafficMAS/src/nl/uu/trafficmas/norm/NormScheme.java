@@ -12,8 +12,9 @@ public abstract class NormScheme {
 	protected Expression trigger;
 	protected Sanction sanction;
 	protected List<Sensor> sensorList;
-	
-	public NormScheme(List<Sensor> sensorList) {
+	public final String id;
+	public NormScheme(String id, List<Sensor> sensorList) {
+		this.id = id;
 		this.sensorList = sensorList;
 	}
 	

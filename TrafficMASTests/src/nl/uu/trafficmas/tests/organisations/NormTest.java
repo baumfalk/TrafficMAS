@@ -59,7 +59,7 @@ public class NormTest {
 		double maxSpeed 			= 50;
 		boolean changeLane 			= false;
 		double sanction				= 100;
-		NormInstantiation normInst 	= normScheme.instantiateNorm(maxSpeed,changeLane, sanction);
-		normInst.checkViolation(agent.getVelocity(),agent.getRoad(),agent.getLane(),agent.getDistance());
+		//NormInstantiation normInst 	= normScheme.instantiateNorm(maxSpeed,changeLane, sanction);
+		//normInst.checkViolation(agent.getVelocity(),agent.getRoad(),agent.getLane(),agent.getDistance());
 	}
 }
