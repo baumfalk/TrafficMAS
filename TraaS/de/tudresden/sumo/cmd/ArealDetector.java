@@ -81,4 +81,11 @@ public class ArealDetector {
 		return new SumoCommand(Constants.CMD_GET_AREAL_DETECTOR_VARIABLE, Constants.LAST_STEP_OCCUPANCY, loopID, Constants.RESPONSE_GET_AREAL_DETECTOR_VARIABLE, Constants.TYPE_DOUBLE);
 	}
 	
+	
+	/**
+	 * getLastStepVehicleIDs
+	 */
+	public static SumoCommand getLastStepVehicleIDs(String loopID) {
+		return new SumoCommand(Constants.CMD_GET_AREAL_DETECTOR_VARIABLE, Constants.LAST_STEP_VEHICLE_ID_LIST, loopID, Constants.RESPONSE_GET_AREAL_DETECTOR_VARIABLE, Constants.TYPE_STRINGLIST);
+	}
 }
