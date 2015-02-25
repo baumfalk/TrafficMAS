@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<mas simulationlength="2000">
+<mas simulationlength="100">
     <edges value="EdgeTest.xml"/>
     <nodes value="NodeTest.xml"/>
     <agentprofiles value="AgentProfileTypesTest.xml"/>

@@ -51,13 +51,28 @@ public enum AgentProfileType {
 		case OldLady:
 			// No hurry, my dear
 			goalArrivalTime =  startTime + minimalTravelTime;
-
 			break;
 		case HotShot:
 			//OUTTATHEWAY
 			goalArrivalTime =  startTime + minimalTravelTime;
 		}
 		return goalArrivalTime;
+	}
+	
+	public static AgentProfileType getAgentProfileType(String agentProfileTypeString) {
+		AgentProfileType agent = null;
+		switch(agentProfileTypeString) {
+		case "Normal":
+			agent = Normal;
+			break;
+		case "OldLady":
+			agent = OldLady;
+			break;
+		case "HotShot":
+			agent = HotShot;
+			break;
+		}
+		return agent;
 	}
 
 }

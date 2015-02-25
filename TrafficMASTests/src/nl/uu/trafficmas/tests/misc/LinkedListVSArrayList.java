@@ -15,7 +15,7 @@ public class LinkedListVSArrayList {
 		List<Integer> list1 = new ArrayList<Integer>();
 		LinkedList<Integer> list2 = new LinkedList<Integer>();
 		List<Integer> list3 = new ArrayList<Integer>(size);
-		long beginTime = 0;
+		long beginTime;
 	
 		
 		beginTime = System.nanoTime();
@@ -23,29 +23,29 @@ public class LinkedListVSArrayList {
 		for (int i = 0; i < size; i++) {
 			list1.add(i);
 		}
-		System.out.println("Filling of arraylist took "+(System.nanoTime()-beginTime)/1e6+"ms");
+		//System.out.println("Filling of arraylist took "+(System.nanoTime()-beginTime)/1e6+"ms");
 		
 		beginTime = System.nanoTime();
 		
 		for (int i = 0; i < size; i++) {
 			list2.add(i);
 		}
-		System.out.println("Filling of linkedlist took "+(System.nanoTime()-beginTime)/1e6+"ms");
+		//System.out.println("Filling of linkedlist took "+(System.nanoTime()-beginTime)/1e6+"ms");
 		
 		beginTime = System.nanoTime();
 		
 		for (int i = 0; i < size; i++) {
 			list3.add(i);
 		}
-		System.out.println("Filling of prepared arraylist took "+(System.nanoTime()-beginTime)/1e6+"ms");
+		//System.out.println("Filling of prepared arraylist took "+(System.nanoTime()-beginTime)/1e6+"ms");
 		
 		//sublist
-		System.out.println("Start sublisting");
+		//System.out.println("Start sublisting");
 		beginTime = System.nanoTime();
 	
 		list1.subList(0, size/2);
 		list1.subList(0,size/2).clear();
-		System.out.println("Sublist + clear of arraylist took "+(System.nanoTime()-beginTime)/1e6+"ms");
+		//System.out.println("Sublist + clear of arraylist took "+(System.nanoTime()-beginTime)/1e6+"ms");
 		
 		
 	}

@@ -1,30 +1,32 @@
 package nl.uu.trafficmas.datamodel;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import nl.uu.trafficmas.agent.AgentProfileType;
 
 public class MASData {
 	public final int simulationLength;
-	public final double spawnProbability;
-	public final HashMap<AgentProfileType, Double> agentProfileTypeDistribution;
-	public final HashMap<String, Double> routeIdAndProbability;
-	public MASData(int simulationLength, double spawnProbability,
-			HashMap<AgentProfileType, Double> agentProfileTypeDistribution, 
-			HashMap<String, Double> routeIdAndProbability) {
-		this.simulationLength 				= simulationLength;
-		this.spawnProbability 				= spawnProbability;
-		this.agentProfileTypeDistribution 	= agentProfileTypeDistribution;
-		this.routeIdAndProbability 			= routeIdAndProbability;
+	public final LinkedHashMap<String, Double> spawnProbabilities;
+	public final boolean multipleRoutes;
+	public final HashMap<String, LinkedHashMap<AgentProfileType, Double>> routeAgentTypeSpawnDist;
+	public MASData(int simulationLength, 
+			LinkedHashMap<String,Double> spawnProbabilities, 
+			boolean multipleRoutes,
+			HashMap<String, LinkedHashMap<AgentProfileType, Double>> routeAgentTypeSpawnDist) {
+		this.simulationLength 			= simulationLength;
+		this.spawnProbabilities 		= spawnProbabilities;
+		this.multipleRoutes 			= multipleRoutes;
+		this.routeAgentTypeSpawnDist 	= routeAgentTypeSpawnDist;
 	}
 	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("SimulationLength: "+simulationLength+"\r\n");
-		sb.append("spawnProbability: "+spawnProbability+"\r\n");
-		sb.append("Agent Profile Distr"+agentProfileTypeDistribution+"\r\n");
-		sb.append("Route Spawn Prob"+routeIdAndProbability+"\r\n");
+		sb.append("spawnProbability: "+spawnProbabilities+"\r\n");
+		sb.append("multipleRoutes: "+multipleRoutes+"\r\n");
+		sb.append("AgentType Spawnprob per route"+routeAgentTypeSpawnDist+"\r\n");
 		return sb.toString();
 	}
 	
