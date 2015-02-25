@@ -29,6 +29,7 @@ public class Road {
 		Lane[] lanes = new Lane[laneList.size()];
 		return laneList.toArray(lanes);
 	}
+	
 	@Override
 	public boolean equals(Object other) {
 		if (other == null) return false;

@@ -6,13 +6,33 @@ import nl.uu.trafficmas.agent.PhysicalObject;
 import nl.uu.trafficmas.simulationmodel.AgentData;
 import nl.uu.trafficmas.simulationmodel.SensorData;
 
-public class Sensor extends PhysicalObject {
-	public final double length;
+public class Sensor {
+
 	public final String id;
+	public final Lane lane;
+	public final double length;
+	public final double position;
+	public final int frequency;
+	private SensorData sensorData;
 	
-	public Sensor(String id, double length) {
-		this.id 	= id;
-		this.length = length;
+	public Sensor(String id, Lane lane, double position, double length, int frequency){
+		this.id 		= id;
+		this.lane		= lane;
+		this.position	= position;
+		this.length		= length;
+		this.frequency	= frequency;
+	}
+	
+	public String getId(){
+		return id;
+	}
+	
+	public Lane getLane(){
+		return lane;
+	}
+	
+	public double getPosition(){
+		return position;
 	}
 	
 	public double getLength(){
@@ -20,16 +40,20 @@ public class Sensor extends PhysicalObject {
 	}
 	
 	public double getEndPosition() {
-		return this.distance+this.length;
+		return this.position+this.length;
 	}
 
 	public List<AgentData> readSensor() {
 		// TODO Auto-generated method stub
-		return null;
+		return sensorData.getAgentsData();
 	}
 
 	public void updateSensorData(SensorData sensorData) {
 		// TODO Auto-generated method stub
+		this.sensorData = sensorData;
 		
+	}
+	public int getFrequency(){
+		return frequency;
 	}
 }

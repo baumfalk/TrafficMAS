@@ -22,7 +22,6 @@ public class XMLExtractEdgesTest {
 
 	@Test
 	public void extractEdges() throws ParserConfigurationException, SAXException, IOException {
-		// <edge from="A28H0" id="A28Tot350" to="A28H350" numLanes="2" priority="2" />
 		
 		String dir 		= System.getProperty("user.dir")+"/tests/XML/ExtractEdges/";
 		String nodeXML 	= "NodeTest.xml";

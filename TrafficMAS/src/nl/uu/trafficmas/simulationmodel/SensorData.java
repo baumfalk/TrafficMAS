@@ -1,6 +1,8 @@
 package nl.uu.trafficmas.simulationmodel;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SensorData implements Data {
@@ -25,5 +27,14 @@ public class SensorData implements Data {
 	
 	public AgentData getAgentData(String vehicleID) {
 		return vehicleData.get(vehicleID);
+	}
+	public List<AgentData> getAgentsData() {
+		List<AgentData> agentDataList = new ArrayList<AgentData>();
+		for(String agentID: vehicleIDs) {
+			if(vehicleData.containsKey(agentID))
+				agentDataList.add(vehicleData.get(agentID));
+		}
+		
+		return agentDataList;
 	}
 }

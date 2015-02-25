@@ -5,15 +5,18 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 public class RoadNetwork {
-	private Set<Node> nodes;
-	private Set<Edge> edges;
+	private Set<Node> 	nodes;
+	private Set<Edge> 	edges;
+	private Set<Sensor> sensors;
 	private Map<Node,Map<Node,Edge>> nodesEdgeLinks;
 	public RoadNetwork() {
 		nodes = new HashSet<Node>();
 		edges = new HashSet<Edge>();
+		sensors = new HashSet<Sensor>();
 		nodesEdgeLinks = new HashMap<Node, Map<Node,Edge>>();
 	}
 	
@@ -22,7 +25,7 @@ public class RoadNetwork {
 		addNodes(nodeList);
 		addEdges(edgeList);
 	}
-
+	
 	public Node[] getNodes() {
 		Node[] list = new Node[nodes.size()];
 		return nodes.toArray(list);
@@ -53,6 +56,17 @@ public class RoadNetwork {
 		for(int i = 0; i < newNodes.size(); i++){
 			this.addNode(newNodes.get(i));
 		}
+	}
+	
+	public void addSensors(HashMap<String,Sensor> sensors){
+		for(Entry<String,Sensor> entry : sensors.entrySet()){
+			this.sensors.add(entry.getValue());
+		}
+	}
+
+	public Sensor[] getSensors() {
+		Sensor[] list = new Sensor[sensors.size()];
+		return sensors.toArray(list);
 	}
 	
 	public void removeNode(Node node) {

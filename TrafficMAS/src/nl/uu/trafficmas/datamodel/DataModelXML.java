@@ -35,6 +35,8 @@ public class DataModelXML implements DataModel {
 	private Document edgesDoc;
 	private Document routesDoc;
 	private Document agentProfilesDoc;
+	private Document sensorsDoc;
+
 
 	public DataModelXML(String dir, String masXML) throws SAXException, IOException, ParserConfigurationException  {
 		setup(dir,masXML);
@@ -47,12 +49,18 @@ public class DataModelXML implements DataModel {
 		String edgesXML 			= masDoc.getDocumentElement().getElementsByTagName("edges").item(0).getAttributes().getNamedItem("value").getTextContent();
 		String routesXML 			= masDoc.getDocumentElement().getElementsByTagName("routes").item(0).getAttributes().getNamedItem("value").getTextContent();
 		String agentProfilesXML 	= masDoc.getDocumentElement().getElementsByTagName("agentprofiles").item(0).getAttributes().getNamedItem("value").getTextContent();
-		
+
 		nodesDoc			= DataModelXML.loadDocument(dir, nodesXML);
 		edgesDoc			= DataModelXML.loadDocument(dir, edgesXML);
 		routesDoc			= DataModelXML.loadDocument(dir, routesXML);
 		agentProfilesDoc	= DataModelXML.loadDocument(dir, agentProfilesXML);
-
+		sensorsDoc			= null;
+		
+		NodeList sensorNodes		= masDoc.getDocumentElement().getElementsByTagName("sensors");
+		if(sensorNodes.getLength()>0){
+			String sensorXML		= masDoc.getDocumentElement().getElementsByTagName("sensors").item(0).getAttributes().getNamedItem("value").getTextContent();
+			sensorsDoc				= DataModelXML.loadDocument(dir, sensorXML);
+		}
 	}
 
 	public static Document loadDocument(String dir, String xml)
@@ -67,7 +75,11 @@ public class DataModelXML implements DataModel {
 
 	@Override
 	public RoadNetwork instantiateRoadNetwork() {
-		return instantiateRoadNetwork(this.nodesDoc, this.edgesDoc);
+		if(sensorsDoc == null){
+			return instantiateRoadNetwork(this.nodesDoc, this.edgesDoc);
+		} else {
+			return instantiateRoadNetwork(this.nodesDoc, this.edgesDoc, this.sensorsDoc);
+		}
 	}
 	
 	/**
@@ -88,6 +100,25 @@ public class DataModelXML implements DataModel {
 		ArrayList<Edge> edges 		= extractEdges(edgeDoc,nodes);
 		
 		RoadNetwork rn = new RoadNetwork(nodeList, edges);
+		
+		if(rn.validateRoadNetwork()){
+			return rn;
+		} else{
+			return null;
+		}
+	}
+	
+	public static RoadNetwork instantiateRoadNetwork(Document nodeDoc, Document edgeDoc, Document sensorDoc) {
+		HashMap<String,Node> nodes 	= DataModelXML.extractNodes(nodeDoc);
+		ArrayList<Node> nodeList 	= new ArrayList<Node>(nodes.values());
+		ArrayList<Edge> edges 		= extractEdges(edgeDoc,nodes);
+		
+		RoadNetwork rn = new RoadNetwork(nodeList, edges);
+		
+		// Add sensors to the road network.
+		HashMap<String,Sensor> sensors = DataModelXML.getSensors(rn, sensorDoc);
+		rn.addSensors(sensors);
+
 		if(rn.validateRoadNetwork()){
 			return rn;
 		} else{
@@ -351,6 +382,40 @@ public class DataModelXML implements DataModel {
 		}
 		
 		return routes;
+	}
+	
+	
+	@Override
+	public HashMap<String, Sensor> getSensors(RoadNetwork rn) {
+		return getSensors(rn,this.sensorsDoc);
+	}
+	/**
+	 * 
+	 * @param rn
+	 * @param sensorsDoc
+	 * @return
+	 */
+	public static HashMap<String, Sensor> getSensors(RoadNetwork rn, Document sensorsDoc){
+		HashMap<String,Sensor> sensors = new HashMap<String, Sensor>();
+		NodeList sensorList = sensorsDoc.getElementsByTagName("laneAreaDetector");
+		
+		for (int i = 0; i < sensorList.getLength(); i++) {
+			org.w3c.dom.Node n = sensorList.item(i);
+			NamedNodeMap attr = n.getAttributes();
+			String id 			= attr.getNamedItem("id").getTextContent();
+			String lane 		= attr.getNamedItem("lane").getTextContent();
+			String position 	= attr.getNamedItem("pos").getTextContent();
+			String length 		= attr.getNamedItem("length").getTextContent();
+			String frequency 	= attr.getNamedItem("freq").getTextContent();
+			
+			String roadID 		= lane.substring(0, lane.length()-2);
+			String laneIndex 	= lane.substring(lane.length()-1, lane.length());
+			Road r = rn.getRoadFromID(roadID);
+			Lane l = r.laneList.get((Integer.parseInt(laneIndex)));
+			Sensor sensor = new Sensor(id, l, Double.parseDouble(position), Double.parseDouble(length), Integer.parseInt(frequency));
+			sensors.put(id, sensor);
+		}
+		return sensors;
 	}
 
 	@Override

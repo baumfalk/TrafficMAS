@@ -471,8 +471,8 @@ public class TrafficMASController {
 	
 	/**
 	 * Generates a Map of Agents and their respective starting times according to 'masData'. 
-	 * An agent will be spawned on each route with chance masData.spawnProbability if > 0.
-	 * Otherwise the individual spawn probabilities of the routes will be used.
+	 * An agent will be spawned on each route with individual spawn probabilities if the value of "multiple-routes" in the xml is true.
+	 * Otherwise, the data given in the xml with the id="all" is used. 
 	 * Randomness is determined by 'rng'.  
 	 * @param masData
 	 * @param rng
@@ -484,14 +484,12 @@ public class TrafficMASController {
 		LinkedHashMap<Agent, Integer> agentsAndTimes = new LinkedHashMap<Agent, Integer>();
 		int simulationLength = masData.simulationLength;
 		
-		// If spawnProbability is 0.0, the spawn probabilities of the roads is checked. 
-		// Otherwise, the spawn probability is the same for every road.
 		LinkedHashMap<String,Double> agentSpawnProbabilities 	= masData.spawnProbabilities;
 		boolean multipleRoutes			= masData.multipleRoutes;
 		
 		HashMap<String, LinkedHashMap<AgentProfileType, Double>> routeAgentTypeSpawnDist = masData.routeAgentTypeSpawnDist;
 
-		
+		// If different spawn rates are applied to each route
 		if(multipleRoutes){
 			for (int currentTime = 1; currentTime <= simulationLength; currentTime++) {
 				double coinFlip = rng.nextDouble();
@@ -502,6 +500,7 @@ public class TrafficMASController {
 					}
 				}
 			}
+		// Otherwise, use the data given in the xml with the id="all" 
 		} else{
 			for (int currentTime = 1; currentTime <= simulationLength; currentTime++) {
 				double coinFlip = rng.nextDouble();
