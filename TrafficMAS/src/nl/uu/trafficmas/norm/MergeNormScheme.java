@@ -23,8 +23,9 @@ public class MergeNormScheme extends NormScheme {
 	 * third sensor: after merge
 	 * @param sensorList the list of the sensors, used to determine how to merge.
 	 */
-	public MergeNormScheme(List<Sensor> sensorList) {
-		super("MergeNormScheme"+(++count),sensorList);
+	public MergeNormScheme(String id, SanctionType sanctionType, List<Sensor> sensorList) {
+		super(id,sanctionType,sensorList);
+		//super(id, sanctionType, sensorList);
 		mainSensor 	= sensorList.get(0);
 		rampSensor 	= sensorList.get(1);
 		mergeSensor	= sensorList.get(2);

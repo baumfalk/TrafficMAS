@@ -3,8 +3,11 @@ package nl.uu.trafficmas.datamodel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import nl.uu.trafficmas.agent.AgentProfileType;
+import nl.uu.trafficmas.norm.NormScheme;
+import nl.uu.trafficmas.organisation.Organisation;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
 import nl.uu.trafficmas.roadnetwork.Sensor;
@@ -49,6 +52,12 @@ public interface DataModel {
 	public ArrayList<Route> getRoutes(RoadNetwork rn);
 	
 	/**
+	 * 
+	 * @return
+	 */
+	public Map<String, NormScheme> getNormSchemes(Map<String, Sensor> sensors);
+	
+	/**
 	 * Returns a hashMap of all sensors in the road network. These sensors are stated in the XML files read by the Datamodel.
 	 * @param rn
 	 * @return a map containing with the key being the Id of the sensor, and the key being the sensor object itself.
@@ -59,7 +68,7 @@ public interface DataModel {
 	 * Not yet implemented
 	 */
 	public void close();
-
+	
 	/**
 	 * Returns a hashmap which contains the AgentProfile distribution map on every route as parsed by the route.xml file.
 	 * @return

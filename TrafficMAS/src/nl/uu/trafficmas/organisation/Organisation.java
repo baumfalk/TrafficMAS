@@ -18,6 +18,11 @@ public class Organisation {
 	private Map<String,AgentData> currentOrgKnowledge;
 	private ArrayList<InstitutionalState> institutionalStates;
 	
+	public Organisation(ArrayList<NormScheme> normSchemes, ArrayList<Sensor> sensors ){
+		this.normSchemes 	= normSchemes;
+		this.sensors 		= sensors;
+	}
+	
 	public ArrayList<NormScheme> getNormSchemes() {
 		return normSchemes;
 	}

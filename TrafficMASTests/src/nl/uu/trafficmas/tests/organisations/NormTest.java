@@ -6,6 +6,7 @@ import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -19,6 +20,7 @@ import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Node;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
+import nl.uu.trafficmas.roadnetwork.Sensor;
 
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -33,7 +35,9 @@ public class NormTest {
 		String normsXML		= "orgnormtest.norm.xml";
 		Document normsDoc	= DataModelXML.loadDocument(dir, normsXML);
 		
-		Map<String,NormScheme> normList = DataModelXML.getNorms(normsDoc);
+		Map<String,Sensor> tempdicks = new HashMap<String, Sensor>();
+		
+		Map<String,NormScheme> normList = DataModelXML.getNormSchemes(tempdicks, normsDoc);
 		
 		
 		assertNotNull(normList);

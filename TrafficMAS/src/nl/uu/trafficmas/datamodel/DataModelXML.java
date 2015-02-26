@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -12,7 +13,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import nl.uu.trafficmas.agent.AgentProfileType;
+import nl.uu.trafficmas.norm.MergeNormScheme;
 import nl.uu.trafficmas.norm.NormScheme;
+import nl.uu.trafficmas.norm.Sanction;
+import nl.uu.trafficmas.norm.SanctionType;
 import nl.uu.trafficmas.organisation.Organisation;
 import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Lane;
@@ -24,6 +28,7 @@ import nl.uu.trafficmas.roadnetwork.Route;
 import nl.uu.trafficmas.roadnetwork.Sensor;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -36,6 +41,8 @@ public class DataModelXML implements DataModel {
 	private Document routesDoc;
 	private Document agentProfilesDoc;
 	private Document sensorsDoc;
+	private Document normsDoc;
+	private Document orgsDoc;
 
 
 	public DataModelXML(String dir, String masXML) throws SAXException, IOException, ParserConfigurationException  {
@@ -448,19 +455,94 @@ public class DataModelXML implements DataModel {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public Map<String, NormScheme> getNormSchemes(Map<String,Sensor> sensors){
+		return getNormSchemes(sensors, this.normsDoc);
+	}
+	
+	public static Map<String, NormScheme> getNormSchemes(Map<String,Sensor> sensors, Document normsDoc) {
+		Map<String,NormScheme> normSchemes = new HashMap<String,NormScheme>();
+		List<Sensor> normSensors = new ArrayList<Sensor>();
+		NodeList normSchemeList = normsDoc.getElementsByTagName("norm_scheme");
+		
+		for (int i = 0; i < normSchemeList.getLength(); i++) {
+			
+			org.w3c.dom.Node n = normSchemeList.item(i);
+			if (n.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
+				Element element = (Element) n;
+				String id 			= element.getAttribute("id");
+				String sanctionStr	= element.getAttribute("sanction");			
 
-	public static Map<String, NormScheme> getNorms(Document normsDoc) {
-		return null;
+				NodeList sensorList = element.getElementsByTagName("sensor");
+				for (int j = 0; j < sensorList.getLength(); j++) {
+					String sensID = sensorList.item(j).getAttributes().getNamedItem("id").getTextContent();
+					normSensors.add(sensors.get(sensID));
+				}
+
+				SanctionType sanctionType;
+				switch(sanctionStr){
+				case "LowFine":
+					sanctionType = SanctionType.LowFine;
+					break;
+				case "HighFine":
+					sanctionType = SanctionType.HighFine;
+					break;
+				default:
+					sanctionType = null;
+				}
+			
+				//TODO: Apply this to different norm schemes.
+				NormScheme normScheme = new MergeNormScheme(id,sanctionType,normSensors);
+				normSchemes.put(id, normScheme);
+			}	
+		}		
+		return normSchemes;
 	}
 
 	public static Map<String, Organisation> instantiateOrganisations(
-			Document orgsDoc, Document normsDoc, Document sensorsDoc) {
+			Document orgsDoc, Map<String,NormScheme> normSchemeMap, Map<String,Sensor> sensorMap) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public static Map<String, Sensor> getSensors(Document sensorsDoc) {
-		// TODO Auto-generated method stub
+	
+	public Map<String, Organisation> getOrganisations() {
+		return getOrganisations(this.orgsDoc);
+	}
+	
+	public static Map<String, Organisation> getOrganisations(Document organisationDoc) {
+		Map<String,Organisation> orgMap = new HashMap<String,Organisation>();
+		ArrayList<NormScheme> normSchemes = new ArrayList<NormScheme>();
+		ArrayList<Sensor> sensors = new ArrayList<Sensor>();
+		NodeList organisationList = organisationDoc.getElementsByTagName("organisation");
+		
+		for (int i = 0; i < organisationList.getLength(); i++) {
+			 
+			org.w3c.dom.Node nNode = organisationList.item(i);
+	 
+			if (nNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
+				Element element = (Element) nNode;
+				String orgId = element.getAttribute("id");
+				
+				NodeList sensorList = element.getElementsByTagName("sensor");
+				for (int j = 0; j < sensorList.getLength(); j++) {
+					String sensID = sensorList.item(j).getAttributes().getNamedItem("id").getTextContent();
+					Sensor sensor = new Sensor(sensID, null, 0, 0, 0);
+					sensors.add(sensor);
+				}	
+				
+				NodeList normsSensorList = element.getElementsByTagName("norm");
+				for (int k = 0; k < normsSensorList.getLength(); k++) {
+					String normId = normsSensorList.item(k).getAttributes().getNamedItem("id").getTextContent();
+					
+					// TODO: Deze moet algemeen blijven. 
+					NormScheme normScheme = new MergeNormScheme(normId, null, null);
+				}	 
+			}
+			Organisation organisation = new Organisation(normSchemes, sensors);
+		}
 		return null;
 	}
+
 }

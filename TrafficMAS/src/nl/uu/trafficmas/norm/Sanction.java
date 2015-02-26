@@ -10,9 +10,6 @@ public class Sanction implements InstitutionalState {
 	public SanctionType getSanctionType() {
 		return sanctionType;
 	}
-	public void setSanctionType(SanctionType sanctionType) {
-		this.sanctionType = sanctionType;
-	}
 	
 	public Agent getAgent() {
 		return agent;
