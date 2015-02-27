@@ -40,7 +40,7 @@ public class XMLGetNormSchemesTest {
 	
 		Map<String,NormScheme> normSchemesMap = DataModelXML.getNormSchemes(sensors, normSchemeDoc);
 		
-		assertEquals(normSchemesMap.get("ramp-merging").id,"ramp-merging");	
-		assertEquals(normSchemesMap.get("ramp-merging").sensorList.size(),3);	
+		assertEquals(normSchemesMap.get("ramp-merging_1").id,"ramp-merging_1");	
+		assertEquals(normSchemesMap.get("ramp-merging_1").sensorList.size(),3);	
 	}
 }

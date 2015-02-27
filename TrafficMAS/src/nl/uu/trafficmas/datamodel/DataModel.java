@@ -51,19 +51,30 @@ public interface DataModel {
 	 */
 	public ArrayList<Route> getRoutes(RoadNetwork rn);
 	
+	
+	/*
 	/**
 	 * 
 	 * @return
-	 */
+	 
 	public Map<String, NormScheme> getNormSchemes(Map<String, Sensor> sensors);
 	
 	/**
 	 * Returns a hashMap of all sensors in the road network. These sensors are stated in the XML files read by the Datamodel.
 	 * @param rn
 	 * @return a map containing with the key being the Id of the sensor, and the key being the sensor object itself.
-	 */
+	 
 	public HashMap<String, Sensor> getSensors(RoadNetwork rn);
-
+	*/
+	
+	/**
+	 * 
+	 * @param sensors
+	 * @param normSchemes
+	 * @return
+	 */
+	public Map<String,Organisation> instantiateOrganisations();
+	
 	/**
 	 * Not yet implemented
 	 */

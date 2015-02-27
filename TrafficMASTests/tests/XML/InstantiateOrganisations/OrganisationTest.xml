@@ -7,7 +7,7 @@
             <sensor id="sens5" />
         </sensors>
         <norms>
-            <norm id="norm1" />
+            <norm id="ramp-merging_1" />
         </norms>
     </organisation>
 </organisations>
