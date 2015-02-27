@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -12,7 +13,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import nl.uu.trafficmas.agent.AgentProfileType;
+import nl.uu.trafficmas.norm.MergeNormScheme;
 import nl.uu.trafficmas.norm.NormScheme;
+import nl.uu.trafficmas.norm.Sanction;
+import nl.uu.trafficmas.norm.SanctionType;
 import nl.uu.trafficmas.organisation.Organisation;
 import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Lane;
@@ -24,6 +28,7 @@ import nl.uu.trafficmas.roadnetwork.Route;
 import nl.uu.trafficmas.roadnetwork.Sensor;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -36,6 +41,8 @@ public class DataModelXML implements DataModel {
 	private Document routesDoc;
 	private Document agentProfilesDoc;
 	private Document sensorsDoc;
+	private Document normsDoc;
+	private Document orgsDoc;
 
 
 	public DataModelXML(String dir, String masXML) throws SAXException, IOException, ParserConfigurationException  {
@@ -116,8 +123,8 @@ public class DataModelXML implements DataModel {
 		RoadNetwork rn = new RoadNetwork(nodeList, edges);
 		
 		// Add sensors to the road network.
-		HashMap<String,Sensor> sensors = DataModelXML.getSensors(rn, sensorDoc);
-		rn.addSensors(sensors);
+		HashMap<String,Sensor> sensorMap 		= getSensors(rn, sensorDoc);
+		rn.addSensors(sensorMap);		
 
 		if(rn.validateRoadNetwork()){
 			return rn;
@@ -385,10 +392,7 @@ public class DataModelXML implements DataModel {
 	}
 	
 	
-	@Override
-	public HashMap<String, Sensor> getSensors(RoadNetwork rn) {
-		return getSensors(rn,this.sensorsDoc);
-	}
+
 	/**
 	 * 
 	 * @param rn
@@ -417,6 +421,97 @@ public class DataModelXML implements DataModel {
 		}
 		return sensors;
 	}
+	
+	public static Map<String, NormScheme> getNormSchemes(Map<String,Sensor> sensors, Document normsDoc) {
+		Map<String,NormScheme> normSchemes = new HashMap<String,NormScheme>();
+		List<Sensor> normSensors = new ArrayList<Sensor>();
+		NodeList normSchemeList = normsDoc.getElementsByTagName("norm_scheme");
+		
+		for (int i = 0; i < normSchemeList.getLength(); i++) {
+			
+			org.w3c.dom.Node n = normSchemeList.item(i);
+			if (n.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
+				Element element = (Element) n;
+				String id 			= element.getAttribute("id");
+				String sanctionStr	= element.getAttribute("sanction");	
+				String className	= element.getAttribute("classname");
+
+				NodeList sensorList = element.getElementsByTagName("sensor");
+				for (int j = 0; j < sensorList.getLength(); j++) {
+					String sensID = sensorList.item(j).getAttributes().getNamedItem("id").getTextContent();
+					normSensors.add(sensors.get(sensID));
+				}
+				
+				SanctionType sanctionType;
+				switch(sanctionStr){
+				case "LowFine":
+					sanctionType = SanctionType.LowFine;
+					break;
+				case "HighFine":
+					sanctionType = SanctionType.HighFine;
+					break;
+				default:
+					sanctionType = null;
+				}
+				
+				//TODO: Apply this to different norm schemes using "classname" param in xml.
+				NormScheme normScheme = new MergeNormScheme(id,sanctionType,normSensors);
+				normSchemes.put(id, normScheme);
+			}	
+		}		
+		return normSchemes;
+	}
+
+	@Override
+	public Map<String,Organisation> instantiateOrganisations(){
+		return instantiateOrganisations(this.nodesDoc, this.edgesDoc, this.sensorsDoc, this.normsDoc, this.orgsDoc );
+	}
+	
+	public static Map<String, Organisation> instantiateOrganisations(
+			Document nodeDoc, Document edgeDoc, Document sensorDoc, Document normDoc, Document orgDoc) {
+		
+		Map<String,Organisation> orgMap = new HashMap<String,Organisation>();
+		HashMap<String,Node> nodes 	= DataModelXML.extractNodes(nodeDoc);
+		ArrayList<Node> nodeList 	= new ArrayList<Node>(nodes.values());
+		ArrayList<Edge> edges 		= extractEdges(edgeDoc,nodes);
+		RoadNetwork rn = new RoadNetwork(nodeList, edges);
+		
+		HashMap<String,Sensor> sensorMap 		= getSensors(rn, sensorDoc);
+		Map<String,NormScheme> normSchemeMap	= getNormSchemes(sensorMap, normDoc);
+		
+		
+		ArrayList<NormScheme> normSchemes = new ArrayList<NormScheme>();
+		ArrayList<Sensor> sensors = new ArrayList<Sensor>();
+		NodeList organisationList = orgDoc.getElementsByTagName("organisation");
+		
+		for (int i = 0; i < organisationList.getLength(); i++) {
+			 
+			org.w3c.dom.Node nNode = organisationList.item(i);
+			if (nNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
+				Element element = (Element) nNode;
+				String orgId = element.getAttribute("id");
+
+				NodeList sensorList = element.getElementsByTagName("sensor");
+				for (int j = 0; j < sensorList.getLength(); j++) {
+					String sensId = sensorList.item(j).getAttributes().getNamedItem("id").getTextContent();
+					Sensor sensor = sensorMap.get(sensId);
+					sensors.add(sensor);
+				}	
+				
+				NodeList normsSensorList = element.getElementsByTagName("norm");
+				for (int k = 0; k < normsSensorList.getLength(); k++) {
+					String normId = normsSensorList.item(k).getAttributes().getNamedItem("id").getTextContent();
+					NormScheme normScheme = normSchemeMap.get(normId);
+					//System.out.println(normScheme.id);
+					normSchemes.add(normScheme);
+				}	 
+				Organisation organisation = new Organisation(normSchemes, sensors);
+				orgMap.put(orgId, organisation);
+			}
+		}
+		return orgMap;
+	}
+	
 
 	@Override
 	public MASData getMASData() {
@@ -446,21 +541,5 @@ public class DataModelXML implements DataModel {
 	@Override
 	public void close() {
 		// TODO Auto-generated method stub
-		
-	}
-
-	public static Map<String, NormScheme> getNorms(Document normsDoc) {
-		return null;
-	}
-
-	public static Map<String, Organisation> instantiateOrganisations(
-			Document orgsDoc, Document normsDoc, Document sensorsDoc) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public static Map<String, Sensor> getSensors(Document sensorsDoc) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

@@ -11,12 +11,13 @@ import nl.uu.trafficmas.simulationmodel.AgentData;
 public abstract class NormScheme {
 	protected Expression precondition;
 	protected Expression trigger;
-	protected Sanction sanction;
-	protected List<Sensor> sensorList;
+	protected SanctionType sanctionType;
+	public final List<Sensor> sensorList;
 	public final String id;
-	public NormScheme(String id, List<Sensor> sensorList) {
-		this.id = id;
-		this.sensorList = sensorList;
+	public NormScheme(String id, SanctionType sanctionType, List<Sensor> sensorList) {
+		this.id 			= id;
+		this.sanctionType 	= sanctionType;
+		this.sensorList		= sensorList;
 	}
 	
 	public abstract List<NormInstantiation> instantiateNorms(RoadNetwork rn, Map<String, AgentData> currentOrgKnowledge);

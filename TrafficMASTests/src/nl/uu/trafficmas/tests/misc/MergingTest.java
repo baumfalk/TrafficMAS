@@ -62,11 +62,7 @@ public class MergingTest {
 //		TrafficMASController.createAgent(routes.get(1), agentsAndTimes, agentProfileDistribution, rn, 10, .5);
 //		TrafficMASController.createAgent(routes.get(1), agentsAndTimes, agentProfileDistribution, rn, 15, .5);
 //		TrafficMASController.createAgent(routes.get(1), agentsAndTimes, agentProfileDistribution, rn, 20, .5);
-		/*
-		for(Entry<Agent, Integer> agentPair : agentsAndTimes.entrySet()){
-			System.out.println("<"+agentPair.getKey()+", "+agentPair.getValue()+">");
-		}
-		*/
+	
 		
 		HashMap<String, Agent> completeAgentMap = SimulationModelTraaS.addAgents(agentsAndTimes, conn);
 		HashMap<String, Agent> currentAgentMap 	= SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, new LinkedHashMap<String, Agent>(), conn);

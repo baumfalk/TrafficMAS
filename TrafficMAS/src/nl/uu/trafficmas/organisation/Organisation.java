@@ -20,6 +20,11 @@ public class Organisation {
 	private ArrayList<InstitutionalState> institutionalStates;
 	private int currentTime;
 	
+	public Organisation(ArrayList<NormScheme> normSchemes, ArrayList<Sensor> sensors ){
+		this.normSchemes 	= normSchemes;
+		this.sensors 		= sensors;
+	}
+	
 	public ArrayList<NormScheme> getNormSchemes() {
 		return normSchemes;
 	}
