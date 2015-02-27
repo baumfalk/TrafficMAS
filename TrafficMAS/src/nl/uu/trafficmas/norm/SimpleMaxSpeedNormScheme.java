@@ -25,12 +25,12 @@ public class SimpleMaxSpeedNormScheme extends NormScheme {
 		List<NormInstantiation> list = new ArrayList<NormInstantiation>();
 		for(Sensor s : sensorList) {
 			for(AgentData agentData : s.readSensor()) {
-				
+				list.add(new SimpleMaxSpeedNormInstantiation(this, agentData.id));
 			}
 		}
 		
 		
-		return null;
+		return list;
 	}
 
 	
@@ -48,14 +48,9 @@ public class SimpleMaxSpeedNormScheme extends NormScheme {
 	@Override
 	public boolean violated(AgentData ad) {
 		// TODO Auto-generated method stub
-		return false;
+		return ad.velocity > 10;
 	}
 
-	@Override
-	public Sanction getSanction() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public boolean deadline(Map<String, AgentData> currentOrgKnowledge,

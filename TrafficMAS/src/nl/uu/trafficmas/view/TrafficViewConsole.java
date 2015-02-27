@@ -1,6 +1,7 @@
 package nl.uu.trafficmas.view;
 
 import java.util.Collection;
+import java.util.Map;
 
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.organisation.Organisation;
@@ -39,9 +40,9 @@ public class TrafficViewConsole implements TrafficView {
 	}
 
 	@Override
-	public void updateFromOrganisations(Collection<Organisation> orgs) {
+	public void updateFromOrganisations(Map<String, Organisation> organisations) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override

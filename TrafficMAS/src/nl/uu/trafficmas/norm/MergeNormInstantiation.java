@@ -20,12 +20,6 @@ public class MergeNormInstantiation extends NormInstantiation {
 	}
 
 	@Override
-	public Sanction getSanction() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public boolean deadline(Map<String, AgentData> currentOrgKnowledge,
 			int currentTime) {
 		// TODO Auto-generated method stub

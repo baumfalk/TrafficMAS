@@ -57,7 +57,7 @@ public class Organisation {
 		for(NormInstantiation ni : normInstantiations) {
 			AgentData ad = currentOrgKnowledge.get(ni.agentID());
 			if(ni.violated(ad)) {
-				sanctions.add(ni.getSanction());
+				sanctions.add(ni.getSanction(ad));
 			}
 		}
 		return sanctions;

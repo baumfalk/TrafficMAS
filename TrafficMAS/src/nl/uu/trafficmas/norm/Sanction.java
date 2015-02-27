@@ -4,17 +4,12 @@ import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.organisation.InstitutionalState;
 
 public class Sanction implements InstitutionalState {
-	private SanctionType sanctionType;
-	private String agentID;
+	public final SanctionType sanctionType;
+	public final String agentID;
 	
-	public SanctionType getSanctionType() {
-		return sanctionType;
+	public Sanction(SanctionType sanctionType, String agentID) {
+		this.sanctionType = sanctionType;
+		this.agentID	= agentID;
 	}
 	
-	public String agentID() {
-		return agentID;
-	}
-	public void setAgentID(String agentID) {
-		this.agentID = agentID;
-	}
 }

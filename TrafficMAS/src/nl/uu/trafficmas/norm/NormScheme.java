@@ -28,7 +28,10 @@ public abstract class NormScheme {
 	
 	public abstract boolean violated(AgentData ad);
 
-	public abstract Sanction getSanction();
+	public Sanction getSanction(AgentData ad) {
+		return new Sanction(sanctionType, ad.id);
+	}
+
 
 	public abstract boolean deadline(Map<String, AgentData> currentOrgKnowledge, int currentTime);
 }

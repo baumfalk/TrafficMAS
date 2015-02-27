@@ -62,11 +62,17 @@ public class DataModelXML implements DataModel {
 		routesDoc			= DataModelXML.loadDocument(dir, routesXML);
 		agentProfilesDoc	= DataModelXML.loadDocument(dir, agentProfilesXML);
 		sensorsDoc			= null;
-		
+		normsDoc			= null;
 		NodeList sensorNodes		= masDoc.getDocumentElement().getElementsByTagName("sensors");
 		if(sensorNodes.getLength()>0){
 			String sensorXML		= masDoc.getDocumentElement().getElementsByTagName("sensors").item(0).getAttributes().getNamedItem("value").getTextContent();
 			sensorsDoc				= DataModelXML.loadDocument(dir, sensorXML);
+		}
+		
+		NodeList normNodes = masDoc.getDocumentElement().getElementsByTagName("norms");
+		if(normNodes.getLength()>0){
+			String normsXML			= masDoc.getDocumentElement().getElementsByTagName("norms").item(0).getAttributes().getNamedItem("value").getTextContent();
+			normsDoc				= DataModelXML.loadDocument(dir, normsXML);
 		}
 	}
 
@@ -442,7 +448,7 @@ public class DataModelXML implements DataModel {
 					normSensors.add(sensors.get(sensID));
 				}
 				
-				SanctionType sanctionType;
+				SanctionType sanctionType = null;
 				switch(sanctionStr){
 				case "LowFine":
 					sanctionType = SanctionType.LowFine;
@@ -450,8 +456,6 @@ public class DataModelXML implements DataModel {
 				case "HighFine":
 					sanctionType = SanctionType.HighFine;
 					break;
-				default:
-					sanctionType = null;
 				}
 				
 				//TODO: Apply this to different norm schemes using "classname" param in xml.
@@ -511,11 +515,10 @@ public class DataModelXML implements DataModel {
 		}
 		return orgMap;
 	}
-	
 
 	@Override
 	public MASData getMASData() {
-		return getMASData(this.masDoc, this.agentProfilesDoc, this.routesDoc);
+		return getMASData(this.masDoc, this.agentProfilesDoc, this.nodesDoc, this.edgesDoc, this.sensorsDoc, this.normsDoc, this.orgsDoc, this.routesDoc);
 	}
 	
 	/**
@@ -530,12 +533,14 @@ public class DataModelXML implements DataModel {
 	 * @throws SAXException 
 	 * @throws ParserConfigurationException 
 	 */
-	public static MASData getMASData(Document masDoc, Document agentProfilesDoc, Document routesDoc) {
+	public static MASData getMASData(Document masDoc, Document agentProfilesDoc, Document nodeDoc, Document edgeDoc, Document sensorDoc, Document normDoc, Document orgDoc,Document routesDoc) {
 		int simulationLength 							= DataModelXML.simulationLength(masDoc);
 		boolean multipleRoutes 							= DataModelXML.getMultipleRoutesValue(agentProfilesDoc);
 		LinkedHashMap<String, Double> spawnProbabilities 	= DataModelXML.getAgentSpawnProbability(agentProfilesDoc);
 		HashMap<String, LinkedHashMap<AgentProfileType,Double>> routeAgentTypeSpawnProbabilityMap 	= DataModelXML.getRoutesAgentTypeSpawnProbabilities(agentProfilesDoc);
-		return new MASData(simulationLength, spawnProbabilities, multipleRoutes, routeAgentTypeSpawnProbabilityMap);
+		Map<String, Organisation> instantiatedOrganisations = DataModelXML.instantiateOrganisations(nodeDoc, edgeDoc, sensorDoc, normDoc, orgDoc);
+		
+		return new MASData(simulationLength, spawnProbabilities, multipleRoutes, routeAgentTypeSpawnProbabilityMap,instantiatedOrganisations);
 	}
 
 	@Override

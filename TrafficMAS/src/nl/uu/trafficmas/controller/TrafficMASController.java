@@ -34,7 +34,7 @@ public class TrafficMASController {
 
 	private RoadNetwork roadNetwork;
 	private HashMap<Agent, Integer> agentsAndTime;
-	private ArrayList<Organisation> organisations;
+	private Map<String, Organisation> organisations;
 	private Random rng;
 	
 	private HashMap<String,Agent> completeAgentMap = new LinkedHashMap<String, Agent>();
@@ -75,7 +75,7 @@ public class TrafficMASController {
 		this.agentsAndTime 	= TrafficMASController.instantiateAgents(masData, rng, routes, roadNetwork);
 		view.addMessage("Generated agent spawn times");
 
-		this.organisations 	= TrafficMASController.instantiateOrganisations(masData);
+		this.organisations 	= this.masData.organisations;
 		view.addMessage("Initialized organisations");
 
 		//////////////////////
@@ -173,12 +173,12 @@ public class TrafficMASController {
 	 * Not yet completely implemented.	 
 	 * @return 
 	 */
-	public static HashMap<Agent, AgentAction> nextMASState(int currentTime, Map<String,Agent>currentAgentMap, List<Organisation> organisations, RoadNetwork roadNetwork) {
+	public static HashMap<Agent, AgentAction> nextMASState(int currentTime, Map<String,Agent>currentAgentMap, Map<String, Organisation> organisations2, RoadNetwork roadNetwork) {
 		//TODO: Organization sanctions
 		
-		Map<String,List<Sanction>> sanctions 				= TrafficMASController.getOrgSanctions(organisations);
-		Map<String,List<NormInstantiation>> normInst		= TrafficMASController.getNormInstantiations(organisations,roadNetwork);
-		Map<String,List<NormInstantiation>> clearedNormInst	= TrafficMASController.getClearedNormInst(organisations);
+		Map<String,List<Sanction>> sanctions 				= TrafficMASController.getOrgSanctions(organisations2);
+		Map<String,List<NormInstantiation>> normInst		= TrafficMASController.getNormInstantiations(organisations2,roadNetwork);
+		Map<String,List<NormInstantiation>> clearedNormInst	= TrafficMASController.getClearedNormInst(organisations2);
 	
 		return  TrafficMASController.getAgentActions(currentTime, currentAgentMap,sanctions,normInst,clearedNormInst);
 	}
@@ -255,14 +255,14 @@ public class TrafficMASController {
 		organisations	= TrafficMASController.updateOrganisations(organisations, simulationStateData);
 	}
 	
-	public static ArrayList<Organisation> updateOrganisations(
-			ArrayList<Organisation> organisations,
+	public static Map<String, Organisation> updateOrganisations(
+			Map<String, Organisation> organisations2,
 			StateData simulationStateData) {
-		if(organisations == null) 
+		if(organisations2 == null) 
 			return null;
 		
 		// update the sensors with the sensordata
-		for(Organisation org : organisations) {
+		for(Organisation org : organisations2.values()) {
 			org.updateTime(simulationStateData.currentTimeStep/1000);
 			for(Sensor sensor : org.getSensors()) {
 				SensorData sd = simulationStateData.sensorData.get(sensor.id);
@@ -274,7 +274,7 @@ public class TrafficMASController {
 			org.readSensors();
 		}
 		
-		return organisations;
+		return organisations2;
 	}
 
 	/**
@@ -307,21 +307,21 @@ public class TrafficMASController {
 	}
 
 	public static Map<String, List<Sanction>> getOrgSanctions(
-			List<Organisation> organisations2) {
+			Map<String, Organisation> organisations2) {
 		// TODO Auto-generated method stub
 		Map<String, List<Sanction>> agentSanctions = new HashMap<String, List<Sanction>>(); 
 		if(organisations2 == null)
 			return agentSanctions;
-		for(Organisation org : organisations2) {
+		for(Organisation org : organisations2.values()) {
 			// get all sanctions the org found
 			List<Sanction> sancList= org.getNewSanctions();
 			// distribute the sanctions to the relevant agents.
 			for(Sanction s : sancList) {
-				if(!agentSanctions.containsKey(s.agentID())) {
+				if(!agentSanctions.containsKey(s.agentID)) {
 					List<Sanction> sl = new  ArrayList<Sanction>();
-					agentSanctions.put(s.agentID(), sl);
+					agentSanctions.put(s.agentID, sl);
 				}
-				agentSanctions.get(s.agentID()).add(s);
+				agentSanctions.get(s.agentID).add(s);
 			}
 		}
 		
@@ -329,12 +329,12 @@ public class TrafficMASController {
 	}
 	
 	public static Map<String, List<NormInstantiation>> getNormInstantiations(
-			List<Organisation> organisations, RoadNetwork roadNetwork) {
+			Map<String, Organisation> organisations2, RoadNetwork roadNetwork) {
 		// TODO Auto-generated method stub
 		Map<String, List<NormInstantiation>> agentNorms = new HashMap<String, List<NormInstantiation>>(); 
-		if(organisations == null)
+		if(organisations2 == null)
 			return agentNorms;
-		for(Organisation org : organisations) {
+		for(Organisation org : organisations2.values()) {
 			// get all sanctions the org found
 			List<NormInstantiation> normList= org.getNewNormInstantiations(roadNetwork);
 			// distribute the sanctions to the relevant agents.
@@ -351,11 +351,11 @@ public class TrafficMASController {
 	}
 
 	public static Map<String, List<NormInstantiation>> getClearedNormInst(
-			List<Organisation> organisations) {
+			Map<String, Organisation> organisations2) {
 		Map<String, List<NormInstantiation>> agentClearedNorms = new HashMap<String, List<NormInstantiation>>(); 
-		if(organisations == null)
+		if(organisations2 == null)
 			return agentClearedNorms;
-		for(Organisation org : organisations) {
+		for(Organisation org : organisations2.values()) {
 			// get all sanctions the org found
 			List<NormInstantiation> clearedNormList= org.getClearedNormInstantiations();
 			// distribute the sanctions to the relevant agents.
@@ -451,10 +451,10 @@ public class TrafficMASController {
 		}
 	}
 	
-	public static void updateView(TrafficView view, RoadNetwork roadNetwork, Collection<Agent> currentAgents, Collection<Organisation> organisations ) {
+	public static void updateView(TrafficView view, RoadNetwork roadNetwork, Collection<Agent> currentAgents, Map<String, Organisation> organisations2 ) {
 		view.updateFromRoadNetwork(roadNetwork);
 		view.updateFromAgents(currentAgents);
-		view.updateFromOrganisations(organisations);
+		view.updateFromOrganisations(organisations2);
 		view.visualize();
 	}
 	
@@ -561,6 +561,7 @@ public class TrafficMASController {
 	 * @return
 	 */
 	public static ArrayList<Organisation> instantiateOrganisations(MASData masData) {
+		
 		return null;
 	}
 }
