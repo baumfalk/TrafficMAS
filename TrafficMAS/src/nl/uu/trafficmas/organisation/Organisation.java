@@ -8,6 +8,7 @@ import java.util.Map;
 import nl.uu.trafficmas.norm.NormInstantiation;
 import nl.uu.trafficmas.norm.NormScheme;
 import nl.uu.trafficmas.norm.Sanction;
+import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Sensor;
 import nl.uu.trafficmas.simulationmodel.AgentData;
 
@@ -17,6 +18,7 @@ public class Organisation {
 	private ArrayList<Sensor> sensors;
 	private Map<String,AgentData> currentOrgKnowledge;
 	private ArrayList<InstitutionalState> institutionalStates;
+	private int currentTime;
 	
 	public ArrayList<NormScheme> getNormSchemes() {
 		return normSchemes;
@@ -46,19 +48,41 @@ public class Organisation {
 		this.institutionalStates = institutionalStates;
 	}
 	public List<Sanction> getNewSanctions() {
+		List<Sanction> sanctions = new ArrayList<Sanction>();
 		for(NormInstantiation ni : normInstantiations) {
-
+			AgentData ad = currentOrgKnowledge.get(ni.agentID());
+			if(ni.violated(ad)) {
+				sanctions.add(ni.getSanction());
+			}
 		}
-		return null;
+		return sanctions;
 	}
-	public List<NormInstantiation> getNewNormInstantiations() {
-		// TODO Auto-generated method stub
-		return null;
+	
+	public List<NormInstantiation> getNewNormInstantiations(RoadNetwork rn) {
+		List<NormInstantiation> newList = new ArrayList<NormInstantiation>();
+		
+		for(NormScheme ns : normSchemes) {
+			if(ns.checkCondition()) {
+				newList.addAll(ns.instantiateNorms(rn));
+			}
+		}
+		
+		return newList;
 	}
+	
 	public List<NormInstantiation> getClearedNormInstantiations() {
-		// TODO Auto-generated method stub
-		return null;
+		List<NormInstantiation> clearedList= new ArrayList<NormInstantiation>();
+		for(NormInstantiation ni : normInstantiations) {
+			//TODO: also delete on norm violation?
+			if(ni.deadline(currentOrgKnowledge, currentTime)) {
+				clearedList.add(ni);
+			}
+		}
+		
+		normInstantiations.removeAll(clearedList);
+		return clearedList;
 	}
+	
 	public void readSensors() {
 		currentOrgKnowledge = new HashMap<String,AgentData>();
 		for(Sensor s : sensors) {
@@ -73,5 +97,8 @@ public class Organisation {
 				currentOrgKnowledge.put(ad.id, ad);
 			}
 		}
+	}
+	public void updateTime(int currentTime) {
+		this.currentTime = currentTime;
 	}
 }

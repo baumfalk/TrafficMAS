@@ -147,7 +147,7 @@ public class TrafficMASController {
 		this.updateMAS(simulationStateData); 
 		view.addMessage("Number of agents in MAS:"+currentAgentMap.size());
 
-		HashMap<Agent,AgentAction> agentActions = nextMASState(simulationStateData.currentTimeStep/1000,currentAgentMap,organisations);
+		HashMap<Agent,AgentAction> agentActions = nextMASState(simulationStateData.currentTimeStep/1000,currentAgentMap,organisations,roadNetwork);
 		//view.addMessage(agentActions.toString());
 		start_time = System.nanoTime();
 		TrafficMASController.updateSimulation(simulationModel, agentActions);
@@ -173,13 +173,13 @@ public class TrafficMASController {
 	 * Not yet completely implemented.	 
 	 * @return 
 	 */
-	public static HashMap<Agent, AgentAction> nextMASState(int currentTime, Map<String,Agent>currentAgentMap, List<Organisation> organisations) {
+	public static HashMap<Agent, AgentAction> nextMASState(int currentTime, Map<String,Agent>currentAgentMap, List<Organisation> organisations, RoadNetwork roadNetwork) {
 		//TODO: Organization sanctions
 		
 		// get org sanctions
 		Map<Agent,List<Sanction>> sanctions 				= TrafficMASController.getOrgSanctions(organisations);
 		// get org new norm instantiations
-		Map<Agent,List<NormInstantiation>> normInst			= TrafficMASController.getNormInstantiations(organisations);
+		Map<Agent,List<NormInstantiation>> normInst			= TrafficMASController.getNormInstantiations(organisations,roadNetwork);
 		
 		// get org norm clears
 		Map<Agent,List<NormInstantiation>> clearedNormInst	= TrafficMASController.getClearedNormInst(organisations);
@@ -268,7 +268,7 @@ public class TrafficMASController {
 		
 		// update the sensors with the sensordata
 		for(Organisation org : organisations) {
-			
+			org.updateTime(simulationStateData.currentTimeStep/1000);
 			for(Sensor sensor : org.getSensors()) {
 				SensorData sd = simulationStateData.sensorData.get(sensor.id);
 				for(String agentID : sd.vehicleIDs) {
@@ -334,14 +334,14 @@ public class TrafficMASController {
 	}
 	
 	public static Map<Agent, List<NormInstantiation>> getNormInstantiations(
-			List<Organisation> organisations) {
+			List<Organisation> organisations, RoadNetwork roadNetwork) {
 		// TODO Auto-generated method stub
 		Map<Agent, List<NormInstantiation>> agentNorms = new HashMap<Agent, List<NormInstantiation>>(); 
 		if(organisations == null)
 			return agentNorms;
 		for(Organisation org : organisations) {
 			// get all sanctions the org found
-			List<NormInstantiation> normList= org.getNewNormInstantiations();
+			List<NormInstantiation> normList= org.getNewNormInstantiations(roadNetwork);
 			// distribute the sanctions to the relevant agents.
 			for(NormInstantiation norm : normList) {
 				if(!agentNorms.containsKey(norm.getAgent())) {

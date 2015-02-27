@@ -2,10 +2,10 @@ package nl.uu.trafficmas.norm;
 
 import java.util.List;
 
-import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.organisation.Expression;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Sensor;
+import nl.uu.trafficmas.simulationmodel.AgentData;
 
 public abstract class NormScheme {
 	protected Expression precondition;
@@ -18,7 +18,7 @@ public abstract class NormScheme {
 		this.sensorList = sensorList;
 	}
 	
-	public abstract List<NormInstantiation> instantiateNorms(List<Agent> agents,RoadNetwork rn);
+	public abstract List<NormInstantiation> instantiateNorms(RoadNetwork rn);
 	
 	
 	public abstract boolean checkCondition();

@@ -3,7 +3,6 @@ package nl.uu.trafficmas.norm;
 import java.util.ArrayList;
 import java.util.List;
 
-import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Sensor;
 import nl.uu.trafficmas.simulationmodel.AgentData;
@@ -31,7 +30,7 @@ public class MergeNormScheme extends NormScheme {
 	}
 
 	@Override
-	public List<NormInstantiation> instantiateNorms(List<Agent> agents,RoadNetwork rn) {
+	public List<NormInstantiation> instantiateNorms(RoadNetwork rn) {
 		// TODO Auto-generated method stub
 		this.runAlgorithm(rn);
 		
