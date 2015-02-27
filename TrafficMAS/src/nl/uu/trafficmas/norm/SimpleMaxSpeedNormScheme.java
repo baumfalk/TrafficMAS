@@ -10,9 +10,13 @@ import nl.uu.trafficmas.simulationmodel.AgentData;
 
 public class SimpleMaxSpeedNormScheme extends NormScheme {
 
-	public SimpleMaxSpeedNormScheme(String id, List<Sensor> sensorList) {
-		super(id, sensorList);
+
+	public SimpleMaxSpeedNormScheme(String id, SanctionType sanctionType,
+			List<Sensor> sensorList) {
+		super(id, sanctionType, sensorList);
+		// TODO Auto-generated constructor stub
 	}
+
 
 	@Override
 	public List<NormInstantiation> instantiateNorms(RoadNetwork rn,
