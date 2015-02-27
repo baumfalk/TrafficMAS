@@ -62,8 +62,8 @@ public class Organisation {
 		List<NormInstantiation> newList = new ArrayList<NormInstantiation>();
 		
 		for(NormScheme ns : normSchemes) {
-			if(ns.checkCondition()) {
-				newList.addAll(ns.instantiateNorms(rn));
+			if(ns.checkCondition(currentOrgKnowledge)) {
+				newList.addAll(ns.instantiateNorms(rn,currentOrgKnowledge));
 			}
 		}
 		

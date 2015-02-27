@@ -2,6 +2,7 @@ package nl.uu.trafficmas.norm;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Sensor;
@@ -30,7 +31,7 @@ public class MergeNormScheme extends NormScheme {
 	}
 
 	@Override
-	public List<NormInstantiation> instantiateNorms(RoadNetwork rn) {
+	public List<NormInstantiation> instantiateNorms(RoadNetwork rn, Map<String, AgentData> currentOrgKnowledge) {
 		// TODO Auto-generated method stub
 		this.runAlgorithm(rn);
 		
@@ -38,11 +39,6 @@ public class MergeNormScheme extends NormScheme {
 		return null;
 	}
 
-	@Override
-	public boolean checkCondition() {
-	
-		return true;
-	}
 
 
 	/**
@@ -200,5 +196,30 @@ public class MergeNormScheme extends NormScheme {
 		System.out.println("\t lambda:"+lambda);
 		System.out.println();
 		return lambda;
+	}
+
+	@Override
+	public boolean checkCondition(Map<String, AgentData> currentOrgKnowledge) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean violated(AgentData ad) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Sanction getSanction() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean deadline(Map<String, AgentData> currentOrgKnowledge,
+			int currentTime) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

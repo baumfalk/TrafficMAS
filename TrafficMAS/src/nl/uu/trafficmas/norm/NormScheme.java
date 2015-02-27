@@ -1,6 +1,7 @@
 package nl.uu.trafficmas.norm;
 
 import java.util.List;
+import java.util.Map;
 
 import nl.uu.trafficmas.organisation.Expression;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
@@ -18,10 +19,15 @@ public abstract class NormScheme {
 		this.sensorList = sensorList;
 	}
 	
-	public abstract List<NormInstantiation> instantiateNorms(RoadNetwork rn);
+	public abstract List<NormInstantiation> instantiateNorms(RoadNetwork rn, Map<String, AgentData> currentOrgKnowledge);
 	
-	
-	public abstract boolean checkCondition();
+	public abstract boolean checkCondition(Map<String, AgentData> currentOrgKnowledge);
 	
 	protected abstract void runAlgorithm(RoadNetwork rn);
+	
+	public abstract boolean violated(AgentData ad);
+
+	public abstract Sanction getSanction();
+
+	public abstract boolean deadline(Map<String, AgentData> currentOrgKnowledge, int currentTime);
 }

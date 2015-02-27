@@ -176,15 +176,10 @@ public class TrafficMASController {
 	public static HashMap<Agent, AgentAction> nextMASState(int currentTime, Map<String,Agent>currentAgentMap, List<Organisation> organisations, RoadNetwork roadNetwork) {
 		//TODO: Organization sanctions
 		
-		// get org sanctions
-		Map<Agent,List<Sanction>> sanctions 				= TrafficMASController.getOrgSanctions(organisations);
-		// get org new norm instantiations
-		Map<Agent,List<NormInstantiation>> normInst			= TrafficMASController.getNormInstantiations(organisations,roadNetwork);
-		
-		// get org norm clears
-		Map<Agent,List<NormInstantiation>> clearedNormInst	= TrafficMASController.getClearedNormInst(organisations);
+		Map<String,List<Sanction>> sanctions 				= TrafficMASController.getOrgSanctions(organisations);
+		Map<String,List<NormInstantiation>> normInst		= TrafficMASController.getNormInstantiations(organisations,roadNetwork);
+		Map<String,List<NormInstantiation>> clearedNormInst	= TrafficMASController.getClearedNormInst(organisations);
 	
-		
 		return  TrafficMASController.getAgentActions(currentTime, currentAgentMap,sanctions,normInst,clearedNormInst);
 	}
 
@@ -197,16 +192,16 @@ public class TrafficMASController {
 	 * @param sanctions 
 	 * @return a map containing an agent as key and an AgentAction as value.
 	 */
-	public static HashMap<Agent, AgentAction> getAgentActions(int currentTime, Map<String, Agent> currentAgents, Map<Agent, List<Sanction>> sanctions, Map<Agent, List<NormInstantiation>> normInst, Map<Agent, List<NormInstantiation>> clearedNormInst) {
+	public static HashMap<Agent, AgentAction> getAgentActions(int currentTime, Map<String, Agent> currentAgents, Map<String, List<Sanction>> sanctions, Map<String, List<NormInstantiation>> normInst, Map<String, List<NormInstantiation>> clearedNormInst) {
 		
 		HashMap <Agent,AgentAction> actions = new LinkedHashMap<Agent, AgentAction>();
 		for(Agent agent : currentAgents.values()) {
 			if(agent.getRoad() == null) {
 				continue;
 			}
-			List<Sanction> agentSanc 				= (sanctions!= null && sanctions.containsKey(agent)) ? (sanctions.get(agent)) : null;
-			List<NormInstantiation> agentInst 		= (normInst != null && normInst.containsKey(agent)) ? (normInst.get(agent)) : null;
-			List<NormInstantiation> agentClearInst	= (clearedNormInst!= null && clearedNormInst.containsKey(agent)) ? (clearedNormInst.get(agent)) : null;
+			List<Sanction> agentSanc 				= (sanctions!= null && sanctions.containsKey(agent.agentID)) ? (sanctions.get(agent.agentID)) : null;
+			List<NormInstantiation> agentInst 		= (normInst != null && normInst.containsKey(agent.agentID)) ? (normInst.get(agent.agentID)) : null;
+			List<NormInstantiation> agentClearInst	= (clearedNormInst!= null && clearedNormInst.containsKey(agent.agentID)) ? (clearedNormInst.get(agent.agentID)) : null;
 			
 			actions.put(agent, agent.doAction(currentTime,agentSanc,agentInst,agentClearInst));
 		}
@@ -311,10 +306,10 @@ public class TrafficMASController {
 		return roadNetwork;
 	}
 
-	public static Map<Agent, List<Sanction>> getOrgSanctions(
+	public static Map<String, List<Sanction>> getOrgSanctions(
 			List<Organisation> organisations2) {
 		// TODO Auto-generated method stub
-		Map<Agent, List<Sanction>> agentSanctions = new HashMap<Agent, List<Sanction>>(); 
+		Map<String, List<Sanction>> agentSanctions = new HashMap<String, List<Sanction>>(); 
 		if(organisations2 == null)
 			return agentSanctions;
 		for(Organisation org : organisations2) {
@@ -322,21 +317,21 @@ public class TrafficMASController {
 			List<Sanction> sancList= org.getNewSanctions();
 			// distribute the sanctions to the relevant agents.
 			for(Sanction s : sancList) {
-				if(!agentSanctions.containsKey(s.getAgent())) {
+				if(!agentSanctions.containsKey(s.agentID())) {
 					List<Sanction> sl = new  ArrayList<Sanction>();
-					agentSanctions.put(s.getAgent(), sl);
+					agentSanctions.put(s.agentID(), sl);
 				}
-				agentSanctions.get(s.getAgent()).add(s);
+				agentSanctions.get(s.agentID()).add(s);
 			}
 		}
 		
 		return agentSanctions;
 	}
 	
-	public static Map<Agent, List<NormInstantiation>> getNormInstantiations(
+	public static Map<String, List<NormInstantiation>> getNormInstantiations(
 			List<Organisation> organisations, RoadNetwork roadNetwork) {
 		// TODO Auto-generated method stub
-		Map<Agent, List<NormInstantiation>> agentNorms = new HashMap<Agent, List<NormInstantiation>>(); 
+		Map<String, List<NormInstantiation>> agentNorms = new HashMap<String, List<NormInstantiation>>(); 
 		if(organisations == null)
 			return agentNorms;
 		for(Organisation org : organisations) {
@@ -344,20 +339,20 @@ public class TrafficMASController {
 			List<NormInstantiation> normList= org.getNewNormInstantiations(roadNetwork);
 			// distribute the sanctions to the relevant agents.
 			for(NormInstantiation norm : normList) {
-				if(!agentNorms.containsKey(norm.getAgent())) {
+				if(!agentNorms.containsKey(norm.agentID())) {
 					List<NormInstantiation> nl = new  ArrayList<NormInstantiation>();
-					agentNorms.put(norm.getAgent(), nl);
+					agentNorms.put(norm.agentID(), nl);
 				}
-				agentNorms.get(norm.getAgent()).add(norm);
+				agentNorms.get(norm.agentID()).add(norm);
 			}
 		}
 		
 		return agentNorms;
 	}
 
-	public static Map<Agent, List<NormInstantiation>> getClearedNormInst(
+	public static Map<String, List<NormInstantiation>> getClearedNormInst(
 			List<Organisation> organisations) {
-		Map<Agent, List<NormInstantiation>> agentClearedNorms = new HashMap<Agent, List<NormInstantiation>>(); 
+		Map<String, List<NormInstantiation>> agentClearedNorms = new HashMap<String, List<NormInstantiation>>(); 
 		if(organisations == null)
 			return agentClearedNorms;
 		for(Organisation org : organisations) {
@@ -365,11 +360,11 @@ public class TrafficMASController {
 			List<NormInstantiation> clearedNormList= org.getClearedNormInstantiations();
 			// distribute the sanctions to the relevant agents.
 			for(NormInstantiation norm : clearedNormList) {
-				if(!agentClearedNorms.containsKey(norm.getAgent())) {
+				if(!agentClearedNorms.containsKey(norm.agentID())) {
 					List<NormInstantiation> nl = new  ArrayList<NormInstantiation>();
-					agentClearedNorms.put(norm.getAgent(), nl);
+					agentClearedNorms.put(norm.agentID(), nl);
 				}
-				agentClearedNorms.get(norm.getAgent()).add(norm);
+				agentClearedNorms.get(norm.agentID()).add(norm);
 			}
 		}
 		

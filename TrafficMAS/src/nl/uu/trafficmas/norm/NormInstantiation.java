@@ -1,47 +1,31 @@
 package nl.uu.trafficmas.norm;
 
-import java.util.List;
 import java.util.Map;
 
 import nl.uu.trafficmas.agent.Agent;
-import nl.uu.trafficmas.organisation.BruteState;
 import nl.uu.trafficmas.simulationmodel.AgentData;
 
-public class NormInstantiation {
-	private NormScheme ns;
-	private Agent agent;
+public abstract class NormInstantiation {
+	private final NormScheme ns;
+	public final String agentID;
 	
-	private boolean evaluateNorm(List<BruteState> bf, NormScheme ns) {
-		return false;
+	public NormInstantiation(NormScheme ns, String agentID) {
+		this.ns = ns;
+		this.agentID = agentID;
 	}
-	
-	private Sanction instantiateSanction(Agent agent, SanctionType st) {
-		return null;
-	}
-
 	public String agentID() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Agent getAgent() {
-		// TODO Auto-generated method stub
-		return null;
+		return agentID;
 	}
 
 	public boolean violated(AgentData ad) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+		return ns.violated(ad);
+	};
 
 	public Sanction getSanction() {
-		// TODO Auto-generated method stub
-		return null;
+		return ns.getSanction();
 	}
 
-	public boolean deadline(Map<String, AgentData> currentOrgKnowledge,
-			int currentTime) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean deadline(Map<String, AgentData> currentOrgKnowledge, int currentTime) {
+		return ns.deadline(currentOrgKnowledge, currentTime);
 	}
 }
