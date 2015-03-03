@@ -55,7 +55,6 @@ public class GetChangeLaneTimeTest {
 		ChangeLaneAction action = new ChangeLaneAction(0);
 		for(Agent agent : agentPairList.keySet()) {
 			agent.setRoad(rn.getEdges()[0].getRoad());
-			System.out.println(agent);
 			assertEquals(5.5,action.getTime(5, 0, 2, 1, 2, 2, 1, 0, 0,agent),0);
 		}
 	}

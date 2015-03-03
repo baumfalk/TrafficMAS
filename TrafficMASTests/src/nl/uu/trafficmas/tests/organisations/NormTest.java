@@ -30,24 +30,21 @@ public class NormTest {
 
 	@Test
 	public void test() throws ParserConfigurationException, SAXException, IOException {
-		fail("Not yet implemented");
 		String dir 			= System.getProperty("user.dir")+"/tests/Organisations/Norms/";
-		String normsXML		= "orgnormtest.norm.xml";
-		Document normsDoc	= DataModelXML.loadDocument(dir, normsXML);
-		
-		Map<String,Sensor> tempdicks = new HashMap<String, Sensor>();
-		
-		Map<String,NormScheme> normList = DataModelXML.getNormSchemes(tempdicks, normsDoc);
-		
-		
-		assertNotNull(normList);
-		assertEquals(false, normList.isEmpty());
-		assertEquals(true,normList.containsKey("norm1"));
 		String nodeXML 		= "orgnormtest.node.xml";
-		String edgeXML 		= "orgnormtest.node.xml";
+		String edgeXML 		= "orgnormtest.edge.xml";
+		String sensXML		= "orgnormtest.sens.xml";
+		String normsXML		= "orgnormtest.norm.xml";
+		//String orgsXML	= "orgnormtest.orgs.xml";
+
 		
 		Document nodeDoc 	= DataModelXML.loadDocument(dir, nodeXML);
 		Document edgeDoc 	= DataModelXML.loadDocument(dir, edgeXML);
+		Document sensDoc	= DataModelXML.loadDocument(dir, sensXML);
+		Document normsDoc	= DataModelXML.loadDocument(dir, normsXML);
+		//Document orgsDoc	= DataModelXML.loadDocument(dir, orgsXML);
+		
+		
 		RoadNetwork rn = DataModelXML.instantiateRoadNetwork(nodeDoc, edgeDoc);
 		
 		Node goalNode = rn.getNodes()[0];
@@ -58,6 +55,15 @@ public class NormTest {
 		Agent agent = new HotShotAgent("agent1", goalNode, r, rn, 100, 20.0, 20.0);
 		agent.setDistance(5);
 		agent.setVelocity(500);
+		
+		
+		
+		Map<String,Sensor> sensors = DataModelXML.getSensors(rn, sensDoc);
+		Map<String,NormScheme> normList = DataModelXML.getNormSchemes(sensors, normsDoc);
+		
+		assertNotNull(normList);
+		assertEquals(false, normList.isEmpty());
+		assertEquals(true,normList.containsKey("norm1"));
 		
 		NormScheme normScheme 		= normList.get("norm1");
 		double maxSpeed 			= 50;

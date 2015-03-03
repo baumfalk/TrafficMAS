@@ -505,6 +505,43 @@ public class DataModelXML implements DataModel {
 		return normSchemes;
 	}
 
+	public static Map<String, Organisation> getOrganisations(Map<String,Sensor> sensorMap, Map<String,NormScheme> normSchemeMap, Document orgDoc) {
+		Map<String,Organisation> orgMap = new HashMap<String,Organisation>();
+
+		ArrayList<NormScheme> normSchemes = new ArrayList<NormScheme>();
+		ArrayList<Sensor> sensors = new ArrayList<Sensor>();
+		NodeList organisationList = orgDoc.getElementsByTagName("organisation");
+		
+		for (int i = 0; i < organisationList.getLength(); i++) {
+			 
+			org.w3c.dom.Node nNode = organisationList.item(i);
+			if (nNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
+				Element element = (Element) nNode;
+				String orgId = element.getAttribute("id");
+
+				NodeList sensorList = element.getElementsByTagName("sensor");
+				for (int j = 0; j < sensorList.getLength(); j++) {
+					String sensId = sensorList.item(j).getAttributes().getNamedItem("id").getTextContent();
+					Sensor sensor = sensorMap.get(sensId);
+					sensors.add(sensor);
+				}	
+				
+				NodeList normsSensorList = element.getElementsByTagName("norm");
+				for (int k = 0; k < normsSensorList.getLength(); k++) {
+					String normId = normsSensorList.item(k).getAttributes().getNamedItem("id").getTextContent();
+					NormScheme normScheme = normSchemeMap.get(normId);
+					normSchemes.add(normScheme);
+				}	 
+				Organisation organisation = new Organisation(normSchemes, sensors);
+				orgMap.put(orgId, organisation);
+			}
+		}
+		return orgMap;
+	}
+		
+	
+
+	
 	@Override
 	public Map<String,Organisation> instantiateOrganisations(){
 		return instantiateOrganisations(this.nodesDoc, this.edgesDoc, this.sensorsDoc, this.normsDoc, this.orgsDoc );
@@ -545,7 +582,6 @@ public class DataModelXML implements DataModel {
 				for (int k = 0; k < normsSensorList.getLength(); k++) {
 					String normId = normsSensorList.item(k).getAttributes().getNamedItem("id").getTextContent();
 					NormScheme normScheme = normSchemeMap.get(normId);
-					//System.out.println(normScheme.id);
 					normSchemes.add(normScheme);
 				}	 
 				Organisation organisation = new Organisation(normSchemes, sensors);
