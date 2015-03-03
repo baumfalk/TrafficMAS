@@ -1,6 +1,5 @@
 package nl.uu.trafficmas.norm;
 
-import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.organisation.InstitutionalState;
 
 public class Sanction implements InstitutionalState {

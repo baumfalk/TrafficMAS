@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<mas simulationlength="100">
+    <edges value="simple.edg.xml"/>
+    <nodes value="simple.nod.xml"/>
+    <agentprofiles value="simple.agentprofiles.xml"/>
+    <sumoconfig value = "simple.cfg.xml"/>
+    <routes value="simple.rou.xml"/>
+</mas>

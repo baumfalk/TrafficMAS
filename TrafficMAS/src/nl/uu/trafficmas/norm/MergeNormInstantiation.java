@@ -2,7 +2,6 @@ package nl.uu.trafficmas.norm;
 
 import java.util.Map;
 
-import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.simulationmodel.AgentData;
 
 public class MergeNormInstantiation extends NormInstantiation {

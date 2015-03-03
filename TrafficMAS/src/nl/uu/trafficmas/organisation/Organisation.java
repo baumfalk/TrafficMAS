@@ -13,43 +13,41 @@ import nl.uu.trafficmas.roadnetwork.Sensor;
 import nl.uu.trafficmas.simulationmodel.AgentData;
 
 public class Organisation {
-	private ArrayList<NormScheme> normSchemes;
-	private ArrayList<NormInstantiation> normInstantiations;
-	private ArrayList<Sensor> sensors;
+	private List<NormScheme> normSchemes;
+	private List<NormInstantiation> normInstantiations;
+	private List<Sensor> sensors;
 	private Map<String,AgentData> currentOrgKnowledge;
-	private ArrayList<InstitutionalState> institutionalStates;
+	private List<InstitutionalState> institutionalStates;
 	private int currentTime;
 	
 	public Organisation(ArrayList<NormScheme> normSchemes, ArrayList<Sensor> sensors ){
 		this.normSchemes 	= normSchemes;
 		this.sensors 		= sensors;
+		normInstantiations	= new ArrayList<NormInstantiation>();
 	}
 	
-	public ArrayList<NormScheme> getNormSchemes() {
+	public List<NormScheme> getNormSchemes() {
 		return normSchemes;
 	}
 	public void setNormSchemes(ArrayList<NormScheme> normSchemes) {
 		this.normSchemes = normSchemes;
 	}
 	
-	public ArrayList<NormInstantiation> getNormInstantiations() {
+	public List<NormInstantiation> getNormInstantiations() {
 		return normInstantiations;
 	}
-	public void setNormInstantiations(ArrayList<NormInstantiation> normInstantiations) {
-		this.normInstantiations = normInstantiations;
-	}
 	
-	public ArrayList<Sensor> getSensors() {
+	public List<Sensor> getSensors() {
 		return sensors;
 	}
 	public void setSensors(ArrayList<Sensor> sensors) {
 		this.sensors = sensors;
 	}
 	
-	public ArrayList<InstitutionalState> getInstitutionalStates() {
+	public List<InstitutionalState> getInstitutionalStates() {
 		return institutionalStates;
 	}
-	public void setInstitutionalStates(ArrayList<InstitutionalState> institutionalStates) {
+	public void setInstitutionalStates(List<InstitutionalState> institutionalStates) {
 		this.institutionalStates = institutionalStates;
 	}
 	public List<Sanction> getNewSanctions() {

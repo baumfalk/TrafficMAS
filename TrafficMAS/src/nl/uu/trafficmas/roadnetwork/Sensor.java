@@ -2,7 +2,6 @@ package nl.uu.trafficmas.roadnetwork;
 
 import java.util.List;
 
-import nl.uu.trafficmas.agent.PhysicalObject;
 import nl.uu.trafficmas.simulationmodel.AgentData;
 import nl.uu.trafficmas.simulationmodel.SensorData;
 

@@ -2,6 +2,7 @@ package nl.uu.trafficmas.datamodel;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -15,7 +16,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import nl.uu.trafficmas.agent.AgentProfileType;
 import nl.uu.trafficmas.norm.MergeNormScheme;
 import nl.uu.trafficmas.norm.NormScheme;
-import nl.uu.trafficmas.norm.Sanction;
 import nl.uu.trafficmas.norm.SanctionType;
 import nl.uu.trafficmas.organisation.Organisation;
 import nl.uu.trafficmas.roadnetwork.Edge;
@@ -63,16 +63,24 @@ public class DataModelXML implements DataModel {
 		agentProfilesDoc	= DataModelXML.loadDocument(dir, agentProfilesXML);
 		sensorsDoc			= null;
 		normsDoc			= null;
+		orgsDoc				= null;
+		
 		NodeList sensorNodes		= masDoc.getDocumentElement().getElementsByTagName("sensors");
 		if(sensorNodes.getLength()>0){
-			String sensorXML		= masDoc.getDocumentElement().getElementsByTagName("sensors").item(0).getAttributes().getNamedItem("value").getTextContent();
+			String sensorXML		= sensorNodes.item(0).getAttributes().getNamedItem("value").getTextContent();
 			sensorsDoc				= DataModelXML.loadDocument(dir, sensorXML);
 		}
 		
 		NodeList normNodes = masDoc.getDocumentElement().getElementsByTagName("norms");
 		if(normNodes.getLength()>0){
-			String normsXML			= masDoc.getDocumentElement().getElementsByTagName("norms").item(0).getAttributes().getNamedItem("value").getTextContent();
+			String normsXML			= normNodes.item(0).getAttributes().getNamedItem("value").getTextContent();
 			normsDoc				= DataModelXML.loadDocument(dir, normsXML);
+		}
+		
+		NodeList orgNodes = masDoc.getDocumentElement().getElementsByTagName("organisations");
+		if(normNodes.getLength()>0){
+			String normsXML		= masDoc.getDocumentElement().getElementsByTagName("organisations").item(0).getAttributes().getNamedItem("value").getTextContent();
+			orgsDoc				= DataModelXML.loadDocument(dir, normsXML);
 		}
 	}
 
@@ -440,6 +448,7 @@ public class DataModelXML implements DataModel {
 				Element element = (Element) n;
 				String id 			= element.getAttribute("id");
 				String sanctionStr	= element.getAttribute("sanction");	
+				String packageName	= element.getAttribute("packagename");
 				String className	= element.getAttribute("classname");
 
 				NodeList sensorList = element.getElementsByTagName("sensor");
@@ -459,7 +468,37 @@ public class DataModelXML implements DataModel {
 				}
 				
 				//TODO: Apply this to different norm schemes using "classname" param in xml.
-				NormScheme normScheme = new MergeNormScheme(id,sanctionType,normSensors);
+				NormScheme normScheme = null;
+				try {
+					packageName = (packageName.isEmpty()) ? ("nl.uu.trafficmas.norm") : packageName;
+					Class<?> cls = Class.forName(packageName+"."+className);
+					normScheme = (NormScheme) cls.getDeclaredConstructor(String.class, SanctionType.class, List.class).newInstance(id,sanctionType,normSensors);
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalArgumentException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InvocationTargetException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (NoSuchMethodException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SecurityException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InstantiationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				if(normScheme == null) {
+					normScheme = new MergeNormScheme(id,sanctionType,normSensors);
+				}
 				normSchemes.put(id, normScheme);
 			}	
 		}		
@@ -538,8 +577,10 @@ public class DataModelXML implements DataModel {
 		boolean multipleRoutes 							= DataModelXML.getMultipleRoutesValue(agentProfilesDoc);
 		LinkedHashMap<String, Double> spawnProbabilities 	= DataModelXML.getAgentSpawnProbability(agentProfilesDoc);
 		HashMap<String, LinkedHashMap<AgentProfileType,Double>> routeAgentTypeSpawnProbabilityMap 	= DataModelXML.getRoutesAgentTypeSpawnProbabilities(agentProfilesDoc);
-		Map<String, Organisation> instantiatedOrganisations = DataModelXML.instantiateOrganisations(nodeDoc, edgeDoc, sensorDoc, normDoc, orgDoc);
-		
+		Map<String, Organisation> instantiatedOrganisations = null;
+		if(!(sensorDoc == null || normDoc == null || orgDoc == null)) {
+			instantiatedOrganisations = DataModelXML.instantiateOrganisations(nodeDoc, edgeDoc, sensorDoc, normDoc, orgDoc);
+		}
 		return new MASData(simulationLength, spawnProbabilities, multipleRoutes, routeAgentTypeSpawnProbabilityMap,instantiatedOrganisations);
 	}
 

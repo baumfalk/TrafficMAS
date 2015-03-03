@@ -6,11 +6,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import nl.uu.trafficmas.agent.AgentProfileType;
-import nl.uu.trafficmas.norm.NormScheme;
 import nl.uu.trafficmas.organisation.Organisation;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
-import nl.uu.trafficmas.roadnetwork.Sensor;
 
 public interface DataModel {
 	/**
