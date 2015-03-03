@@ -69,7 +69,7 @@ public class Organisation {
 				newList.addAll(ns.instantiateNorms(rn,currentOrgKnowledge));
 			}
 		}
-		
+		normInstantiations.addAll(newList);
 		return newList;
 	}
 	

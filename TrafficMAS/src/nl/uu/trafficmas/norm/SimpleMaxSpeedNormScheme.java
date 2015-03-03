@@ -29,7 +29,6 @@ public class SimpleMaxSpeedNormScheme extends NormScheme {
 			}
 		}
 		
-		
 		return list;
 	}
 
@@ -48,7 +47,7 @@ public class SimpleMaxSpeedNormScheme extends NormScheme {
 	@Override
 	public boolean violated(AgentData ad) {
 		// TODO Auto-generated method stub
-		return ad.velocity > 10;
+		return ad.velocity > 2;
 	}
 
 
