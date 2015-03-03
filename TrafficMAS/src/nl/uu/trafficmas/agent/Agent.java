@@ -6,6 +6,9 @@ import java.util.Comparator;
 import java.util.List;
 
 import nl.uu.trafficmas.agent.actions.AgentAction;
+import nl.uu.trafficmas.agent.actions.ChangeLaneAction;
+import nl.uu.trafficmas.agent.actions.ChangeRouteAction;
+import nl.uu.trafficmas.agent.actions.DoNothingAction;
 import nl.uu.trafficmas.norm.NormInstantiation;
 import nl.uu.trafficmas.norm.Sanction;
 import nl.uu.trafficmas.roadnetwork.Edge;
@@ -13,6 +16,7 @@ import nl.uu.trafficmas.roadnetwork.Node;
 import nl.uu.trafficmas.roadnetwork.Road;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
+import nl.uu.trafficmas.simulationmodel.AgentData;
 
 public abstract class Agent extends AgentPhysical {
 	private Node 					goalNode;
@@ -96,7 +100,6 @@ public abstract class Agent extends AgentPhysical {
 			currentNormInstList.addAll(agentInst);
 		
 		// Only do an action if it improves our situation
-		double noActionUtility	= utility(expectedArrivalTime,currentSanctionList);
 		AgentAction bestAction 	= null;
 		// Set currentRoadID value
 		double routeRemainderLength = Route.getRouteRemainderLength(this.currentRouteEdges, this.road);
@@ -108,10 +111,18 @@ public abstract class Agent extends AgentPhysical {
 		if(this.lane.hasLeftLane()) {
 			leftLaneSpeed = this.lane.getLeftLane().getLaneMeanSpeed();
 		}
+		AgentData ad = this.getAgentData();
 		for(AgentAction action : AgentAction.values()) {
 			
+			if(action instanceof ChangeLaneAction && !this.lane.hasLeftLane())
+				continue;
 			double time 					= action.getTime(currentTime,velocity, leftLaneSpeed, this.distance, this.road.length, this.maxComfySpeed, routeRemainderLength, this.leaderAgentSpeed, this.leaderDistance,this);
-			ArrayList<Sanction> sanctions 	= action.getSanctions(maxComfySpeed, velocity,currentNormInstList);
+			
+			List<Sanction> sanctions = null;
+			if(!currentNormInstList.isEmpty()) {
+				AgentData newAD = action.getNewAgentState(ad);
+				sanctions = action.getSanctions(newAD,currentNormInstList);
+			}
 			double newUtility 				= utility(time, sanctions);
 			action.setUtility(newUtility);
 			actionList.add(action);
@@ -122,11 +133,10 @@ public abstract class Agent extends AgentPhysical {
 	        	return AgentAction.compare(action1, action2);
 	        }
 	    });
-		// only do an action if it is strictly better than doing nothing.
-		if(actionList.get(0).getUtility() > noActionUtility) {
-			bestAction = actionList.get(0);
-		}
+		bestAction = actionList.get(0);
 		
+		if(bestAction instanceof DoNothingAction)
+			bestAction = null;
 		return bestAction;
 	}
 	
@@ -233,5 +243,11 @@ public abstract class Agent extends AgentPhysical {
 
 	public List<String> getPossibleNewRoute() {
 		return possibleNewRoute;
+	}
+	
+	public AgentData getAgentData() {
+		Object [] leader = {null, this.leaderDistance};
+		AgentData newData = new AgentData(this.agentID, leader, this.distance, (this.velocity), this.road.id, this.lane.laneIndex);
+		return newData;
 	}
 }

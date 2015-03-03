@@ -12,13 +12,12 @@ import nl.uu.trafficmas.simulationmodel.AgentData;
 import de.tudresden.sumo.cmd.Vehicle;
 import de.tudresden.sumo.util.SumoCommand;
 
-public class ChangeVelocityAction extends SumoAgentAction {
+public class DoNothingAction extends SumoAgentAction {
 
-	public ChangeVelocityAction(int priority) {
+	public DoNothingAction(int priority) {
 		super(priority);
 	}
 
-	protected double speedIncrease;
 	@Override
 	public double getTime(int currentTime, double currentSpeed,
 			double meanTravelSpeedNextLane, double currentPos,
@@ -33,7 +32,7 @@ public class ChangeVelocityAction extends SumoAgentAction {
 		 */
 		double laneDistRemaining = (currentLaneLength-currentPos);
 		double finishTime = currentTime;
-		double newSpeed = Math.max(0.01,Math.min(currentSpeed + speedIncrease, maxComfySpeed));
+		double newSpeed = Math.max(0.01,Math.min(currentSpeed, maxComfySpeed));
 		//  normally this is the time we spent on a the rest of the lane.
 		double timeSpentOnLane = laneDistRemaining/newSpeed;
 		
@@ -60,16 +59,14 @@ public class ChangeVelocityAction extends SumoAgentAction {
 
 	@Override
 	public SumoCommand getCommand(Agent currentAgent) {
-		double velocity = currentAgent.getVelocity();
-		double maxComfySpeed = currentAgent.getMaxComfySpeed();
-		return Vehicle.setMaxSpeed(currentAgent.agentID, Math.max(0.01,Math.min(velocity+speedIncrease, maxComfySpeed)));
+		return null;
 	}
 
 	@Override
 	public AgentData getNewAgentState(AgentData agentData) {
 		// TODO make new constructor for agentdata so we don't need Object [] leader
 		Object [] leader = {agentData.leaderId, agentData.leaderDistance};
-		AgentData newData = new AgentData(agentData.id, leader, agentData.position, Math.max(0,(agentData.velocity+speedIncrease)), agentData.roadID, agentData.laneIndex);	
+		AgentData newData = new AgentData(agentData.id, leader, agentData.position, Math.max(0,agentData.velocity), agentData.roadID, agentData.laneIndex);	
 		return newData;
 	}
 

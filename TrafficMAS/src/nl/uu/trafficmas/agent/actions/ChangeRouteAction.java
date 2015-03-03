@@ -11,6 +11,7 @@ import nl.uu.trafficmas.roadnetwork.AStar;
 import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Node;
 import nl.uu.trafficmas.roadnetwork.Route;
+import nl.uu.trafficmas.simulationmodel.AgentData;
 import de.tudresden.sumo.cmd.Vehicle;
 import de.tudresden.sumo.util.SumoCommand;
 import de.tudresden.ws.container.SumoStringList;
@@ -34,7 +35,7 @@ public class ChangeRouteAction extends SumoAgentAction {
 		
 		// no possible route
 		if(newRoute == null) {
-			return Double.MAX_VALUE;
+			return Double.POSITIVE_INFINITY;
 		}
 		newRoute.add(0, agent.getRoute()[0].getID());
 		agent.setPossibleNewRoute(newRoute);
@@ -62,13 +63,6 @@ public class ChangeRouteAction extends SumoAgentAction {
 	}
 
 	@Override
-	public ArrayList<Sanction> getSanctions(double maxComfySpeed,
-			double velocity, List<NormInstantiation> normInst) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	@Override
 	public SumoCommand getCommand(Agent currentAgent) {
 		currentAgent.setRoute(currentAgent.getPossibleNewRoute());
 		currentAgent.setPossibleNewRoute(null);
@@ -77,5 +71,11 @@ public class ChangeRouteAction extends SumoAgentAction {
 			route.add(edge.getID());
 		}
 		return Vehicle.setRoute(currentAgent.agentID, route);
+	}
+
+	@Override
+	public AgentData getNewAgentState(AgentData agentData) {
+		// TODO make this better, look ahead?
+		return agentData;
 	}
 }

@@ -28,8 +28,8 @@ public abstract class NormScheme {
 	
 	public abstract boolean violated(AgentData ad);
 
-	public Sanction getSanction(AgentData ad) {
-		return new Sanction(sanctionType, ad.id);
+	public Sanction getSanction(String agentID) {
+		return new Sanction(sanctionType, agentID);
 	}
 
 

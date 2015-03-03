@@ -54,8 +54,9 @@ public class Organisation {
 		List<Sanction> sanctions = new ArrayList<Sanction>();
 		for(NormInstantiation ni : normInstantiations) {
 			AgentData ad = currentOrgKnowledge.get(ni.agentID());
-			if(ni.violated(ad)) {
-				sanctions.add(ni.getSanction(ad));
+			
+			if(ad != null && ni.violated(ad)) {
+				sanctions.add(ni.getSanction(ad.id));
 			}
 		}
 		return sanctions;

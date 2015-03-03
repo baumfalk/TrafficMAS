@@ -20,8 +20,8 @@ public abstract class NormInstantiation {
 		return ns.violated(ad);
 	};
 
-	public Sanction getSanction(AgentData ad) {
-		return ns.getSanction(ad);
+	public Sanction getSanction(String agentID) {
+		return ns.getSanction(agentID);
 	}
 
 	public boolean deadline(Map<String, AgentData> currentOrgKnowledge, int currentTime) {

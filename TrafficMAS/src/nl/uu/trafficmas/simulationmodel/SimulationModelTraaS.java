@@ -260,6 +260,7 @@ public class SimulationModelTraaS implements SimulationModel {
 	
 		try {
 			if(cmdList.size() != 0) {
+				System.out.println(actions);
 				conn.do_jobs_set(cmdList);
 			}
 			

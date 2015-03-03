@@ -6,18 +6,23 @@ import java.util.List;
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.norm.NormInstantiation;
 import nl.uu.trafficmas.norm.Sanction;
+import nl.uu.trafficmas.simulationmodel.AgentData;
 
 public abstract class AgentAction {
 	
 	// add new actions here
 	// listed in order of priority (descending)
-	public static final AgentAction ChangeVelocity1		= new ChangeVelocity1Action(1);
-	public static final AgentAction ChangeVelocity5		= new ChangeVelocity5Action(2);
-	public static final AgentAction ChangeVelocity10	= new ChangeVelocity10Action(3);
-	public static final AgentAction ChangeVelocity20	= new ChangeVelocity20Action(4);
-	public static final AgentAction ChangeVelocity50	= new ChangeVelocity50Action(5);
-	public static final AgentAction ChangeLane 			= new ChangeLaneAction(6);
-	public static final AgentAction ChangeRoute 		= new ChangeRouteAction(7);
+	private static int actionPriority = 0;
+	public static final AgentAction DoNothingAction				= new DoNothingAction(actionPriority++);
+	public static final AgentAction ChangeVelocityMinus1Action	= new ChangeVelocityMinus1Action(actionPriority++);
+	public static final AgentAction ChangeVelocityMinus5Action	= new ChangeVelocityMinus5Action(actionPriority++);
+	public static final AgentAction ChangeVelocity1				= new ChangeVelocity1Action(actionPriority++);
+	public static final AgentAction ChangeVelocity5				= new ChangeVelocity5Action(actionPriority++);
+	public static final AgentAction ChangeVelocity10			= new ChangeVelocity10Action(actionPriority++);
+	public static final AgentAction ChangeVelocity20			= new ChangeVelocity20Action(actionPriority++);
+	public static final AgentAction ChangeVelocity50			= new ChangeVelocity50Action(actionPriority++);
+	public static final AgentAction ChangeLane 					= new ChangeLaneAction(actionPriority++);
+	public static final AgentAction ChangeRoute 				= new ChangeRouteAction(actionPriority);
 	
 	public final int priority;
 	
@@ -29,14 +34,22 @@ public abstract class AgentAction {
 	
 	public static AgentAction[] values() {
 		// add new actions here
-		AgentAction [] array = {ChangeVelocity1, ChangeVelocity5, ChangeVelocity10,
+		AgentAction [] array = {DoNothingAction,ChangeVelocityMinus5Action,ChangeVelocityMinus1Action,ChangeVelocity1, ChangeVelocity5, ChangeVelocity10,
 				ChangeVelocity20, ChangeVelocity50, ChangeLane, ChangeRoute};
 		return array;
 	}
 	
 	public abstract double getTime(int currentTime, double currentSpeed, double meanTravelSpeedNextLane, double currentPos, double currentLaneLength, double maxComfySpeed, double routeRemainderLength, double leaderAgentSpeed, double leaderDistance, Agent agent);
 	
-	public abstract ArrayList<Sanction> getSanctions(double maxComfySpeed, double velocity, List<NormInstantiation> normInst);
+	public List<Sanction> getSanctions(AgentData agentData, List<NormInstantiation> normInst) {
+		List<Sanction> sanctions = new ArrayList<Sanction>();
+		for(NormInstantiation ni : normInst) {
+			if(ni.violated(agentData)) {
+				sanctions.add(ni.getSanction(agentData.id));
+			}
+		}
+		return sanctions;
+	}
 	
 	public void setUtility(double newUtility) {
 		utility = newUtility;
@@ -46,6 +59,8 @@ public abstract class AgentAction {
 		return utility;
 	}
 
+	public abstract AgentData getNewAgentState(AgentData agentData);
+	
 	public static int compare(AgentAction action1, AgentAction action2) {
 		if(action1.getUtility() > action2.getUtility())
     		return -1;

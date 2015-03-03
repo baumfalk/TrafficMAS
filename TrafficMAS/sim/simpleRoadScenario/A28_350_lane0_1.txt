@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 3-3-2015 13:56:39 by SUMO gui Version 0.22.0
+<!-- generated on 3-3-2015 15:31:49 by SUMO gui Version 0.22.0
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumo-gui.exeConfiguration.xsd">
@@ -24,7 +24,7 @@
     </emissions>
 
     <traci_server>
-        <remote-port value="51674"/>
+        <remote-port value="53984"/>
     </traci_server>
 
     <random_number>
@@ -41,5 +41,7 @@
 -->
 
 <detector xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/det_e2_file.xsd">
-   <interval begin="0.00" end="4.00" id="A28_350_lane0_s2" nSamples="0" meanSpeed="-1.00" meanOccupancy="0.00" maxOccupancy="0.00" meanMaxJamLengthInVehicles="0.00" meanMaxJamLengthInMeters="0.00" maxJamLengthInVehicles="0" maxJamLengthInMeters="0.00" jamLengthInVehiclesSum="0" jamLengthInMetersSum="0.00" meanHaltingDuration="0.00" maxHaltingDuration="0.00" haltingDurationSum="0.00" meanIntervalHaltingDuration="0.00" maxIntervalHaltingDuration="0.00" intervalHaltingDurationSum="0.00" startedHalts="0.00" meanVehicleNumber="0.00" maxVehicleNumber="0" />
+   <interval begin="0.00" end="25.00" id="A28_350_lane0_s2" nSamples="0" meanSpeed="-1.00" meanOccupancy="0.00" maxOccupancy="0.00" meanMaxJamLengthInVehicles="0.00" meanMaxJamLengthInMeters="0.00" maxJamLengthInVehicles="0" maxJamLengthInMeters="0.00" jamLengthInVehiclesSum="0" jamLengthInMetersSum="0.00" meanHaltingDuration="0.00" maxHaltingDuration="0.00" haltingDurationSum="0.00" meanIntervalHaltingDuration="0.00" maxIntervalHaltingDuration="0.00" intervalHaltingDurationSum="0.00" startedHalts="0.00" meanVehicleNumber="0.00" maxVehicleNumber="0" />
+   <interval begin="25.00" end="50.00" id="A28_350_lane0_s2" nSamples="2" meanSpeed="8.00" meanOccupancy="2.80" maxOccupancy="50.00" meanMaxJamLengthInVehicles="0.00" meanMaxJamLengthInMeters="0.00" maxJamLengthInVehicles="0" maxJamLengthInMeters="0.00" jamLengthInVehiclesSum="0" jamLengthInMetersSum="0.00" meanHaltingDuration="0.00" maxHaltingDuration="0.00" haltingDurationSum="0.00" meanIntervalHaltingDuration="0.00" maxIntervalHaltingDuration="0.00" intervalHaltingDurationSum="0.00" startedHalts="0.00" meanVehicleNumber="0.08" maxVehicleNumber="1" />
+   <interval begin="50.00" end="65.00" id="A28_350_lane0_s2" nSamples="12" meanSpeed="6.00" meanOccupancy="21.33" maxOccupancy="50.00" meanMaxJamLengthInVehicles="0.00" meanMaxJamLengthInMeters="0.00" maxJamLengthInVehicles="0" maxJamLengthInMeters="0.00" jamLengthInVehiclesSum="0" jamLengthInMetersSum="0.00" meanHaltingDuration="0.00" maxHaltingDuration="0.00" haltingDurationSum="0.00" meanIntervalHaltingDuration="0.00" maxIntervalHaltingDuration="0.00" intervalHaltingDurationSum="0.00" startedHalts="0.00" meanVehicleNumber="0.80" maxVehicleNumber="2" />
 </detector>

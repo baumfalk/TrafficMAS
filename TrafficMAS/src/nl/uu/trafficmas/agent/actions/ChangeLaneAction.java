@@ -8,6 +8,7 @@ import nl.uu.trafficmas.norm.NormInstantiation;
 import nl.uu.trafficmas.norm.Sanction;
 import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Route;
+import nl.uu.trafficmas.simulationmodel.AgentData;
 import de.tudresden.sumo.cmd.Vehicle;
 import de.tudresden.sumo.util.SumoCommand;
 
@@ -46,15 +47,6 @@ public class ChangeLaneAction extends SumoAgentAction {
 		return finishTime;
 	}
 
-	@Override
-	public ArrayList<Sanction> getSanctions(double maxComfySpeed, double velocity, List<NormInstantiation> normInst) {
-		// TODO Auto-generated method stub
-		
-		
-		return null;
-	}
-	
-	
 
 	@Override
 	public SumoCommand getCommand(Agent currentAgent) {
@@ -66,6 +58,15 @@ public class ChangeLaneAction extends SumoAgentAction {
 		}
 			
 		return Vehicle.changeLane(currentAgent.agentID, (byte) (agentLaneIndex+1) , OVERTAKE_DURATION);
+	}
+
+	@Override
+	public AgentData getNewAgentState(AgentData agentData) {
+		// TODO take into account that there is no next lane
+		Object [] leader = {agentData.leaderId, agentData.leaderDistance};
+		AgentData newData = new AgentData(agentData.id, leader, agentData.position, (agentData.velocity), agentData.roadID, agentData.laneIndex+1);	
+		
+		return newData;
 	}
 
 }
