@@ -27,4 +27,16 @@ public abstract class NormInstantiation {
 	public boolean deadline(Map<String, AgentData> currentOrgKnowledge, int currentTime) {
 		return ns.deadline(currentOrgKnowledge, currentTime);
 	}
+	
+	@Override
+	public boolean equals(Object ni)  {
+		if(!(ni instanceof NormInstantiation))
+			return false;
+		return ((NormInstantiation) ni).ns.id.equals(this.ns.id) && ((NormInstantiation) ni).agentID.equals(this.agentID);	
+	}
+	
+	@Override
+	public int hashCode() {
+		return (int) (Integer.valueOf(this.agentID.charAt(0))+(Integer.valueOf(this.ns.id.charAt(0))));
+	}
 }

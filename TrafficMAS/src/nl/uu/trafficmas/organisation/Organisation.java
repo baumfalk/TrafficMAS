@@ -2,8 +2,10 @@ package nl.uu.trafficmas.organisation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import nl.uu.trafficmas.norm.NormInstantiation;
 import nl.uu.trafficmas.norm.NormScheme;
@@ -13,17 +15,21 @@ import nl.uu.trafficmas.roadnetwork.Sensor;
 import nl.uu.trafficmas.simulationmodel.AgentData;
 
 public class Organisation {
-	private List<NormScheme> normSchemes;
-	private List<NormInstantiation> normInstantiations;
-	private List<Sensor> sensors;
-	private Map<String,AgentData> currentOrgKnowledge;
-	private List<InstitutionalState> institutionalStates;
-	private int currentTime;
+	private List<NormScheme> 					normSchemes;
+	private List<NormInstantiation> 			normInstantiations;
+	private Map<String,Set<NormInstantiation>> 	agentNormInst;
+	private Map<String,List<Sanction>> 			agentSanctions;
+	private List<Sensor> 						sensors;
+	private Map<String,AgentData> 				currentOrgKnowledge;
+	private List<InstitutionalState> 			institutionalStates;
+	private int 								currentTime;
 	
-	public Organisation(ArrayList<NormScheme> normSchemes, ArrayList<Sensor> sensors ){
+	public Organisation(List<NormScheme> normSchemes, List<Sensor> sensors ){
 		this.normSchemes 	= normSchemes;
 		this.sensors 		= sensors;
 		normInstantiations	= new ArrayList<NormInstantiation>();
+		agentNormInst		= new HashMap<String, Set<NormInstantiation>>();
+		agentSanctions		= new HashMap<String, List<Sanction>>();
 	}
 	
 	public List<NormScheme> getNormSchemes() {
@@ -56,24 +62,47 @@ public class Organisation {
 			AgentData ad = currentOrgKnowledge.get(ni.agentID());
 			
 			if(ad != null && ni.violated(ad)) {
-				sanctions.add(ni.getSanction(ad.id));
+				Sanction sanction = ni.getSanction(ad.id);
+				sanctions.add(sanction);
+				if(!agentSanctions.containsKey(ad.id)) {
+					agentSanctions.put(ad.id, new ArrayList<Sanction>());
+				}
+				agentSanctions.get(ad.id).add(sanction);
+				// remove instantiation when sanctioned.
+				agentNormInst.get(ni.agentID).remove(ni);
 			}
 		}
+		
 		return sanctions;
 	}
 	
 	public List<NormInstantiation> getNewNormInstantiations(RoadNetwork rn) {
+		return getNewNormInstantiations(rn, normSchemes, currentOrgKnowledge, agentNormInst, normInstantiations);
+	}
+	
+	
+	public static List<NormInstantiation> getNewNormInstantiations(
+			RoadNetwork rn, List<NormScheme> normSchemes,
+			Map<String, AgentData> currentOrgKnowledge,
+			Map<String,Set<NormInstantiation>> agentNormInst,
+			List<NormInstantiation> normInstantiations) {
 		List<NormInstantiation> newList = new ArrayList<NormInstantiation>();
 		
 		for(NormScheme ns : normSchemes) {
 			if(ns.checkCondition(currentOrgKnowledge)) {
-				newList.addAll(ns.instantiateNorms(rn,currentOrgKnowledge));
+				List<NormInstantiation> nis = ns.instantiateNorms(rn,currentOrgKnowledge);
+				newList.addAll(nis);
+				for(NormInstantiation ni : nis) {
+					if(!agentNormInst.containsKey(ni.agentID)) {
+						agentNormInst.put(ni.agentID, new HashSet<NormInstantiation>());
+					}
+					agentNormInst.get(ni.agentID).add(ni);
+				}
 			}
 		}
 		normInstantiations.addAll(newList);
 		return newList;
 	}
-	
 	public List<NormInstantiation> getClearedNormInstantiations() {
 		List<NormInstantiation> clearedList= new ArrayList<NormInstantiation>();
 		for(NormInstantiation ni : normInstantiations) {
@@ -82,7 +111,9 @@ public class Organisation {
 				clearedList.add(ni);
 			}
 		}
-		
+		for(NormInstantiation ni : clearedList) {
+			agentNormInst.get(ni.agentID).remove(ni);
+		}
 		normInstantiations.removeAll(clearedList);
 		return clearedList;
 	}
@@ -91,6 +122,7 @@ public class Organisation {
 		currentOrgKnowledge = new HashMap<String,AgentData>();
 		for(Sensor s : sensors) {
 			for(AgentData ad : s.readSensor()) {
+				// TODO: proper error handling when an agent is detected by *two* sensors
 				if(currentOrgKnowledge.containsKey(ad.id)) {
 					System.out.println("Org.readsensors: agent " + ad.id + " was already located by a sensor!");
 					

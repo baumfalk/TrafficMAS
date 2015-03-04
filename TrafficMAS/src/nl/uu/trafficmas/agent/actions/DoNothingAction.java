@@ -1,15 +1,9 @@
 package nl.uu.trafficmas.agent.actions;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import nl.uu.trafficmas.agent.Agent;
-import nl.uu.trafficmas.norm.NormInstantiation;
-import nl.uu.trafficmas.norm.Sanction;
 import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Route;
 import nl.uu.trafficmas.simulationmodel.AgentData;
-import de.tudresden.sumo.cmd.Vehicle;
 import de.tudresden.sumo.util.SumoCommand;
 
 public class DoNothingAction extends SumoAgentAction {

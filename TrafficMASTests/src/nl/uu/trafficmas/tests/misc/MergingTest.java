@@ -1,14 +1,11 @@
 package nl.uu.trafficmas.tests.misc;
 
-import static org.junit.Assert.*;
 import it.polito.appeal.traci.SumoTraciConnection;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Map.Entry;
-import java.util.Random;
 
 import javax.xml.parsers.ParserConfigurationException;
 

@@ -2,11 +2,9 @@ package nl.uu.trafficmas.tests.organisations;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -14,7 +12,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.agent.HotShotAgent;
 import nl.uu.trafficmas.datamodel.DataModelXML;
-import nl.uu.trafficmas.norm.NormInstantiation;
 import nl.uu.trafficmas.norm.NormScheme;
 import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Node;

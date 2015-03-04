@@ -1,9 +1,8 @@
 package nl.uu.trafficmas.tests.XML;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -15,8 +14,6 @@ import nl.uu.trafficmas.roadnetwork.Sensor;
 
 import org.junit.Test;
 import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class XMLGetNormSchemesTest {

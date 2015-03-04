@@ -1,6 +1,6 @@
 package nl.uu.trafficmas.tests.XML;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -13,8 +13,6 @@ import nl.uu.trafficmas.datamodel.DataModelXML;
 
 import org.junit.Test;
 import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class GetAgentSpawnInformationTest {

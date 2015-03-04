@@ -7,7 +7,6 @@ import java.util.List;
 
 import nl.uu.trafficmas.agent.actions.AgentAction;
 import nl.uu.trafficmas.agent.actions.ChangeLaneAction;
-import nl.uu.trafficmas.agent.actions.ChangeRouteAction;
 import nl.uu.trafficmas.agent.actions.DoNothingAction;
 import nl.uu.trafficmas.norm.NormInstantiation;
 import nl.uu.trafficmas.norm.Sanction;
