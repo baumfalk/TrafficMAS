@@ -15,14 +15,65 @@ import org.junit.Test;
 
 public class MergeNormTest {
 
+	
 	@Test
-	public void calcTest() {
+	public void calcTest2() {
 		
-		double lambda 		= 2.0; 
+		double lambda		= 2;
 		double c_zero_pos 	= 10;
 		double c_one_pos 	= 20;
-		double c_zero_v		= (80/3.6);
-		double c_one_v		= (100/3.6);
+		double c_zero_v		= (100/3.6);
+		double c_one_v		= (80/3.6);
+		double accel		= Double.POSITIVE_INFINITY;
+		double decel		= -5;
+		double vprime1; 
+		double vprime2;
+		
+		
+		double test;
+		
+		double firstPartSqrt =  Math.pow((2*accel*c_zero_pos)+(2*lambda*accel*c_zero_v)+(2*c_zero_v*c_one_v),2);
+		double secndPartSqrt = 2*lambda*c_zero_v*(-(2*accel*c_one_pos*c_zero_v)-(2*lambda*accel*c_zero_v*c_zero_v)-(c_zero_v*c_one_v*c_one_v));
+		double afterSqrtPos	 = (2*accel*c_zero_pos)+(2*lambda*accel*c_zero_v)+(2*c_zero_v*c_one_v);
+		double afterSqrtNeg	 = (2*accel*c_zero_pos)-(2*lambda*accel*c_zero_v)-(2*c_zero_v*c_one_v);
+
+		
+		
+		vprime1 = (Math.sqrt(
+				accel*accel*c_zero_pos*c_zero_pos
+					+2*accel*c_zero_pos*c_zero_v*c_one_v
+						-(2*accel*c_one_pos*c_zero_v*c_zero_v))
+					+(accel*c_zero_pos)+(c_zero_v*c_one_v))/c_zero_v;
+		
+		vprime1 = (Math.sqrt(firstPartSqrt+secndPartSqrt)+afterSqrtPos)/(2*c_zero_v);
+		vprime2 = -(Math.sqrt(firstPartSqrt+secndPartSqrt)-afterSqrtNeg)/(2*c_zero_v);
+		
+		//System.out.println("Test: "+ test);
+
+		System.out.println("New speed car one for positive sqrt: "+ vprime1);
+		System.out.println("New speed car one for negative sqrt: "+ vprime2);
+
+		/*
+		System.out.println("Current speed car zero: "+ c_zero_v);
+		System.out.println("Current speed car one: "+ c_one_v);
+		
+		double c_one_v_new	=	(1/lambda*c_one_pos+c_zero_v)/(1+(1/lambda)*(c_zero_pos/c_zero_v));
+		System.out.println("Speed for car one with " +lambda+ " seconds before collission at merge point: "+c_one_v_new+"m/s");
+		System.out.println("New speed in km/h: " +c_one_v_new*3.6);
+		System.out.println("Difference:" + (c_one_v_new-c_one_v));
+		*/
+		fail("Not implemented yet");
+	}
+	
+	
+	//@Test
+	public void calcTest() {
+		
+		double lambda 		= Double.POSITIVE_INFINITY; 
+		double c_zero_pos 	= 10;
+		double c_one_pos 	= 20;
+		double c_zero_v		= (100/3.6);
+		double c_one_v		= (80/3.6);
 		
 		System.out.println("Current speed car zero: "+ c_zero_v);
 		System.out.println("Current speed car one: "+ c_one_v);
@@ -65,7 +116,7 @@ public class MergeNormTest {
 		return lambda;
 	}
 	
-	@Test
+	//@Test
 	public void test() {
 		
 		
