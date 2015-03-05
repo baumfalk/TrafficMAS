@@ -14,6 +14,7 @@ public abstract class NormScheme {
 	protected SanctionType sanctionType;
 	public final List<Sensor> sensorList;
 	public final String id;
+	
 	public NormScheme(String id, SanctionType sanctionType, List<Sensor> sensorList) {
 		this.id 			= id;
 		this.sanctionType 	= sanctionType;
