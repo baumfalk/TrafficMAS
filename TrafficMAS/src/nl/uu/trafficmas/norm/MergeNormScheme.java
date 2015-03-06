@@ -25,7 +25,6 @@ public class MergeNormScheme extends NormScheme {
 	 */
 	public MergeNormScheme(String id, SanctionType sanctionType, List<Sensor> sensorList) {
 		super(id,sanctionType,sensorList);
-		//super(id, sanctionType, sensorList);
 		mainSensor 	= sensorList.get(0);
 		rampSensor 	= sensorList.get(1);
 		mergeSensor	= sensorList.get(2);

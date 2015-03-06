@@ -564,7 +564,7 @@ public class TrafficMASController {
 	 * @param masData
 	 * @return
 	 */
-	public static ArrayList<Organisation> instantiateOrganisations(MASData masData) {
+	public static Map<String,Organisation> instantiateOrganisations(MASData masData) {
 		
 		return null;
 	}
