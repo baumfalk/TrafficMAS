@@ -1,8 +1,10 @@
 package nl.uu.trafficmas.norm;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Sensor;
@@ -10,12 +12,10 @@ import nl.uu.trafficmas.simulationmodel.AgentData;
 
 public class MergeNormScheme extends NormScheme {
 
-	private List<AgentData> mainList;
-	private List<AgentData> rampList;
 	private Sensor mainSensor;
 	private Sensor rampSensor;
 	private Sensor mergeSensor;
-	private List<AgentData> outputList;
+	private Set<String> tickedAgents;
 	private static int count = 0;
 	/**
 	 * first sensor: main road
@@ -29,41 +29,111 @@ public class MergeNormScheme extends NormScheme {
 		mainSensor 	= sensorList.get(0);
 		rampSensor 	= sensorList.get(1);
 		mergeSensor	= sensorList.get(2);
+		tickedAgents= new HashSet<String>();
 	}
 
 	@Override
 	public List<NormInstantiation> instantiateNorms(RoadNetwork rn, Map<String, AgentData> currentOrgKnowledge) {
-		// TODO Auto-generated method stub
-		this.runAlgorithm(rn);
+		
+		double vmax = (80/3.6);
+		List<AgentData> mainList = mainSensor.readSensor();
+		List<AgentData> rampList = rampSensor.readSensor();
+		
+		removeTicketAgents(mainList);
+		removeTicketAgents(rampList);
+		
+		
+		List<AgentData> outputList = mergeTrafficStreams(mainList, rampList, mainSensor.getEndPosition(), rampSensor.getEndPosition());
+		for (int i = 0; i < outputList.size(); i++) {
+			tickedAgents.add(outputList.get(i).id);
+		}
+		
+		AgentData firstCar = outputList.get(0);
+		
+		MergeNormInstantiation ni = new MergeNormInstantiation(this, firstCar.id);
+		ni.setSpeed(Math.min(vmax, mergeSensor.getLastStepMeanSpeed()));
+		List<NormInstantiation> normInstList = new ArrayList<NormInstantiation>();
+		
+		normInstList.add(ni);
+		
+		double lastSpeed = ni.getSpeed();
+		double lastCarMergePoint= rn.getEdge(firstCar.roadID).getRoad().length;
+		double distRemaining	= lastCarMergePoint-firstCar.position;
+		double acceleration 	= (firstCar.velocity < lastSpeed) ? firstCar.acceleration : firstCar.deceleration;
+		double accelerationTime	= (Math.abs(lastSpeed-firstCar.velocity)/acceleration);
+		double accelAvgSpeed	= (ni.getSpeed()-firstCar.velocity)/2;
+		double accelerationDist	= accelerationTime*accelAvgSpeed;
+		distRemaining			-= accelerationDist;
+		double lastCarArrivalTimeMergePoint = accelerationTime + distRemaining/lastSpeed;
+		
+		double timeBetweenCars	= 2.0;
+		
+		for (int i = 1; i < outputList.size(); i++) {
+			
+			AgentData currentCar 	= outputList.get(i);
+			lastCarMergePoint 		= rn.getEdge(currentCar.roadID).getRoad().length;
+			distRemaining			= lastCarMergePoint - currentCar.position;
+			double posAtArrivalTime = currentCar.velocity* (timeBetweenCars + lastCarArrivalTimeMergePoint);
+			acceleration 			= (posAtArrivalTime < lastCarMergePoint) ? currentCar.acceleration : currentCar.deceleration;
+			lastSpeed 				= findBestSpeed(currentCar.velocity, acceleration, distRemaining, lastCarArrivalTimeMergePoint, timeBetweenCars );
+			lastSpeed				= Math.min(lastSpeed, vmax);
+			lastCarArrivalTimeMergePoint = getArrivalTime(currentCar.velocity, acceleration, distRemaining, lastSpeed);
+			ni = new MergeNormInstantiation(this, currentCar.id);
+			ni.setSpeed(lastSpeed);
+			normInstList.add(ni);
+		}
 		
 		// determine based on the order the speed for the other cars in front of 
-		return null;
+		return normInstList;
 	}
 
-
-
-	/**
-	 * Based on the algorithm in the paper 
-	 * 		Proactive Traffic Merging Strategies for Sensor-Enabled Cars
-	 * by Wang et al
-	 */
-	@Override
-	protected void runAlgorithm(RoadNetwork rn) {
-		mainList = mainSensor.readSensor();
-		rampList = rampSensor.readSensor();
-		outputList = mergeTrafficStreams(mainList, rampList, mainSensor.getEndPosition(), rampSensor.getEndPosition());
-		
-		
+	public static double findBestSpeed(double velocity, double acceleration,
+			double distRemaining, double lastCarArrivalTimeMergePoint,
+			double timeBetweenCars) {
 		// TODO Auto-generated method stub
 		
-		// read cars from first and second sensor
-		// make sure lists are ordered based on position of cars on road
-		// while there are still cars on the ramp that are unassigned
-		// get the first unassigned car
-		// 
-		// if the car has passed the decision point (assumption: we only have sensors
-		// for the area of the decision point, so this if is nt needed)
+		// boostrap depending on if we need to brake or not
+		// between 0m/s or 200m/s
+		double vprime 	= (acceleration >0) ? 200 : 0;
+		double vhigh 	= (acceleration >0) ? 200 : velocity;
+		double vlow 	= (acceleration >0) ? velocity : 0;
+		double sigma 	= 0.1;
+		int steps 		= 20;
+		int currentStep = 0;
+		double arrivalTime = 0;
+		do
+		{
+			arrivalTime = getArrivalTime(velocity, acceleration, distRemaining, vprime);
+			
+			double newvprime = (vhigh + vlow)/2;
+			if(newvprime < vprime) {
+				vhigh = vprime;
+			} else{
+				vlow = vprime;
+			}
+			vprime = newvprime;
+			
+		}while(currentStep < steps 
+				&& (arrivalTime < (lastCarArrivalTimeMergePoint + timeBetweenCars)-sigma)
+				&& (arrivalTime > (lastCarArrivalTimeMergePoint + timeBetweenCars)+sigma));
 		
+		
+		return vprime;
+	}
+
+	private static double getArrivalTime(double velocity, double acceleration,
+			double distRemaining, double vprime) {
+		return Math.abs((vprime - velocity)/acceleration)+ (distRemaining-
+				Math.abs((vprime - velocity)/acceleration)*(vprime+velocity)/2
+				)/vprime;
+	}
+
+	private void removeTicketAgents(List<AgentData> mainList) {
+		for(AgentData ad : mainList) {
+			if(tickedAgents.contains(ad.id)) {
+				mainList.remove(ad);
+			}
+		}
 	}
 
 	public static List<AgentData> mergeTrafficStreams(List<AgentData> mainList, List <AgentData> rampList, double mainRoadEnd, double rampRoadEnd) {
@@ -114,91 +184,6 @@ public class MergeNormScheme extends NormScheme {
 		return outputList;
 	}
 	
-	public static List<Double> calculateNewSpeeds(List<AgentData> outputList, RoadNetwork rn) {
-		List<Double> newSpeeds = new ArrayList<Double>(outputList.size());
-		newSpeeds.add(outputList.get(0).velocity);
-		for(int i=0;i<outputList.size()-1;i++) {			
-			AgentData first = outputList.get(i);
-			AgentData second = outputList.get(i+1);
-			double firstDistRemaining = rn.getEdge(first.roadID).getRoad().length - first.position;
-			double secondDistRemaining = rn.getEdge(second.roadID).getRoad().length - second.position;
-
-			double secondSpeed = findBestSpeed(first,second,firstDistRemaining,secondDistRemaining);
-			System.out.println("Speed that is being added:"+secondSpeed);
-			newSpeeds.add(secondSpeed);
-		}
-		
-		return newSpeeds;
-	}
-
-	public static double findBestSpeed(AgentData first, AgentData second, double firstDistRemaining, double secondDistRemaining) {
-		double lambda;
-		double c_zero_pos 	= firstDistRemaining;
-		double c_one_pos 	= secondDistRemaining;
-		double c_zero_v		= first.velocity;
-		double c_one_v		= second.velocity;
-		
-		double c_one_a		= (c_zero_v < c_one_v) ? -5 : 2;// TODO: use first.deceleration for this;
-		double new_v_high 	= c_one_v;
-		double new_v_low	= c_zero_v;
-		double c_one_v_new	= new_v_high;
-		double lambda_sigma = 0.1;
-		double lambda_goal	= 4;
-		int numberOfAttempts= 20;
-		int attempt = 1;
-		do
-		{
-			lambda = calcLambda(c_zero_v,c_one_v,c_one_v_new,c_zero_pos,c_one_pos,c_one_a);
-			System.out.println("Attempt #"+attempt++ + "lambda:"+lambda+" newspeed:"+c_one_v_new);
-			double lambdaInf = calcLambda(c_zero_v,c_one_v,c_one_v_new,c_zero_pos,c_one_pos,Double.NEGATIVE_INFINITY);
-			System.out.println("\t With decel = infinity, lambda = "+lambdaInf);
-			if(lambda < lambda_goal - lambda_sigma) {
-				new_v_high = c_one_v_new;
-				c_one_v_new = (new_v_low+new_v_high)/2;
-			} else if(lambda > lambda_goal + lambda_sigma) {
-				new_v_low = c_one_v_new;
-				c_one_v_new = (new_v_low+new_v_high)/2;
-			}
-		}while((lambda < lambda_goal - lambda_sigma || lambda > lambda_goal + lambda_sigma) && attempt < numberOfAttempts);
-		
-		//unrealistic results, keep the original speed
-		if(lambda < 0) {
-			c_one_v_new = c_one_v;
-		}
-		System.out.println("final speed:"+ c_one_v_new);
-		return c_one_v_new;
-	}
-	
-	public static double calcLambda(double v0, double v1, double vprime, double s0, double s1, double a1 ) {
-		System.out.println("CalcLambdaFunction\nv0:"+v0+"\nv1:"+v1+"\nvprime:"+vprime+"\ns0:"+s0+"\ns1:"+s1+"\na1:"+a1);
-		double decelTime = (vprime - v1)/a1;
-		double decelAvrgSpeed = (v1+vprime)/2;
-		double decelDist = decelAvrgSpeed * decelTime;
-		
-		double distAfterDecel = s1-decelDist;
-		double c0TravelTime	= s0/v0;
-		double timeAfterDecel = c0TravelTime - decelTime;
-		double distNewSpeed	= timeAfterDecel * vprime;
-		
-		double diffDist = distAfterDecel - distNewSpeed;
-		double diffVel	= vprime - v0;
-		
-		double lambda = diffDist/diffVel;
-		
-		System.out.println("\t deceltime:"+decelTime);
-		System.out.println("\t decelAvrgSpeed:"+ decelAvrgSpeed);
-		System.out.println("\t decelDist:"+ decelDist);
-		System.out.println("\t distAfterDecel:"+ distAfterDecel);
-		System.out.println("\t c0TravelTime:"+ c0TravelTime);
-		System.out.println("\t timeAfterDecel:"+ timeAfterDecel);
-		System.out.println("\t distNewSpeed:"+ distNewSpeed);
-		System.out.println("\t diffDist:"+ diffDist);
-		System.out.println("\t diffVel:"+ diffVel);
-		System.out.println("\t lambda:"+lambda);
-		System.out.println();
-		return lambda;
-	}
-
 	@Override
 	public boolean checkCondition(Map<String, AgentData> currentOrgKnowledge) {
 		// TODO Auto-generated method stub

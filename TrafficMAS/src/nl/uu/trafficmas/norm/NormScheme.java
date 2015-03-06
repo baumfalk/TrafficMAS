@@ -25,14 +25,11 @@ public abstract class NormScheme {
 	
 	public abstract boolean checkCondition(Map<String, AgentData> currentOrgKnowledge);
 	
-	protected abstract void runAlgorithm(RoadNetwork rn);
-	
 	public abstract boolean violated(AgentData ad);
 
 	public Sanction getSanction(String agentID) {
 		return new Sanction(sanctionType, agentID);
 	}
-
 
 	public abstract boolean deadline(Map<String, AgentData> currentOrgKnowledge, int currentTime);
 }

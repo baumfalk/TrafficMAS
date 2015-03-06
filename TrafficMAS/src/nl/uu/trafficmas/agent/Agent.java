@@ -37,7 +37,8 @@ public abstract class Agent extends AgentPhysical {
 	private List<String> 			possibleNewRoute;
 	
 	public final static double DEFAULT_MAX_SPEED = 20;
-	
+	public final static double acceleration = 1;
+	public final static double deceleration = -3;
 	public abstract double specificUtility(double time, List<Sanction> sanctionList);
 	
 	/**
@@ -246,7 +247,7 @@ public abstract class Agent extends AgentPhysical {
 	
 	public AgentData getAgentData() {
 		Object [] leader = {null, this.leaderDistance};
-		AgentData newData = new AgentData(this.agentID, leader, this.distance, (this.velocity), this.road.id, this.lane.laneIndex);
+		AgentData newData = new AgentData(this.agentID, leader, this.distance, (this.velocity), this.road.id, this.lane.laneIndex, Agent.deceleration, Agent.acceleration);
 		return newData;
 	}
 }

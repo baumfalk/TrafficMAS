@@ -59,7 +59,7 @@ public class ChangeLaneAction extends SumoAgentAction {
 	public AgentData getNewAgentState(AgentData agentData) {
 		// TODO take into account that there is no next lane
 		Object [] leader = {agentData.leaderId, agentData.leaderDistance};
-		AgentData newData = new AgentData(agentData.id, leader, agentData.position, (agentData.velocity), agentData.roadID, agentData.laneIndex+1);	
+		AgentData newData = new AgentData(agentData.id, leader, agentData.position, (agentData.velocity), agentData.roadID, agentData.laneIndex+1,Agent.deceleration, Agent.acceleration);	
 		
 		return newData;
 	}

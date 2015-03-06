@@ -9,8 +9,10 @@ public class AgentData implements Data {
 	public final double velocity;
 	public final String roadID;
 	public final int laneIndex;
+	public final double deceleration;
+	public final double acceleration;
 
-	public AgentData(String id, Object[] leader, double position, double speed, String roadID, int laneIndex) {
+	public AgentData(String id, Object[] leader, double position, double speed, String roadID, int laneIndex, double deceleration, double acceleration) {
 		this.id = id;
 		if(leader == null) {
 			leaderId = null;
@@ -20,10 +22,12 @@ public class AgentData implements Data {
 			leaderId = (String) leader[0];
 			leaderDistance = (double) leader[1];
 		}
-		this.position 			= position;
-		this.velocity			= speed;
-		this.roadID 			= roadID;
-		this.laneIndex 			= laneIndex;
+		this.position 		= position;
+		this.velocity		= speed;
+		this.roadID 		= roadID;
+		this.laneIndex 		= laneIndex;
+		this.deceleration 	= deceleration;
+		this.acceleration	= acceleration;
 	}
 	
 	@Override

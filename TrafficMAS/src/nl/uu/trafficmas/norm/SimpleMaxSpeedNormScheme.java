@@ -39,12 +39,6 @@ public class SimpleMaxSpeedNormScheme extends NormScheme {
 	}
 
 	@Override
-	protected void runAlgorithm(RoadNetwork rn) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public boolean violated(AgentData ad) {
 		// TODO Auto-generated method stub
 		return ad.velocity > 4;
