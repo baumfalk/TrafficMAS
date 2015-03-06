@@ -123,9 +123,10 @@ public class MergeNormScheme extends NormScheme {
 
 	private static double getArrivalTime(double velocity, double acceleration,
 			double distRemaining, double vprime) {
-		return Math.abs((vprime - velocity)/acceleration)+ (distRemaining-
-				Math.abs((vprime - velocity)/acceleration)*(vprime+velocity)/2
-				)/vprime;
+		double accelerationTime = Math.abs((vprime - velocity)/acceleration);
+		double accelerationDist = accelerationTime*(vprime+velocity)/2;
+		double remainingTime = (distRemaining-accelerationDist)/vprime;
+		return accelerationTime+ remainingTime;
 	}
 
 	private void removeTicketAgents(List<AgentData> mainList) {
