@@ -1,22 +1,41 @@
 package nl.uu.trafficmas.tests.norms;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import it.polito.appeal.traci.SumoTraciConnection;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
+import javax.xml.parsers.ParserConfigurationException;
+
+import nl.uu.trafficmas.agent.Agent;
+import nl.uu.trafficmas.agent.actions.AgentAction;
+import nl.uu.trafficmas.controller.TrafficMASController;
+import nl.uu.trafficmas.datamodel.DataModel;
+import nl.uu.trafficmas.datamodel.DataModelXML;
+import nl.uu.trafficmas.datamodel.MASData;
 import nl.uu.trafficmas.norm.MergeNormScheme;
 import nl.uu.trafficmas.roadnetwork.Node;
 import nl.uu.trafficmas.roadnetwork.Road;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
+import nl.uu.trafficmas.roadnetwork.Route;
 import nl.uu.trafficmas.simulationmodel.AgentData;
+import nl.uu.trafficmas.simulationmodel.SimulationModelTraaS;
+import nl.uu.trafficmas.simulationmodel.StateData;
 
 import org.junit.Test;
+import org.xml.sax.SAXException;
+
+import com.sun.swing.internal.plaf.synth.resources.synth_sv;
 
 public class MergeNormTest {
 
 	
-	@Test
+	//@Test
 	public void calcTest2() {
 		
 		double lambda		= 2;
@@ -179,5 +198,51 @@ public class MergeNormTest {
 		
 		fail("Not yet implemented");
 	}
+	
+	@Test
+	public void mergeTest() throws SAXException, IOException, ParserConfigurationException{
+		Random random = new Random(1337);
 
+		String dir 			= System.getProperty("user.dir")+"/tests/Organisations/Norms/";
+		DataModel dataModel = new DataModelXML(dir,"orgnormtest.mas.xml");
+		MASData masData 	= dataModel.getMASData(); 
+		
+		HashMap<String, String> options = new HashMap<String, String>();
+		options.put("e", Integer.toString(masData.simulationLength));
+		options.put("start", "1");
+		options.put("quit-on-end", "1");
+		
+		SumoTraciConnection conn 	= SimulationModelTraaS.initializeWithOptions(options,"sumo-gui", System.getProperty("user.dir")+"/tests/Organisations/Norms/orgnormtest.cfg.xml");
+		RoadNetwork rn 				= dataModel.instantiateRoadNetwork();
+		ArrayList<Route> routes 	= dataModel.getRoutes(rn);
+		System.out.println("hallo");
+		HashMap<Agent,Integer> agentPairList 	= TrafficMASController.instantiateAgents(masData, random, routes, rn);
+		HashMap<String, Agent> completeAgentMap = SimulationModelTraaS.addAgents(agentPairList, conn);	
+		System.out.println(completeAgentMap.size());
+		HashMap<String, Agent> currentAgentMap 	= SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, new HashMap<String, Agent>(), conn);
+		
+		boolean timeStep = false;
+		StateData stateData = SimulationModelTraaS.getStateData(conn, timeStep);
+		
+		int i = 0;
+		while(i++ < masData.simulationLength){
+			System.out.println(completeAgentMap.size());
+
+			currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, currentAgentMap, conn);
+			stateData 		= SimulationModelTraaS.getStateData(conn, true);
+			System.out.println("Whats the time?: "+stateData.currentTimeStep);
+			currentAgentMap = TrafficMASController.updateAgents(completeAgentMap, rn, stateData);
+			rn = TrafficMASController.updateRoadNetwork(rn, stateData);
+			try {
+			
+			} catch (Exception e) {
+				e.printStackTrace();
+			}	
+		}
+	}
 }
+
+
+
+
+
