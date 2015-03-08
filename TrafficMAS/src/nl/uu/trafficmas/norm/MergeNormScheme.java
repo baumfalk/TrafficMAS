@@ -39,8 +39,8 @@ public class MergeNormScheme extends NormScheme {
 		List<AgentData> mainList = mainSensor.readSensor();
 		List<AgentData> rampList = rampSensor.readSensor();
 		
-		removeTicketAgents(mainList);
-		removeTicketAgents(rampList);
+		removeTickedAgents(mainList);
+		removeTickedAgents(rampList);
 		
 		
 		List<AgentData> outputList = mergeTrafficStreams(mainList, rampList, mainSensor.getEndPosition(), rampSensor.getEndPosition());
@@ -129,7 +129,7 @@ public class MergeNormScheme extends NormScheme {
 		return accelerationTime+ remainingTime;
 	}
 
-	private void removeTicketAgents(List<AgentData> mainList) {
+	private void removeTickedAgents(List<AgentData> mainList) {
 		for(AgentData ad : mainList) {
 			if(tickedAgents.contains(ad.id)) {
 				mainList.remove(ad);
