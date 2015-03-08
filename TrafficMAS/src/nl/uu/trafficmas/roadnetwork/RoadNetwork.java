@@ -64,9 +64,12 @@ public class RoadNetwork {
 		}
 	}
 
-	public Sensor[] getSensors() {
-		Sensor[] list = new Sensor[sensors.size()];
-		return sensors.toArray(list);
+	public Map<String, Sensor> getSensorMap() {
+		Map<String, Sensor> sensorMap = new HashMap<String, Sensor>();
+		for(Sensor s : this.sensors){
+			sensorMap.put(s.id, s);
+		}
+		return sensorMap;
 	}
 	
 	public void removeNode(Node node) {

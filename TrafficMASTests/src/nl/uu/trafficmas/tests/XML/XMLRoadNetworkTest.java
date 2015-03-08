@@ -35,7 +35,7 @@ public class XMLRoadNetworkTest {
 		
 		rn = DataModelXML.instantiateRoadNetwork(nodeDoc, edgeDoc, sensorDoc);
 		
-		Sensor sensor = rn.getSensors()[0];
+		Sensor sensor = rn.getSensorMap().get("A28_350_lane0_0");
 		
 		assertEquals("A28_350_lane0_0",								sensor.getId());
 		assertEquals(10,											sensor.getLength(),0.0);

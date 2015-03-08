@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -17,12 +17,9 @@ import nl.uu.trafficmas.controller.TrafficMASController;
 import nl.uu.trafficmas.datamodel.DataModel;
 import nl.uu.trafficmas.datamodel.DataModelXML;
 import nl.uu.trafficmas.datamodel.MASData;
-import nl.uu.trafficmas.norm.MergeNormScheme;
-import nl.uu.trafficmas.roadnetwork.Node;
-import nl.uu.trafficmas.roadnetwork.Road;
+import nl.uu.trafficmas.organisation.Organisation;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
-import nl.uu.trafficmas.simulationmodel.AgentData;
 import nl.uu.trafficmas.simulationmodel.SimulationModelTraaS;
 import nl.uu.trafficmas.simulationmodel.StateData;
 
@@ -33,7 +30,6 @@ public class MergeNormTest {
 
 	@Test
 	public void mergeNormTest() throws SAXException, IOException, ParserConfigurationException{
-		fail("Not yet implemented");
 		Random random 	= new Random(1337);
 		String dir 		= System.getProperty("user.dir")+"/tests/Organisations/Norms/";
 		String sumocfg 	= System.getProperty("user.dir")+"/tests/Organisations/Norms/orgnormtest.cfg.xml";
@@ -47,23 +43,23 @@ public class MergeNormTest {
 		options.put("start", "1");
 		options.put("quit-on-end", "1");
 		
-		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options,"sumo", sumocfg);				
+		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options,"sumo-gui", sumocfg);				
 		RoadNetwork rn = dataModel.instantiateRoadNetwork();
 		ArrayList<Route> routes = dataModel.getRoutes(rn);
 		
 		HashMap<Agent,Integer> agentPairList 	= TrafficMASController.instantiateAgents(masData, random, routes, rn);
 		HashMap<String, Agent> completeAgentMap = SimulationModelTraaS.addAgents(agentPairList, conn);
 		HashMap<String, Agent> currentAgentMap 	= SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, new LinkedHashMap<String, Agent>(), conn);
-		HashMap<String, Organisation> orgsMap	= TrafficMASController.instantiateOrganisations(masData);
+		Map<String, Organisation> orgsMap	= TrafficMASController.instantiateOrganisations(dataModel, rn);
 		
 		try {
 			int i = 0;
 			while (i++ < masData.simulationLength) {
-				currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, currentAgentMap, conn);
-				StateData stateData 		= SimulationModelTraaS.getStateData(conn, true);
-				currentAgentMap = TrafficMASController.updateAgents(completeAgentMap, rn, stateData);
-				rn = TrafficMASController.updateRoadNetwork(rn, stateData);
-				
+				currentAgentMap 		= SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, currentAgentMap, conn);
+				StateData stateData 	= SimulationModelTraaS.getStateData(conn, true);
+				currentAgentMap 		= TrafficMASController.updateAgents(completeAgentMap, rn, stateData);
+				rn						= TrafficMASController.updateRoadNetwork(rn, stateData);
+				orgsMap					= TrafficMASController.updateOrganisations(orgsMap, stateData);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

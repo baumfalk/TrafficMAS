@@ -13,6 +13,7 @@ import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.agent.AgentProfileType;
 import nl.uu.trafficmas.agent.actions.AgentAction;
 import nl.uu.trafficmas.datamodel.DataModel;
+import nl.uu.trafficmas.datamodel.DataModelXML;
 import nl.uu.trafficmas.datamodel.MASData;
 import nl.uu.trafficmas.norm.NormInstantiation;
 import nl.uu.trafficmas.norm.Sanction;
@@ -75,7 +76,7 @@ public class TrafficMASController {
 		this.agentsAndTime 	= TrafficMASController.instantiateAgents(masData, rng, routes, roadNetwork);
 		view.addMessage("Generated agent spawn times");
 
-		this.organisations 	= this.masData.organisations;
+		this.organisations 	= masData.organisations;
 		view.addMessage("Initialized organisations");
 
 		//////////////////////
@@ -564,8 +565,9 @@ public class TrafficMASController {
 	 * @param masData
 	 * @return
 	 */
-	public static Map<String,Organisation> instantiateOrganisations(MASData masData) {
-		
-		return null;
+	public static Map<String,Organisation> instantiateOrganisations(DataModel dataModel, RoadNetwork roadNetwork) {
+		Map<String,Organisation> orgsMap = new HashMap<String, Organisation>();
+		orgsMap = dataModel.getOrganisations(roadNetwork.getSensorMap());
+		return orgsMap;
 	}
 }

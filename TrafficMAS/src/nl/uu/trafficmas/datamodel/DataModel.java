@@ -5,10 +5,14 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.w3c.dom.Document;
+
 import nl.uu.trafficmas.agent.AgentProfileType;
+import nl.uu.trafficmas.norm.NormScheme;
 import nl.uu.trafficmas.organisation.Organisation;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
+import nl.uu.trafficmas.roadnetwork.Sensor;
 
 public interface DataModel {
 	/**
@@ -67,11 +71,11 @@ public interface DataModel {
 	
 	/**
 	 * 
-	 * @param sensors
-	 * @param normSchemes
+	 * @param sensorMap
 	 * @return
 	 */
-	public Map<String,Organisation> instantiateOrganisations();
+	public Map<String, Organisation> getOrganisations(Map<String,Sensor> sensorMap);
+
 	
 	/**
 	 * Not yet implemented
