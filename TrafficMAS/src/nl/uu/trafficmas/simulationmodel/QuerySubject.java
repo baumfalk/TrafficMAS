@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 
+import nl.uu.trafficmas.agent.Agent;
 import de.tudresden.sumo.util.SumoCommand;
 import de.tudresden.ws.container.SumoStringList;
 
@@ -107,6 +108,9 @@ public enum QuerySubject {
 			case VehicleIDList:
 				cmd = de.tudresden.sumo.cmd.ArealDetector.getLastStepVehicleIDs(id);
 				break;
+			case Speed:
+				cmd = de.tudresden.sumo.cmd.ArealDetector.getLastStepMeanSpeed(id);
+				break;
 			default:
 				throw new Exception(this+" cannot handle " + queryField);
 			}
@@ -137,12 +141,12 @@ public enum QuerySubject {
 			data = new LaneData(id, meanSpeed[0], meanTime[0], edgeId[0]);
 			break;
 		case Vehicle:
-			data = new AgentData(id, leadingVehicle[0], position[0], speed[0],edgeId[0],laneIndex[0]);
+			data = new AgentData(id, leadingVehicle[0], position[0], speed[0],edgeId[0],laneIndex[0],Agent.deceleration, Agent.acceleration);
 			break;
 		case Sensor:
 			String [] vehicleIds = new String[vehicleList[0].size()];
 			vehicleList[0].toArray(vehicleIds);
-			data = new SensorData(id,vehicleIds);
+			data = new SensorData(id,vehicleIds,speed[0]);
 			break;
 		}
 		

@@ -55,4 +55,9 @@ public class Sensor {
 	public int getFrequency(){
 		return frequency;
 	}
+
+	public double getLastStepMeanSpeed() {
+		// TODO Auto-generated method stub
+		return this.sensorData.meanSpeed;
+	}
 }

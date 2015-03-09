@@ -64,7 +64,7 @@ public class ChangeVelocityAction extends SumoAgentAction {
 	public AgentData getNewAgentState(AgentData agentData) {
 		// TODO make new constructor for agentdata so we don't need Object [] leader
 		Object [] leader = {agentData.leaderId, agentData.leaderDistance};
-		AgentData newData = new AgentData(agentData.id, leader, agentData.position, Math.max(0,(agentData.velocity+speedIncrease)), agentData.roadID, agentData.laneIndex);	
+		AgentData newData = new AgentData(agentData.id, leader, agentData.position, Math.max(0,(agentData.velocity+speedIncrease)), agentData.roadID, agentData.laneIndex,Agent.deceleration, Agent.acceleration);	
 		return newData;
 	}
 
