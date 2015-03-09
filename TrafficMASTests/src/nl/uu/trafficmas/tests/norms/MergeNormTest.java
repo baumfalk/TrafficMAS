@@ -1,6 +1,5 @@
 package nl.uu.trafficmas.tests.norms;
 
-<<<<<<< HEAD
 import static org.junit.Assert.fail;
 import it.polito.appeal.traci.SumoTraciConnection;
 
@@ -45,7 +44,7 @@ public class MergeNormTest {
 		options.put("start", "1");
 		options.put("quit-on-end", "1");
 		
-		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options,"sumo-gui", sumocfg);				
+		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options,"sumo", sumocfg);				
 		RoadNetwork rn = dataModel.instantiateRoadNetwork();
 		ArrayList<Route> routes = dataModel.getRoutes(rn);
 		
@@ -72,9 +71,3 @@ public class MergeNormTest {
 		
 	}
 }
-=======
-
-public class MergeNormTest {
-
-}
->>>>>>> 55f803045e65669d5362884cf8af528853c02ea6
