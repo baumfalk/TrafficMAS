@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 4-3-2015 10:05:16 by SUMO gui Version 0.22.0
+<!-- generated on Mon Mar  9 12:20:59 2015 by SUMO gui Version 0.22.0
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumo-gui.exeConfiguration.xsd">
 
     <input>
-        <net-file value=".\sim\simpleRoadScenario\simple.net.xml"/>
-        <route-files value=".\sim\simpleRoadScenario\simple.rou.xml"/>
-        <additional-files value=".\sim\simpleRoadScenario\simple.sensors.xml"/>
+        <net-file value="sim/SimpleRoadScenario/simple.net.xml"/>
+        <route-files value="sim/SimpleRoadScenario/simple.rou.xml"/>
+        <additional-files value="sim/SimpleRoadScenario/simple.sensors.xml"/>
     </input>
 
     <output>
-        <save-state.prefix value=".\sim\simpleRoadScenario\state"/>
+        <save-state.prefix value="sim/SimpleRoadScenario/state"/>
     </output>
 
     <time>
@@ -20,11 +20,11 @@
     </time>
 
     <emissions>
-        <phemlight-path value=".\sim\simpleRoadScenario\./PHEMlight/"/>
+        <phemlight-path value="sim/SimpleRoadScenario/./PHEMlight/"/>
     </emissions>
 
     <traci_server>
-        <remote-port value="49279"/>
+        <remote-port value="56058"/>
     </traci_server>
 
     <random_number>
@@ -32,7 +32,7 @@
     </random_number>
 
     <gui_only>
-        <gui-settings-file value=".\sim\simpleRoadScenario\simple.settings.xml"/>
+        <gui-settings-file value="sim/SimpleRoadScenario/simple.settings.xml"/>
         <quit-on-end value="true"/>
         <start value="true"/>
     </gui_only>
@@ -42,7 +42,5 @@
 
 <detector xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/det_e2_file.xsd">
    <interval begin="0.00" end="25.00" id="A28_350_lane0_s1" nSamples="23" meanSpeed="4.39" meanOccupancy="34.00" maxOccupancy="50.00" meanMaxJamLengthInVehicles="0.00" meanMaxJamLengthInMeters="0.00" maxJamLengthInVehicles="0" maxJamLengthInMeters="0.00" jamLengthInVehiclesSum="0" jamLengthInMetersSum="0.00" meanHaltingDuration="0.00" maxHaltingDuration="0.00" haltingDurationSum="0.00" meanIntervalHaltingDuration="0.00" maxIntervalHaltingDuration="0.00" intervalHaltingDurationSum="0.00" startedHalts="0.00" meanVehicleNumber="0.92" maxVehicleNumber="1" />
-   <interval begin="25.00" end="50.00" id="A28_350_lane0_s1" nSamples="25" meanSpeed="4.36" meanOccupancy="35.60" maxOccupancy="50.00" meanMaxJamLengthInVehicles="0.00" meanMaxJamLengthInMeters="0.00" maxJamLengthInVehicles="0" maxJamLengthInMeters="0.00" jamLengthInVehiclesSum="0" jamLengthInMetersSum="0.00" meanHaltingDuration="0.00" maxHaltingDuration="0.00" haltingDurationSum="0.00" meanIntervalHaltingDuration="0.00" maxIntervalHaltingDuration="0.00" intervalHaltingDurationSum="0.00" startedHalts="0.00" meanVehicleNumber="1.00" maxVehicleNumber="1" />
-   <interval begin="50.00" end="75.00" id="A28_350_lane0_s1" nSamples="25" meanSpeed="4.36" meanOccupancy="36.40" maxOccupancy="50.00" meanMaxJamLengthInVehicles="0.00" meanMaxJamLengthInMeters="0.00" maxJamLengthInVehicles="0" maxJamLengthInMeters="0.00" jamLengthInVehiclesSum="0" jamLengthInMetersSum="0.00" meanHaltingDuration="0.00" maxHaltingDuration="0.00" haltingDurationSum="0.00" meanIntervalHaltingDuration="0.00" maxIntervalHaltingDuration="0.00" intervalHaltingDurationSum="0.00" startedHalts="0.00" meanVehicleNumber="1.00" maxVehicleNumber="1" />
-   <interval begin="75.00" end="80.00" id="A28_350_lane0_s1" nSamples="5" meanSpeed="4.40" meanOccupancy="36.00" maxOccupancy="50.00" meanMaxJamLengthInVehicles="0.00" meanMaxJamLengthInMeters="0.00" maxJamLengthInVehicles="0" maxJamLengthInMeters="0.00" jamLengthInVehiclesSum="0" jamLengthInMetersSum="0.00" meanHaltingDuration="0.00" maxHaltingDuration="0.00" haltingDurationSum="0.00" meanIntervalHaltingDuration="0.00" maxIntervalHaltingDuration="0.00" intervalHaltingDurationSum="0.00" startedHalts="0.00" meanVehicleNumber="1.00" maxVehicleNumber="1" />
+   <interval begin="25.00" end="48.00" id="A28_350_lane0_s1" nSamples="23" meanSpeed="4.43" meanOccupancy="34.78" maxOccupancy="50.00" meanMaxJamLengthInVehicles="0.00" meanMaxJamLengthInMeters="0.00" maxJamLengthInVehicles="0" maxJamLengthInMeters="0.00" jamLengthInVehiclesSum="0" jamLengthInMetersSum="0.00" meanHaltingDuration="0.00" maxHaltingDuration="0.00" haltingDurationSum="0.00" meanIntervalHaltingDuration="0.00" maxIntervalHaltingDuration="0.00" intervalHaltingDurationSum="0.00" startedHalts="0.00" meanVehicleNumber="1.00" maxVehicleNumber="1" />
 </detector>
