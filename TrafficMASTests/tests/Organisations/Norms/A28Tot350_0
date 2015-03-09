@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on Mon Mar  9 13:09:12 2015 by SUMO gui Version 0.22.0
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumo-gui.exeConfiguration.xsd">
+
+    <input>
+        <net-file value="/Users/barendpoot/Workspace/TrafficMAS/TrafficMASTests/tests/Organisations/Norms/orgnormtest.net.xml"/>
+        <route-files value="/Users/barendpoot/Workspace/TrafficMAS/TrafficMASTests/tests/Organisations/Norms/orgnormtest.rou.xml"/>
+        <additional-files value="/Users/barendpoot/Workspace/TrafficMAS/TrafficMASTests/tests/Organisations/Norms/orgnormtest.sens.xml"/>
+    </input>
+
+    <output>
+        <save-state.prefix value="/Users/barendpoot/Workspace/TrafficMAS/TrafficMASTests/tests/Organisations/Norms/state"/>
+    </output>
+
+    <time>
+        <end value="1000"/>
+    </time>
+
+    <emissions>
+        <phemlight-path value="/Users/barendpoot/Workspace/TrafficMAS/TrafficMASTests/tests/Organisations/Norms/./PHEMlight/"/>
+    </emissions>
+
+    <traci_server>
+        <remote-port value="63328"/>
+    </traci_server>
+
+    <random_number>
+        <seed value="0"/>
+    </random_number>
+
+    <gui_only>
+        <gui-settings-file value="/Users/barendpoot/Workspace/TrafficMAS/TrafficMASTests/tests/Organisations/Norms/orgnormtest.settings.xml"/>
+        <quit-on-end value="true"/>
+        <start value="true"/>
+    </gui_only>
+
+</configuration>
+-->
+
+<detector xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/det_e2_file.xsd">
+   <interval begin="0.00" end="25.00" id="sens2" nSamples="68" meanSpeed="6.33" meanOccupancy="13.16" maxOccupancy="30.00" meanMaxJamLengthInVehicles="0.00" meanMaxJamLengthInMeters="0.00" maxJamLengthInVehicles="0" maxJamLengthInMeters="0.00" jamLengthInVehiclesSum="0" jamLengthInMetersSum="0.00" meanHaltingDuration="0.00" maxHaltingDuration="0.00" haltingDurationSum="0.00" meanIntervalHaltingDuration="0.00" maxIntervalHaltingDuration="0.00" intervalHaltingDurationSum="0.00" startedHalts="0.00" meanVehicleNumber="2.72" maxVehicleNumber="6" />
+   <interval begin="25.00" end="50.00" id="sens2" nSamples="63" meanSpeed="7.84" meanOccupancy="12.00" maxOccupancy="21.01" meanMaxJamLengthInVehicles="0.00" meanMaxJamLengthInMeters="0.00" maxJamLengthInVehicles="0" maxJamLengthInMeters="0.00" jamLengthInVehiclesSum="0" jamLengthInMetersSum="0.00" meanHaltingDuration="0.00" maxHaltingDuration="0.00" haltingDurationSum="0.00" meanIntervalHaltingDuration="0.00" maxIntervalHaltingDuration="0.00" intervalHaltingDurationSum="0.00" startedHalts="0.00" meanVehicleNumber="2.52" maxVehicleNumber="5" />
+   <interval begin="50.00" end="66.00" id="sens2" nSamples="48" meanSpeed="6.98" meanOccupancy="14.81" maxOccupancy="19.00" meanMaxJamLengthInVehicles="0.00" meanMaxJamLengthInMeters="0.00" maxJamLengthInVehicles="0" maxJamLengthInMeters="0.00" jamLengthInVehiclesSum="0" jamLengthInMetersSum="0.00" meanHaltingDuration="0.00" maxHaltingDuration="0.00" haltingDurationSum="0.00" meanIntervalHaltingDuration="0.00" maxIntervalHaltingDuration="0.00" intervalHaltingDurationSum="0.00" startedHalts="0.00" meanVehicleNumber="3.00" maxVehicleNumber="4" />
+</detector>

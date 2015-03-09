@@ -2,22 +2,34 @@ package nl.uu.trafficmas.tests.organisations;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import it.polito.appeal.traci.SumoTraciConnection;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Random;
+import java.util.Map.Entry;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.agent.HotShotAgent;
+import nl.uu.trafficmas.agent.actions.AgentAction;
+import nl.uu.trafficmas.controller.TrafficMASController;
+import nl.uu.trafficmas.datamodel.DataModel;
 import nl.uu.trafficmas.datamodel.DataModelXML;
+import nl.uu.trafficmas.datamodel.MASData;
 import nl.uu.trafficmas.norm.NormScheme;
 import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Node;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
 import nl.uu.trafficmas.roadnetwork.Sensor;
+import nl.uu.trafficmas.simulationmodel.SimulationModelTraaS;
+import nl.uu.trafficmas.simulationmodel.StateData;
 
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -25,7 +37,7 @@ import org.xml.sax.SAXException;
 
 public class NormTest {
 
-	@Test
+	//@Test
 	public void test() throws ParserConfigurationException, SAXException, IOException {
 		String dir 			= System.getProperty("user.dir")+"/tests/Organisations/Norms/";
 		String nodeXML 		= "orgnormtest.node.xml";
@@ -70,3 +82,6 @@ public class NormTest {
 		//normInst.checkViolation(agent.getVelocity(),agent.getRoad(),agent.getLane(),agent.getDistance());
 	}
 }
+
+
+

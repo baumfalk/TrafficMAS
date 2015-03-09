@@ -505,12 +505,18 @@ public class DataModelXML implements DataModel {
 		return normSchemes;
 	}
 
-	public static Map<String, Organisation> getOrganisations(Map<String,Sensor> sensorMap, Map<String,NormScheme> normSchemeMap, Document orgDoc) {
+	public Map<String, Organisation> getOrganisations(Map<String,Sensor> sensorMap){
+		return getOrganisations(sensorMap, this.normsDoc, this.orgsDoc);
+	}
+	
+	public static Map<String, Organisation> getOrganisations(Map<String,Sensor> sensorMap, Document normDoc, Document orgDoc) {
 		Map<String,Organisation> orgMap = new HashMap<String,Organisation>();
 
 		ArrayList<NormScheme> normSchemes = new ArrayList<NormScheme>();
 		ArrayList<Sensor> sensors = new ArrayList<Sensor>();
 		NodeList organisationList = orgDoc.getElementsByTagName("organisation");
+		Map<String, NormScheme> normSchemeMap = getNormSchemes(sensorMap, normDoc);
+		
 		
 		for (int i = 0; i < organisationList.getLength(); i++) {
 			 
@@ -537,14 +543,6 @@ public class DataModelXML implements DataModel {
 			}
 		}
 		return orgMap;
-	}
-		
-	
-
-	
-	@Override
-	public Map<String,Organisation> instantiateOrganisations(){
-		return instantiateOrganisations(this.nodesDoc, this.edgesDoc, this.sensorsDoc, this.normsDoc, this.orgsDoc );
 	}
 	
 	public static Map<String, Organisation> instantiateOrganisations(
