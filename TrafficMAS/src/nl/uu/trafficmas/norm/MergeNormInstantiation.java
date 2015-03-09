@@ -21,7 +21,7 @@ public class MergeNormInstantiation extends NormInstantiation {
 	public boolean violated(AgentData ad) {
 		//TODO: some leeway, i.e. 3% deviation from the target speed?
 		// Agent can only receive a violation while on sensor 3.
-		return !(ad.velocity > speed*0.95 && ad.velocity < speed*1.05);
+		return !(ad.velocity > speed*0.85 && ad.velocity < speed*1.15);
 	}
 
 	@Override
