@@ -63,7 +63,8 @@ public class MergeNormTest {
 				currentAgentMap 		= TrafficMASController.updateAgents(completeAgentMap, rn, stateData);
 				rn						= TrafficMASController.updateRoadNetwork(rn, stateData);
 				orgsMap					= TrafficMASController.updateOrganisations(orgsMap, stateData);
-				actions					= TrafficMASController.nextMASState(i*1000, currentAgentMap, orgsMap, rn);
+				actions					= TrafficMASController.nextMASState(i, currentAgentMap, orgsMap, rn);
+				SimulationModelTraaS.simulateAgentActions(actions, conn);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -36,7 +36,7 @@ public abstract class Agent extends AgentPhysical {
 	private RoadNetwork 			roadNetwork;
 	private List<String> 			possibleNewRoute;
 	
-	public final static double DEFAULT_MAX_SPEED = 20;
+	public final static double DEFAULT_MAX_SPEED = (150/3.6);
 	public final static double acceleration = 1;
 	public final static double deceleration = -3;
 	public abstract double specificUtility(double time, List<Sanction> sanctionList);

@@ -30,10 +30,10 @@ public enum AgentProfileType {
 		double maxComfySpeed = 0;
 		switch(this) {
 		case Normal:
-			maxComfySpeed = maxSpeed * 0.6;
+			maxComfySpeed = maxSpeed * 0.8;
 			break;
 		case OldLady:
-			maxComfySpeed = maxSpeed * 0.3;
+			maxComfySpeed = maxSpeed * 0.6;
 			break;
 		case HotShot:
 			maxComfySpeed = maxSpeed;
