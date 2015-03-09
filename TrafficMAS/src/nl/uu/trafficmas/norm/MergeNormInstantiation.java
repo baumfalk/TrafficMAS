@@ -2,6 +2,7 @@ package nl.uu.trafficmas.norm;
 
 import java.util.Map;
 
+import nl.uu.trafficmas.roadnetwork.Sensor;
 import nl.uu.trafficmas.simulationmodel.AgentData;
 
 public class MergeNormInstantiation extends NormInstantiation {
@@ -19,7 +20,12 @@ public class MergeNormInstantiation extends NormInstantiation {
 	@Override
 	public boolean violated(AgentData ad) {
 		//TODO: some leeway, i.e. 3% deviation from the target speed?
-		return ad.velocity != speed;
+		// Agent can only receive a violation while on sensor 3.
+		Sensor s = MergeNormScheme.getSensors().get(2);
+		if( ad.roadID.equals(s.lane.getRoadID())){
+			return true;
+		}
+		return false;
 	}
 
 	@Override

@@ -207,6 +207,10 @@ public class TrafficMASController {
 			if(agentSanc!= null && !agentSanc.isEmpty()) {
 				System.out.println("SANCTIONS:" + agentSanc);
 			}
+			if(agentInst != null){
+				System.out.println("NORM INST");
+			}
+			
 			System.out.println(agent + "\n\t id:" + agent.agentID + "\n\t sanc:" + agentSanc + "\n\t int:"+agentInst+"\n\t clear"+agentClearInst+"\n\n");
 			actions.put(agent, agent.doAction(currentTime,agentSanc,agentInst,agentClearInst));
 		}

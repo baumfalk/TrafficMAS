@@ -2,6 +2,8 @@ package nl.uu.trafficmas.norm;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -18,6 +20,8 @@ public class MergeNormScheme extends NormScheme {
 	private Sensor mergeSensor;
 	private Set<String> tickedAgents;
 	private static int count = 0;
+	private static List<Sensor> sensors;
+
 	/**
 	 * first sensor: main road
 	 * second sensor: ramp
@@ -26,6 +30,7 @@ public class MergeNormScheme extends NormScheme {
 	 */
 	public MergeNormScheme(String id, SanctionType sanctionType, List<Sensor> sensorList) {
 		super(id,sanctionType,sensorList);
+		sensors		= sensorList;
 		mainSensor 	= sensorList.get(0);
 		rampSensor 	= sensorList.get(1);
 		mergeSensor	= sensorList.get(2);
@@ -38,6 +43,7 @@ public class MergeNormScheme extends NormScheme {
 		double vmax = (80/3.6);
 		List<AgentData> mainList = mainSensor.readSensor();
 		List<AgentData> rampList = rampSensor.readSensor();
+		List<AgentData> contList = mergeSensor.readSensor();
 		
 		removeTickedAgents(mainList);
 		removeTickedAgents(rampList);
@@ -48,10 +54,12 @@ public class MergeNormScheme extends NormScheme {
 			tickedAgents.add(outputList.get(i).id);
 		}
 		
+		currentOrgKnowledge.isEmpty();
 		AgentData firstCar = outputList.get(0);
 		
 		MergeNormInstantiation ni = new MergeNormInstantiation(this, firstCar.id);
-		ni.setSpeed(Math.min(vmax, mergeSensor.getLastStepMeanSpeed()));
+		double normInstSpeed = Math.min(vmax, mergeSensor.getLastStepMeanSpeed());
+		ni.setSpeed(normInstSpeed);
 		List<NormInstantiation> normInstList = new ArrayList<NormInstantiation>();
 		
 		normInstList.add(ni);
@@ -130,10 +138,11 @@ public class MergeNormScheme extends NormScheme {
 	}
 
 	private void removeTickedAgents(List<AgentData> mainList) {
-		for(AgentData ad : mainList) {
-			if(tickedAgents.contains(ad.id)) {
-				mainList.remove(ad);
-			}
+		Iterator<AgentData> iter = mainList.iterator();
+		while (iter.hasNext()) {
+		    AgentData ad = iter.next();
+		    if (tickedAgents.contains(ad.id))
+		        iter.remove();
 		}
 	}
 
@@ -189,7 +198,8 @@ public class MergeNormScheme extends NormScheme {
 	public boolean checkCondition(Map<String, AgentData> currentOrgKnowledge) {
 		for(Entry<String, AgentData> entry : currentOrgKnowledge.entrySet()){
 			// TODO: replace arbitratry hardcoded 90.
-			if(entry.getValue().roadID.equals(rampSensor.lane.getRoadID()) && entry.getValue().position > 90)
+			String str = rampSensor.lane.getRoadID();
+			if(entry.getValue().roadID.equals(rampSensor.lane.getRoadID()) && entry.getValue().position > 90 && !tickedAgents.contains(entry.getKey()))
 				return true;
 		} 
 		return false;
@@ -206,5 +216,9 @@ public class MergeNormScheme extends NormScheme {
 			int currentTime) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	public static List<Sensor> getSensors(){
+		return sensors;
 	}
 }
