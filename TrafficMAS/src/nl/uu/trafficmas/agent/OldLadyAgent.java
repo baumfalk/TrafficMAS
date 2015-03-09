@@ -20,7 +20,7 @@ public class OldLadyAgent extends AgentSumo {
 		double utility = 0;
 		utility = (double) (this.getGoalArrivalTime() / (arrivalTime));
 		
-		if(sanctionList!= null && sanctionList.isEmpty()) {
+		if(sanctionList!= null && !sanctionList.isEmpty()) {
 			for(Sanction s : sanctionList) {
 				switch(s.sanctionType) {
 				case HighFine:

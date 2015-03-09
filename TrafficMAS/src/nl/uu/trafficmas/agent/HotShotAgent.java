@@ -20,7 +20,7 @@ public class HotShotAgent extends AgentSumo {
 		utility = (double) (this.getGoalArrivalTime() / (arrivalTime));
 		
 		//TODO: fix this horrible code
-		if(sanctionList!= null && sanctionList.isEmpty()) {
+		if(sanctionList!= null && !sanctionList.isEmpty()) {
 			for(Sanction s : sanctionList) {
 				switch(s.sanctionType) {
 				case HighFine:

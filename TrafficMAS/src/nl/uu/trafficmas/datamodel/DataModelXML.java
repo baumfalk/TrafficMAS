@@ -461,7 +461,6 @@ public class DataModelXML implements DataModel {
 				Map<String,String> attributes = new HashMap<String,String>();
 				for (int j = 0; j < childNodes.getLength(); j++) {
 					org.w3c.dom.Node childNode = childNodes.item(j);
-					System.out.println(childNode + " nodeName " + childNode.getNodeName() + " textcontent " + childNode.getTextContent());
 					if(childNode.getNodeName().equals("sensor") || childNode.getNodeName().equals("#text")) {
 						continue;
 					}
@@ -487,7 +486,6 @@ public class DataModelXML implements DataModel {
 					normScheme = new MergeNormScheme(id,sanctionType,normSensors);
 				}
 				normScheme.addAttributes(attributes);
-				System.out.println(attributes.get("maxspeed"));
 				normSchemes.put(id, normScheme);
 			}	
 		}		
