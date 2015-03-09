@@ -457,6 +457,17 @@ public class DataModelXML implements DataModel {
 					normSensors.add(sensors.get(sensID));
 				}
 				
+				NodeList childNodes = n.getChildNodes();
+				Map<String,String> attributes = new HashMap<String,String>();
+				for (int j = 0; j < childNodes.getLength(); j++) {
+					org.w3c.dom.Node childNode = childNodes.item(j);
+					System.out.println(childNode + " nodeName " + childNode.getNodeName() + " textcontent " + childNode.getTextContent());
+					if(childNode.getNodeName().equals("sensor") || childNode.getNodeName().equals("#text")) {
+						continue;
+					}
+					attributes.put(childNode.getNodeName(),childNode.getTextContent());
+				}
+				
 				SanctionType sanctionType = null;
 				switch(sanctionStr){
 				case "LowFine":
@@ -469,40 +480,51 @@ public class DataModelXML implements DataModel {
 				
 				//TODO: Apply this to different norm schemes using "classname" param in xml.
 				NormScheme normScheme = null;
-				try {
-					packageName = (packageName.isEmpty()) ? ("nl.uu.trafficmas.norm") : packageName;
-					Class<?> cls = Class.forName(packageName+"."+className);
-					normScheme = (NormScheme) cls.getDeclaredConstructor(String.class, SanctionType.class, List.class).newInstance(id,sanctionType,normSensors);
-				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IllegalArgumentException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (InvocationTargetException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (NoSuchMethodException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (SecurityException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (InstantiationException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IllegalAccessException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
+				normScheme = strToNormScheme(normSensors, id, packageName,
+						className, sanctionType);
+			
 				if(normScheme == null) {
 					normScheme = new MergeNormScheme(id,sanctionType,normSensors);
 				}
+				normScheme.addAttributes(attributes);
+				System.out.println(attributes.get("maxspeed"));
 				normSchemes.put(id, normScheme);
 			}	
 		}		
 		return normSchemes;
+	}
+
+	public static NormScheme strToNormScheme(List<Sensor> normSensors,
+			String id, String packageName, String className,
+			SanctionType sanctionType)  {
+		NormScheme normScheme = null;
+		try {
+			packageName = (packageName.isEmpty()) ? ("nl.uu.trafficmas.norm") : packageName;
+			Class<?> cls = Class.forName(packageName+"."+className);
+			normScheme = (NormScheme) cls.getDeclaredConstructor(String.class, SanctionType.class, List.class).newInstance(id,sanctionType,normSensors);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return normScheme;
 	}
 
 	public Map<String, Organisation> getOrganisations(Map<String,Sensor> sensorMap){
@@ -534,7 +556,9 @@ public class DataModelXML implements DataModel {
 				
 				NodeList normsSensorList = element.getElementsByTagName("norm");
 				for (int k = 0; k < normsSensorList.getLength(); k++) {
-					String normId = normsSensorList.item(k).getAttributes().getNamedItem("id").getTextContent();
+					org.w3c.dom.Node nodeNormSensor = normsSensorList.item(k);
+					
+					String normId = nodeNormSensor.getAttributes().getNamedItem("id").getTextContent();
 					NormScheme normScheme = normSchemeMap.get(normId);
 					normSchemes.add(normScheme);
 				}	 

@@ -11,9 +11,12 @@ import nl.uu.trafficmas.simulationmodel.AgentData;
 public class SimpleMaxSpeedNormScheme extends NormScheme {
 
 
+	private double maxSpeed;
+
 	public SimpleMaxSpeedNormScheme(String id, SanctionType sanctionType,
 			List<Sensor> sensorList) {
 		super(id, sanctionType, sensorList);
+		maxSpeed = 4;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -41,7 +44,7 @@ public class SimpleMaxSpeedNormScheme extends NormScheme {
 	@Override
 	public boolean violated(AgentData ad) {
 		// TODO Auto-generated method stub
-		return ad.velocity > 4;
+		return ad.velocity > maxSpeed;
 	}
 
 
@@ -51,4 +54,13 @@ public class SimpleMaxSpeedNormScheme extends NormScheme {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+	@Override
+	public void addAttributes(Map<String, String> attributes) {
+		this.attributes = attributes;
+		if(attributes.containsKey("maxspeed")) {
+			maxSpeed = Double.parseDouble(attributes.get("maxspeed"));
+		}
+	}
+	
 }

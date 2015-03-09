@@ -14,7 +14,7 @@ public abstract class NormScheme {
 	protected SanctionType sanctionType;
 	public final List<Sensor> sensorList;
 	public final String id;
-	
+	protected Map<String,String> attributes;
 	public NormScheme(String id, SanctionType sanctionType, List<Sensor> sensorList) {
 		this.id 			= id;
 		this.sanctionType 	= sanctionType;
@@ -32,4 +32,8 @@ public abstract class NormScheme {
 	}
 
 	public abstract boolean deadline(Map<String, AgentData> currentOrgKnowledge, int currentTime);
+
+	public void addAttributes(Map<String, String> attributes) {
+		this.attributes = attributes;
+	}
 }
