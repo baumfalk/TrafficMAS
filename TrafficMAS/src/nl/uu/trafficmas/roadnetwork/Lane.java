@@ -30,6 +30,12 @@ public class Lane implements BruteState {
 		return id;
 	}
 	
+	public String getRoadID(){
+		// TODO: Hackings gezet hier.
+		String roadID = this.id.substring(0, id.length()-2);
+		return roadID;
+	}
+	
 	public void setID(String id) {
 		if(this.id == null)
 			this.id = id;

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
@@ -186,7 +187,11 @@ public class MergeNormScheme extends NormScheme {
 	
 	@Override
 	public boolean checkCondition(Map<String, AgentData> currentOrgKnowledge) {
-		// TODO Auto-generated method stub
+		for(Entry<String, AgentData> entry : currentOrgKnowledge.entrySet()){
+			// TODO: replace arbitratry hardcoded 90.
+			if(entry.getValue().roadID.equals(rampSensor.lane.getRoadID()) && entry.getValue().position > 90)
+				return true;
+		} 
 		return false;
 	}
 
