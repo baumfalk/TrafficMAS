@@ -13,6 +13,7 @@ import java.util.Random;
 import javax.xml.parsers.ParserConfigurationException;
 
 import nl.uu.trafficmas.agent.Agent;
+import nl.uu.trafficmas.agent.actions.AgentAction;
 import nl.uu.trafficmas.controller.TrafficMASController;
 import nl.uu.trafficmas.datamodel.DataModel;
 import nl.uu.trafficmas.datamodel.DataModelXML;
@@ -51,6 +52,8 @@ public class MergeNormTest {
 		HashMap<String, Agent> completeAgentMap = SimulationModelTraaS.addAgents(agentPairList, conn);
 		HashMap<String, Agent> currentAgentMap 	= SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, new LinkedHashMap<String, Agent>(), conn);
 		Map<String, Organisation> orgsMap	= TrafficMASController.instantiateOrganisations(dataModel, rn);
+		HashMap<Agent, AgentAction> actions = new HashMap<Agent, AgentAction>();
+
 		
 		try {
 			int i = 0;
@@ -60,6 +63,7 @@ public class MergeNormTest {
 				currentAgentMap 		= TrafficMASController.updateAgents(completeAgentMap, rn, stateData);
 				rn						= TrafficMASController.updateRoadNetwork(rn, stateData);
 				orgsMap					= TrafficMASController.updateOrganisations(orgsMap, stateData);
+				actions					= TrafficMASController.nextMASState(i*1000, currentAgentMap, orgsMap, rn);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
