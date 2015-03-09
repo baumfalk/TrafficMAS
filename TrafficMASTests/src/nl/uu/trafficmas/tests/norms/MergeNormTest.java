@@ -1,5 +1,6 @@
 package nl.uu.trafficmas.tests.norms;
 
+<<<<<<< HEAD
 import static org.junit.Assert.fail;
 import it.polito.appeal.traci.SumoTraciConnection;
 
@@ -71,3 +72,9 @@ public class MergeNormTest {
 		
 	}
 }
+=======
+
+public class MergeNormTest {
+
+}
+>>>>>>> 55f803045e65669d5362884cf8af528853c02ea6
