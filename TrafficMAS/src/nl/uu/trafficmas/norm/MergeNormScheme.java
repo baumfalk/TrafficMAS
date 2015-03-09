@@ -40,10 +40,9 @@ public class MergeNormScheme extends NormScheme {
 	@Override
 	public List<NormInstantiation> instantiateNorms(RoadNetwork rn, Map<String, AgentData> currentOrgKnowledge) {
 		
-		double vmax = (80/3.6);
+		double vmax = (60/3.6);
 		List<AgentData> mainList = mainSensor.readSensor();
 		List<AgentData> rampList = rampSensor.readSensor();
-		List<AgentData> contList = mergeSensor.readSensor();
 		
 		removeTickedAgents(mainList);
 		removeTickedAgents(rampList);
@@ -54,11 +53,15 @@ public class MergeNormScheme extends NormScheme {
 			tickedAgents.add(outputList.get(i).id);
 		}
 		
-		currentOrgKnowledge.isEmpty();
+		currentOrgKnowledge.isEmpty(); 
 		AgentData firstCar = outputList.get(0);
-		
+		double normInstSpeed;
 		MergeNormInstantiation ni = new MergeNormInstantiation(this, firstCar.id);
-		double normInstSpeed = Math.min(vmax, mergeSensor.getLastStepMeanSpeed());
+		if(mergeSensor.getLastStepMeanSpeed() == 0.0){
+			normInstSpeed = vmax;
+		} else{
+			normInstSpeed = Math.min(vmax, mergeSensor.getLastStepMeanSpeed());
+		}
 		ni.setSpeed(normInstSpeed);
 		List<NormInstantiation> normInstList = new ArrayList<NormInstantiation>();
 		
