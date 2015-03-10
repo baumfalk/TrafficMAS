@@ -66,6 +66,8 @@ public class ChangeLaneTest {
 					for(Entry<String, Agent> entry : currentAgentMap.entrySet()){
 						if(entry.getValue().getClass().getSimpleName().equals("NormalAgent")){
 							actions.put(entry.getValue(), AgentAction.ChangeLane);
+						} else if(entry.getValue().getClass().getSimpleName().equals("OldLadyAgent")){
+							actions.put(entry.getValue(), AgentAction.ChangeVelocityMinus5Action);
 						}
 						changeLaneAgents.add(entry.getValue());
 					}

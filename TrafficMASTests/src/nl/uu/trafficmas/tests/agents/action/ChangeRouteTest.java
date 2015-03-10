@@ -76,14 +76,12 @@ public class ChangeRouteTest {
 				}
 
 				// Check if both agents have taken the alternate route.
-				if(i==50){
+				if(i==48){
 					for(Agent agent : newRouteAgents){
 						assertEquals("edge1", agent.getRoad().id);
 					}
 				}
-
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

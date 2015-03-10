@@ -63,15 +63,13 @@ public class GetAgentActionsTest {
 			
 			try {
 				// The fourth agent will ChangeLane, the rest does not need to take action.
-				if(stateData.currentTimeStep == 12000){
+				if(stateData.currentTimeStep == 6000){
 					for(Map.Entry<Agent, AgentAction> entry : agentActionMap.entrySet()){
-						if(entry.getKey().getClass().getSimpleName().equals("HotShotAgent")){
-							assertEquals(AgentAction.ChangeLane,entry.getValue());
-						} else{
-							assertEquals(null,entry.getValue());
+						if(entry.getKey().getClass().getSimpleName().equals("OldLadyAgent")){
+							assertEquals(AgentAction.ChangeVelocity20,entry.getValue());
 						}
 					}
-				}	
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}	
