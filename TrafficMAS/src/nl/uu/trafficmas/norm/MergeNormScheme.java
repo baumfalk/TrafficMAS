@@ -42,7 +42,7 @@ public class MergeNormScheme extends NormScheme {
 	@Override
 	public List<NormInstantiation> instantiateNorms(RoadNetwork rn, Map<String, AgentData> currentOrgKnowledge) {
 		
-		double vmax = (60/3.6);
+		double vmax = (80/3.6);
 		List<AgentData> mainList = mainSensor.readSensor();
 		List<AgentData> rampList = rampSensor.readSensor();
 		

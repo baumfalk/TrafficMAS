@@ -152,6 +152,7 @@ public abstract class Agent extends AgentPhysical {
 						double newUtility 				= utility(time, sanctions);
 						if(newUtility > bestXUtil) {
 							bestX = vel;
+							bestXUtil = newUtility;
 						}
 					}
 				}
