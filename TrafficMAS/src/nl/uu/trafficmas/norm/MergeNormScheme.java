@@ -21,7 +21,6 @@ public class MergeNormScheme extends NormScheme {
 	private Set<String> tickedAgents;
 	private static int count = 0;
 	private static List<Sensor> sensors;
-	private double bestSpeed;
 	
 
 	/**
@@ -64,7 +63,6 @@ public class MergeNormScheme extends NormScheme {
 		} else{
 			normInstSpeed = Math.min(vmax, mergeSensor.getLastStepMeanSpeed());
 		}
-		this.bestSpeed = normInstSpeed;
 		ni.setSpeed(normInstSpeed);
 		List<NormInstantiation> normInstList = new ArrayList<NormInstantiation>();
 		
@@ -75,7 +73,7 @@ public class MergeNormScheme extends NormScheme {
 		double distRemaining	= lastCarMergePoint-firstCar.position;
 		double acceleration 	= (firstCar.velocity < lastSpeed) ? firstCar.acceleration : firstCar.deceleration;
 		double accelerationTime	= (Math.abs(lastSpeed-firstCar.velocity)/acceleration);
-		double accelAvgSpeed	= (ni.getSpeed()-firstCar.velocity)/2;
+		double accelAvgSpeed	= (ni.getSpeed()+firstCar.velocity)/2;
 		double accelerationDist	= accelerationTime*accelAvgSpeed;
 		distRemaining			-= accelerationDist;
 		double lastCarArrivalTimeMergePoint = accelerationTime + distRemaining/lastSpeed;
@@ -230,8 +228,7 @@ public class MergeNormScheme extends NormScheme {
 
 	@Override
 	public AgentData goal() {
-		AgentData ad = new AgentData(null, null, -1, this.bestSpeed, null, -1, -1, -1);
-		return ad;
+		return null;
 	}
 
 }
