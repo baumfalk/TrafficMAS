@@ -28,6 +28,10 @@ public abstract class NormInstantiation {
 		return ns.deadline(currentOrgKnowledge, currentTime);
 	}
 	
+	public AgentData goal() {
+		return ns.goal();
+	}
+	
 	@Override
 	public boolean equals(Object ni)  {
 		if(!(ni instanceof NormInstantiation))

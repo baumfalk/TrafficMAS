@@ -39,5 +39,9 @@ public class MergeNormInstantiation extends NormInstantiation {
 	public double getSpeed() {
 		return speed;
 	}
-
+	
+	public AgentData goal() {
+		AgentData ad = new AgentData(null, null, -1, speed, null, -1, -1, -1);
+		return ad;
+	}
 }

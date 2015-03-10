@@ -224,4 +224,11 @@ public class MergeNormScheme extends NormScheme {
 	public static List<Sensor> getSensors(){
 		return sensors;
 	}
+
+	@Override
+	public AgentData goal() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

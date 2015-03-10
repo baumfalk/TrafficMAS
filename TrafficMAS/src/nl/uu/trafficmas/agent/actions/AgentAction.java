@@ -2,6 +2,7 @@ package nl.uu.trafficmas.agent.actions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.norm.NormInstantiation;
@@ -30,6 +31,7 @@ public abstract class AgentAction {
 	public final int priority;
 	
 	protected double utility;
+	protected Map<String, String> parameters;
 
 	public AgentAction(int priority) {
 		this.priority = priority;
@@ -74,5 +76,9 @@ public abstract class AgentAction {
     		return action1.priority - action2.priority;
     	}
     }
+	
+	public void setParameters(Map<String,String> parameters) {
+		this.parameters = parameters;
+	}
 
 }

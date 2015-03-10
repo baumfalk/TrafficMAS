@@ -62,5 +62,12 @@ public class SimpleMaxSpeedNormScheme extends NormScheme {
 			maxSpeed = Double.parseDouble(attributes.get("maxspeed"));
 		}
 	}
+
+
+	@Override
+	public AgentData goal() {
+		AgentData ad = new AgentData(null, null, -1, maxSpeed, null, -1, -1, -1);
+		return ad;
+	}
 	
 }

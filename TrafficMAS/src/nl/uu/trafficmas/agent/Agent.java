@@ -3,11 +3,14 @@ package nl.uu.trafficmas.agent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import nl.uu.trafficmas.agent.actions.AgentAction;
 import nl.uu.trafficmas.agent.actions.ChangeLaneAction;
 import nl.uu.trafficmas.agent.actions.DoNothingAction;
+import nl.uu.trafficmas.agent.actions.SetVelocityXAction;
 import nl.uu.trafficmas.norm.NormInstantiation;
 import nl.uu.trafficmas.norm.Sanction;
 import nl.uu.trafficmas.roadnetwork.Edge;
@@ -116,16 +119,61 @@ public abstract class Agent extends AgentPhysical {
 			
 			if(action instanceof ChangeLaneAction && !this.lane.hasLeftLane())
 				continue;
-			double time 					= action.getTime(currentTime,velocity, leftLaneSpeed, this.distance, this.road.length, this.maxComfySpeed, routeRemainderLength, this.leaderAgentSpeed, this.leaderDistance,this);
+			if(action instanceof SetVelocityXAction && currentNormInstList.isEmpty())
+				continue;
 			
-			List<Sanction> sanctions = null;
-			if(!currentNormInstList.isEmpty()) {
-				AgentData newAD = action.getNewAgentState(ad);
-				sanctions = action.getSanctions(newAD,currentNormInstList);
+			double time 			= 0;
+			double dist 			= this.distance;
+			double roadLength 		= this.road.length;
+			double maxComfySp 		= this.maxComfySpeed;
+			double leaderAgentSpeed = this.leaderAgentSpeed;
+			double leaderDistance 	= this.leaderDistance;
+			double vel 				= 0;
+			if(action instanceof SetVelocityXAction) {
+				// find best speed (==X) from norm instantiations
+				double bestX = 0;
+				double bestXUtil = Double.NEGATIVE_INFINITY;
+				Map<String,String> parameters = new HashMap<String,String>();
+				
+				for (NormInstantiation ni : currentNormInstList) {
+					//TODO also include lane, position etc in this
+					vel = ni.goal().velocity;
+					parameters.put("X", Double.toString(vel));
+					action.setParameters(parameters);
+					if(vel != -1) {
+						
+						time = action.getTime(currentTime,vel, leftLaneSpeed, dist, roadLength, maxComfySp, routeRemainderLength, leaderAgentSpeed, leaderDistance,this);
+
+						List<Sanction> sanctions = null;
+						if(!currentNormInstList.isEmpty()) {
+							AgentData newAD = action.getNewAgentState(ad);
+							sanctions = action.getSanctions(newAD,currentNormInstList);
+						}
+						double newUtility 				= utility(time, sanctions);
+						if(newUtility > bestXUtil) {
+							bestX = vel;
+						}
+					}
+				}
+				parameters.put("X", Double.toString(bestX));
+				action.setParameters(parameters);
+				action.setUtility(bestXUtil);
+				
+				actionList.add(action);
+				
+			} else {
+				vel = velocity;
+				time = action.getTime(currentTime,vel, leftLaneSpeed, dist, roadLength, maxComfySp, routeRemainderLength, leaderAgentSpeed, leaderDistance,this);
+
+				List<Sanction> sanctions = null;
+				if(!currentNormInstList.isEmpty()) {
+					AgentData newAD = action.getNewAgentState(ad);
+					sanctions = action.getSanctions(newAD,currentNormInstList);
+				}
+				double newUtility 				= utility(time, sanctions);
+				action.setUtility(newUtility);
+				actionList.add(action);
 			}
-			double newUtility 				= utility(time, sanctions);
-			action.setUtility(newUtility);
-			actionList.add(action);
 		}
 		// sort the actions by their utility
 		Collections.sort(actionList, new Comparator<AgentAction>() {

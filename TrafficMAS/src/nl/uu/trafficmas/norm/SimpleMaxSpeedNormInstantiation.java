@@ -1,5 +1,7 @@
 package nl.uu.trafficmas.norm;
 
+import nl.uu.trafficmas.simulationmodel.AgentData;
+
 
 public class SimpleMaxSpeedNormInstantiation extends NormInstantiation {
 
@@ -7,5 +9,4 @@ public class SimpleMaxSpeedNormInstantiation extends NormInstantiation {
 		super(ns, agentID);
 		// TODO Auto-generated constructor stub
 	}
-
 }
