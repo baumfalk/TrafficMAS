@@ -133,7 +133,7 @@ public class MergeNormScheme extends NormScheme {
 		return vprime;
 	}
 
-	private static double getArrivalTime(double velocity, double acceleration,
+	public static double getArrivalTime(double velocity, double acceleration,
 			double distRemaining, double vprime) {
 		double accelerationTime = Math.abs((vprime - velocity)/acceleration);
 		double accelerationDist = accelerationTime*(vprime+velocity)/2;
