@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import nl.uu.trafficmas.exception.InvalidParameterCombination;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Sensor;
 import nl.uu.trafficmas.simulationmodel.AgentData;
@@ -134,9 +135,16 @@ public class MergeNormScheme extends NormScheme {
 	}
 
 	public static double getArrivalTime(double velocity, double acceleration,
-			double distRemaining, double vprime) {
+			double distRemaining, double vprime) throws InvalidParameterCombination {
+		
 		double accelerationTime = Math.abs((vprime - velocity)/acceleration);
 		double accelerationDist = accelerationTime*(vprime+velocity)/2;
+		
+		boolean positiveSpeedDeltaNegativeAccel = velocity < vprime && acceleration <= 0;
+		boolean negativeSpeedDeltaPositiveAccel = velocity > vprime && acceleration >= 0;
+		boolean notEnoughDistRemaining = (accelerationDist > distRemaining);
+		if(positiveSpeedDeltaNegativeAccel || negativeSpeedDeltaPositiveAccel || notEnoughDistRemaining)
+			throw new InvalidParameterCombination();
 		double remainingTime = (distRemaining-accelerationDist)/vprime;
 		return accelerationTime+ remainingTime;
 	}

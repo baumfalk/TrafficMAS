@@ -9,38 +9,84 @@ import org.junit.Test;
 public class MergeNormGetArrivalTimeTest {
 
 	@Test(expected=InvalidParameterCombination.class)
-	public void case1() {
-		Double velocity, acceleration, distRemaining, vprime, result;
+	public void positiveSpeedDeltaNegativeAccel() throws InvalidParameterCombination {
+		double velocity, acceleration, distRemaining, vprime, result;
 		
 		velocity 		= 1.0;
 		acceleration 	= -1.0;
-		distRemaining 	= 0.0;
+		distRemaining 	= 10.0;
 		vprime 			= 2.0;
 		result = MergeNormScheme.getArrivalTime(velocity, acceleration, distRemaining, vprime);
 	}
 	
-	@Test
-	public void case2() {
-		Double velocity, acceleration, distRemaining, vprime, result;
+	@Test(expected=InvalidParameterCombination.class)
+	public void negativeSpeedDeltaPositiveAccel() throws InvalidParameterCombination {
+		double velocity, acceleration, distRemaining, vprime, result;
 		
-		velocity 		= 0.0;
-		acceleration 	= 0.0;
-		distRemaining 	= 0.0;
-		vprime 			= 0.0;
+		velocity 		= 2.0;
+		acceleration 	= 1.0;
+		distRemaining 	= 10.0;
+		vprime 			= 1.0;
 		result = MergeNormScheme.getArrivalTime(velocity, acceleration, distRemaining, vprime);
-		assertEquals(0,result,0.0);
+	}
+	
+	@Test(expected=InvalidParameterCombination.class)
+	public void impossibleToAchieve() throws InvalidParameterCombination {
+		double velocity, acceleration, distRemaining, vprime, result;
+		velocity 		= 2.0;
+		acceleration 	= 1.0;
+		distRemaining 	= 1.0;
+		vprime 			= 10.0;
+		result = MergeNormScheme.getArrivalTime(velocity, acceleration, distRemaining, vprime);
+	}
+	
+	
+	@Test
+	public void infinitePosAcceleration() throws InvalidParameterCombination {
+		double velocity, acceleration, distRemaining, vprime, result;
+		
+		velocity 		= 1.0;
+		acceleration 	= Double.POSITIVE_INFINITY;
+		distRemaining 	= 10.0;
+		vprime 			= 2.0;
+		result = MergeNormScheme.getArrivalTime(velocity, acceleration, distRemaining, vprime);
+		assertEquals(5,result,0.0);
 	}
 	
 	@Test
-	public void case3() {
-		Double velocity, acceleration, distRemaining, vprime, result;
+	public void infiniteNegAcceleration() throws InvalidParameterCombination {
+		double velocity, acceleration, distRemaining, vprime, result;
 		
-		velocity 		= 0.0;
-		acceleration 	= 0.0;
-		distRemaining 	= 0.0;
-		vprime 			= 0.0;
+		velocity 		= 2.0;
+		acceleration 	= Double.NEGATIVE_INFINITY;
+		distRemaining 	= 10.0;
+		vprime 			= 1.0;
 		result = MergeNormScheme.getArrivalTime(velocity, acceleration, distRemaining, vprime);
-		assertEquals(0,result,0.0);
+		assertEquals(10,result,0.0);
+	}
+	
+	@Test
+	public void normalAccelExample() throws InvalidParameterCombination {
+		double velocity, acceleration, distRemaining, vprime, result;
+		
+		velocity 		= 1.0;
+		acceleration 	= 1;
+		distRemaining 	= 10.0;
+		vprime 			= 3.0;
+		result = MergeNormScheme.getArrivalTime(velocity, acceleration, distRemaining, vprime);
+		assertEquals(4,result,0.0);
+	}
+	
+	@Test
+	public void normalDecelExample() throws InvalidParameterCombination {
+		double velocity, acceleration, distRemaining, vprime, result;
+		
+		velocity 		= 3.0;
+		acceleration 	= -1;
+		distRemaining 	= 10.0;
+		vprime 			= 1.0;
+		result = MergeNormScheme.getArrivalTime(velocity, acceleration, distRemaining, vprime);
+		assertEquals(8,result,0.0);
 	}
 
 }
