@@ -15,6 +15,7 @@ public abstract class AgentAction {
 	// listed in order of priority (descending)
 	private static int actionPriority = 0;
 	public static final AgentAction DoNothingAction				= new DoNothingAction(actionPriority++);
+	public static final AgentAction SetVelocityXAction			= new SetVelocityXAction(actionPriority++);
 	public static final AgentAction ChangeVelocityMinus1Action	= new ChangeVelocityMinus1Action(actionPriority++);
 	public static final AgentAction ChangeVelocityMinus5Action	= new ChangeVelocityMinus5Action(actionPriority++);
 	public static final AgentAction ChangeVelocityMinus10Action	= new ChangeVelocityMinus10Action(actionPriority++);
@@ -40,8 +41,8 @@ public abstract class AgentAction {
 	
 	public static AgentAction[] values() {
 		// add new actions here
-		AgentAction [] array = {DoNothingAction,ChangeVelocityMinus50Action,ChangeVelocityMinus20Action,ChangeVelocityMinus10Action,ChangeVelocityMinus5Action,ChangeVelocityMinus1Action,ChangeVelocity1, ChangeVelocity5, ChangeVelocity10,
-				ChangeVelocity20, ChangeVelocity50,SetVelocityX, ChangeLane, ChangeRoute};
+		AgentAction [] array = {DoNothingAction,SetVelocityXAction,ChangeVelocityMinus50Action,ChangeVelocityMinus20Action,ChangeVelocityMinus10Action,ChangeVelocityMinus5Action,ChangeVelocityMinus1Action,ChangeVelocity1, ChangeVelocity5, ChangeVelocity10,
+				ChangeVelocity20, ChangeVelocity50, ChangeLane, ChangeRoute};
 		return array;
 	}
 	

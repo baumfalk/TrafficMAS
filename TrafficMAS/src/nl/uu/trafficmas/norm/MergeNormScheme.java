@@ -21,6 +21,8 @@ public class MergeNormScheme extends NormScheme {
 	private Set<String> tickedAgents;
 	private static int count = 0;
 	private static List<Sensor> sensors;
+	private double bestSpeed;
+	
 
 	/**
 	 * first sensor: main road
@@ -62,6 +64,7 @@ public class MergeNormScheme extends NormScheme {
 		} else{
 			normInstSpeed = Math.min(vmax, mergeSensor.getLastStepMeanSpeed());
 		}
+		this.bestSpeed = normInstSpeed;
 		ni.setSpeed(normInstSpeed);
 		List<NormInstantiation> normInstList = new ArrayList<NormInstantiation>();
 		
@@ -227,8 +230,8 @@ public class MergeNormScheme extends NormScheme {
 
 	@Override
 	public AgentData goal() {
-		// TODO Auto-generated method stub
-		return null;
+		AgentData ad = new AgentData(null, null, -1, this.bestSpeed, null, -1, -1, -1);
+		return ad;
 	}
 
 }
