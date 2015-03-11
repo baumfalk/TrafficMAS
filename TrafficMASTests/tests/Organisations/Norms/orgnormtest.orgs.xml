@@ -6,7 +6,7 @@
             <sensor id="sens3" />
         </sensors>
         <norms>
-            <norm id="norm1" />
+			<norm id="norm1" />        
         </norms>
     </organisation>
 </organisations>

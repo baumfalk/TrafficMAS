@@ -157,10 +157,11 @@ public abstract class Agent extends AgentPhysical {
 					}
 				}
 				parameters.put("X", Double.toString(bestX));
-				action.setParameters(parameters);
-				action.setUtility(bestXUtil);
+				AgentAction newAction = new SetVelocityXAction(action.priority);
+				newAction.setParameters(parameters);
+				newAction.setUtility(bestXUtil);
 				
-				actionList.add(action);
+				actionList.add(newAction);
 				
 			} else {
 				vel = velocity;

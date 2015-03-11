@@ -48,10 +48,20 @@ public class MergeNormScheme extends NormScheme {
 
 		List<AgentData> mainList = mainSensor.readSensor();
 		List<AgentData> rampList = rampSensor.readSensor();
+		List<AgentData> endList	 = mergeSensor.readSensor();
+		
+		if(mainList.isEmpty()){
+			String str = "test";
+			str = "aap";
+		}
+		
 		// only for new agents
 		removeTickedAgents(mainList);
 		removeTickedAgents(rampList);
 		
+		//List<AgentData> mainListTemp = mainList;
+		//List<AgentData> rampListTemp = rampList; 
+
 		
 		// calculate merged list
 		List<AgentData> outputList = mergeTrafficStreams(mainList, rampList, mainSensor.getEndPosition(), rampSensor.getEndPosition());
@@ -59,7 +69,6 @@ public class MergeNormScheme extends NormScheme {
 		for (int i = 0; i < outputList.size(); i++) {
 			tickedAgents.add(outputList.get(i).id);
 		}
-		
 		
 		// calculate norm and arrival time for first car
 		List<NormInstantiation> normInstList = new ArrayList<NormInstantiation>();
@@ -257,11 +266,16 @@ public class MergeNormScheme extends NormScheme {
 	@Override
 	public boolean checkCondition(Map<String, AgentData> currentOrgKnowledge) {
 		for(Entry<String, AgentData> entry : currentOrgKnowledge.entrySet()){
-			// TODO: replace arbitratry hardcoded 90.
+			// TODO: replace arbitratry hardcoded 90%.
 			String str = rampSensor.lane.getRoadID();
-			if(entry.getValue().roadID.equals(rampSensor.lane.getRoadID()) && entry.getValue().position > 90 && !tickedAgents.contains(entry.getKey()))
+			boolean posRampTriggered = entry.getValue().position > (rampSensor.position + rampSensor.length*.9);
+			boolean rampSensorTriggered = entry.getValue().roadID.equals(rampSensor.lane.getRoadID()) && posRampTriggered;
+			boolean posMainTriggered = entry.getValue().position > (mainSensor.position + mainSensor.length*.9);
+			boolean mainSensorTriggered = entry.getValue().roadID.equals(mainSensor.lane.getRoadID()) && posMainTriggered;
+			boolean isNotTicked = !tickedAgents.contains(entry.getKey());
+			if((rampSensorTriggered || mainSensorTriggered) && isNotTicked)
 				return true;
-		} 
+		}
 		return false;
 	}
 
