@@ -77,7 +77,7 @@ public class Organisation {
 	}
 	
 	public List<NormInstantiation> getNewNormInstantiations(RoadNetwork rn) {
-		return getNewNormInstantiations(rn, normSchemes, currentOrgKnowledge, agentNormInst, normInstantiations);
+		return getNewNormInstantiations(rn, normSchemes, currentOrgKnowledge, agentNormInst, normInstantiations, currentTime);
 	}
 	
 	
@@ -85,12 +85,13 @@ public class Organisation {
 			RoadNetwork rn, List<NormScheme> normSchemes,
 			Map<String, AgentData> currentOrgKnowledge,
 			Map<String,Set<NormInstantiation>> agentNormInst,
-			List<NormInstantiation> normInstantiations) {
+			List<NormInstantiation> normInstantiations,
+			int currentTime) {
 		List<NormInstantiation> newList = new ArrayList<NormInstantiation>();
 		
 		for(NormScheme ns : normSchemes) {
 			if(ns.checkCondition(currentOrgKnowledge)) {
-				List<NormInstantiation> nis = ns.instantiateNorms(rn,currentOrgKnowledge);
+				List<NormInstantiation> nis = ns.instantiateNorms(rn,currentTime, currentOrgKnowledge);
 				newList.addAll(nis);
 				for(NormInstantiation ni : nis) {
 					if(!agentNormInst.containsKey(ni.agentID)) {

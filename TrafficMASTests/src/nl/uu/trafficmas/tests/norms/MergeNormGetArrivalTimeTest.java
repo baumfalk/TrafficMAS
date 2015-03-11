@@ -19,7 +19,7 @@ public class MergeNormGetArrivalTimeTest {
 		acceleration 	= -1.0;
 		distRemaining 	= 10.0;
 		vprime 			= 2.0;
-		result = MergeNormScheme.getArrivalTime(velocity, acceleration, distRemaining, vprime);
+		result = MergeNormScheme.getTravelTime(velocity, acceleration, distRemaining, vprime);
 	}
 	
 	@Test(expected=InvalidVelocityParameter.class)
@@ -30,7 +30,7 @@ public class MergeNormGetArrivalTimeTest {
 		acceleration 	= 1.0;
 		distRemaining 	= 10.0;
 		vprime 			= 2.0;
-		result = MergeNormScheme.getArrivalTime(velocity, acceleration, distRemaining, vprime);
+		result = MergeNormScheme.getTravelTime(velocity, acceleration, distRemaining, vprime);
 	}
 	
 	@Test(expected=InvalidDistanceParameter.class)
@@ -41,7 +41,7 @@ public class MergeNormGetArrivalTimeTest {
 		acceleration 	= 1.0;
 		distRemaining 	= -1.0;
 		vprime 			= 2.0;
-		result = MergeNormScheme.getArrivalTime(velocity, acceleration, distRemaining, vprime);
+		result = MergeNormScheme.getTravelTime(velocity, acceleration, distRemaining, vprime);
 	}
 	
 	@Test(expected=InvalidVPrimeParameter.class)
@@ -52,7 +52,7 @@ public class MergeNormGetArrivalTimeTest {
 		acceleration 	= -1.0;
 		distRemaining 	= 10.0;
 		vprime 			= -1.0;
-		result = MergeNormScheme.getArrivalTime(velocity, acceleration, distRemaining, vprime);
+		result = MergeNormScheme.getTravelTime(velocity, acceleration, distRemaining, vprime);
 	}
 	
 	@Test(expected=InvalidParameterCombination.class)
@@ -63,7 +63,7 @@ public class MergeNormGetArrivalTimeTest {
 		acceleration 	= 1.0;
 		distRemaining 	= 10.0;
 		vprime 			= 1.0;
-		result = MergeNormScheme.getArrivalTime(velocity, acceleration, distRemaining, vprime);
+		result = MergeNormScheme.getTravelTime(velocity, acceleration, distRemaining, vprime);
 	}
 	
 	@Test(expected=InvalidDistanceParameter.class)
@@ -73,7 +73,7 @@ public class MergeNormGetArrivalTimeTest {
 		acceleration 	= 1.0;
 		distRemaining 	= 1.0;
 		vprime 			= 10.0;
-		result = MergeNormScheme.getArrivalTime(velocity, acceleration, distRemaining, vprime);
+		result = MergeNormScheme.getTravelTime(velocity, acceleration, distRemaining, vprime);
 	}
 	
 	
@@ -85,7 +85,7 @@ public class MergeNormGetArrivalTimeTest {
 		acceleration 	= Double.POSITIVE_INFINITY;
 		distRemaining 	= 10.0;
 		vprime 			= 2.0;
-		result = MergeNormScheme.getArrivalTime(velocity, acceleration, distRemaining, vprime);
+		result = MergeNormScheme.getTravelTime(velocity, acceleration, distRemaining, vprime);
 		assertEquals(5,result,0.0);
 	}
 	
@@ -97,7 +97,7 @@ public class MergeNormGetArrivalTimeTest {
 		acceleration 	= Double.NEGATIVE_INFINITY;
 		distRemaining 	= 10.0;
 		vprime 			= 1.0;
-		result = MergeNormScheme.getArrivalTime(velocity, acceleration, distRemaining, vprime);
+		result = MergeNormScheme.getTravelTime(velocity, acceleration, distRemaining, vprime);
 		assertEquals(10,result,0.0);
 	}
 	
@@ -109,7 +109,7 @@ public class MergeNormGetArrivalTimeTest {
 		acceleration 	= 1;
 		distRemaining 	= 10.0;
 		vprime 			= 3.0;
-		result = MergeNormScheme.getArrivalTime(velocity, acceleration, distRemaining, vprime);
+		result = MergeNormScheme.getTravelTime(velocity, acceleration, distRemaining, vprime);
 		assertEquals(4,result,0.0);
 	}
 	
@@ -121,7 +121,7 @@ public class MergeNormGetArrivalTimeTest {
 		acceleration 	= -1;
 		distRemaining 	= 10.0;
 		vprime 			= 1.0;
-		result = MergeNormScheme.getArrivalTime(velocity, acceleration, distRemaining, vprime);
+		result = MergeNormScheme.getTravelTime(velocity, acceleration, distRemaining, vprime);
 		assertEquals(8,result,0.0);
 	}
 

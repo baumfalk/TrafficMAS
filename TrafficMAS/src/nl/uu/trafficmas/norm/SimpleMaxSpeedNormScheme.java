@@ -22,7 +22,7 @@ public class SimpleMaxSpeedNormScheme extends NormScheme {
 
 
 	@Override
-	public List<NormInstantiation> instantiateNorms(RoadNetwork rn,
+	public List<NormInstantiation> instantiateNorms(RoadNetwork rn, int currentTime,
 			Map<String, AgentData> currentOrgKnowledge) {
 		
 		List<NormInstantiation> list = new ArrayList<NormInstantiation>();

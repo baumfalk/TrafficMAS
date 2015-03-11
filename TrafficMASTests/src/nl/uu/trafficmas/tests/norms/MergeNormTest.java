@@ -47,14 +47,13 @@ public class MergeNormTest {
 		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options,"sumo-gui", sumocfg);				
 		RoadNetwork rn = dataModel.instantiateRoadNetwork();
 		ArrayList<Route> routes = dataModel.getRoutes(rn);
-		
+
 		HashMap<Agent,Integer> agentPairList 	= TrafficMASController.instantiateAgents(masData, random, routes, rn);
 		HashMap<String, Agent> completeAgentMap = SimulationModelTraaS.addAgents(agentPairList, conn);
 		HashMap<String, Agent> currentAgentMap 	= SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, new LinkedHashMap<String, Agent>(), conn);
 		Map<String, Organisation> orgsMap	= TrafficMASController.instantiateOrganisations(dataModel, rn);
 		HashMap<Agent, AgentAction> actions = new HashMap<Agent, AgentAction>();
 
-		
 		try {
 			int i = 0;
 			while (i++ < masData.simulationLength) {
@@ -69,6 +68,5 @@ public class MergeNormTest {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
 }

@@ -21,7 +21,7 @@ public abstract class NormScheme {
 		this.sensorList		= sensorList;
 	}
 	
-	public abstract List<NormInstantiation> instantiateNorms(RoadNetwork rn, Map<String, AgentData> currentOrgKnowledge);
+	public abstract List<NormInstantiation> instantiateNorms(RoadNetwork rn, int currentTime, Map<String, AgentData> currentOrgKnowledge);
 	
 	public abstract boolean checkCondition(Map<String, AgentData> currentOrgKnowledge);
 	
