@@ -140,10 +140,12 @@ public class MergeNormScheme extends NormScheme {
 		double accelerationTime = Math.abs((vprime - velocity)/acceleration);
 		double accelerationDist = accelerationTime*(vprime+velocity)/2;
 		
+		boolean negativeVelocity				= (velocity < 0);
+		boolean negativeVPrime					= (vprime < 0);
 		boolean positiveSpeedDeltaNegativeAccel = velocity < vprime && acceleration <= 0;
 		boolean negativeSpeedDeltaPositiveAccel = velocity > vprime && acceleration >= 0;
 		boolean notEnoughDistRemaining = (accelerationDist > distRemaining);
-		if(positiveSpeedDeltaNegativeAccel || negativeSpeedDeltaPositiveAccel || notEnoughDistRemaining)
+		if(negativeVelocity || negativeVPrime || positiveSpeedDeltaNegativeAccel || negativeSpeedDeltaPositiveAccel || notEnoughDistRemaining)
 			throw new InvalidParameterCombination();
 		double remainingTime = (distRemaining-accelerationDist)/vprime;
 		return accelerationTime+ remainingTime;

@@ -20,6 +20,39 @@ public class MergeNormGetArrivalTimeTest {
 	}
 	
 	@Test(expected=InvalidParameterCombination.class)
+	public void negativeVelocity() throws InvalidParameterCombination {
+		double velocity, acceleration, distRemaining, vprime, result;
+		
+		velocity 		= -1.0;
+		acceleration 	= 1.0;
+		distRemaining 	= 10.0;
+		vprime 			= 2.0;
+		result = MergeNormScheme.getArrivalTime(velocity, acceleration, distRemaining, vprime);
+	}
+	
+	@Test(expected=InvalidParameterCombination.class)
+	public void negativeDist() throws InvalidParameterCombination {
+		double velocity, acceleration, distRemaining, vprime, result;
+		
+		velocity 		= 1.0;
+		acceleration 	= 1.0;
+		distRemaining 	= -1.0;
+		vprime 			= 2.0;
+		result = MergeNormScheme.getArrivalTime(velocity, acceleration, distRemaining, vprime);
+	}
+	
+	@Test(expected=InvalidParameterCombination.class)
+	public void negativeVPrime() throws InvalidParameterCombination {
+		double velocity, acceleration, distRemaining, vprime, result;
+		
+		velocity 		= 1.0;
+		acceleration 	= -1.0;
+		distRemaining 	= 10.0;
+		vprime 			= -1.0;
+		result = MergeNormScheme.getArrivalTime(velocity, acceleration, distRemaining, vprime);
+	}
+	
+	@Test(expected=InvalidParameterCombination.class)
 	public void negativeSpeedDeltaPositiveAccel() throws InvalidParameterCombination {
 		double velocity, acceleration, distRemaining, vprime, result;
 		
