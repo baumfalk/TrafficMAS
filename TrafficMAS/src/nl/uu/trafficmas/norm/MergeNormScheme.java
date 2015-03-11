@@ -165,7 +165,7 @@ public class MergeNormScheme extends NormScheme {
 		System.out.println("Pos result: " + posResult);
 		System.out.println("Neg result: " + negResult);
 		
-		if (velocity * lastCarArrivalTimeMergePoint > distRemaining){
+		if (velocity * time > distRemaining){
 			vprime = posResult;
 		} else {
 			vprime = negResult;
