@@ -91,14 +91,9 @@ public class MergeNormScheme extends NormScheme {
 			distRemaining			= lastCarMergePoint - currentCar.position;
 			double posAtArrivalTime = currentCar.velocity* (timeBetweenCars + lastCarArrivalTimeMergePoint);
 			acceleration 			= (posAtArrivalTime < lastCarMergePoint) ? currentCar.acceleration : currentCar.deceleration;
-			try {
-				lastSpeed 				= findBestSpeed(currentCar.velocity, acceleration, distRemaining, lastCarArrivalTimeMergePoint, timeBetweenCars );
-				lastSpeed				= Math.min(lastSpeed, vmax);
-				lastCarArrivalTimeMergePoint = getArrivalTime(currentCar.velocity, acceleration, distRemaining, lastSpeed);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			lastSpeed 				= findBestSpeed(currentCar.velocity, acceleration, distRemaining, lastCarArrivalTimeMergePoint, timeBetweenCars );
+			lastSpeed				= Math.min(lastSpeed, vmax);
+			lastCarArrivalTimeMergePoint = getArrivalTime(currentCar.velocity, acceleration, distRemaining, lastSpeed);
 			ni = new MergeNormInstantiation(this, currentCar.id);
 			ni.setSpeed(lastSpeed);
 			normInstList.add(ni);
@@ -110,44 +105,42 @@ public class MergeNormScheme extends NormScheme {
 
 	public static double findBestSpeed(double velocity, double acceleration,
 			double distRemaining, double lastCarArrivalTimeMergePoint,
-			double timeBetweenCars) throws Exception {
+			double timeBetweenCars) {
 		// TODO Auto-generated method stub
 		
 		// boostrap depending on if we need to brake or not
 		// between 0m/s or 200m/s
-		double vprime 	= (acceleration >0) ? 200 : 0;
-		double vhigh 	= (acceleration >0) ? 200 : velocity;
-		double vlow 	= (acceleration >0) ? velocity : 0;
-		double sigma 	= 0.1;
-		int steps 		= 20;
-		int currentStep = 0;
-		double arrivalTime = 0;
-		do
-		{
-			arrivalTime = getArrivalTime(velocity, acceleration, distRemaining, vprime);
-			
-			double newvprime = (vhigh + vlow)/2;
-			if(newvprime < vprime) {
-				vhigh = vprime;
-			} else{
-				vlow = vprime;
-			}
-			vprime = newvprime;
-			
-		}while(currentStep < steps 
-				&& (arrivalTime < (lastCarArrivalTimeMergePoint + timeBetweenCars)-sigma)
-				&& (arrivalTime > (lastCarArrivalTimeMergePoint + timeBetweenCars)+sigma));
+		double vprime;
 		
+		double time = lastCarArrivalTimeMergePoint+timeBetweenCars;
 		
+		double firstSqrt 		= (acceleration*acceleration*time*time);
+		double secndSqrt		= (2*acceleration*distRemaining);
+		double thridSqrt		= (2*acceleration*time*velocity);
+		double afterSqrt		= (acceleration*time+velocity);
+		
+		double sqrt = firstSqrt-secndSqrt+thridSqrt;
+		
+		double posResult = Math.sqrt(sqrt)+afterSqrt;
+		double negResult = -Math.sqrt(sqrt)+afterSqrt;
+		
+		System.out.println("Pos result: " + posResult);
+		System.out.println("Neg result: " + negResult);
+		
+		if (velocity * lastCarArrivalTimeMergePoint > distRemaining){
+			vprime = posResult;
+		} else {
+			vprime = negResult;
+		}
 		return vprime;
 	}
 
 	public static double getArrivalTime(double velocity, double acceleration,
-			double distRemaining, double vprime) throws Exception {
+			double distRemaining, double vprime) {
 		
 		double accelerationTime = Math.abs((vprime - velocity)/acceleration);
 		double accelerationDist = accelerationTime*(vprime+velocity)/2;
-		
+		/*
 		boolean negativeVelocity				= (velocity < 0);
 		boolean negativeVPrime					= (vprime < 0);
 		boolean positiveSpeedDeltaNegativeAccel = velocity < vprime && acceleration <= 0;
@@ -161,6 +154,7 @@ public class MergeNormScheme extends NormScheme {
 			throw new InvalidVPrimeParameter();
 		if(positiveSpeedDeltaNegativeAccel || negativeSpeedDeltaPositiveAccel)
 			throw new InvalidParameterCombination();
+		*/
 		double remainingTime = (distRemaining-accelerationDist)/vprime;
 		return accelerationTime+ remainingTime;
 	}
