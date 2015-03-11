@@ -1,7 +1,10 @@
 package nl.uu.trafficmas.tests.norms;
 
 import static org.junit.Assert.assertEquals;
+import nl.uu.trafficmas.exception.InvalidDistanceParameter;
 import nl.uu.trafficmas.exception.InvalidParameterCombination;
+import nl.uu.trafficmas.exception.InvalidVPrimeParameter;
+import nl.uu.trafficmas.exception.InvalidVelocityParameter;
 import nl.uu.trafficmas.norm.MergeNormScheme;
 
 import org.junit.Test;
@@ -9,7 +12,7 @@ import org.junit.Test;
 public class MergeNormGetArrivalTimeTest {
 
 	@Test(expected=InvalidParameterCombination.class)
-	public void positiveSpeedDeltaNegativeAccel() throws InvalidParameterCombination {
+	public void positiveSpeedDeltaNegativeAccel() throws Exception {
 		double velocity, acceleration, distRemaining, vprime, result;
 		
 		velocity 		= 1.0;
@@ -19,8 +22,8 @@ public class MergeNormGetArrivalTimeTest {
 		result = MergeNormScheme.getArrivalTime(velocity, acceleration, distRemaining, vprime);
 	}
 	
-	@Test(expected=InvalidParameterCombination.class)
-	public void negativeVelocity() throws InvalidParameterCombination {
+	@Test(expected=InvalidVelocityParameter.class)
+	public void negativeVelocity() throws Exception {
 		double velocity, acceleration, distRemaining, vprime, result;
 		
 		velocity 		= -1.0;
@@ -30,8 +33,8 @@ public class MergeNormGetArrivalTimeTest {
 		result = MergeNormScheme.getArrivalTime(velocity, acceleration, distRemaining, vprime);
 	}
 	
-	@Test(expected=InvalidParameterCombination.class)
-	public void negativeDist() throws InvalidParameterCombination {
+	@Test(expected=InvalidDistanceParameter.class)
+	public void negativeDist() throws Exception {
 		double velocity, acceleration, distRemaining, vprime, result;
 		
 		velocity 		= 1.0;
@@ -41,8 +44,8 @@ public class MergeNormGetArrivalTimeTest {
 		result = MergeNormScheme.getArrivalTime(velocity, acceleration, distRemaining, vprime);
 	}
 	
-	@Test(expected=InvalidParameterCombination.class)
-	public void negativeVPrime() throws InvalidParameterCombination {
+	@Test(expected=InvalidVPrimeParameter.class)
+	public void negativeVPrime() throws Exception {
 		double velocity, acceleration, distRemaining, vprime, result;
 		
 		velocity 		= 1.0;
@@ -53,7 +56,7 @@ public class MergeNormGetArrivalTimeTest {
 	}
 	
 	@Test(expected=InvalidParameterCombination.class)
-	public void negativeSpeedDeltaPositiveAccel() throws InvalidParameterCombination {
+	public void negativeSpeedDeltaPositiveAccel() throws Exception {
 		double velocity, acceleration, distRemaining, vprime, result;
 		
 		velocity 		= 2.0;
@@ -63,8 +66,8 @@ public class MergeNormGetArrivalTimeTest {
 		result = MergeNormScheme.getArrivalTime(velocity, acceleration, distRemaining, vprime);
 	}
 	
-	@Test(expected=InvalidParameterCombination.class)
-	public void impossibleToAchieve() throws InvalidParameterCombination {
+	@Test(expected=InvalidDistanceParameter.class)
+	public void impossibleToAchieve() throws Exception {
 		double velocity, acceleration, distRemaining, vprime, result;
 		velocity 		= 2.0;
 		acceleration 	= 1.0;
@@ -75,7 +78,7 @@ public class MergeNormGetArrivalTimeTest {
 	
 	
 	@Test
-	public void infinitePosAcceleration() throws InvalidParameterCombination {
+	public void infinitePosAcceleration() throws Exception {
 		double velocity, acceleration, distRemaining, vprime, result;
 		
 		velocity 		= 1.0;
@@ -87,7 +90,7 @@ public class MergeNormGetArrivalTimeTest {
 	}
 	
 	@Test
-	public void infiniteNegAcceleration() throws InvalidParameterCombination {
+	public void infiniteNegAcceleration() throws Exception {
 		double velocity, acceleration, distRemaining, vprime, result;
 		
 		velocity 		= 2.0;
@@ -99,7 +102,7 @@ public class MergeNormGetArrivalTimeTest {
 	}
 	
 	@Test
-	public void normalAccelExample() throws InvalidParameterCombination {
+	public void normalAccelExample() throws Exception {
 		double velocity, acceleration, distRemaining, vprime, result;
 		
 		velocity 		= 1.0;
@@ -111,7 +114,7 @@ public class MergeNormGetArrivalTimeTest {
 	}
 	
 	@Test
-	public void normalDecelExample() throws InvalidParameterCombination {
+	public void normalDecelExample() throws Exception {
 		double velocity, acceleration, distRemaining, vprime, result;
 		
 		velocity 		= 3.0;

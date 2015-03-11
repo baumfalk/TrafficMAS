@@ -9,7 +9,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import nl.uu.trafficmas.exception.InvalidDistanceParameter;
 import nl.uu.trafficmas.exception.InvalidParameterCombination;
+import nl.uu.trafficmas.exception.InvalidVPrimeParameter;
+import nl.uu.trafficmas.exception.InvalidVelocityParameter;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Sensor;
 import nl.uu.trafficmas.simulationmodel.AgentData;
@@ -88,9 +91,14 @@ public class MergeNormScheme extends NormScheme {
 			distRemaining			= lastCarMergePoint - currentCar.position;
 			double posAtArrivalTime = currentCar.velocity* (timeBetweenCars + lastCarArrivalTimeMergePoint);
 			acceleration 			= (posAtArrivalTime < lastCarMergePoint) ? currentCar.acceleration : currentCar.deceleration;
-			lastSpeed 				= findBestSpeed(currentCar.velocity, acceleration, distRemaining, lastCarArrivalTimeMergePoint, timeBetweenCars );
-			lastSpeed				= Math.min(lastSpeed, vmax);
-			lastCarArrivalTimeMergePoint = getArrivalTime(currentCar.velocity, acceleration, distRemaining, lastSpeed);
+			try {
+				lastSpeed 				= findBestSpeed(currentCar.velocity, acceleration, distRemaining, lastCarArrivalTimeMergePoint, timeBetweenCars );
+				lastSpeed				= Math.min(lastSpeed, vmax);
+				lastCarArrivalTimeMergePoint = getArrivalTime(currentCar.velocity, acceleration, distRemaining, lastSpeed);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			ni = new MergeNormInstantiation(this, currentCar.id);
 			ni.setSpeed(lastSpeed);
 			normInstList.add(ni);
@@ -102,7 +110,7 @@ public class MergeNormScheme extends NormScheme {
 
 	public static double findBestSpeed(double velocity, double acceleration,
 			double distRemaining, double lastCarArrivalTimeMergePoint,
-			double timeBetweenCars) {
+			double timeBetweenCars) throws Exception {
 		// TODO Auto-generated method stub
 		
 		// boostrap depending on if we need to brake or not
@@ -135,7 +143,7 @@ public class MergeNormScheme extends NormScheme {
 	}
 
 	public static double getArrivalTime(double velocity, double acceleration,
-			double distRemaining, double vprime) throws InvalidParameterCombination {
+			double distRemaining, double vprime) throws Exception {
 		
 		double accelerationTime = Math.abs((vprime - velocity)/acceleration);
 		double accelerationDist = accelerationTime*(vprime+velocity)/2;
@@ -145,7 +153,13 @@ public class MergeNormScheme extends NormScheme {
 		boolean positiveSpeedDeltaNegativeAccel = velocity < vprime && acceleration <= 0;
 		boolean negativeSpeedDeltaPositiveAccel = velocity > vprime && acceleration >= 0;
 		boolean notEnoughDistRemaining = (accelerationDist > distRemaining);
-		if(negativeVelocity || negativeVPrime || positiveSpeedDeltaNegativeAccel || negativeSpeedDeltaPositiveAccel || notEnoughDistRemaining)
+		if(notEnoughDistRemaining)
+			throw new InvalidDistanceParameter();
+		if(negativeVelocity)
+			throw new InvalidVelocityParameter();
+		if(negativeVPrime)
+			throw new InvalidVPrimeParameter();
+		if(positiveSpeedDeltaNegativeAccel || negativeSpeedDeltaPositiveAccel)
 			throw new InvalidParameterCombination();
 		double remainingTime = (distRemaining-accelerationDist)/vprime;
 		return accelerationTime+ remainingTime;
