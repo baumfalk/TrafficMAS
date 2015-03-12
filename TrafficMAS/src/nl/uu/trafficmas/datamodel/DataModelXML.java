@@ -261,7 +261,7 @@ public class DataModelXML implements DataModel {
 			LinkedHashMap<AgentProfileType, Double> agentsAndDist = new LinkedHashMap<AgentProfileType, Double>();
 			routesMap.put(id, agentsAndDist);
 			for (int j=0; j< attributes.getLength(); j++){
-				if(!attributes.item(j).getNodeName().equals("id")){
+				if(!attributes.item(j).getNodeName().equals("id") && !attributes.item(j).getNodeName().equals("spawn-probability")){
 					AgentProfileType agent = AgentProfileType.getAgentProfileType(attributes.item(j).getNodeName());
 					double spawnProb = Double.valueOf(attributes.item(j).getNodeValue());
 					agentsAndDist.put(agent, spawnProb);
