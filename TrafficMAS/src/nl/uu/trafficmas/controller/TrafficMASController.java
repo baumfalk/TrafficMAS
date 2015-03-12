@@ -502,8 +502,8 @@ public class TrafficMASController {
 				double coinFlip = rng.nextDouble();
 				for(Route route : routes){ 
 					if(coinFlip < agentSpawnProbabilities.get(route.routeID)){
-						coinFlip = rng.nextDouble();
-						createAgent(route, agentsAndTimes, routeAgentTypeSpawnDist.get(route.routeID), roadNetwork, currentTime, coinFlip);
+						double coinFlip2 = rng.nextDouble();
+						createAgent(route, agentsAndTimes, routeAgentTypeSpawnDist.get(route.routeID), roadNetwork, currentTime, coinFlip2);
 					}
 				}
 			}
@@ -513,8 +513,8 @@ public class TrafficMASController {
 				double coinFlip = rng.nextDouble();
 				if(coinFlip < agentSpawnProbabilities.get("all")) {
 					for(Route route : routes){
-						coinFlip = rng.nextDouble();
-						createAgent(route, agentsAndTimes, routeAgentTypeSpawnDist.get("all"), roadNetwork, currentTime, coinFlip);
+						double coinFlip2 = rng.nextDouble();
+						createAgent(route, agentsAndTimes, routeAgentTypeSpawnDist.get("all"), roadNetwork, currentTime, coinFlip2);
 					}
 				}
 			}
