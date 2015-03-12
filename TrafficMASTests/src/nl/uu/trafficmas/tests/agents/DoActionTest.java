@@ -24,6 +24,8 @@ import nl.uu.trafficmas.simulationmodel.StateData;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
+import de.tudresden.sumo.cmd.Vehicle;
+
 public class DoActionTest {
 
 	@Test
@@ -50,7 +52,6 @@ public class DoActionTest {
 		boolean timeStep = false;
 		StateData stateData = SimulationModelTraaS.getStateData(conn, timeStep);
 
-		// All agents have a velocity of 0.
 		// The first agent is a granny
 		Agent granny = completeAgentMap.get("Agent 0");
 		
@@ -64,12 +65,11 @@ public class DoActionTest {
 			stateData 		= SimulationModelTraaS.getStateData(conn, true);
 			currentAgentMap = TrafficMASController.updateAgents(completeAgentMap, rn, stateData);
 			rn = TrafficMASController.updateRoadNetwork(rn, stateData);
-			try {
+			try {			
 				if(currentAgentMap.containsValue(granny) && currentAgentMap.containsValue(hotshot)){
 					AgentAction grannyAction 	= granny.doAction(stateData.currentTimeStep/1000,null,null,null);
-					AgentAction hotShotAction 	= hotshot.doAction(stateData.currentTimeStep/1000,null,null,null);
-					assertEquals(null, grannyAction);
-					assertEquals(AgentAction.ChangeLane, hotShotAction);
+					//AgentAction hotShotAction 	= hotshot.doAction(stateData.currentTimeStep/1000,null,null,null);
+					assertEquals(AgentAction.ChangeVelocity20, grannyAction);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
