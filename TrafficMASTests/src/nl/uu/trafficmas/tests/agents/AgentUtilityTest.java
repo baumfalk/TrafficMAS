@@ -21,7 +21,10 @@ public class AgentUtilityTest {
 		// goal achieved should be utility 1
 		for(AgentProfileType apt : agentProfileTypes) {
 			Agent agent = apt.toAgent(Agent.getNextAgentID(),null, route, null, 10, 10);
-			assertEquals(1.0,agent.specificUtility(agent.getGoalArrivalTime(), null),0);
+			// Except for sumoDefAgent
+			if(!apt.equals(AgentProfileType.SUMODefault)){
+				assertEquals(1.0,agent.specificUtility(agent.getGoalArrivalTime(), null),0);
+			}
 		}
 	}
 }

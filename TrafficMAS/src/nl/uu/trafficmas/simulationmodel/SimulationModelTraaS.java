@@ -12,7 +12,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import nl.uu.trafficmas.agent.Agent;
+import nl.uu.trafficmas.agent.AgentProfileType;
 import nl.uu.trafficmas.agent.AgentSumo;
+import nl.uu.trafficmas.agent.SUMODefaultAgent;
 import nl.uu.trafficmas.agent.actions.AgentAction;
 import nl.uu.trafficmas.agent.actions.SumoAgentAction;
 import de.tudresden.sumo.cmd.Simulation;
@@ -159,22 +161,29 @@ public class SimulationModelTraaS implements SimulationModel {
 		
 		try {
 			for( Entry<Agent, Integer> agentPair : agentPairList.entrySet()){
+				
 				Agent agent = agentPair.getKey();
-				cmds.add(addAgentCommand(agent, agent.getRouteID(), agentPair.getValue()));
-				//cmds.add(Vehicle.setRoute(agent.agentID, agent.getRouteStringList()));
-				cmds.add(Vehicle.setLaneChangeMode(agent.agentID, 0b1001000000));
-				cmds.add(Vehicle.setSpeedMode(agent.agentID, 0b00001));
+				// Use SUMO default settings for this agent.
+				if(agent instanceof SUMODefaultAgent){
+					cmds.add(addAgentCommand(agent, agent.getRouteID(), agentPair.getValue()));
+					cmds.add(Vehicle.setColor(agent.agentID, ((AgentSumo) agent).getColor()));
+					completeAgentMap.put(agent.agentID, agent);
+				} else{
+				// Otherwise, disable setSpeedMode, LaneChangeMode and set custom maxSpeed. 
+					cmds.add(addAgentCommand(agent, agent.getRouteID(), agentPair.getValue()));
+					cmds.add(Vehicle.setLaneChangeMode(agent.agentID, 0b1001000000));
+					cmds.add(Vehicle.setSpeedMode(agent.agentID, 0b00001));
+					cmds.add(Vehicle.setMaxSpeed(agent.agentID, agent.getMaxComfySpeed()));
+					cmds.add(Vehicle.setColor(agent.agentID, ((AgentSumo) agent).getColor()));
+					completeAgentMap.put(agent.agentID, agent);
+				}
 				// TODO: think of a way to express max comfy speed in a different way
-				cmds.add(Vehicle.setMaxSpeed(agent.agentID, agent.getMaxComfySpeed()));
-				cmds.add(Vehicle.setColor(agent.agentID, ((AgentSumo) agent).getColor()));
-				completeAgentMap.put(agent.agentID, agent);
 			}
 	
 			if(agentPairList.size() > 0){
 				conn.do_jobs_set(cmds);
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return completeAgentMap;

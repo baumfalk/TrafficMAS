@@ -11,6 +11,7 @@ import java.util.Random;
 
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.agent.AgentProfileType;
+import nl.uu.trafficmas.agent.SUMODefaultAgent;
 import nl.uu.trafficmas.agent.actions.AgentAction;
 import nl.uu.trafficmas.datamodel.DataModel;
 import nl.uu.trafficmas.datamodel.DataModelXML;
@@ -212,7 +213,9 @@ public class TrafficMASController {
 			}
 			
 			System.out.println(agent + "\n\t id:" + agent.agentID + "\n\t sanc:" + agentSanc + "\n\t int:"+agentInst+"\n\t clear"+agentClearInst+"\n\n");
-			actions.put(agent, agent.doAction(currentTime,agentSanc,agentInst,agentClearInst));
+			if(!(agent instanceof SUMODefaultAgent)){
+				actions.put(agent, agent.doAction(currentTime,agentSanc,agentInst,agentClearInst));
+			}
 		}
 		
 		return actions;

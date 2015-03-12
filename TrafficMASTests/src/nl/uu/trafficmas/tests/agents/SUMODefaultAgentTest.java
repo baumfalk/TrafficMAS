@@ -1,6 +1,6 @@
-package nl.uu.trafficmas.tests.norms;
+package nl.uu.trafficmas.tests.agents;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import it.polito.appeal.traci.SumoTraciConnection;
 
 import java.io.IOException;
@@ -27,13 +27,13 @@ import nl.uu.trafficmas.simulationmodel.StateData;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-public class MergeNormTest {
+public class SUMODefaultAgentTest {
 
 	@Test
-	public void mergeNormTest() throws SAXException, IOException, ParserConfigurationException{
+	public void SUMODefaultAgent() throws SAXException, IOException, ParserConfigurationException {
 		Random random 	= new Random(1337);
-		String dir 		= System.getProperty("user.dir")+"/tests/Organisations/Norms/";
-		String sumocfg 	= System.getProperty("user.dir")+"/tests/Organisations/Norms/orgnormtest.cfg.xml";
+		String dir 		= System.getProperty("user.dir")+"/tests/Agent/SUMODefaultAgent/";
+		String sumocfg 	= System.getProperty("user.dir")+"/tests/Agent/SUMODefaultAgent/orgnormtest.cfg.xml";
 		String masXML 	= "orgnormtest.mas.xml";
 		
 		DataModel dataModel = new DataModelXML(dir,masXML);
@@ -44,7 +44,7 @@ public class MergeNormTest {
 		options.put("start", "1");
 		options.put("quit-on-end", "1");
 		
-		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options,"sumo", sumocfg);				
+		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options,"sumo-gui", sumocfg);				
 		RoadNetwork rn = dataModel.instantiateRoadNetwork();
 		ArrayList<Route> routes = dataModel.getRoutes(rn);
 
