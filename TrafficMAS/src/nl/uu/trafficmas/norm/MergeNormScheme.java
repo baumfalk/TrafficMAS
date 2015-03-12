@@ -25,6 +25,8 @@ public class MergeNormScheme extends NormScheme {
 	private double LastCarMergePointTime 	= -1;
 	private Set<String> tickedAgents;
 	private static List<Sensor> sensors;
+	public static final double TIME_BETWEEN_CARS = 2.5;
+
 	
 
 	/**
@@ -45,7 +47,6 @@ public class MergeNormScheme extends NormScheme {
 	@Override
 	public List<NormInstantiation> instantiateNorms(RoadNetwork rn, int currentTime, Map<String, AgentData> currentOrgKnowledge) {
 		double vmax = (80/3.6);
-		double timeBetweenCars	= 2.5;
 		
 		List<AgentData> mainList = mainSensor.readSensor();
 		List<AgentData> rampList = rampSensor.readSensor();
@@ -75,7 +76,7 @@ public class MergeNormScheme extends NormScheme {
 			
 			AgentData currentCar 	= outputList.get(i);
 			lastCarArrivalTimeMergePoint = carNormInstantiation(rn, vmax,
-					timeBetweenCars, normInstList,
+					TIME_BETWEEN_CARS, normInstList,
 					lastCarArrivalTimeMergePoint, currentCar, currentTime);
 			carArrivalTimes.add(lastCarArrivalTimeMergePoint);
 		}
