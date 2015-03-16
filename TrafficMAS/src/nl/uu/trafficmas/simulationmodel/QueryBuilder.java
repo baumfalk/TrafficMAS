@@ -110,7 +110,7 @@ public class QueryBuilder {
 				List<Object> subList = responses.subList(0, numberOfFields);
 				
 				Data data = querySubject.toData(querySubjectFields.get(querySubject), subList, id);
-
+				
 				switch(querySubject) {
 				case Edge:
 					edgesData.put(id, (EdgeData) data);

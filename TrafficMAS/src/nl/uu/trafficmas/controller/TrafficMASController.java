@@ -86,6 +86,9 @@ public class TrafficMASController {
 		this.completeAgentMap 	= TrafficMASController.setupSimulation(masData, simulationModel, agentsAndTime);
 		view.addMessage("Simulation is set up");
 
+		// Update lanes with actual SUMO lane length
+		this.roadNetwork 		= TrafficMASController.updateRoadNetworkLanes(roadNetwork, simulationModel);
+		
 		this.currentAgentMap 	= new LinkedHashMap<String, Agent>();
 		////////////////
 		// setup view //
@@ -187,6 +190,9 @@ public class TrafficMASController {
 		return simulationModel.getNewStateData();
 	}
 
+	public static RoadNetwork updateRoadNetworkLanes(RoadNetwork rn, SimulationModel simulationModel){
+		return simulationModel.updateRoadNetworkLanes(rn);
+	}
 	/**
 	 * Calculates the next step for the MAS. Organisations execute their actions, Agent actions are sent to SUMO.
 	 * Not yet completely implemented.	 

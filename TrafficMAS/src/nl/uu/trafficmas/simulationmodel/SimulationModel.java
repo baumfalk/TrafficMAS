@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.agent.actions.AgentAction;
+import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 
 public interface SimulationModel {
 	/**
@@ -32,6 +33,8 @@ public interface SimulationModel {
 	 * @return a StateData object which contains 3 HashMaps concerning agent, edge and lane data, and an Integer with the current timestep.
 	 */
 	public StateData getNewStateData();
+	
+	public RoadNetwork updateRoadNetworkLanes(RoadNetwork rn);
 	
 	/**
 	 * Sends a list of commands to spawn Agents to SUMO. The agent data and spawn times are provided in 'agentPairList'. 

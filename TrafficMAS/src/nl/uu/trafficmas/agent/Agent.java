@@ -94,6 +94,7 @@ public abstract class Agent extends AgentPhysical {
 	 * @return an AgentAction with the highest utility, or if no advantage can be gained from performing an action, null.
 	 */
 	public AgentAction doAction(int currentTime, List<Sanction> agentSanc, List<NormInstantiation> agentInst, List<NormInstantiation> agentClearInst) {
+
 		// add the achieved sanctions
 		if(agentSanc != null)
 			currentSanctionList.addAll(agentSanc);

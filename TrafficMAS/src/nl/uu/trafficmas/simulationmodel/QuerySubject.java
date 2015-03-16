@@ -77,6 +77,9 @@ public enum QuerySubject {
 			case EdgeId:
 				cmd = de.tudresden.sumo.cmd.Lane.getEdgeID(id);
 				break;
+			case LaneLength:
+				cmd = de.tudresden.sumo.cmd.Lane.getLength(id);
+				break;
 			default:
 				throw new Exception(this+" cannot handle " + queryField);
 			}
@@ -128,17 +131,18 @@ public enum QuerySubject {
 		double [] 	meanTime 			= new double[1];
 		double [] 	position 			= new double[1];
 		double [] 	speed				= new double[1];
+		double [] 	length				= new double[1];
 		SumoStringList [] vehicleList	= new SumoStringList[1];
 		Iterator<QueryField> queryFieldIt = linkedHashSet.iterator();
 		Iterator<Object> responseIt = subList.iterator();
 		parseResponses(edgeId, leadingVehicle, meanSpeed, meanTime,
-				position, speed, laneIndex,vehicleList, queryFieldIt,responseIt);
+				position, speed, laneIndex,vehicleList, length, queryFieldIt,responseIt);
 		switch (this) {
 		case Edge:
 			data = new EdgeData(id, meanSpeed[0],meanTime[0]);
 			break;
 		case Lane:
-			data = new LaneData(id, meanSpeed[0], meanTime[0], edgeId[0]);
+			data = new LaneData(id, meanSpeed[0], meanTime[0], edgeId[0], length[0]);
 			break;
 		case Vehicle:
 			data = new AgentData(id, leadingVehicle[0], position[0], speed[0],edgeId[0],laneIndex[0],Agent.deceleration, Agent.acceleration);
@@ -155,8 +159,8 @@ public enum QuerySubject {
 
 	private void parseResponses(String[] edgeId, Object[][] leadingVehicle,
 			double[] meanSpeed, double[] meanTime, double[] position,
-			double[] speed, int [] laneIndex, SumoStringList [] vehicleList, Iterator<QueryField> queryFieldIt,
-			Iterator<Object> responseIt) {
+			double[] speed, int [] laneIndex, SumoStringList [] vehicleList, double[] length,
+			Iterator<QueryField> queryFieldIt, Iterator<Object> responseIt) {
 		while(queryFieldIt.hasNext() && responseIt.hasNext()) {
 			QueryField queryField = queryFieldIt.next();
 			Object response = responseIt.next();
@@ -184,6 +188,11 @@ public enum QuerySubject {
 				break;
 			case VehicleIDList:
 				vehicleList[0] = (SumoStringList) response;
+				break;
+			case LaneLength:
+				length[0] = (double) response;
+				break;
+			default:
 				break;
 			}
 		}

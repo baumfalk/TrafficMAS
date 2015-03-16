@@ -12,11 +12,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import nl.uu.trafficmas.agent.Agent;
-import nl.uu.trafficmas.agent.AgentProfileType;
 import nl.uu.trafficmas.agent.AgentSumo;
 import nl.uu.trafficmas.agent.SUMODefaultAgent;
 import nl.uu.trafficmas.agent.actions.AgentAction;
 import nl.uu.trafficmas.agent.actions.SumoAgentAction;
+import nl.uu.trafficmas.roadnetwork.Edge;
+import nl.uu.trafficmas.roadnetwork.Lane;
+import nl.uu.trafficmas.roadnetwork.Road;
+import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import de.tudresden.sumo.cmd.Simulation;
 import de.tudresden.sumo.cmd.Vehicle;
 import de.tudresden.sumo.util.SumoCommand;
@@ -171,7 +174,7 @@ public class SimulationModelTraaS implements SimulationModel {
 				} else{
 				// Otherwise, disable setSpeedMode, LaneChangeMode and set custom maxSpeed. 
 					cmds.add(addAgentCommand(agent, agent.getRouteID(), agentPair.getValue()));
-					cmds.add(Vehicle.setLaneChangeMode(agent.agentID, 0b1001000000));
+					cmds.add(Vehicle.setLaneChangeMode(agent.agentID, 0b1000000000));
 					cmds.add(Vehicle.setSpeedMode(agent.agentID, 0b00001));
 					cmds.add(Vehicle.setMaxSpeed(agent.agentID, agent.getMaxComfySpeed()));
 					cmds.add(Vehicle.setColor(agent.agentID, ((AgentSumo) agent).getColor()));
@@ -284,6 +287,20 @@ public class SimulationModelTraaS implements SimulationModel {
 		return getStateData(conn,true);
 	}
 
+	@Override
+	public RoadNetwork updateRoadNetworkLanes(RoadNetwork rn){
+		StateData stateData = getStateData(conn, false);
+
+		HashMap<String,LaneData> laneDataMap = stateData.lanesData;
+		for( Edge e : rn.getEdges()){
+			Road r = e.getRoad();
+			Lane l = r.getLanes()[0];
+			LaneData laneData = laneDataMap.get(l.getID());
+			r.setLength(laneData.length);
+		}
+		return rn;
+	}
+
 	/**
 	 * Does a timestep in SUMO if 'timeStep' is true and returns StateData, which contains the most recent information about Edge, Lane and Agent objects.
 	 * @param conn
@@ -314,6 +331,7 @@ public class SimulationModelTraaS implements SimulationModel {
 			qb.addQueryField(QuerySubject.Lane, QueryField.MeanTime);
 			qb.addQueryField(QuerySubject.Lane, QueryField.MeanSpeed);
 			qb.addQueryField(QuerySubject.Lane, QueryField.EdgeId);
+			qb.addQueryField(QuerySubject.Lane, QueryField.LaneLength);
 
 			qb.addQueryField(QuerySubject.Sensor, QueryField.VehicleIDList);
 			

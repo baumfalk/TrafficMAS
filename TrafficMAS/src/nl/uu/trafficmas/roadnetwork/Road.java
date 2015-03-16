@@ -4,7 +4,7 @@ import java.util.List;
 
 public class Road {
 	public final String id;
-	public final double length;
+	public double length;
 	public final List<Lane> laneList;
 	public int priority;
 	private double meanTravelTime;
@@ -21,6 +21,10 @@ public class Road {
 		return priority;
 	}
 
+	public void setLength(double length){
+		this.length = length;
+	}
+	
 	public void setMeanTravelTime(double meanTravelTime) {
 		this.meanTravelTime = meanTravelTime;
 	}
