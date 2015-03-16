@@ -26,7 +26,6 @@ public class MergeNormScheme extends NormScheme {
 	private Set<String> tickedAgents;
 	private static List<Sensor> sensors;
 	public static final double TIME_BETWEEN_CARS = 2.5;
-
 	
 
 	/**
