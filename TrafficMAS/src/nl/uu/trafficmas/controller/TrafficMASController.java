@@ -15,6 +15,7 @@ import nl.uu.trafficmas.agent.SUMODefaultAgent;
 import nl.uu.trafficmas.agent.actions.AgentAction;
 import nl.uu.trafficmas.datamodel.DataModel;
 import nl.uu.trafficmas.datamodel.MASData;
+import nl.uu.trafficmas.exception.DistanceLargerThanRoadException;
 import nl.uu.trafficmas.norm.NormInstantiation;
 import nl.uu.trafficmas.norm.Sanction;
 import nl.uu.trafficmas.organisation.Organisation;
@@ -136,6 +137,7 @@ public class TrafficMASController {
 		long start_time = System.nanoTime();
 		long total_start_time = start_time;
 		StateData simulationStateData = TrafficMASController.nextSimulationState(simulationModel);
+		TrafficMASController.verifyState(simulationStateData, this.roadNetwork);
 		view.addMessage("+++++++++++++++++++++");
 		long end_time = System.nanoTime();
 		double difference = (end_time - start_time)/1e6;
@@ -164,6 +166,22 @@ public class TrafficMASController {
 	}
 
 	
+	public static void verifyState(StateData simulationStateData, RoadNetwork roadNetwork) throws DistanceLargerThanRoadException {
+		agentRoadPositionCheck(simulationStateData, roadNetwork);
+	}
+
+	private static void agentRoadPositionCheck(StateData simulationStateData,
+			RoadNetwork roadNetwork) throws DistanceLargerThanRoadException {
+		for(AgentData ad : simulationStateData.agentsData.values()) {
+			Road r = roadNetwork.getRoadFromID(ad.roadID);
+			if(r== null)
+				continue;
+			if(r.length - ad.position < 0) {
+				throw new DistanceLargerThanRoadException(ad.id + " is farther on a road in the simulation than we think is possible!");
+			}
+		}
+	}
+
 	public static StateData nextSimulationState(SimulationModel simulationModel) {
 		// do step and get new data
 		return simulationModel.getNewStateData();

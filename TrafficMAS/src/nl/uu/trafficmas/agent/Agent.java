@@ -11,6 +11,7 @@ import nl.uu.trafficmas.agent.actions.AgentAction;
 import nl.uu.trafficmas.agent.actions.ChangeLaneAction;
 import nl.uu.trafficmas.agent.actions.DoNothingAction;
 import nl.uu.trafficmas.agent.actions.SetVelocityXAction;
+import nl.uu.trafficmas.exception.DistanceLargerThanRoadException;
 import nl.uu.trafficmas.norm.NormInstantiation;
 import nl.uu.trafficmas.norm.Sanction;
 import nl.uu.trafficmas.roadnetwork.Edge;
@@ -93,7 +94,6 @@ public abstract class Agent extends AgentPhysical {
 	 * @return an AgentAction with the highest utility, or if no advantage can be gained from performing an action, null.
 	 */
 	public AgentAction doAction(int currentTime, List<Sanction> agentSanc, List<NormInstantiation> agentInst, List<NormInstantiation> agentClearInst) {
-		
 		// add the achieved sanctions
 		if(agentSanc != null)
 			currentSanctionList.addAll(agentSanc);
