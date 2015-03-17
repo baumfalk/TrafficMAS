@@ -42,7 +42,7 @@ public class UpdateRoadNetworkTest {
 		options.put("start", "1");
 		options.put("quit-on-end", "1");
 		
-		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options,"sumo", sumocfg);				
+		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options,"sumo-gui", sumocfg);				
 		RoadNetwork rn = dataModel.instantiateRoadNetwork();
 		ArrayList<Route> routes = dataModel.getRoutes(rn);
 		
@@ -68,7 +68,7 @@ public class UpdateRoadNetworkTest {
 					assertTrue(r.getMeanTravelTime() > r.length/13.9);
 
 					// The left lane has no agents on it so it's meanSpeed should be max (13.9)
-					assertEquals(13.9, r.laneList.get(1).getLaneMeanSpeed(),0 );
+					assertEquals(5.0, r.laneList.get(1).getLaneMeanSpeed(),0 );
 					
 					// And thus meanTravelTime on that same lane should be 0 
 					assertEquals(r.length/r.laneList.get(1).getLaneMeanSpeed(), r.laneList.get(1).getMeanTravelTime(),0);
