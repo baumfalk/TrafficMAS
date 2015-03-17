@@ -49,7 +49,7 @@ public class SUMODefaultAgentTest {
 		ArrayList<Route> routes = dataModel.getRoutes(rn);
 
 		HashMap<Agent,Integer> agentPairList 	= TrafficMASController.instantiateAgents(masData, random, routes, rn);
-		HashMap<String, Agent> completeAgentMap = SimulationModelTraaS.addAgents(agentPairList, conn);
+		HashMap<String, Agent> completeAgentMap = SimulationModelTraaS.addAgents(agentPairList, random, conn);
 		HashMap<String, Agent> currentAgentMap 	= SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, new LinkedHashMap<String, Agent>(), conn);
 		Map<String, Organisation> orgsMap	= TrafficMASController.instantiateOrganisations(dataModel, rn);
 		HashMap<Agent, AgentAction> actions = new HashMap<Agent, AgentAction>();

@@ -47,7 +47,7 @@ public class UpdateRoadNetworkTest {
 		ArrayList<Route> routes = dataModel.getRoutes(rn);
 		
 		HashMap<Agent,Integer> agentPairList 	= TrafficMASController.instantiateAgents(masData, random, routes, rn);
-		HashMap<String, Agent> completeAgentMap = SimulationModelTraaS.addAgents(agentPairList, conn);	
+		HashMap<String, Agent> completeAgentMap = SimulationModelTraaS.addAgents(agentPairList, random, conn);	
 
 		boolean timeStep = false;
 		StateData stateData = SimulationModelTraaS.getStateData(conn, timeStep);

@@ -39,7 +39,7 @@ public class SetupSimulationTest {
 		ArrayList<Route> routes = dataModel.getRoutes(rn);
 
 		HashMap<Agent,Integer> agentsAndTime 	= TrafficMASController.instantiateAgents(masData, rng, routes, rn);
-		HashMap<String, Agent> completeAgentMap = TrafficMASController.setupSimulation(masData, simModel, agentsAndTime);
+		HashMap<String, Agent> completeAgentMap = TrafficMASController.setupSimulation(masData, simModel, agentsAndTime, rng);
 		
 		assertEquals(9, completeAgentMap.size());
 

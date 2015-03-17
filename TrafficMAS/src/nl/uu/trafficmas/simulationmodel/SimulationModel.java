@@ -1,6 +1,7 @@
 package nl.uu.trafficmas.simulationmodel;
 
 import java.util.HashMap;
+import java.util.Random;
 
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.agent.actions.AgentAction;
@@ -42,7 +43,7 @@ public interface SimulationModel {
 	 * @param agentPairList
 	 * @return the HashMap containing all agents that will spawn in the simulation. 
 	 */
-	public HashMap<String, Agent> addAgents(HashMap<Agent, Integer> agentPairList);
+	public HashMap<String, Agent> addAgents(HashMap<Agent, Integer> agentPairList, Random rng);
 	
 	/**
 	 * Adds a single agent 'agent' at time 'tick' with route 'routeID'.

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Random;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -28,6 +29,7 @@ public class MergingTest {
 
 	@Test
 	public void test() throws SAXException, IOException, ParserConfigurationException {
+		Random random 	= new Random(1337);
 		String dir 		= System.getProperty("user.dir")+"/tests/Misc/MergingTest/";
 		String sumocfg 	= System.getProperty("user.dir")+"/tests/Misc/MergingTest/hello.sumocfg";
 		String masXML 	= "hello.mas.xml";
@@ -61,7 +63,7 @@ public class MergingTest {
 //		TrafficMASController.createAgent(routes.get(1), agentsAndTimes, agentProfileDistribution, rn, 20, .5);
 	
 		
-		HashMap<String, Agent> completeAgentMap = SimulationModelTraaS.addAgents(agentsAndTimes, conn);
+		HashMap<String, Agent> completeAgentMap = SimulationModelTraaS.addAgents(agentsAndTimes, random, conn);
 		HashMap<String, Agent> currentAgentMap 	= SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, new LinkedHashMap<String, Agent>(), conn);
 		StateData stateData;
 		HashMap<Agent, AgentAction> actions;

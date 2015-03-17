@@ -49,7 +49,7 @@ public class QueryBuilderTest {
 		ArrayList<Route> routes = dataModel.getRoutes(rn);
 		
 		HashMap<Agent,Integer> agentPairList = TrafficMASController.instantiateAgents(masData, random, routes, rn);
-		SimulationModelTraaS.addAgents(agentPairList, conn);
+		SimulationModelTraaS.addAgents(agentPairList, random, conn);
 		
 		boolean timeStep 	= false;
 		StateData stateData = SimulationModelTraaS.getStateData(conn, timeStep);

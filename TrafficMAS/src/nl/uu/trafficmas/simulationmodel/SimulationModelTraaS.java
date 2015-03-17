@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
 
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.agent.AgentSumo;
@@ -120,7 +121,7 @@ public class SimulationModelTraaS implements SimulationModel {
 	}
 	
 	/**
-	 * Calls the method SimulationModelTraas.addAgentCommand(agent,routeID,tick)
+	 * Calls the method SimulationModelTraas.addAgentCommand(agent,routeID,tick,0)
 	 * @param agent
 	 * @param routeID
 	 * @param tick
@@ -128,7 +129,7 @@ public class SimulationModelTraaS implements SimulationModel {
 	 */
 	public static void addAgent(Agent agent, String routeID, int tick, SumoTraciConnection conn){
 		try {
-			conn.do_job_set(addAgentCommand(agent, routeID, tick));
+			conn.do_job_set(addAgentCommand(agent, routeID, tick, (byte) 0));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -142,13 +143,13 @@ public class SimulationModelTraaS implements SimulationModel {
 	 * @param tick
 	 * @return a SumoCommand to add a single agent.
 	 */
-	public static SumoCommand addAgentCommand(Agent agent, String routeID, int tick) {
-		return Vehicle.add(agent.agentID, "Car", routeID, tick, 0.0, Math.min(agent.getMaxComfySpeed(),3), (byte) 0);
+	public static SumoCommand addAgentCommand(Agent agent, String routeID, int tick, byte laneIndex) {
+		return Vehicle.add(agent.agentID, "Car", routeID, tick, 0.0, Math.min(agent.getMaxComfySpeed(),3), laneIndex);
 	}
 	
 	@Override
-	public HashMap<String, Agent> addAgents(HashMap<Agent, Integer> agentPairList) {
-		return addAgents(agentPairList, conn);
+	public HashMap<String, Agent> addAgents(HashMap<Agent, Integer> agentPairList, Random rng) {
+		return addAgents(agentPairList, rng, conn);
 	}
 	
 	/**
@@ -158,7 +159,7 @@ public class SimulationModelTraaS implements SimulationModel {
 	 * @param conn
 	 * @return the HashMap containing all agents that will spawn in the simulation. 
 	 */
-	public static HashMap<String, Agent> addAgents(HashMap<Agent, Integer> agentPairList, SumoTraciConnection conn){
+	public static HashMap<String, Agent> addAgents(HashMap<Agent, Integer> agentPairList, Random rng, SumoTraciConnection conn){
 		HashMap<String, Agent> completeAgentMap = new LinkedHashMap<String, Agent>();
 		ArrayList<SumoCommand> cmds = new ArrayList<>();
 		
@@ -166,14 +167,19 @@ public class SimulationModelTraaS implements SimulationModel {
 			for( Entry<Agent, Integer> agentPair : agentPairList.entrySet()){
 				
 				Agent agent = agentPair.getKey();
+				
+				// Determine a random lane for the agent to spawn on.
+				Road r = agent.getRoadNetwork().getRoadFromID(agent.getRouteStringList().get(0));
+				byte laneIndex = r.getLanes()[rng.nextInt(r.getLanes().length)].laneIndex;
+				
 				// Use SUMO default settings for this agent.
 				if(agent instanceof SUMODefaultAgent){
-					cmds.add(addAgentCommand(agent, agent.getRouteID(), agentPair.getValue()));
+					cmds.add(addAgentCommand(agent, agent.getRouteID(), agentPair.getValue(), laneIndex));
 					cmds.add(Vehicle.setColor(agent.agentID, ((AgentSumo) agent).getColor()));
 					completeAgentMap.put(agent.agentID, agent);
 				} else{
-				// Otherwise, disable setSpeedMode, LaneChangeMode and set custom maxSpeed. 
-					cmds.add(addAgentCommand(agent, agent.getRouteID(), agentPair.getValue()));
+				// Otherwise for our agents, disable setSpeedMode, LaneChangeMode and set custom maxSpeed. 
+					cmds.add(addAgentCommand(agent, agent.getRouteID(), agentPair.getValue(), laneIndex));
 					cmds.add(Vehicle.setLaneChangeMode(agent.agentID, 0b1100000000));
 					cmds.add(Vehicle.setSpeedMode(agent.agentID, 0b00001));
 					cmds.add(Vehicle.setMaxSpeed(agent.agentID, agent.getMaxComfySpeed()));

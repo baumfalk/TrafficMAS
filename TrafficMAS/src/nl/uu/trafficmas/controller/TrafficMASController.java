@@ -83,7 +83,7 @@ public class TrafficMASController {
 		//////////////////////
 		// setup simulation //
 		//////////////////////
-		this.completeAgentMap 	= TrafficMASController.setupSimulation(masData, simulationModel, agentsAndTime);
+		this.completeAgentMap 	= TrafficMASController.setupSimulation(masData, simulationModel, agentsAndTime, rng);
 		view.addMessage("Simulation is set up");
 
 		// Update lanes with actual SUMO lane length
@@ -260,7 +260,7 @@ public class TrafficMASController {
 	 * @param agentsAndTime
 	 * @return a map of all Agent objects that will act in the simulation.
 	 */
-	public static HashMap<String,Agent> setupSimulation(MASData masData, SimulationModel simulationModel, HashMap<Agent,Integer> agentsAndTime) {
+	public static HashMap<String,Agent> setupSimulation(MASData masData, SimulationModel simulationModel, HashMap<Agent,Integer> agentsAndTime, Random rng) {
 		// start the simulation
 		HashMap<String, String> optionValueMap = new LinkedHashMap<String, String>();
 		optionValueMap.put("e", Integer.toString(masData.simulationLength));
@@ -269,7 +269,7 @@ public class TrafficMASController {
 		simulationModel.initializeWithOptions(optionValueMap);
 		// add the agents
 		
-		return simulationModel.addAgents(agentsAndTime);
+		return simulationModel.addAgents(agentsAndTime, rng);
 	}
 	
 	/**
