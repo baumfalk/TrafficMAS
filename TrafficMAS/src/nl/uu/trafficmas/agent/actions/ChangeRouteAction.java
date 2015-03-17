@@ -17,6 +17,14 @@ public class ChangeRouteAction extends SumoAgentAction {
 
 	public ChangeRouteAction(int priority) {
 		super(priority);
+		
+	}
+
+	@Override
+	public boolean isRelevant(Agent agent) {
+		boolean relevant = true;
+		
+		return relevant;
 	}
 
 	@Override

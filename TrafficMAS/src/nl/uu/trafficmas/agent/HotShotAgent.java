@@ -1,8 +1,12 @@
 package nl.uu.trafficmas.agent;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import nl.uu.trafficmas.norm.Sanction;
+import nl.uu.trafficmas.norm.SanctionType;
 import nl.uu.trafficmas.roadnetwork.Node;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
@@ -14,31 +18,17 @@ public class HotShotAgent extends AgentSumo {
 		super(agentID, goalNode, route, roadNetwork, goalArrivalTime, maxSpeed, maxComfySpeed);
 	}
 
-	@Override
-	public double specificUtility(double arrivalTime, List<Sanction> sanctionList) {
-		double utility = 0;
-		utility = (double) (this.getGoalArrivalTime() / (arrivalTime));
-		
-		//TODO: fix this horrible code
-		if(sanctionList!= null && !sanctionList.isEmpty()) {
-			for(Sanction s : sanctionList) {
-				switch(s.sanctionType) {
-				case HighFine:
-					utility -= 0.2;
-					break;
-				case LowFine:
-					utility -= 1;
-					break;		
-				}
-			}
-		}
-		
-		return Math.max(0,Math.min(1, utility));
-	}
 
 	@Override
 	public SumoColor getColor() {
 		//blue
 		return new SumoColor(0,0,255,255);
+	}
+
+	@Override
+	protected Map<SanctionType, Double> sanctionIntensity(
+			Set<SanctionType> sanctionsTypes, List<Sanction> currentSanctionList) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

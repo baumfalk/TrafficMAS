@@ -2,6 +2,7 @@ package nl.uu.trafficmas.simulationmodel;
 
 public class AgentData implements Data {
 
+	private static final int LaneSwitchConstant = 2;
 	public final String id;
 	public final String leaderId;
 	public final double leaderDistance;
@@ -42,5 +43,34 @@ public class AgentData implements Data {
 		sb.append("LeaderDistance: "+ leaderDistance+"\r\n");
 
 		return sb.toString();
+	}
+
+	public static double distance(AgentData agentData, AgentData goal, double acceleration, double deceleration) {
+		double laneDist 	= laneDistance(agentData.laneIndex,goal.laneIndex);
+		double speedDist	= speedDistance(agentData.velocity, goal.velocity, acceleration, deceleration);
+		
+		return laneDist + speedDist;
+	}
+
+	private static double speedDistance(double velocityAgent, double velocityGoal,
+			double acceleration, double deceleration) {
+		//apparently speed is not used in this norm
+		if(velocityAgent < 0 || velocityGoal < 0)
+			return 0;
+		
+		boolean shouldDecel = velocityAgent < velocityGoal;
+		double accel = (shouldDecel) ? deceleration : acceleration;
+		
+		return Math.abs(velocityAgent - velocityGoal)/accel;
+	}
+
+	private static double laneDistance(int laneIndexAgent, int laneIndexGoal) {
+		// TODO Auto-generated method stub
+		// apparently laneIndex is not an issue
+		if(laneIndexAgent < 0 || laneIndexGoal < 0)
+			return 0;
+		
+		
+		return Math.abs(laneIndexAgent-laneIndexGoal)/AgentData.LaneSwitchConstant;
 	}
 }

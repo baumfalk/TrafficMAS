@@ -54,6 +54,17 @@ public class ChangeVelocityAction extends SumoAgentAction {
 	}
 
 	@Override
+	public boolean isRelevant(Agent agent) {
+		boolean relevant = true;
+		boolean tooFast = agent.getVelocity() + speedIncrease > agent.getMaxSpeed();
+		boolean tooSlow = agent.getVelocity() + speedIncrease <= 0;
+		if(tooFast || tooSlow) {
+			relevant = false;
+		} 
+		return relevant;
+	}
+
+	@Override
 	public SumoCommand getCommand(Agent currentAgent) {
 		double velocity = currentAgent.getVelocity();
 		double maxComfySpeed = currentAgent.getMaxComfySpeed();

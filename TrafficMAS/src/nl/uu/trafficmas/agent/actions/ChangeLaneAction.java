@@ -44,6 +44,11 @@ public class ChangeLaneAction extends SumoAgentAction {
 
 
 	@Override
+	public boolean isRelevant(Agent agent) {
+		return agent.getLane().hasLeftLane();
+	}
+
+	@Override
 	public SumoCommand getCommand(Agent currentAgent) {
 		byte agentLaneIndex = currentAgent.getLane().laneIndex;
 		int maxLaneIndex = currentAgent.getRoad().laneList.size()-1;

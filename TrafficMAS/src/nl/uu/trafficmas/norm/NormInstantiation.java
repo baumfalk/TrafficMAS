@@ -1,5 +1,6 @@
 package nl.uu.trafficmas.norm;
 
+import java.util.List;
 import java.util.Map;
 
 import nl.uu.trafficmas.simulationmodel.AgentData;
@@ -42,5 +43,9 @@ public abstract class NormInstantiation {
 	@Override
 	public int hashCode() {
 		return (int) (Integer.valueOf(this.agentID.charAt(0))+(Integer.valueOf(this.ns.id.charAt(0))));
+	}
+	public List<AgentData> getGoals() {
+		// TODO Auto-generated method stub
+		return ns.getGoals();
 	}
 }

@@ -38,4 +38,6 @@ public abstract class NormScheme {
 	public void addAttributes(Map<String, String> attributes) {
 		this.attributes = attributes;
 	}
+
+	public abstract List<AgentData> getGoals();
 }

@@ -1,8 +1,10 @@
 package nl.uu.trafficmas.agent.actions;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.norm.NormInstantiation;
@@ -15,7 +17,6 @@ public abstract class AgentAction {
 	// listed in order of priority (descending)
 	private static int actionPriority = 0;
 	public static final AgentAction DoNothingAction				= new DoNothingAction(actionPriority++);
-	public static final AgentAction SetVelocityXAction			= new SetVelocityXAction(actionPriority++);
 	public static final AgentAction ChangeVelocityMinus1Action	= new ChangeVelocityMinus1Action(actionPriority++);
 	public static final AgentAction ChangeVelocityMinus5Action	= new ChangeVelocityMinus5Action(actionPriority++);
 	public static final AgentAction ChangeVelocityMinus10Action	= new ChangeVelocityMinus10Action(actionPriority++);
@@ -26,7 +27,6 @@ public abstract class AgentAction {
 	public static final AgentAction ChangeVelocity10			= new ChangeVelocity10Action(actionPriority++);
 	public static final AgentAction ChangeVelocity20			= new ChangeVelocity20Action(actionPriority++);
 	public static final AgentAction ChangeVelocity50			= new ChangeVelocity50Action(actionPriority++);
-	public static final AgentAction SetVelocityX				= new SetVelocityXAction(actionPriority++);
 	public static final AgentAction ChangeLane 					= new ChangeLaneAction(actionPriority++);
 	public static final AgentAction ChangeRoute 				= new ChangeRouteAction(actionPriority);
 	
@@ -34,6 +34,7 @@ public abstract class AgentAction {
 	
 	protected double utility;
 	protected Map<String, String> parameters;
+	private double distance;
 
 	public AgentAction(int priority) {
 		this.priority = priority;
@@ -41,22 +42,12 @@ public abstract class AgentAction {
 	
 	public static AgentAction[] values() {
 		// add new actions here
-		AgentAction [] array = {DoNothingAction,SetVelocityXAction,ChangeVelocityMinus50Action,ChangeVelocityMinus20Action,ChangeVelocityMinus10Action,ChangeVelocityMinus5Action,ChangeVelocityMinus1Action,ChangeVelocity1, ChangeVelocity5, ChangeVelocity10,
+		AgentAction [] array = {DoNothingAction,ChangeVelocityMinus50Action,ChangeVelocityMinus20Action,ChangeVelocityMinus10Action,ChangeVelocityMinus5Action,ChangeVelocityMinus1Action,ChangeVelocity1, ChangeVelocity5, ChangeVelocity10,
 				ChangeVelocity20, ChangeVelocity50, ChangeLane, ChangeRoute};
 		return array;
 	}
 	
 	public abstract double getTime(int currentTime, double currentSpeed, double meanTravelSpeedNextLane, double currentPos, double currentLaneLength, double maxComfySpeed, double routeRemainderLength, double leaderAgentSpeed, double leaderDistance, Agent agent);
-	
-	public List<Sanction> getSanctions(AgentData agentData, List<NormInstantiation> normInst) {
-		List<Sanction> sanctions = new ArrayList<Sanction>();
-		for(NormInstantiation ni : normInst) {
-			if(ni.violated(agentData)) {
-				sanctions.add(ni.getSanction(agentData.id));
-			}
-		}
-		return sanctions;
-	}
 	
 	public void setUtility(double newUtility) {
 		utility = newUtility;
@@ -81,6 +72,10 @@ public abstract class AgentAction {
 	
 	public void setParameters(Map<String,String> parameters) {
 		this.parameters = parameters;
+	}
+
+	public boolean isRelevant(Agent agent) {
+		return true;
 	}
 
 }
