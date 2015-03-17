@@ -174,7 +174,7 @@ public class SimulationModelTraaS implements SimulationModel {
 				} else{
 				// Otherwise, disable setSpeedMode, LaneChangeMode and set custom maxSpeed. 
 					cmds.add(addAgentCommand(agent, agent.getRouteID(), agentPair.getValue()));
-					cmds.add(Vehicle.setLaneChangeMode(agent.agentID, 0b1000000000));
+					cmds.add(Vehicle.setLaneChangeMode(agent.agentID, 0b1100000000));
 					cmds.add(Vehicle.setSpeedMode(agent.agentID, 0b00001));
 					cmds.add(Vehicle.setMaxSpeed(agent.agentID, agent.getMaxComfySpeed()));
 					cmds.add(Vehicle.setColor(agent.agentID, ((AgentSumo) agent).getColor()));
