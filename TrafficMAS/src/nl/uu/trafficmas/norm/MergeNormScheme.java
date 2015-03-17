@@ -21,7 +21,7 @@ public class MergeNormScheme extends NormScheme {
 
 	private Sensor mainSensor;
 	private Sensor rampSensor;
-	private Sensor mergeSensor;
+	public Sensor mergeSensor;
 	private double LastCarMergePointTime 	= -1;
 	private Set<String> tickedAgents;
 	private static List<Sensor> sensors;

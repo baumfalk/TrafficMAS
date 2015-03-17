@@ -27,8 +27,10 @@ public class MergeNormInstantiation extends NormInstantiation {
 	@Override
 	public boolean deadline(Map<String, AgentData> currentOrgKnowledge,
 			int currentTime) {
-		// TODO Auto-generated method stub
-		return false;
+		
+		AgentData agentData = currentOrgKnowledge.get(agentID);
+		MergeNormScheme mergeNormScheme = (MergeNormScheme)ns;
+		return mergeNormScheme.mergeSensor.readSensor().contains(agentData);
 	}
 
 

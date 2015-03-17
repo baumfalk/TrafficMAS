@@ -5,7 +5,7 @@ import java.util.Map;
 import nl.uu.trafficmas.simulationmodel.AgentData;
 
 public abstract class NormInstantiation {
-	private final NormScheme ns;
+	protected final NormScheme ns;
 	public final String agentID;
 	
 	public NormInstantiation(NormScheme ns, String agentID) {
