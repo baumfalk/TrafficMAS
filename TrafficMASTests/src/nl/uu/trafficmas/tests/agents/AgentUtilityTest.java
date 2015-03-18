@@ -23,7 +23,7 @@ public class AgentUtilityTest {
 			Agent agent = apt.toAgent(Agent.getNextAgentID(),null, route, null, 10, 10);
 			// Except for sumoDefAgent
 			if(!apt.equals(AgentProfileType.SUMODefault)){
-				assertEquals(1.0,agent.specificUtility(agent.getGoalArrivalTime(), null, null),0);
+				assertEquals(1.0,agent.utility(agent.getGoalArrivalTime(), null, null),0);
 			}
 		}
 	}
