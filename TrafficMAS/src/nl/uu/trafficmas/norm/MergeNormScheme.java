@@ -67,6 +67,7 @@ public class MergeNormScheme extends NormScheme {
 		
 		// calculate norm and arrival time for first car
 		List<NormInstantiation> normInstList = new ArrayList<NormInstantiation>();
+		
 		double lastCarArrivalTimeMergePoint = LastCarMergePointTime;
 		
 		
@@ -92,6 +93,7 @@ public class MergeNormScheme extends NormScheme {
 		double lastCarMergePoint;
 		double distRemaining;
 		double acceleration;
+		double newPrevCarArrivalTimeMergePoint = prevCarArrivalTimeMergePoint;
 		
 		lastCarMergePoint 		= rn.getEdge(currentCar.roadID).getRoad().length;
 		distRemaining			= lastCarMergePoint - currentCar.position;
@@ -108,9 +110,8 @@ public class MergeNormScheme extends NormScheme {
 				lastSpeed = vmax;
 			}
 		}
-		
 		try {
-			prevCarArrivalTimeMergePoint = currentTime + getTravelTime(currentCar.velocity, acceleration, distRemaining, lastSpeed);
+			newPrevCarArrivalTimeMergePoint = currentTime + getTravelTime(currentCar.velocity, acceleration, distRemaining, lastSpeed);
 		} catch (InvalidVPrimeParameter e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -127,9 +128,15 @@ public class MergeNormScheme extends NormScheme {
 		ni = new MergeNormInstantiation(this, currentCar.id);
 		double correctedLastSpeed = Math.round(lastSpeed*PRECISION)/PRECISION;
 		System.out.println("speed:" +lastSpeed +" correctedSpeed: "+ correctedLastSpeed);
-		ni.setSpeed(correctedLastSpeed);
+		// TODO: Find reasonable value.
+		if( correctedLastSpeed < vmax*0.2 ){
+			ni.setLaneIndex(1);
+			newPrevCarArrivalTimeMergePoint = prevCarArrivalTimeMergePoint;
+		} else{
+			ni.setSpeed(correctedLastSpeed);
+		}
 		normInstList.add(ni);
-		return prevCarArrivalTimeMergePoint;
+		return newPrevCarArrivalTimeMergePoint;
 	}
 
 	public static double findBestSpeed(double velocity, double acceleration,

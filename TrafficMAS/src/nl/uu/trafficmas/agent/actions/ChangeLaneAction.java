@@ -45,7 +45,15 @@ public class ChangeLaneAction extends SumoAgentAction {
 
 	@Override
 	public boolean isRelevant(Agent agent) {
-		return agent.getLane().hasLeftLane();
+		boolean relevant = false;
+		// Switching lanes is only relevant if there is a left lane 
+		//	&& you can get a significant speed boost from it. (Significant apparently means more than 200%)
+		// TODO: Find a reasonable value for this.
+		if (agent.getLane().hasLeftLane() && agent.getLane().getLeftLane().getLaneMeanSpeed() > agent.getLane().getLaneMeanSpeed()*2){
+			relevant = true;
+		}
+		
+		return relevant;
 	}
 
 	@Override
