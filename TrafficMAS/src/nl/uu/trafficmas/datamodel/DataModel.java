@@ -5,10 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.w3c.dom.Document;
-
 import nl.uu.trafficmas.agent.AgentProfileType;
-import nl.uu.trafficmas.norm.NormScheme;
 import nl.uu.trafficmas.organisation.Organisation;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;

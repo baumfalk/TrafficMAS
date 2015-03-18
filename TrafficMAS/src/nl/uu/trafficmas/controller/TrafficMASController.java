@@ -138,8 +138,6 @@ public class TrafficMASController {
 	public void doStep(SimulationModel simulationModel, TrafficView view, int i)
 			throws Exception {
 		
-		if(i == 205)
-			System.out.println("we're here.");
 		long start_time = System.nanoTime();
 		long total_start_time = start_time;
 		StateData simulationStateData = TrafficMASController.nextSimulationState(simulationModel);
@@ -230,13 +228,6 @@ public class TrafficMASController {
 			List<Sanction> agentSanc 				= (sanctions!= null && sanctions.containsKey(agent.agentID)) ? (sanctions.get(agent.agentID)) : null;
 			List<NormInstantiation> agentInst 		= (normInst != null && normInst.containsKey(agent.agentID)) ? (normInst.get(agent.agentID)) : null;
 			List<NormInstantiation> agentClearInst	= (clearedNormInst!= null && clearedNormInst.containsKey(agent.agentID)) ? (clearedNormInst.get(agent.agentID)) : null;
-			
-			if(agentSanc!= null && !agentSanc.isEmpty()) {
-				System.out.println("SANCTIONS:" + agentSanc);
-			}
-			if(agentInst != null){
-				System.out.println("NORM INST");
-			}
 			
 			//System.out.println(agent + "\n\t id:" + agent.agentID + "\n\t sanc:" + agentSanc + "\n\t int:"+agentInst+"\n\t clear"+agentClearInst+"\n\n");
 			if(!(agent instanceof SUMODefaultAgent)){

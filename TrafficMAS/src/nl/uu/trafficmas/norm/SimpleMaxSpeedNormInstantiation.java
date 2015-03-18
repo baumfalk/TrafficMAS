@@ -1,6 +1,5 @@
 package nl.uu.trafficmas.norm;
 
-import nl.uu.trafficmas.simulationmodel.AgentData;
 
 
 public class SimpleMaxSpeedNormInstantiation extends NormInstantiation {

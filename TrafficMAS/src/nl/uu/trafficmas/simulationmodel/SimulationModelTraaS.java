@@ -170,7 +170,18 @@ public class SimulationModelTraaS implements SimulationModel {
 				
 				// Determine a random lane for the agent to spawn on.
 				Road r = agent.getRoadNetwork().getRoadFromID(agent.getRouteStringList().get(0));
-				byte laneIndex = r.getLanes()[rng.nextInt(r.getLanes().length)].laneIndex;
+				
+				//todo distribute with 60% 40%
+				
+				// keep flipping coins until we get < 0.6 or until we run out of lanes.
+				double coinFlip = rng.nextDouble();
+				int randomLaneIndex = 0;
+				while(coinFlip >= 0.6 && randomLaneIndex+1 <= r.getLanes().length-1) {
+					randomLaneIndex++;
+					coinFlip = rng.nextDouble();
+				}
+				
+				byte laneIndex = r.getLanes()[randomLaneIndex].laneIndex;
 				
 				// Use SUMO default settings for this agent.
 				if(agent instanceof SUMODefaultAgent){

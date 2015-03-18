@@ -69,10 +69,6 @@ public class ChangeVelocityAction extends SumoAgentAction {
 		double velocity = currentAgent.getVelocity();
 		double maxComfySpeed = currentAgent.getMaxComfySpeed();
 		
-		if(velocity+speedIncrease < 0) {
-			System.out.println("hmm");
-		}
-		
 		return Vehicle.setMaxSpeed(currentAgent.agentID, Math.max(1,Math.min(velocity+speedIncrease, maxComfySpeed)));
 	}
 
