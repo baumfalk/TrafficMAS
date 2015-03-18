@@ -33,7 +33,7 @@ public class SensorData implements Data {
 	public List<AgentData> getAgentsData() {
 		List<AgentData> agentDataList = new ArrayList<AgentData>();
 		for(String agentID: vehicleIDs) {
-			if(vehicleData.containsKey(agentID))
+			if(vehicleData.containsKey(agentID) && vehicleData.get(agentID) != null)
 				agentDataList.add(vehicleData.get(agentID));
 		}
 		
