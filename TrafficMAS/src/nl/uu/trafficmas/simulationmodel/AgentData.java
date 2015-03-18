@@ -71,6 +71,6 @@ public class AgentData implements Data {
 			return 0;
 		
 		
-		return Math.abs(laneIndexAgent-laneIndexGoal)/AgentData.LaneSwitchConstant;
+		return Math.abs(laneIndexAgent-laneIndexGoal)*AgentData.LaneSwitchConstant;
 	}
 }
