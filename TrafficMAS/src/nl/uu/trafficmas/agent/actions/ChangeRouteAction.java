@@ -24,6 +24,11 @@ public class ChangeRouteAction extends SumoAgentAction {
 	public boolean isRelevant(Agent agent) {
 		boolean relevant = true;
 		
+		if(agent.getRoute().length == 1 || (agent.getDistance() < agent.getRoad().length*.8)){
+			relevant = false;
+		}
+		
+		
 		return relevant;
 	}
 
