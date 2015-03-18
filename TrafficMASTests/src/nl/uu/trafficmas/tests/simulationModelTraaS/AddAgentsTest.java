@@ -56,7 +56,7 @@ public class AddAgentsTest {
 				boolean timeStep = true;
 				StateData stateData = SimulationModelTraaS.getStateData(conn, timeStep);				
 				if(i == 8){
-					assertEquals(3,stateData.agentsData.size());
+					assertEquals(5,stateData.agentsData.size());
 				}
 			}
 			conn.close();
