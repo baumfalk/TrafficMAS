@@ -55,4 +55,10 @@ public class MergeNormInstantiation extends NormInstantiation {
 	public List<AgentData> getGoals() {
 		return goals;
 	}
+
+	public void setSpeedAndLane(double correctedLastSpeed, int laneIndex) {
+		this.speed = correctedLastSpeed;
+		this.laneIndex = laneIndex;
+		goals.add(new AgentData(null, null, -1, correctedLastSpeed, null, laneIndex, -1, -1));
+	}
 }
