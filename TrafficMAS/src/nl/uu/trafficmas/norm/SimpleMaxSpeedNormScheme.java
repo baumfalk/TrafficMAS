@@ -12,11 +12,13 @@ public class SimpleMaxSpeedNormScheme extends NormScheme {
 
 
 	private double maxSpeed;
+	private List<AgentData> goals;
 
 	public SimpleMaxSpeedNormScheme(String id, SanctionType sanctionType,
 			List<Sensor> sensorList) {
 		super(id, sanctionType, sensorList);
 		maxSpeed = 4;
+		goals = new ArrayList<AgentData>();
 		// TODO Auto-generated constructor stub
 	}
 
@@ -60,14 +62,14 @@ public class SimpleMaxSpeedNormScheme extends NormScheme {
 		this.attributes = attributes;
 		if(attributes.containsKey("maxspeed")) {
 			maxSpeed = Double.parseDouble(attributes.get("maxspeed"));
+			goals.add(new AgentData(null, null, -1, maxSpeed, null, -1, -1, -1));
 		}
 	}
 
 
 	@Override
-	public AgentData goal() {
-		AgentData ad = new AgentData(null, null, -1, maxSpeed, null, -1, -1, -1);
-		return ad;
+	public List<AgentData> getGoals() {
+		return goals;
 	}
 	
 }

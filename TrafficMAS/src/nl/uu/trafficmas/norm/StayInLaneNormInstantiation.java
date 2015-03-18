@@ -1,23 +1,26 @@
 package nl.uu.trafficmas.norm;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import nl.uu.trafficmas.simulationmodel.AgentData;
 
 public class StayInLaneNormInstantiation extends NormInstantiation {
 
-	private AgentData agentData;
+	private List<AgentData> goals;
 	
 	public StayInLaneNormInstantiation(NormScheme ns, String agentID) {
 		super(ns, agentID);
-		// TODO Auto-generated constructor stub
+		goals = new ArrayList<AgentData>();
 	}
 
 	public void setGoal(AgentData agentData){
-		this.agentData = agentData;
+		goals.add(agentData);
 	}
 	
 	@Override
-	public AgentData goal() {
-		return this.agentData;
+	public List<AgentData> getGoals() {
+		return goals;
 	}
 	
 }

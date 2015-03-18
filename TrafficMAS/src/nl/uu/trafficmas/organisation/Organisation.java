@@ -69,6 +69,7 @@ public class Organisation {
 				}
 				agentSanctions.get(ad.id).add(sanction);
 				// remove instantiation when sanctioned.
+				// TODO: also get this to agent
 				agentNormInst.get(ni.agentID).remove(ni);
 			}
 		}

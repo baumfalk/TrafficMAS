@@ -126,7 +126,7 @@ public class TrafficMASController {
 	 * @throws Exception 
 	 */
 	public void run(DataModel dataModel, SimulationModel simulationModel, TrafficView view) throws Exception {
-		int i = 1;
+		int i = 0;
 		view.addMessage("Starting main loop");
 		while(i++ < masData.simulationLength) {
 			doStep(simulationModel, view, i);
@@ -137,6 +137,9 @@ public class TrafficMASController {
 
 	public void doStep(SimulationModel simulationModel, TrafficView view, int i)
 			throws Exception {
+		
+		if(i == 205)
+			System.out.println("we're here.");
 		long start_time = System.nanoTime();
 		long total_start_time = start_time;
 		StateData simulationStateData = TrafficMASController.nextSimulationState(simulationModel);
@@ -235,7 +238,7 @@ public class TrafficMASController {
 				System.out.println("NORM INST");
 			}
 			
-			System.out.println(agent + "\n\t id:" + agent.agentID + "\n\t sanc:" + agentSanc + "\n\t int:"+agentInst+"\n\t clear"+agentClearInst+"\n\n");
+			//System.out.println(agent + "\n\t id:" + agent.agentID + "\n\t sanc:" + agentSanc + "\n\t int:"+agentInst+"\n\t clear"+agentClearInst+"\n\n");
 			if(!(agent instanceof SUMODefaultAgent)){
 				actions.put(agent, agent.doAction(currentTime,agentSanc,agentInst,agentClearInst));
 			}

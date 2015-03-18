@@ -10,11 +10,10 @@ import nl.uu.trafficmas.norm.SanctionType;
 import nl.uu.trafficmas.roadnetwork.Node;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
-import de.tudresden.ws.container.SumoColor;
 
-public class SUMODefaultAgent extends Agent implements ISumoColor {
+public abstract class BasicAgent extends Agent {
 
-	public SUMODefaultAgent(String agentID, Node goalNode, Route route,
+	public BasicAgent(String agentID, Node goalNode, Route route,
 			RoadNetwork roadNetwork, int goalArrivalTime, double maxSpeed,
 			double maxComfySpeed) {
 		super(agentID, goalNode, route, roadNetwork, goalArrivalTime, maxSpeed,
@@ -22,24 +21,34 @@ public class SUMODefaultAgent extends Agent implements ISumoColor {
 	}
 
 	@Override
-	public SumoColor getColor() {
-		return new SumoColor(255,255,0,255);
-	}
-
-	@Override
 	protected Map<SanctionType, Double> sanctionTypeIntensity(Set<SanctionType> sanctionsTypes,
 			List<Sanction> currentSanctionList) {
-
 		Map<SanctionType,Double> sanctionTypesIntensity = new HashMap<SanctionType,Double>();
+		double intensity = 0;
 		for(SanctionType st : sanctionsTypes) {
-			sanctionTypesIntensity.put(st, 0.0);
+			switch(st) {
+			case LowFine:
+				intensity = -1;
+				break;
+			case HighFine:
+				intensity = -2;
+				break;	
+			case InfiniteFine:
+				intensity = Double.NEGATIVE_INFINITY;
+				break;
+			}
+			sanctionTypesIntensity.put(st, intensity);
 		}
+		
 		return sanctionTypesIntensity;
 	}
 
+
 	@Override
 	protected double calculateTimeUtility(double time) {
-		return 0;
-	}
 
+		double utility = (double) (this.getGoalArrivalTime() / (time));
+
+		return utility;
+	}
 }

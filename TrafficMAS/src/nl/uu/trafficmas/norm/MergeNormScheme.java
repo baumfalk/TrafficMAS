@@ -26,6 +26,7 @@ public class MergeNormScheme extends NormScheme {
 	private Set<String> tickedAgents;
 	private static List<Sensor> sensors;
 	public static final double TIME_BETWEEN_CARS = 2.5;
+	private static final double PRECISION = 100;
 	
 
 	/**
@@ -124,7 +125,9 @@ public class MergeNormScheme extends NormScheme {
 			e.printStackTrace();
 		}
 		ni = new MergeNormInstantiation(this, currentCar.id);
-		ni.setSpeed(lastSpeed);
+		double correctedLastSpeed = Math.round(lastSpeed*PRECISION)/PRECISION;
+		System.out.println("speed:" +lastSpeed +" correctedSpeed: "+ correctedLastSpeed);
+		ni.setSpeed(correctedLastSpeed);
 		normInstList.add(ni);
 		return prevCarArrivalTimeMergePoint;
 	}
@@ -276,8 +279,10 @@ public class MergeNormScheme extends NormScheme {
 		return sensors;
 	}
 
+
 	@Override
-	public AgentData goal() {
+	public List<AgentData> getGoals() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 

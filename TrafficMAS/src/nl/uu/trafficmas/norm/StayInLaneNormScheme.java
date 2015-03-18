@@ -74,16 +74,15 @@ public class StayInLaneNormScheme extends NormScheme {
 	}
 
 	@Override
-	public AgentData goal() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public boolean deadline(Map<String, AgentData> currentOrgKnowledge,
 			int currentTime) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public List<AgentData> getGoals() {
+		return null;
 	}
 
 }

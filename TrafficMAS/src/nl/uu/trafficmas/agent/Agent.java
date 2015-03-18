@@ -44,56 +44,6 @@ public abstract class Agent extends AgentPhysical {
 	public final static double acceleration = 1;
 	public final static double deceleration = -3;
 	
-	/**
-	 * Calculates and returns the Utility according to 'arrivalTime' and 'sanctionList'
-	 * @param time
-	 * @param sanctionsAndDistance
-	 * @return a double value that is a value between and including 0.0 and 1.0.
-	 */
-	public double utility(double time, List<Entry<Sanction, Double>> sanctionsAndDistance, List<Sanction> currentSanctionList) {
-		double utility = 0;
-		if(Math.round(time) == Math.round(this.getGoalArrivalTime()) && sanctionsAndDistance == null) {
-			utility = 1;
-		} else{
-			//to prevent division by zero
-			if(time==0) {
-				time = 1;
-			}
-			
-			Set<SanctionType> sanctions = new HashSet<SanctionType>();
-			for(Entry<Sanction, Double> e : sanctionsAndDistance) {
-				sanctions.add(e.getKey().sanctionType);
-			}
-			
-			double timeUtility = calculateTimeUtility(time);
-			Map<SanctionType,Double> sanctionIntensity = sanctionIntensity(sanctions, currentSanctionList);
-			
-			double sanctionUtility = calculateSanctionUtility(sanctionsAndDistance,sanctionIntensity);
-			
-			utility = timeUtility + sanctionUtility;
-		}
-		
-		return Math.max(0,Math.min(1, utility));
-	}
-	
-	private double calculateSanctionUtility(
-			List<Entry<Sanction, Double>> sanctionsAndDistance,
-			Map<SanctionType, Double> sanctionsIntensity) {
-		// TODO Auto-generated method stub
-		double sum = 0;
-		
-		for(Entry<Sanction, Double> e : sanctionsAndDistance) {
-			Double sanctionIntensity = sanctionsIntensity.get(e.getKey().sanctionType);
-			sum += sanctionIntensity*e.getValue(); // TODO: try different functions?
-		}
-		
-		return sum;
-	}
-
-	protected abstract double calculateTimeUtility(double time);
-
-	protected abstract Map<SanctionType, Double> sanctionIntensity(Set<SanctionType> sanctionsTypes, List<Sanction> currentSanctionList);
-
 	public Agent(String agentID,Node goalNode,Route route, RoadNetwork roadNetwork, int goalArrivalTime, double maxSpeed, double maxComfySpeed){
 		super(agentID);
 		this.goalNode 					= goalNode;
@@ -112,8 +62,7 @@ public abstract class Agent extends AgentPhysical {
 		currentSanctionList = new ArrayList<Sanction>();
 		currentNormInstList	= new ArrayList<NormInstantiation>();	
 	}
-	
-	
+
 	/**
 	 * Returns, according to the utility, the best AgentAction object for a specific agent.
 	 * @param agentClearInst 
@@ -122,7 +71,7 @@ public abstract class Agent extends AgentPhysical {
 	 * @return an AgentAction with the highest utility, or if no advantage can be gained from performing an action, null.
 	 */
 	public AgentAction doAction(int currentTime, List<Sanction> agentSanc, List<NormInstantiation> agentInst, List<NormInstantiation> agentClearInst) {
-
+	
 		// add the achieved sanctions
 		if(agentSanc != null)
 			currentSanctionList.addAll(agentSanc);
@@ -145,6 +94,7 @@ public abstract class Agent extends AgentPhysical {
 		}
 		AgentData ad = this.getAgentData();
 		for(AgentAction action : AgentAction.values()) {
+			action.setUtility(0);
 			if(!action.isRelevant(this))
 				continue;
 			double time 			= 0;
@@ -157,13 +107,17 @@ public abstract class Agent extends AgentPhysical {
 			
 			vel = velocity;
 			time = action.getTime(currentTime,vel, leftLaneSpeed, dist, roadLength, maxComfySp, routeRemainderLength, leaderAgentSpeed, leaderDistance,this);
-
+	
 			List<Entry<Sanction, Double>> sanctionsAndDistance = null;
 			if(!currentNormInstList.isEmpty()) {
 				AgentData newAD = action.getNewAgentState(ad);
 				sanctionsAndDistance = Sanction.getSanctionsAndDistance(newAD,currentNormInstList);
+				//if(!sanctionsAndDistance.isEmpty())
+					//System.out.println(action +" " +sanctionsAndDistance.get(0).getValue());
+
 			}
 			double newUtility 				= utility(time, sanctionsAndDistance, currentSanctionList);
+			//System.out.println(action +" " +newUtility);
 			action.setUtility(newUtility);
 			actionList.add(action);
 		}
@@ -174,12 +128,62 @@ public abstract class Agent extends AgentPhysical {
 	        }
 	    });
 		bestAction = actionList.get(0);
-		
+		//System.out.println(bestAction);
 		if(bestAction instanceof DoNothingAction)
 			bestAction = null;
 		return bestAction;
 	}
+
+	/**
+	 * Calculates and returns the Utility according to 'arrivalTime' and 'sanctionList'
+	 * @param time
+	 * @param sanctionsAndDistance
+	 * @return a double value that is a value between and including 0.0 and 1.0.
+	 */
+	public double utility(double time, List<Entry<Sanction, Double>> sanctionsAndDistance, List<Sanction> currentSanctionList) {
+		double utility = 0;
+		if(Math.round(time) == Math.round(this.getGoalArrivalTime()) && sanctionsAndDistance == null) {
+			utility = 1;
+		} else{
+			//to prevent division by zero
+			if(time==0) {
+				time = 1;
+			}
+ 			double timeUtility = calculateTimeUtility(time);
+			double sanctionUtility = 0;
+			if(sanctionsAndDistance != null) {
+				Set<SanctionType> sanctions = new HashSet<SanctionType>();
+				for(Entry<Sanction, Double> e : sanctionsAndDistance) {
+					sanctions.add(e.getKey().sanctionType);
+				}
+				Map<SanctionType,Double> sanctionIntensity = sanctionTypeIntensity(sanctions, currentSanctionList);
+				
+				sanctionUtility = calculateSanctionUtility(sanctionsAndDistance,sanctionIntensity);
+			}
+			utility = timeUtility + sanctionUtility;
+		}
+		
+		return Math.max(0,Math.min(1, utility));
+	}
 	
+	private double calculateSanctionUtility(
+			List<Entry<Sanction, Double>> sanctionsAndDistance,
+			Map<SanctionType, Double> sanctionsIntensity) {
+		// TODO Auto-generated method stub
+		double sum = 0;
+		
+		for(Entry<Sanction, Double> e : sanctionsAndDistance) {
+			Double sanctionIntensity = sanctionsIntensity.get(e.getKey().sanctionType);
+			sum += sanctionIntensity*e.getValue(); // TODO: try different functions?
+		}
+		
+		return sum;
+	}
+
+	protected abstract double calculateTimeUtility(double time);
+
+	protected abstract Map<SanctionType, Double> sanctionTypeIntensity(Set<SanctionType> sanctionsTypes, List<Sanction> currentSanctionList);
+
 	public Node getGoalNode() {
 		return goalNode;
 	}

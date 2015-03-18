@@ -13,7 +13,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 
 import nl.uu.trafficmas.agent.Agent;
-import nl.uu.trafficmas.agent.AgentSumo;
+import nl.uu.trafficmas.agent.ISumoColor;
 import nl.uu.trafficmas.agent.SUMODefaultAgent;
 import nl.uu.trafficmas.agent.actions.AgentAction;
 import nl.uu.trafficmas.agent.actions.SumoAgentAction;
@@ -175,7 +175,7 @@ public class SimulationModelTraaS implements SimulationModel {
 				// Use SUMO default settings for this agent.
 				if(agent instanceof SUMODefaultAgent){
 					cmds.add(addAgentCommand(agent, agent.getRouteID(), agentPair.getValue(), laneIndex));
-					cmds.add(Vehicle.setColor(agent.agentID, ((AgentSumo) agent).getColor()));
+					cmds.add(Vehicle.setColor(agent.agentID, ((ISumoColor) agent).getColor()));
 					completeAgentMap.put(agent.agentID, agent);
 				} else{
 				// Otherwise for our agents, disable setSpeedMode, LaneChangeMode and set custom maxSpeed. 
@@ -183,7 +183,7 @@ public class SimulationModelTraaS implements SimulationModel {
 					cmds.add(Vehicle.setLaneChangeMode(agent.agentID, 0b1100000000));
 					cmds.add(Vehicle.setSpeedMode(agent.agentID, 0b00001));
 					cmds.add(Vehicle.setMaxSpeed(agent.agentID, agent.getMaxComfySpeed()));
-					cmds.add(Vehicle.setColor(agent.agentID, ((AgentSumo) agent).getColor()));
+					cmds.add(Vehicle.setColor(agent.agentID, ((ISumoColor) agent).getColor()));
 					completeAgentMap.put(agent.agentID, agent);
 				}
 				// TODO: think of a way to express max comfy speed in a different way

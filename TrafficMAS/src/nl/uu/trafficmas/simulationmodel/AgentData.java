@@ -49,7 +49,7 @@ public class AgentData implements Data {
 		double laneDist 	= laneDistance(agentData.laneIndex,goal.laneIndex);
 		double speedDist	= speedDistance(agentData.velocity, goal.velocity, acceleration, deceleration);
 		
-		return laneDist + speedDist;
+		return (laneDist + speedDist) * 0.1;
 	}
 
 	private static double speedDistance(double velocityAgent, double velocityGoal,
@@ -58,10 +58,10 @@ public class AgentData implements Data {
 		if(velocityAgent < 0 || velocityGoal < 0)
 			return 0;
 		
-		boolean shouldDecel = velocityAgent < velocityGoal;
+		boolean shouldDecel = velocityAgent > velocityGoal;
 		double accel = (shouldDecel) ? deceleration : acceleration;
 		
-		return Math.abs(velocityAgent - velocityGoal)/accel;
+		return Math.abs((velocityAgent - velocityGoal)/accel);
 	}
 
 	private static double laneDistance(int laneIndexAgent, int laneIndexGoal) {
