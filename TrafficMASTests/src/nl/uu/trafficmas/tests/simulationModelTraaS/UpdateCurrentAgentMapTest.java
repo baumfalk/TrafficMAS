@@ -55,7 +55,7 @@ public class UpdateCurrentAgentMapTest {
 				SimulationModelTraaS.getStateData(conn, timeStep);
 				currentAgentMap = SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, currentAgentMap, conn);
 			}
-			assertEquals(5, currentAgentMap.size());
+			assertEquals(6, currentAgentMap.size());
 			
 			
 		

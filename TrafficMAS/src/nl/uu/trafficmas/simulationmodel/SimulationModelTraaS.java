@@ -16,6 +16,7 @@ import nl.uu.trafficmas.agent.Agent;
 import nl.uu.trafficmas.agent.ISumoColor;
 import nl.uu.trafficmas.agent.SUMODefaultAgent;
 import nl.uu.trafficmas.agent.actions.AgentAction;
+import nl.uu.trafficmas.agent.actions.ChangeLaneAction;
 import nl.uu.trafficmas.agent.actions.SumoAgentAction;
 import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Lane;
@@ -24,6 +25,7 @@ import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import de.tudresden.sumo.cmd.Simulation;
 import de.tudresden.sumo.cmd.Vehicle;
 import de.tudresden.sumo.util.SumoCommand;
+import de.tudresden.ws.container.SumoColor;
 import de.tudresden.ws.container.SumoStringList;
 
 public class SimulationModelTraaS implements SimulationModel {
@@ -34,6 +36,7 @@ public class SimulationModelTraaS implements SimulationModel {
 	private Socket sa;
 	public static final int LOOK_AHEAD_DISTANCE = 100;
 	public static final int OVERTAKE_DURATION = 5;
+	public static final double RIGHT_LANE_PERCENTAGE = 0.9;
 	
 	public SimulationModelTraaS(String sumoBin, String sumocfg){
 		this.sumoBin = sumoBin;
@@ -176,7 +179,7 @@ public class SimulationModelTraaS implements SimulationModel {
 				// keep flipping coins until we get < 0.6 or until we run out of lanes.
 				double coinFlip = rng.nextDouble();
 				int randomLaneIndex = 0;
-				while(coinFlip >= 0.6 && randomLaneIndex+1 <= r.getLanes().length-1) {
+				while(coinFlip >= RIGHT_LANE_PERCENTAGE && randomLaneIndex+1 <= r.getLanes().length-1) {
 					randomLaneIndex++;
 					coinFlip = rng.nextDouble();
 				}
@@ -280,7 +283,13 @@ public class SimulationModelTraaS implements SimulationModel {
 			
 			Agent currentAgent = entry.getKey();
 			SumoAgentAction action = (SumoAgentAction) entry.getValue();
-		
+			
+			// TODO: remove this, changing color for debug purposes.
+			if(action instanceof ChangeLaneAction){
+				SumoCommand cmd = Vehicle.setColor(currentAgent.agentID, new SumoColor(255, 165, 0, 255));
+				cmdList.add(cmd);
+			}
+			
 			if(action == null)
 				continue;
 			cmdList.add(action.getCommand(currentAgent));
