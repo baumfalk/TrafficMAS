@@ -113,8 +113,8 @@ public abstract class Agent extends AgentPhysical {
 			if(!currentNormInstList.isEmpty()) {
 				AgentData newAD = action.getNewAgentState(ad);
 				sanctionsAndDistance = Sanction.getSanctionsAndDistance(newAD,currentNormInstList);
-				if(!sanctionsAndDistance.isEmpty())
-					System.out.println(action +" " +sanctionsAndDistance.get(0).getValue());
+				//if(!sanctionsAndDistance.isEmpty())
+				//	System.out.println(action +" " +sanctionsAndDistance.get(0).getValue());
 
 			}
 			double newUtility 				= utility(time, sanctionsAndDistance, currentSanctionList);

@@ -36,7 +36,7 @@ public class SimulationModelTraaS implements SimulationModel {
 	private Socket sa;
 	public static final int LOOK_AHEAD_DISTANCE = 100;
 	public static final int OVERTAKE_DURATION = 5;
-	public static final double RIGHT_LANE_PERCENTAGE = 0.9;
+	public static final double RIGHT_LANE_RATIO = 1;
 	
 	public SimulationModelTraaS(String sumoBin, String sumocfg){
 		this.sumoBin = sumoBin;
@@ -179,7 +179,7 @@ public class SimulationModelTraaS implements SimulationModel {
 				// keep flipping coins until we get < 0.6 or until we run out of lanes.
 				double coinFlip = rng.nextDouble();
 				int randomLaneIndex = 0;
-				while(coinFlip >= RIGHT_LANE_PERCENTAGE && randomLaneIndex+1 <= r.getLanes().length-1) {
+				while(coinFlip >= RIGHT_LANE_RATIO && randomLaneIndex+1 <= r.getLanes().length-1) {
 					randomLaneIndex++;
 					coinFlip = rng.nextDouble();
 				}
