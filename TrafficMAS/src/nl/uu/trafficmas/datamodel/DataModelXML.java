@@ -284,6 +284,20 @@ public class DataModelXML implements DataModel {
 	}
 	
 	@Override
+	public double getRightLaneRatio(){
+		return getRightLaneRatio(this.agentProfilesDoc);
+	}
+	
+	public static double getRightLaneRatio(Document agentProfileDoc){
+		NamedNodeMap attributes = agentProfileDoc.getElementsByTagName("agents").item(0).getAttributes();
+		String rightLaneRatioString = "-1";
+		if(attributes.getNamedItem("right-lane-ratio") != null){
+			rightLaneRatioString =attributes.getNamedItem("right-lane-ratio").getTextContent();
+		}
+		return Double.parseDouble(rightLaneRatioString);
+	}
+	
+	@Override
 	public LinkedHashMap<String, Double> getAgentSpawnProbability() {
 		return getAgentSpawnProbability(this.agentProfilesDoc);
 	}
@@ -629,9 +643,10 @@ public class DataModelXML implements DataModel {
 	 * @throws ParserConfigurationException 
 	 */
 	public static MASData getMASData(Document masDoc, Document agentProfilesDoc, Document nodeDoc, Document edgeDoc, Document sensorDoc, Document normDoc, Document orgDoc,Document routesDoc) {
-		int simulationLength 							= DataModelXML.simulationLength(masDoc);
-		boolean multipleRoutes 							= DataModelXML.getMultipleRoutesValue(agentProfilesDoc);
+		int simulationLength 								= DataModelXML.simulationLength(masDoc);
+		boolean multipleRoutes 								= DataModelXML.getMultipleRoutesValue(agentProfilesDoc);
 		LinkedHashMap<String, Double> spawnProbabilities 	= DataModelXML.getAgentSpawnProbability(agentProfilesDoc);
+		double rightLaneRatio								= DataModelXML.getRightLaneRatio(agentProfilesDoc);
 		HashMap<String, LinkedHashMap<AgentProfileType,Double>> routeAgentTypeSpawnProbabilityMap 	= DataModelXML.getRoutesAgentTypeSpawnProbabilities(agentProfilesDoc);
 		Map<String, Organisation> instantiatedOrganisations = null;
 		if(!(sensorDoc == null || normDoc == null || orgDoc == null)) {

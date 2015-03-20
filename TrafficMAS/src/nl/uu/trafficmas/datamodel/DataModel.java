@@ -50,22 +50,6 @@ public interface DataModel {
 	 */
 	public ArrayList<Route> getRoutes(RoadNetwork rn);
 	
-	
-	/*
-	/**
-	 * 
-	 * @return
-	 
-	public Map<String, NormScheme> getNormSchemes(Map<String, Sensor> sensors);
-	
-	/**
-	 * Returns a hashMap of all sensors in the road network. These sensors are stated in the XML files read by the Datamodel.
-	 * @param rn
-	 * @return a map containing with the key being the Id of the sensor, and the key being the sensor object itself.
-	 
-	public HashMap<String, Sensor> getSensors(RoadNetwork rn);
-	*/
-	
 	/**
 	 * 
 	 * @param sensorMap
@@ -90,4 +74,11 @@ public interface DataModel {
 	 * @return true if agents have individual spawn probabilities on each route.
 	 */
 	public boolean getMultipleRoutesValue();
+	
+	/**
+	 * Returns a double value which indicates the amount of agents that will spawn on the rightmost lane.
+	 * @return "-1" if no such value is found in the XML file.
+	 */
+	public double getRightLaneRatio();
+	
 }
