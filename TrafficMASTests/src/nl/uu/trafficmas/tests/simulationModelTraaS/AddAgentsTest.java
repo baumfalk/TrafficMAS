@@ -48,7 +48,7 @@ public class AddAgentsTest {
 
 		HashMap<Agent,Integer> agentPairList = TrafficMASController.instantiateAgents(masData, random, routes, rn);
 		
-		SimulationModelTraaS.addAgents(agentPairList, random, conn);
+		HashMap<String, Agent> completeAgentMap = SimulationModelTraaS.addAgents(agentPairList, random, -1, conn);
 
 		try {
 			int i = 0;

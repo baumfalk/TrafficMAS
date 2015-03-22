@@ -63,7 +63,7 @@ public class MergingTest {
 //		TrafficMASController.createAgent(routes.get(1), agentsAndTimes, agentProfileDistribution, rn, 20, .5);
 	
 		
-		HashMap<String, Agent> completeAgentMap = SimulationModelTraaS.addAgents(agentsAndTimes, random, conn);
+		HashMap<String, Agent> completeAgentMap = SimulationModelTraaS.addAgents(agentsAndTimes, random, -1, conn);
 		HashMap<String, Agent> currentAgentMap 	= SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, new LinkedHashMap<String, Agent>(), conn);
 		StateData stateData;
 		HashMap<Agent, AgentAction> actions;
