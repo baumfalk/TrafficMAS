@@ -139,7 +139,7 @@ public class DataModelXML implements DataModel {
 		// Add sensors to the road network.
 		HashMap<String,Sensor> sensorMap 		= getSensors(rn, sensorDoc);
 		rn.addSensors(sensorMap);		
-
+		
 		if(rn.validateRoadNetwork()){
 			return rn;
 		} else{
@@ -652,7 +652,7 @@ public class DataModelXML implements DataModel {
 		if(!(sensorDoc == null || normDoc == null || orgDoc == null)) {
 			instantiatedOrganisations = DataModelXML.instantiateOrganisations(nodeDoc, edgeDoc, sensorDoc, normDoc, orgDoc);
 		}
-		return new MASData(simulationLength, spawnProbabilities, multipleRoutes, routeAgentTypeSpawnProbabilityMap,instantiatedOrganisations);
+		return new MASData(simulationLength, spawnProbabilities, rightLaneRatio, multipleRoutes, routeAgentTypeSpawnProbabilityMap,instantiatedOrganisations);
 	}
 
 	@Override

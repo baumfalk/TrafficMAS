@@ -44,7 +44,7 @@ public class TrafficMASController {
 	private ArrayList<Route> routes;
 	private HashMap<String, Agent> currentAgentMap;
 	private MASData masData;
-		
+	
 	public TrafficMASController(DataModel dataModel,SimulationModel simulationModel, TrafficView view) {
 		this(dataModel,simulationModel,view,-1);
 	}
@@ -79,7 +79,7 @@ public class TrafficMASController {
 
 		this.organisations 	= masData.organisations;
 		view.addMessage("Initialized organisations");
-
+		
 		//////////////////////
 		// setup simulation //
 		//////////////////////
@@ -263,7 +263,7 @@ public class TrafficMASController {
 		simulationModel.initializeWithOptions(optionValueMap);
 		// add the agents
 		
-		return simulationModel.addAgents(agentsAndTime, rng);
+		return simulationModel.addAgents(agentsAndTime, rng, masData.rightLaneRatio);
 	}
 	
 	/**

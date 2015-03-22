@@ -36,7 +36,6 @@ public class SimulationModelTraaS implements SimulationModel {
 	private Socket sa;
 	public static final int LOOK_AHEAD_DISTANCE = 100;
 	public static final int OVERTAKE_DURATION = 5;
-	public static final double RIGHT_LANE_RATIO = 1;
 	
 	public SimulationModelTraaS(String sumoBin, String sumocfg){
 		this.sumoBin = sumoBin;
@@ -151,8 +150,8 @@ public class SimulationModelTraaS implements SimulationModel {
 	}
 	
 	@Override
-	public HashMap<String, Agent> addAgents(HashMap<Agent, Integer> agentPairList, Random rng) {
-		return addAgents(agentPairList, rng, conn);
+	public HashMap<String, Agent> addAgents(HashMap<Agent, Integer> agentPairList, Random rng, double rightLaneRatio) {
+		return addAgents(agentPairList, rng, rightLaneRatio, conn);
 	}
 	
 	/**
@@ -162,9 +161,13 @@ public class SimulationModelTraaS implements SimulationModel {
 	 * @param conn
 	 * @return the HashMap containing all agents that will spawn in the simulation. 
 	 */
-	public static HashMap<String, Agent> addAgents(HashMap<Agent, Integer> agentPairList, Random rng, SumoTraciConnection conn){
+	public static HashMap<String, Agent> addAgents(HashMap<Agent, Integer> agentPairList, Random rng, double rightLaneRatio, SumoTraciConnection conn){
 		HashMap<String, Agent> completeAgentMap = new LinkedHashMap<String, Agent>();
 		ArrayList<SumoCommand> cmds = new ArrayList<>();
+		
+		if(rightLaneRatio == -1){
+			rightLaneRatio = 1;
+		}
 		
 		try {
 			for( Entry<Agent, Integer> agentPair : agentPairList.entrySet()){
@@ -179,7 +182,7 @@ public class SimulationModelTraaS implements SimulationModel {
 				// keep flipping coins until we get < 0.6 or until we run out of lanes.
 				double coinFlip = rng.nextDouble();
 				int randomLaneIndex = 0;
-				while(coinFlip >= RIGHT_LANE_RATIO && randomLaneIndex+1 <= r.getLanes().length-1) {
+				while(coinFlip >= rightLaneRatio && randomLaneIndex+1 <= r.getLanes().length-1) {
 					randomLaneIndex++;
 					coinFlip = rng.nextDouble();
 				}

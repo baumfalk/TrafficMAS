@@ -1,4 +1,4 @@
-<agents multiple-routes="true">
+<agents multiple-routes="true" right-lane-ratio="1">
    <route id="route0" spawn-probability=".6" HotShot="0" OldLady="0" Normal="1" SUMODefault="0"/>
    <route id="route1" spawn-probability=".3" HotShot="0" OldLady="0" Normal="1" SUMODefault="0"/>
   

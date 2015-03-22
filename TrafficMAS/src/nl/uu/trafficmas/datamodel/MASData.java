@@ -13,13 +13,17 @@ public class MASData {
 	public final boolean multipleRoutes;
 	public final HashMap<String, LinkedHashMap<AgentProfileType, Double>> routeAgentTypeSpawnDist;
 	public final Map<String, Organisation> organisations;
+	public final double rightLaneRatio;
 	
 	public MASData(int simulationLength, 
 			LinkedHashMap<String,Double> spawnProbabilities, 
+			double rightLaneRatio,
 			boolean multipleRoutes,
-			HashMap<String, LinkedHashMap<AgentProfileType, Double>> routeAgentTypeSpawnDist, Map<String, Organisation> organisations) {
+			HashMap<String, LinkedHashMap<AgentProfileType, Double>> routeAgentTypeSpawnDist, 
+			Map<String, Organisation> organisations) {
 		this.simulationLength 			= simulationLength;
 		this.spawnProbabilities 		= spawnProbabilities;
+		this.rightLaneRatio				= rightLaneRatio;
 		this.multipleRoutes 			= multipleRoutes;
 		this.routeAgentTypeSpawnDist 	= routeAgentTypeSpawnDist;
 		this.organisations				= organisations;
@@ -30,6 +34,7 @@ public class MASData {
 		StringBuilder sb = new StringBuilder();
 		sb.append("SimulationLength: "+simulationLength+"\r\n");
 		sb.append("spawnProbability: "+spawnProbabilities+"\r\n");
+		sb.append("rightLaneRatio: "+rightLaneRatio+"\r\n");
 		sb.append("multipleRoutes: "+multipleRoutes+"\r\n");
 		sb.append("AgentType Spawnprob per route"+routeAgentTypeSpawnDist+"\r\n");
 		return sb.toString();
