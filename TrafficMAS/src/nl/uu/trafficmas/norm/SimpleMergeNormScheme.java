@@ -26,6 +26,7 @@ public class SimpleMergeNormScheme extends NormScheme {
 	private Set<String> tickedAgents;
 	private static List<Sensor> sensors;
 	public static final double TIME_BETWEEN_CARS = 2.5;
+	public static final double DISTANCE_BETWEEN_CARS = 9;
 	private static final double PRECISION = 100;
 	
 
@@ -90,6 +91,7 @@ public class SimpleMergeNormScheme extends NormScheme {
 			double prevCarArrivalTimeMergePoint, AgentData currentCar, int currentTime) {
 		SimpleMergeNormInstantiation ni;
 		double lastSpeed;
+		double distanceSpeed = 0;
 		double lastCarMergePoint;
 		double distRemaining;
 		double acceleration;
@@ -105,7 +107,8 @@ public class SimpleMergeNormScheme extends NormScheme {
 			double travelTime = prevCarArrivalTimeMergePoint-currentTime;
 			double posAtArrivalTime = currentCar.velocity* (timeBetweenCars + travelTime)+ currentCar.position;
 			acceleration 			= (posAtArrivalTime < lastCarMergePoint) ? currentCar.acceleration : currentCar.deceleration;
-			lastSpeed 				= findBestSpeed(currentCar.velocity, acceleration, distRemaining, travelTime, timeBetweenCars );
+			lastSpeed 				= findBestSpeedTime(currentCar.velocity, acceleration, distRemaining, travelTime, timeBetweenCars );
+			distanceSpeed			= findBestSpeedDistance(currentCar.velocity, acceleration, distRemaining, currentTime, newPrevCarArrivalTimeMergePoint, DISTANCE_BETWEEN_CARS);
 			if(Double.isNaN(lastSpeed)) {
 				lastSpeed = vmax;
 			}
@@ -127,18 +130,23 @@ public class SimpleMergeNormScheme extends NormScheme {
 		}
 		ni = new SimpleMergeNormInstantiation(this, currentCar.id);
 		double correctedLastSpeed = Math.round(lastSpeed*PRECISION)/PRECISION;
+		double distanceCorrectedSpeed = Math.round(distanceSpeed*PRECISION)/PRECISION;
+		// TODO: Dynamicize
+		// If TIME_BETWEEN_CARS distance with this speed means that the gap between cars is less than 2 meter,
+		// Calculate new speed, which insures the 2 m minGap.
+		// Argh, also keep in mind that cars have a certain size, currently 7 m. So 9 m gap between the two positions.
+		if(TIME_BETWEEN_CARS*correctedLastSpeed < DISTANCE_BETWEEN_CARS){
+			ni.setSpeedAndLane(distanceCorrectedSpeed, 0);
+		}
 		ni.setSpeedAndLane(correctedLastSpeed, 0);
 		normInstList.add(ni);
 		return newPrevCarArrivalTimeMergePoint;
 	}
 
-	public static double findBestSpeed(double velocity, double acceleration,
+	public static double findBestSpeedTime(double velocity, double acceleration,
 			double distRemaining, double lastCarArrivalTimeMergePoint,
 			double timeBetweenCars) {
-		// TODO Auto-generated method stub
 		
-		// boostrap depending on if we need to brake or not
-		// between 0m/s or 200m/s
 		double vprime;
 		
 		double time = lastCarArrivalTimeMergePoint+timeBetweenCars;
@@ -158,6 +166,32 @@ public class SimpleMergeNormScheme extends NormScheme {
 		} else {
 			vprime = negResult;
 		}
+		
+		return vprime;
+	}
+	
+	public static double findBestSpeedDistance(double velocity, double acceleration,
+			double distRemaining, double currentTime, double lastCarArrivalTimeMergePoint,
+			double distanceBetweenCars) {
+		
+		double v 	= velocity;
+		double a 	= acceleration;
+		double m 	= distRemaining;
+		double t1	= currentTime;
+		double t2	= lastCarArrivalTimeMergePoint;
+		double t 	= t2 - t1;
+		double d	= distanceBetweenCars;
+		double vprime;
+		
+		double firstSqrt 		= (a*a*t*t);
+		double secndSqrt		= (2*a*d);
+		double thirdSqrt		= (2*acceleration*m);
+		double forthSqrt		= (2*a*t*v);
+		double afterSqrt		= (a*t+v);
+
+		double sqrt = firstSqrt+secndSqrt-thirdSqrt+forthSqrt;
+		
+		vprime = Math.sqrt(sqrt)+afterSqrt;
 		
 		return vprime;
 	}
