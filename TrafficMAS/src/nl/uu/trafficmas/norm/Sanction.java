@@ -17,7 +17,7 @@ public class Sanction implements InstitutionalState {
 		this.agentID	= agentID;
 	}
 	
-	public static List<Entry<Sanction, Double>> getSanctionsAndDistance(AgentData agentData, List<NormInstantiation> normInst) {
+	public static List<Entry<Sanction, Double>> getSanctionsAndDistance(AgentData agentData, List<NormInstantiation> normInst, int currentTime, int expectedExitTime) {
 		List<Entry<Sanction, Double>> sanctionsAndDistance = new ArrayList<Entry<Sanction, Double>>();
 		for(NormInstantiation ni : normInst) {
 			List<AgentData> normGoals = ni.getGoals();
@@ -31,10 +31,16 @@ public class Sanction implements InstitutionalState {
 			}
 			if(minDist > 0) {
 				Sanction s = ni.getSanction(agentData.id);
-				Entry<Sanction,Double> e = new AbstractMap.SimpleEntry<Sanction, Double>(s, minDist);
+				double delta = calculateDelta(minDist, currentTime, expectedExitTime);
+				Entry<Sanction,Double> e = new AbstractMap.SimpleEntry<Sanction, Double>(s, delta);
 				sanctionsAndDistance.add(e);
 			}
 		}
 		return sanctionsAndDistance;
+	}
+	
+	public static double calculateDelta(double distance, int currentTime, int expectedExitTime) {
+		int timeLeft = expectedExitTime - currentTime;
+		return Math.min(distance, timeLeft)/(timeLeft);
 	}
 }

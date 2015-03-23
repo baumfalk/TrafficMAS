@@ -150,7 +150,7 @@ public class TrafficMASController {
 		view.addMessage("Simulation timestep: "+simulationStateData.currentTimeStep);
 		view.addMessage("sim next state duration:"+difference+"ms");
 		view.addMessage("Number of agents in sim:"+simulationStateData.agentsData.size());
-
+		
 		this.updateMAS(simulationStateData); 
 		view.addMessage("Number of agents in MAS:"+currentAgentMap.size());
 

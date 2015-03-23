@@ -80,7 +80,8 @@ public abstract class Agent extends AgentPhysical {
 			currentNormInstList.removeAll(agentClearInst);
 		if(agentInst != null)
 			currentNormInstList.addAll(agentInst);
-		
+		if(this.agentID.equals("Agent 967"))
+			System.out.println("Why?");
 		// Only do an action if it improves our situation
 		AgentAction bestAction 	= null;
 		// Set currentRoadID value
@@ -112,9 +113,9 @@ public abstract class Agent extends AgentPhysical {
 			List<Entry<Sanction, Double>> sanctionsAndDistance = null;
 			if(!currentNormInstList.isEmpty()) {
 				AgentData newAD = action.getNewAgentState(ad);
-				sanctionsAndDistance = Sanction.getSanctionsAndDistance(newAD,currentNormInstList);
-				//if(!sanctionsAndDistance.isEmpty())
-				//	System.out.println(action +" " +sanctionsAndDistance.get(0).getValue());
+				sanctionsAndDistance = Sanction.getSanctionsAndDistance(newAD,currentNormInstList, currentTime, (int) Math.ceil(expectedArrivalTime));
+				if(!sanctionsAndDistance.isEmpty())
+					System.out.println(action +" " +sanctionsAndDistance.get(0).getValue());
 
 			}
 			double newUtility 				= utility(time, sanctionsAndDistance, currentSanctionList);
@@ -161,10 +162,10 @@ public abstract class Agent extends AgentPhysical {
 				
 				sanctionUtility = calculateSanctionUtility(sanctionsAndDistance,sanctionIntensity);
 			}
-			utility = timeUtility + sanctionUtility;
+			utility = timeUtility - sanctionUtility;
 		}
 		
-		return Math.max(0,Math.min(1, utility));
+		return utility;
 	}
 	
 	private double calculateSanctionUtility(

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on Mon Mar 23 12:43:58 2015 by SUMO netconvert Version 0.22.0
+<!-- generated on Fri Mar 20 15:35:38 2015 by SUMO netconvert Version 0.22.0
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
@@ -56,27 +56,27 @@
         <lane id=":node8_0_1" index="1" speed="42.00" length="0.10" shape="850.00,98.35 850.00,98.35"/>
     </edge>
 
-    <edge id="exit" from="node3" to="node4" priority="1">
+    <edge id="exit" from="node3" to="node4" priority="2">
         <lane id="exit_0" index="0" speed="42.00" length="1.00" shape="850.00,295.05 851.00,295.05"/>
         <lane id="exit_1" index="1" speed="42.00" length="1.00" shape="850.00,298.35 851.00,298.35"/>
     </edge>
-    <edge id="exit1" from="node8" to="node9" priority="1">
+    <edge id="exit1" from="node8" to="node9" priority="2">
         <lane id="exit1_0" index="0" speed="42.00" length="1.00" shape="850.00,95.05 851.00,95.05"/>
         <lane id="exit1_1" index="1" speed="42.00" length="1.00" shape="850.00,98.35 851.00,98.35"/>
     </edge>
-    <edge id="mainEnd" from="node2" to="node3" priority="1">
+    <edge id="mainEnd" from="node2" to="node3" priority="2">
         <lane id="mainEnd_0" index="0" speed="42.00" length="364.68" shape="485.32,295.05 850.00,295.05"/>
         <lane id="mainEnd_1" index="1" speed="42.00" length="364.68" shape="485.32,298.35 850.00,298.35"/>
     </edge>
-    <edge id="mainEnd1" from="node7" to="node8" priority="1">
+    <edge id="mainEnd1" from="node7" to="node8" priority="2">
         <lane id="mainEnd1_0" index="0" speed="42.00" length="364.68" shape="485.32,95.05 850.00,95.05"/>
         <lane id="mainEnd1_1" index="1" speed="42.00" length="364.68" shape="485.32,98.35 850.00,98.35"/>
     </edge>
-    <edge id="mainFront" from="node0" to="node2" priority="1">
+    <edge id="mainFront" from="node0" to="node2" priority="2">
         <lane id="mainFront_0" index="0" speed="42.00" length="483.65" shape="0.00,295.05 481.97,295.05"/>
         <lane id="mainFront_1" index="1" speed="42.00" length="483.65" shape="0.00,298.35 485.32,298.35"/>
     </edge>
-    <edge id="mainFront1" from="node5" to="node7" priority="1">
+    <edge id="mainFront1" from="node5" to="node7" priority="2">
         <lane id="mainFront1_0" index="0" speed="42.00" length="483.65" shape="0.00,95.05 481.97,95.05"/>
         <lane id="mainFront1_1" index="1" speed="42.00" length="483.65" shape="0.00,98.35 485.32,98.35"/>
     </edge>

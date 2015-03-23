@@ -28,13 +28,13 @@ public abstract class BasicAgent extends Agent {
 		for(SanctionType st : sanctionsTypes) {
 			switch(st) {
 			case LowFine:
-				intensity = -1;
+				intensity = 1;
 				break;
 			case HighFine:
-				intensity = -2;
+				intensity = 2;
 				break;	
 			case InfiniteFine:
-				intensity = Double.NEGATIVE_INFINITY;
+				intensity = Double.MAX_VALUE;
 				break;
 			}
 			sanctionTypesIntensity.put(st, intensity);

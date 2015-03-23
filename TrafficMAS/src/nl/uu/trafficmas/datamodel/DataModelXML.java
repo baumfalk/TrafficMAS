@@ -452,11 +452,10 @@ public class DataModelXML implements DataModel {
 	
 	public static Map<String, NormScheme> getNormSchemes(Map<String,Sensor> sensors, Document normsDoc) {
 		Map<String,NormScheme> normSchemes = new HashMap<String,NormScheme>();
-		List<Sensor> normSensors = new ArrayList<Sensor>();
 		NodeList normSchemeList = normsDoc.getElementsByTagName("norm_scheme");
 		
 		for (int i = 0; i < normSchemeList.getLength(); i++) {
-			
+			List<Sensor> normSensors = new ArrayList<Sensor>();
 			org.w3c.dom.Node n = normSchemeList.item(i);
 			if (n.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
 				Element element = (Element) n;
@@ -481,15 +480,7 @@ public class DataModelXML implements DataModel {
 					attributes.put(childNode.getNodeName(),childNode.getTextContent());
 				}
 				
-				SanctionType sanctionType = null;
-				switch(sanctionStr){
-				case "LowFine":
-					sanctionType = SanctionType.LowFine;
-					break;
-				case "HighFine":
-					sanctionType = SanctionType.HighFine;
-					break;
-				}
+				SanctionType sanctionType = SanctionType.valueOf(sanctionStr);
 				
 				//TODO: Apply this to different norm schemes using "classname" param in xml.
 				NormScheme normScheme = null;
@@ -594,8 +585,6 @@ public class DataModelXML implements DataModel {
 		Map<String,NormScheme> normSchemeMap	= getNormSchemes(sensorMap, normDoc);
 		
 		
-		ArrayList<NormScheme> normSchemes = new ArrayList<NormScheme>();
-		ArrayList<Sensor> sensors = new ArrayList<Sensor>();
 		NodeList organisationList = orgDoc.getElementsByTagName("organisation");
 		
 		for (int i = 0; i < organisationList.getLength(); i++) {
@@ -604,13 +593,15 @@ public class DataModelXML implements DataModel {
 			if (nNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
 				Element element = (Element) nNode;
 				String orgId = element.getAttribute("id");
+				ArrayList<NormScheme> normSchemes = new ArrayList<NormScheme>();
+				ArrayList<Sensor> sensors = new ArrayList<Sensor>();
 
 				NodeList sensorList = element.getElementsByTagName("sensor");
 				for (int j = 0; j < sensorList.getLength(); j++) {
 					String sensId = sensorList.item(j).getAttributes().getNamedItem("id").getTextContent();
 					Sensor sensor = sensorMap.get(sensId);
 					sensors.add(sensor);
-				}	
+				}
 				
 				NodeList normsSensorList = element.getElementsByTagName("norm");
 				for (int k = 0; k < normsSensorList.getLength(); k++) {

@@ -1,5 +1,5 @@
 <norm_schemes>
-    <norm_scheme id="norm1" classname="MergeNormScheme" sanction="LowFine" >
+    <norm_scheme id="norm1" classname="SimpleMergeNormScheme" sanction="LowFine" >
     	<sensor id="sens2" />
     	<sensor id="sens1" />
     	<sensor id="sens3" />

@@ -49,7 +49,7 @@ public class AgentData implements Data {
 		double laneDist 	= laneDistance(agentData.laneIndex,goal.laneIndex);
 		double speedDist	= speedDistance(agentData.velocity, goal.velocity, acceleration, deceleration);
 		
-		return (laneDist + speedDist) * 0.1;
+		return (laneDist + speedDist);
 	}
 
 	private static double speedDistance(double velocityAgent, double velocityGoal,

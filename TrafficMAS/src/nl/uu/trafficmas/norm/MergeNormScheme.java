@@ -22,6 +22,7 @@ public class MergeNormScheme extends NormScheme {
 	private Sensor mainSensor;
 	private Sensor rampSensor;
 	public Sensor mergeSensor;
+	private Sensor main_1Sensor;
 	private double LastCarMergePointTime 	= -1;
 	private Set<String> tickedAgents;
 	private static List<Sensor> sensors;
@@ -41,6 +42,8 @@ public class MergeNormScheme extends NormScheme {
 		mainSensor 	= sensorList.get(0);
 		rampSensor 	= sensorList.get(1);
 		mergeSensor	= sensorList.get(2);
+		main_1Sensor= sensorList.get(3);
+		
 		tickedAgents= new HashSet<String>();
 	}
 
@@ -85,6 +88,17 @@ public class MergeNormScheme extends NormScheme {
 		return normInstList;
 	}
 
+	private boolean canChangeLane(AgentData agentData){
+		List<AgentData> nextLaneList = main_1Sensor.readSensor();
+		for(AgentData ad : nextLaneList){
+			// TODO: Improve and remove these hardcoded values, something with average speed of next lane.  
+			if((ad.position < agentData.position -10) && (ad.position > agentData.position - 50) ){
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	private double carNormInstantiation(RoadNetwork rn, double vmax,
 			double timeBetweenCars, List<NormInstantiation> normInstList,
 			double prevCarArrivalTimeMergePoint, AgentData currentCar, int currentTime) {
@@ -127,7 +141,7 @@ public class MergeNormScheme extends NormScheme {
 		}
 		ni = new MergeNormInstantiation(this, currentCar.id);
 		double correctedLastSpeed = Math.round(lastSpeed*PRECISION)/PRECISION;
-		// TODO: Find reasonable value.
+		// TODO: Add condition: is able to change lane at this moment.
 		if( correctedLastSpeed < vmax*0.5 && rn.getRoadFromID(currentCar.roadID).laneList.size() != 1){
 			ni.setLaneIndex(1);
 			newPrevCarArrivalTimeMergePoint = prevCarArrivalTimeMergePoint;
@@ -255,7 +269,7 @@ public class MergeNormScheme extends NormScheme {
 	public boolean checkCondition(Map<String, AgentData> currentOrgKnowledge) {
 		for(Entry<String, AgentData> entry : currentOrgKnowledge.entrySet()){
 			// TODO: replace arbitratry hardcoded 90%.
-			String str = rampSensor.lane.getRoadID();
+			//String str = rampSensor.lane.getRoadID();
 			boolean posRampTriggered = entry.getValue().position > (rampSensor.position + rampSensor.length*.9);
 			boolean rampSensorTriggered = entry.getValue().roadID.equals(rampSensor.lane.getRoadID()) && posRampTriggered;
 			boolean posMainTriggered = entry.getValue().position > (mainSensor.position + mainSensor.length*.9);
