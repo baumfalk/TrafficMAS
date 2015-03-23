@@ -48,7 +48,7 @@ public class TrafficMASController {
 	public TrafficMASController(DataModel dataModel,SimulationModel simulationModel, TrafficView view) {
 		this(dataModel,simulationModel,view,-1);
 	}
-	
+
 	public TrafficMASController(DataModel dataModel,SimulationModel simulationModel, TrafficView view, long seed) {
 		if(seed == -1) {
 			this.rng = new Random();
@@ -247,6 +247,8 @@ public class TrafficMASController {
 		return dataModel.getMASData();
 	}
 	
+	
+	
 	/**
 	 * Sets up the simulation. The SUMO application is started via TraaS with certain options and all SumoCommands to add Agents are sent.
 	 * @param masData
@@ -254,12 +256,14 @@ public class TrafficMASController {
 	 * @param agentsAndTime
 	 * @return a map of all Agent objects that will act in the simulation.
 	 */
+	
 	public static HashMap<String,Agent> setupSimulation(MASData masData, SimulationModel simulationModel, HashMap<Agent,Integer> agentsAndTime, Random rng) {
 		// start the simulation
 		HashMap<String, String> optionValueMap = new LinkedHashMap<String, String>();
 		optionValueMap.put("e", Integer.toString(masData.simulationLength));
 		optionValueMap.put("start", "1");
 		optionValueMap.put("quit-on-end", "1");
+		
 		simulationModel.initializeWithOptions(optionValueMap);
 		// add the agents
 		

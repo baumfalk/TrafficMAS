@@ -1,12 +1,16 @@
 <organisations>
     <organisation id="org1">
         <sensors>
-            <sensor id="main_0MergeS" />
-            <sensor id="ramp_0MergeS" />
-            <sensor id="control_0MergeS" />
+            <sensor id="sens1" />
+            <sensor id="sens2" />
+            <sensor id="sens3" />
+            <sensor id="sens4" />
+            <sensor id="sens5" />
+            <sensor id="sens6" />
         </sensors>
         <norms>
-			<norm id="norm1" />   
+			<norm id="norm1" />    
+			<norm id="norm2" />       
         </norms>
     </organisation>
 </organisations>
