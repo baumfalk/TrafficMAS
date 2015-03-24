@@ -1,3 +1,4 @@
+import nl.uu.trafficmas.controller.Statistics;
 import nl.uu.trafficmas.controller.TrafficMASController;
 import nl.uu.trafficmas.datamodel.DataModel;
 import nl.uu.trafficmas.datamodel.DataModelXML;
@@ -33,7 +34,8 @@ public class TrafficMAS {
 		System.out.println("init time:" + difference + "ms");
 		
 		start_time = System.nanoTime();
-		trafficMas.run(dataModel, simModel, view);
+		Statistics s = trafficMas.run(dataModel, simModel, view);
+		s.save(dir,"LOL");
 		end_time = System.nanoTime();
 		difference = (end_time - start_time)/1e6;
 		System.out.println("run time:" + difference + "ms");

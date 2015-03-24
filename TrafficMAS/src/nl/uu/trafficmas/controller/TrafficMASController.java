@@ -44,6 +44,8 @@ public class TrafficMASController {
 	private ArrayList<Route> routes;
 	private HashMap<String, Agent> currentAgentMap;
 	private MASData masData;
+	private Statistics stats;
+	
 	
 	public TrafficMASController(DataModel dataModel,SimulationModel simulationModel, TrafficView view) {
 		this(dataModel,simulationModel,view,-1);
@@ -55,6 +57,8 @@ public class TrafficMASController {
 		} else {
 			this.rng = new Random(seed);
 		}
+		
+		
 		view.addMessage("Initializing MAS with seed: "+ seed);
 		
 		///////////////
@@ -62,6 +66,9 @@ public class TrafficMASController {
 		///////////////
 		this.masData 		= this.readData(dataModel);
 		view.addMessage(masData.toString());
+		
+		
+		stats = new Statistics(this.masData.simulationLength);
 		///////////////
 		// setup mas //
 		///////////////
@@ -123,9 +130,10 @@ public class TrafficMASController {
 	 * @param dataModel
 	 * @param simulationModel
 	 * @param view
+	 * @return 
 	 * @throws Exception 
 	 */
-	public void run(DataModel dataModel, SimulationModel simulationModel, TrafficView view) throws Exception {
+	public Statistics run(DataModel dataModel, SimulationModel simulationModel, TrafficView view) throws Exception {
 		int i = 0;
 		view.addMessage("Starting main loop");
 		while(i++ < masData.simulationLength) {
@@ -133,6 +141,7 @@ public class TrafficMASController {
 		}
 		
 		TrafficMASController.cleanUp(dataModel, simulationModel, view);
+		return stats;
 	}
 
 	public void doStep(SimulationModel simulationModel, TrafficView view, int i)
@@ -141,6 +150,8 @@ public class TrafficMASController {
 		long start_time = System.nanoTime();
 		long total_start_time = start_time;
 		StateData simulationStateData = TrafficMASController.nextSimulationState(simulationModel);
+		stats.addStateData(simulationStateData,i);
+		
 		TrafficMASController.verifyState(simulationStateData, this.roadNetwork);
 		view.addMessage("+++++++++++++++++++++");
 		long end_time = System.nanoTime();
@@ -154,7 +165,7 @@ public class TrafficMASController {
 		this.updateMAS(simulationStateData); 
 		view.addMessage("Number of agents in MAS:"+currentAgentMap.size());
 
-		HashMap<Agent,AgentAction> agentActions = nextMASState(simulationStateData.currentTimeStep/1000,currentAgentMap,organisations,roadNetwork);
+		HashMap<Agent,AgentAction> agentActions = nextMASState(simulationStateData.currentTimeStep/1000,currentAgentMap,organisations,roadNetwork, stats);
 		//view.addMessage(agentActions.toString());
 		start_time = System.nanoTime();
 		TrafficMASController.updateSimulation(simulationModel, agentActions);
@@ -197,15 +208,20 @@ public class TrafficMASController {
 	/**
 	 * Calculates the next step for the MAS. Organisations execute their actions, Agent actions are sent to SUMO.
 	 * Not yet completely implemented.	 
+	 * @param stats TODO
 	 * @return 
 	 */
-	public static HashMap<Agent, AgentAction> nextMASState(int currentTime, Map<String,Agent>currentAgentMap, Map<String, Organisation> organisations2, RoadNetwork roadNetwork) {
+	public static HashMap<Agent, AgentAction> nextMASState(int currentTime, Map<String,Agent>currentAgentMap, Map<String, Organisation> organisations2, RoadNetwork roadNetwork, Statistics stats) {
 		//TODO: Organization sanctions
 		
 		Map<String,List<Sanction>> sanctions 				= TrafficMASController.getOrgSanctions(organisations2);
+		if(stats != null)
+			stats.addSanctions(currentTime, sanctions);
 		Map<String,List<NormInstantiation>> normInst		= TrafficMASController.getNormInstantiations(organisations2,roadNetwork);
+		stats.addNewNorms(currentTime, normInst);
+		
 		Map<String,List<NormInstantiation>> clearedNormInst	= TrafficMASController.getClearedNormInst(organisations2);
-	
+		stats.addRemovedNorms(currentTime, clearedNormInst);
 		return  TrafficMASController.getAgentActions(currentTime, currentAgentMap,sanctions,normInst,clearedNormInst);
 	}
 

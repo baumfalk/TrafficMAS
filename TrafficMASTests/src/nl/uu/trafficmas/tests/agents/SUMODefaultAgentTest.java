@@ -62,7 +62,7 @@ public class SUMODefaultAgentTest {
 				currentAgentMap 		= TrafficMASController.updateAgents(completeAgentMap, rn, stateData);
 				rn						= TrafficMASController.updateRoadNetwork(rn, stateData);
 				orgsMap					= TrafficMASController.updateOrganisations(orgsMap, stateData);
-				actions					= TrafficMASController.nextMASState(i, currentAgentMap, orgsMap, rn);
+				actions					= TrafficMASController.nextMASState(i, currentAgentMap, orgsMap, rn, null);
 				SimulationModelTraaS.simulateAgentActions(actions, conn);
 			}
 		} catch (Exception e) {

@@ -1,5 +1,6 @@
 import java.util.Random;
 
+import nl.uu.trafficmas.controller.Statistics;
 import nl.uu.trafficmas.controller.TrafficMASController;
 import nl.uu.trafficmas.datamodel.DataModel;
 import nl.uu.trafficmas.datamodel.DataModelXML;
@@ -28,7 +29,7 @@ public class TrafficMASExperiments {
 			DataModel dataModel 			= new DataModelXML(dir,masXML);
 			SimulationModel simModel 		= new SimulationModelTraaS(sumoBin,dir+sumoXML);
 			TrafficView view 				= new DummyView();
-			boolean noDelay = true;
+
 			TrafficMASController trafficMas	= new TrafficMASController(dataModel, simModel, view,seed);
 			long end_time = System.nanoTime();
 			double difference = (end_time - start_time)/1e6;
@@ -37,9 +38,11 @@ public class TrafficMASExperiments {
 			
 			start_time = System.nanoTime();
 			try {
-			trafficMas.run(dataModel, simModel, view);
+				Statistics stats = trafficMas.run(dataModel, simModel, view);
+				stats.save(dir,"Output "+(i+1));
 			} catch(Exception exception) {
 				exception.printStackTrace();
+				i--;
 			}
 			end_time = System.nanoTime();
 			difference = (end_time - start_time)/1e6;
