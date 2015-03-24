@@ -1,8 +1,10 @@
 package nl.uu.trafficmas.norm;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Sensor;
@@ -13,12 +15,13 @@ public class SimpleMaxSpeedNormScheme extends NormScheme {
 
 	private double maxSpeed;
 	private List<AgentData> goals;
-
+	public Set<String> agentNorms;
 	public SimpleMaxSpeedNormScheme(String id, SanctionType sanctionType,
 			List<Sensor> sensorList) {
 		super(id, sanctionType, sensorList);
 		maxSpeed = 4;
 		goals = new ArrayList<AgentData>();
+		agentNorms = new HashSet<String>();
 		// TODO Auto-generated constructor stub
 	}
 
@@ -28,9 +31,11 @@ public class SimpleMaxSpeedNormScheme extends NormScheme {
 			Map<String, AgentData> currentOrgKnowledge) {
 		
 		List<NormInstantiation> list = new ArrayList<NormInstantiation>();
-		for(Sensor s : sensorList) {
-			for(AgentData agentData : s.readSensor()) {
+		Sensor s = sensorList.get(0);
+		for(AgentData agentData : s.readSensor()) {
+			if(!agentNorms.contains(agentData.id)) {
 				list.add(new SimpleMaxSpeedNormInstantiation(this, agentData.id));
+				agentNorms.add(agentData.id);
 			}
 		}
 		
@@ -40,6 +45,7 @@ public class SimpleMaxSpeedNormScheme extends NormScheme {
 	
 	@Override
 	public boolean checkCondition(Map<String, AgentData> currentOrgKnowledge) {
+		
 		return true;
 	}
 
@@ -53,7 +59,7 @@ public class SimpleMaxSpeedNormScheme extends NormScheme {
 	@Override
 	public boolean deadline(Map<String, AgentData> currentOrgKnowledge,
 			int currentTime) {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 	

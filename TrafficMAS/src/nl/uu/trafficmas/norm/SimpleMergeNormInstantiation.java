@@ -25,7 +25,7 @@ public class SimpleMergeNormInstantiation extends NormInstantiation {
 		if(!((SimpleMergeNormScheme)this.ns).mergeSensor.readSensor().contains(ad))
 			return false;
 		
-		return (Math.abs(ad.velocity - speed) > 0.001 || (ad.laneIndex != laneIndex)) ;
+		return (Math.abs(ad.velocity - speed) > 0.009 || (ad.laneIndex != laneIndex)) ;
 	}
 
 	@Override

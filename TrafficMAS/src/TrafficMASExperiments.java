@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import nl.uu.trafficmas.controller.Statistics;
@@ -24,6 +26,7 @@ public class TrafficMASExperiments {
 		Random rand = new Random();
 		long seed = rand.nextLong();
 
+		List<Statistics> statList = new ArrayList<>();
 		for(int i = 0; i < numberOfRuns; i++) {
 			long start_time = System.nanoTime();
 			DataModel dataModel 			= new DataModelXML(dir,masXML);
@@ -39,6 +42,7 @@ public class TrafficMASExperiments {
 			start_time = System.nanoTime();
 			try {
 				Statistics stats = trafficMas.run(dataModel, simModel, view);
+				statList.add(stats);
 				stats.save(dir,"Output "+(i+1));
 			} catch(Exception exception) {
 				exception.printStackTrace();
@@ -50,5 +54,8 @@ public class TrafficMASExperiments {
 			
 			seed = rand.nextLong();
 		}
+		
+		Statistics aggregateStatistics = Statistics.aggregateStatistics(statList);
+		aggregateStatistics.simpleSave(dir, "AggregateOf"+numberOfRuns);
 	}
 }

@@ -16,25 +16,25 @@ import nl.uu.trafficmas.simulationmodel.StateData;
 
 public class Statistics {
 	
-	List<Map<String, List<Sanction>>> sanctionsLog;
-	List<Map<String, List<NormInstantiation>>> newNormsLog;
-	List<Map<String, List<NormInstantiation>>> clearedNormsLog;
-	List<StateData> stateDataLog;
-	List<Double> averageSpeedPerTick;
-	List<Double> averageGapPerTick;
-	List<Integer> departuresPerTick;
+	public List<Map<String, List<Sanction>>> sanctionsLog;
+	public List<Map<String, List<NormInstantiation>>> newNormsLog;
+	public List<Map<String, List<NormInstantiation>>> clearedNormsLog;
+	public List<StateData> stateDataLog;
+	public List<Double> averageSpeedPerTick;
+	public List<Double> averageGapPerTick;
+	public List<Integer> departuresPerTick;
 
-	double averageSpeedInNetwork;
+	public double averageSpeedInNetwork;
 	
 	// total number of vehicles that have left the network/simulation time
-	double throughput; // average number of vehicles leaving network per minute
+	public double throughput; // average number of vehicles leaving network per minute
 	// every tick:
 	// add all gap distances of all cars/divide by current number of cars
 	// add all tick-averages, divide by total simulation length
 	
-	double averageGap; // average distance between leader and car
+	public double averageGap; // average distance between leader and car
 	// every tick: add all sanctions issued by every organization
-	int sanctionsIssued;
+	public double sanctionsIssued;
 	
 	public Statistics(int simulationLength) {
 		sanctionsLog 	= new ArrayList<>(simulationLength);
@@ -75,7 +75,7 @@ public class Statistics {
 		fileContent.add("Throughput:" + Double.toString(throughput));
 		fileContent.add("Average Network Speed:" + Double.toString(averageSpeedInNetwork));
 		fileContent.add("Average Gap:" + Double.toString(averageGap));
-		fileContent.add("Sanctions Issued:" + Integer.toString(sanctionsIssued));
+		fileContent.add("Sanctions Issued:" + Double.toString(sanctionsIssued));
 		
 		try {
 			Files.write(p, fileContent, Charset.defaultCharset());
@@ -84,6 +84,22 @@ public class Statistics {
 		}
 	}
 
+	public void simpleSave(String dir, String title) {
+		Path p = FileSystems.getDefault().getPath(dir,title+".txt");
+		List<String> fileContent = new ArrayList<>();
+		fileContent.add("Throughput:" + Double.toString(throughput));
+		fileContent.add("Average Network Speed:" + Double.toString(averageSpeedInNetwork));
+		fileContent.add("Average Gap:" + Double.toString(averageGap));
+		fileContent.add("Sanctions Issued:" + Double.toString(sanctionsIssued));
+		
+		try {
+			Files.write(p, fileContent, Charset.defaultCharset());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
 	public void addSanctions(int currentTime,
 			Map<String, List<Sanction>> sanctions) {
 		// TODO Auto-generated method stub
@@ -119,4 +135,21 @@ public class Statistics {
 		departuresPerTick.add(simulationStateData.departedList.size());
 	}
 	
+	public static Statistics aggregateStatistics(List<Statistics> statList) {
+		
+		Statistics aggregate = new Statistics(1);
+		for(Statistics stat : statList) {
+			aggregate.averageGap += stat.averageGap;
+			aggregate.averageSpeedInNetwork += stat.averageSpeedInNetwork;
+			aggregate.sanctionsIssued += stat.sanctionsIssued;
+			aggregate.throughput += stat.throughput;
+		}
+		
+		aggregate.averageGap 			/= statList.size();
+		aggregate.averageSpeedInNetwork /= statList.size();
+		aggregate.sanctionsIssued 		/= statList.size();
+		aggregate.throughput 			/= statList.size();
+		
+		return aggregate;
+	}
 }

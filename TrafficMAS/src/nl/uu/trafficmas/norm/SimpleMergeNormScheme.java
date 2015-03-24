@@ -26,7 +26,7 @@ public class SimpleMergeNormScheme extends NormScheme {
 	private Set<String> tickedAgents;
 	private static List<Sensor> sensors;
 	public static final double TIME_BETWEEN_CARS = 2.5;
-	public static final double DISTANCE_BETWEEN_CARS = 9;
+	public static final double DISTANCE_BETWEEN_CARS = 11;
 	private static final double PRECISION = 100;
 	
 
@@ -137,8 +137,9 @@ public class SimpleMergeNormScheme extends NormScheme {
 		// Argh, also keep in mind that cars have a certain size, currently 7 m. So 9 m gap between the two positions.
 		if(TIME_BETWEEN_CARS*correctedLastSpeed < DISTANCE_BETWEEN_CARS){
 			ni.setSpeedAndLane(distanceCorrectedSpeed, 0);
+		} else {
+			ni.setSpeedAndLane(correctedLastSpeed, 0);
 		}
-		ni.setSpeedAndLane(correctedLastSpeed, 0);
 		normInstList.add(ni);
 		return newPrevCarArrivalTimeMergePoint;
 	}
