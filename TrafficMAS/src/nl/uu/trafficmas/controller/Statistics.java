@@ -21,6 +21,7 @@ public class Statistics {
 	List<Map<String, List<NormInstantiation>>> clearedNormsLog;
 	List<StateData> stateDataLog;
 	List<Double> averageSpeedPerTick;
+	List<Double> averageGapPerTick;
 	List<Integer> departuresPerTick;
 
 	double averageSpeedInNetwork;
@@ -40,6 +41,7 @@ public class Statistics {
 		newNormsLog 	= new ArrayList<>(simulationLength);
 		clearedNormsLog = new ArrayList<>(simulationLength);
 		stateDataLog 	= new ArrayList<>(simulationLength);
+		averageGapPerTick	= new ArrayList<>(simulationLength);
 		averageSpeedPerTick = new ArrayList<>(simulationLength);
 		departuresPerTick	= new ArrayList<>(simulationLength);
 	}
@@ -48,12 +50,20 @@ public class Statistics {
 		Path p = FileSystems.getDefault().getPath(dir,title+".txt");
 		List<String> fileContent = new ArrayList<>();
 
-		double totalSpeed = 0;
+		long totalSpeed = 0;
 		for(Double speed : averageSpeedPerTick) {
 			totalSpeed += speed;
 		}
 		averageSpeedInNetwork = totalSpeed/averageSpeedPerTick.size();
 		
+		double totalGap = 0;
+		for(Double gap : averageGapPerTick) {
+			if(gap.isNaN()){
+				gap = 100.0;
+			}
+			totalGap += gap;
+		}
+		averageGap = totalGap/averageGapPerTick.size();
 		
 		double totalDepartures = 0;
 		for(int departures : departuresPerTick) {
@@ -98,11 +108,14 @@ public class Statistics {
 	public void addStateData(StateData simulationStateData, int i) {
 		stateDataLog.add(simulationStateData);
 		
-		double totalSpeed = 0;
+		double totalSpeed 	= 0;
+		double totalGap		= 0;
 		for(AgentData ad : simulationStateData.agentsData.values()) {
-			totalSpeed += ad.velocity;
+			totalSpeed 	+= ad.velocity;
+			totalGap	+= ad.leaderDistance;
 		}
 		averageSpeedPerTick.add(totalSpeed/simulationStateData.agentsData.size());
+		averageGapPerTick.add(totalGap/simulationStateData.agentsData.size());
 		departuresPerTick.add(simulationStateData.departedList.size());
 	}
 	
