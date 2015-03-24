@@ -364,6 +364,8 @@ public class SimulationModelTraaS implements SimulationModel {
 
 			qb.addQueryField(QuerySubject.Sensor, QueryField.VehicleIDList);
 			
+			
+			
 			qb.executeQuery(conn);
 			stateData = qb.getStateData();
 		} catch (Exception e1) {

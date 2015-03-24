@@ -3,12 +3,14 @@ package nl.uu.trafficmas.simulationmodel;
 import it.polito.appeal.traci.SumoTraciConnection;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.tudresden.sumo.cmd.Simulation;
 import de.tudresden.sumo.config.Constants;
 import de.tudresden.sumo.util.SumoCommand;
 import de.tudresden.ws.container.SumoStringList;
@@ -70,8 +72,11 @@ public class QueryBuilder {
 		List<SumoCommand> cmdList = new ArrayList<SumoCommand>();
 		if(timeStep) {
 			cmdList.add(new SumoCommand(Constants.CMD_SIMSTEP2, 0));
+
 		}
 		cmdList.add(de.tudresden.sumo.cmd.Simulation.getCurrentTime());
+		cmdList.add(Simulation.getDepartedIDList());
+
 		for(QuerySubject querySubject : querySubjects) {
 			cmdList.add(querySubject.getIDListCommand());
 		}
@@ -83,7 +88,11 @@ public class QueryBuilder {
 			responses.remove(0);
 		}
 		int currentTimeStep = (int) responses.remove(0);
+		SumoStringList departedIDListSumo = (SumoStringList) responses.remove(0);
+		String [] list = new String[departedIDListSumo.size()];
 		
+		departedIDListSumo.toArray(list);
+		List<String> departedIDList = Arrays.asList(list);
 		// generate the new queries
 		generateQueries(cmdList, responses);
 		// responses should now be empty!
@@ -95,7 +104,8 @@ public class QueryBuilder {
 		processResponses(responses);
 		assert(responses.isEmpty());
 		
-		stateData = new StateData(agentsData, edgesData, lanesData, sensorData, currentTimeStep);
+		stateData = new StateData(agentsData, edgesData, lanesData, sensorData, currentTimeStep, departedIDList);
+		
 		querySubjects.clear();
 	}
 

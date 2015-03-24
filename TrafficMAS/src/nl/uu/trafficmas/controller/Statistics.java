@@ -11,6 +11,7 @@ import java.util.Map;
 
 import nl.uu.trafficmas.norm.NormInstantiation;
 import nl.uu.trafficmas.norm.Sanction;
+import nl.uu.trafficmas.simulationmodel.AgentData;
 import nl.uu.trafficmas.simulationmodel.StateData;
 
 public class Statistics {
@@ -19,6 +20,8 @@ public class Statistics {
 	List<Map<String, List<NormInstantiation>>> newNormsLog;
 	List<Map<String, List<NormInstantiation>>> clearedNormsLog;
 	List<StateData> stateDataLog;
+	List<Double> averageSpeedPerTick;
+	List<Integer> departuresPerTick;
 
 	double averageSpeedInNetwork;
 	
@@ -37,12 +40,28 @@ public class Statistics {
 		newNormsLog 	= new ArrayList<>(simulationLength);
 		clearedNormsLog = new ArrayList<>(simulationLength);
 		stateDataLog 	= new ArrayList<>(simulationLength);
+		averageSpeedPerTick = new ArrayList<>(simulationLength);
+		departuresPerTick	= new ArrayList<>(simulationLength);
 	}
 	
 	public void save(String dir, String title) {
 		Path p = FileSystems.getDefault().getPath(dir,title+".txt");
 		List<String> fileContent = new ArrayList<>();
 
+		double totalSpeed = 0;
+		for(Double speed : averageSpeedPerTick) {
+			totalSpeed += speed;
+		}
+		averageSpeedInNetwork = totalSpeed/averageSpeedPerTick.size();
+		
+		
+		double totalDepartures = 0;
+		for(int departures : departuresPerTick) {
+			totalDepartures += departures;
+		}
+		throughput = totalDepartures/departuresPerTick.size()*60;
+		
+		
 		fileContent.add("Throughput:" + Double.toString(throughput));
 		fileContent.add("Average Network Speed:" + Double.toString(averageSpeedInNetwork));
 		fileContent.add("Average Gap:" + Double.toString(averageGap));
@@ -77,8 +96,14 @@ public class Statistics {
 	}
 
 	public void addStateData(StateData simulationStateData, int i) {
-		// TODO Auto-generated method stub
 		stateDataLog.add(simulationStateData);
+		
+		double totalSpeed = 0;
+		for(AgentData ad : simulationStateData.agentsData.values()) {
+			totalSpeed += ad.velocity;
+		}
+		averageSpeedPerTick.add(totalSpeed/simulationStateData.agentsData.size());
+		departuresPerTick.add(simulationStateData.departedList.size());
 	}
 	
 }
