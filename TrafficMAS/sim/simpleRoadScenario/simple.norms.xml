@@ -2,6 +2,6 @@
     <norm_scheme id="maxspeed"  classname="SimpleMaxSpeedNormScheme"  sanction="LowFine" >
     	<sensor id="A28_350_lane0_s1" />
     	<sensor id="A28_350_lane0_s2" />
-    	<maxspeed>10</maxspeed>
+    	<maxspeed>7.33</maxspeed>
     </norm_scheme>     
 </norm_schemes>

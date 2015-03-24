@@ -22,7 +22,10 @@ public class SimpleMergeNormInstantiation extends NormInstantiation {
 	public boolean violated(AgentData ad) {
 		//TODO: some leeway, i.e. 3% deviation from the target speed?
 		// Agent can only receive a violation while on sensor 3.
-		return (ad.velocity != speed) || (ad.laneIndex != laneIndex) ;
+		if(!((SimpleMergeNormScheme)this.ns).mergeSensor.readSensor().contains(ad))
+			return false;
+		
+		return (Math.abs(ad.velocity - speed) > 0.001 || (ad.laneIndex != laneIndex)) ;
 	}
 
 	@Override
