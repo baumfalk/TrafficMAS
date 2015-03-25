@@ -3,5 +3,6 @@
     	<sensor id="main1_0MergeS" 	/>
     	<sensor id="ramp1_0MergeS" 	/>
     	<sensor id="control1_0MergeS" 	/>
+    	
     </norm_scheme>     
 </norm_schemes>

@@ -5,6 +5,7 @@
             <sensor id="ramp_0MergeS" />
             <sensor id="control_0MergeS" />
             <sensor id="main_1MergeS" />
+            <sensor id="control_1MergeS" />
         </sensors>
         <norms>
 			<norm id="norm1" />   

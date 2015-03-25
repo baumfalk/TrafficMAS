@@ -23,6 +23,7 @@ public class MergeNormScheme extends NormScheme {
 	private Sensor rampSensor;
 	public Sensor mergeSensor;
 	private Sensor main_1Sensor;
+	Sensor merge_1Sensor;
 	private double LastCarMergePointTime 	= -1;
 	private Set<String> tickedAgents;
 	private static List<Sensor> sensors;
@@ -38,11 +39,12 @@ public class MergeNormScheme extends NormScheme {
 	 */
 	public MergeNormScheme(String id, SanctionType sanctionType, List<Sensor> sensorList) {
 		super(id,sanctionType,sensorList);
-		sensors		= sensorList;
-		mainSensor 	= sensorList.get(0);
-		rampSensor 	= sensorList.get(1);
-		mergeSensor	= sensorList.get(2);
-		main_1Sensor= sensorList.get(3);
+		sensors			= sensorList;
+		mainSensor 		= sensorList.get(0);
+		rampSensor 		= sensorList.get(1);
+		mergeSensor		= sensorList.get(2);
+		main_1Sensor	= sensorList.get(3);
+		merge_1Sensor	= sensorList.get(4);
 		
 		tickedAgents= new HashSet<String>();
 	}

@@ -4,6 +4,7 @@
     	<sensor id="ramp_0MergeS" 	/>
     	<sensor id="control_0MergeS"/>
        	<sensor id="main_1MergeS" 	/>
+       	<sensor id="control_1MergeS" />
     </norm_scheme>     
   
   	<norm_scheme id="norm2" classname="MergeNormScheme" sanction="InfiniteFine" >
@@ -11,5 +12,6 @@
     	<sensor id="ramp1_0MergeS" 	/>
     	<sensor id="control1_0MergeS" 	/>
     	<sensor id="main1_1MergeS" 	/>
+    	<sensor id="control_1MergeS" />
     </norm_scheme>     
 </norm_schemes>
