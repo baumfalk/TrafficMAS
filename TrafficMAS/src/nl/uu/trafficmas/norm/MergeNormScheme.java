@@ -27,6 +27,7 @@ public class MergeNormScheme extends NormScheme {
 	private double LastCarMergePointTime 	= -1;
 	private Set<String> tickedAgents;
 	private static List<Sensor> sensors;
+	public static final double MAX_VELOCITY = (80/3.6);
 	public static final double TIME_BETWEEN_CARS = 2.5;
 	private static final double PRECISION = 100;
 	
