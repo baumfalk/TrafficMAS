@@ -26,7 +26,10 @@ public class TrafficMASExperiments {
 		Random rand = new Random();
 		long seed = rand.nextLong();
 
-		List<Statistics> statList = new ArrayList<>();
+		double averageGap 				= 0;
+		double averageSpeedInNetwork 	= 0;
+		double sanctionsIssued 			= 0;
+		double throughput				= 0;
 		for(int i = 0; i < numberOfRuns; i++) {
 			long start_time = System.nanoTime();
 			DataModel dataModel 			= new DataModelXML(dir,masXML);
@@ -39,15 +42,24 @@ public class TrafficMASExperiments {
 			System.out.println("Run #"+(i+1)+" with seed: " + seed);
 			System.out.println("init time:" + difference + "ms");
 			
+			
 			start_time = System.nanoTime();
+			
 			try {
 				Statistics stats = trafficMas.run(dataModel, simModel, view);
-				statList.add(stats);
+				
+				averageGap				+= stats.averageGap;
+				averageSpeedInNetwork 	+= stats.averageSpeedInNetwork;
+				sanctionsIssued			+= stats.sanctionsIssued;
+				throughput				+= stats.throughput;
+						
 				stats.save(dir,"Output "+(i+1));
 			} catch(Exception exception) {
 				exception.printStackTrace();
 				i--;
 			}
+			
+		
 			end_time = System.nanoTime();
 			difference = (end_time - start_time)/1e6;
 			System.out.println("run time:" + difference + "ms");
@@ -55,7 +67,16 @@ public class TrafficMASExperiments {
 			seed = rand.nextLong();
 		}
 		
-		Statistics aggregateStatistics = Statistics.aggregateStatistics(statList);
+		averageGap 				/= numberOfRuns;
+		averageSpeedInNetwork 	/= numberOfRuns;
+		sanctionsIssued			/= numberOfRuns;
+		throughput				/= numberOfRuns;
+		
+		Statistics aggregateStatistics = new Statistics(1);
+		aggregateStatistics.averageGap 				= averageGap;
+		aggregateStatistics.averageSpeedInNetwork 	= averageSpeedInNetwork;
+		aggregateStatistics.sanctionsIssued			= sanctionsIssued;
+		aggregateStatistics.throughput				= throughput;
 		aggregateStatistics.simpleSave(dir, "AggregateOf"+numberOfRuns);
 	}
 }
