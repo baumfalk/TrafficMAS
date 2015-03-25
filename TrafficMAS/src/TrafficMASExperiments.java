@@ -30,6 +30,8 @@ public class TrafficMASExperiments {
 		double averageSpeedInNetwork 	= 0;
 		double sanctionsIssued 			= 0;
 		double throughput				= 0;
+		double startTimeAllExp = System.nanoTime();
+		System.out.println("Going to run "+ numberOfRuns +" experiments");
 		for(int i = 0; i < numberOfRuns; i++) {
 			long start_time = System.nanoTime();
 			DataModel dataModel 			= new DataModelXML(dir,masXML);
@@ -39,7 +41,7 @@ public class TrafficMASExperiments {
 			TrafficMASController trafficMas	= new TrafficMASController(dataModel, simModel, view,seed);
 			long end_time = System.nanoTime();
 			double difference = (end_time - start_time)/1e6;
-			System.out.println("Run #"+(i+1)+" with seed: " + seed);
+			System.out.println("["+((double)(i+1)/numberOfRuns*100)+"%] Run #"+(i+1)+" with seed: " + seed);
 			System.out.println("init time:" + difference + "ms");
 			
 			
@@ -47,13 +49,12 @@ public class TrafficMASExperiments {
 			
 			try {
 				Statistics stats = trafficMas.run(dataModel, simModel, view);
+				stats.save(dir,"Output "+(i+1));
 				
 				averageGap				+= stats.averageGap;
 				averageSpeedInNetwork 	+= stats.averageSpeedInNetwork;
 				sanctionsIssued			+= stats.sanctionsIssued;
 				throughput				+= stats.throughput;
-						
-				stats.save(dir,"Output "+(i+1));
 			} catch(Exception exception) {
 				exception.printStackTrace();
 				i--;
@@ -72,11 +73,15 @@ public class TrafficMASExperiments {
 		sanctionsIssued			/= numberOfRuns;
 		throughput				/= numberOfRuns;
 		
-		Statistics aggregateStatistics = new Statistics(1);
+		Statistics aggregateStatistics = new Statistics(1,0);
 		aggregateStatistics.averageGap 				= averageGap;
 		aggregateStatistics.averageSpeedInNetwork 	= averageSpeedInNetwork;
 		aggregateStatistics.sanctionsIssued			= sanctionsIssued;
 		aggregateStatistics.throughput				= throughput;
 		aggregateStatistics.simpleSave(dir, "AggregateOf"+numberOfRuns);
+		double endTimeAllExperiments = System.nanoTime();
+		double difference = (endTimeAllExperiments - startTimeAllExp)/1e6;
+		System.out.println("run time:" + difference + "ms");
+		
 	}
 }

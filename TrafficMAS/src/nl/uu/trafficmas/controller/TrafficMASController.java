@@ -68,7 +68,7 @@ public class TrafficMASController {
 		view.addMessage(masData.toString());
 		
 		
-		stats = new Statistics(this.masData.simulationLength);
+		stats = new Statistics(this.masData.simulationLength,seed);
 		///////////////
 		// setup mas //
 		///////////////

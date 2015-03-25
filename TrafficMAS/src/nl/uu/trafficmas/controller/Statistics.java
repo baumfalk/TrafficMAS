@@ -35,8 +35,9 @@ public class Statistics {
 	public double averageGap; // average distance between leader and car
 	// every tick: add all sanctions issued by every organization
 	public double sanctionsIssued;
+	private long seed;
 	
-	public Statistics(int simulationLength) {
+	public Statistics(int simulationLength, long seed) {
 		sanctionsLog 	= new ArrayList<>(simulationLength);
 		newNormsLog 	= new ArrayList<>(simulationLength);
 		clearedNormsLog = new ArrayList<>(simulationLength);
@@ -44,6 +45,7 @@ public class Statistics {
 		averageGapPerTick	= new ArrayList<>(simulationLength);
 		averageSpeedPerTick = new ArrayList<>(simulationLength);
 		departuresPerTick	= new ArrayList<>(simulationLength);
+		this.seed 	= seed;
 	}
 	
 	public void save(String dir, String title) {
@@ -76,7 +78,8 @@ public class Statistics {
 		fileContent.add("Average Network Speed:" + Double.toString(averageSpeedInNetwork));
 		fileContent.add("Average Gap:" + Double.toString(averageGap));
 		fileContent.add("Sanctions Issued:" + Double.toString(sanctionsIssued));
-		
+		fileContent.add("Seed:" + Long.toString(seed));
+
 		try {
 			Files.write(p, fileContent, Charset.defaultCharset());
 		} catch (IOException e) {
@@ -91,6 +94,8 @@ public class Statistics {
 		fileContent.add("Average Network Speed:" + Double.toString(averageSpeedInNetwork));
 		fileContent.add("Average Gap:" + Double.toString(averageGap));
 		fileContent.add("Sanctions Issued:" + Double.toString(sanctionsIssued));
+		fileContent.add("Seed:" + Long.toString(seed));
+
 		
 		try {
 			Files.write(p, fileContent, Charset.defaultCharset());
@@ -137,7 +142,7 @@ public class Statistics {
 	
 	public static Statistics aggregateStatistics(List<Statistics> statList) {
 		
-		Statistics aggregate = new Statistics(1);
+		Statistics aggregate = new Statistics(1,0);
 		for(Statistics stat : statList) {
 			aggregate.averageGap += stat.averageGap;
 			aggregate.averageSpeedInNetwork += stat.averageSpeedInNetwork;
