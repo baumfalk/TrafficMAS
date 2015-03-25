@@ -25,8 +25,10 @@ public class SimpleMergeNormScheme extends NormScheme {
 	private double LastCarMergePointTime 	= -1;
 	private Set<String> tickedAgents;
 	private static List<Sensor> sensors;
+	public static final double MAX_VELOCITY = (80/3.6);
 	public static final double TIME_BETWEEN_CARS = 2.5;
-	public static final double DISTANCE_BETWEEN_CARS = 11;
+	//TODO: Remove or implement this.
+	//public static final double DISTANCE_BETWEEN_CARS = 9;
 	private static final double PRECISION = 100;
 	public static final double MERGEPERCENTAGE = 0.9;
 
@@ -47,7 +49,7 @@ public class SimpleMergeNormScheme extends NormScheme {
 
 	@Override
 	public List<NormInstantiation> instantiateNorms(RoadNetwork rn, int currentTime, Map<String, AgentData> currentOrgKnowledge) {
-		double vmax = (80/3.6);
+		double vmax = MAX_VELOCITY;
 		
 		List<AgentData> mainList = mainSensor.readSensor();
 		List<AgentData> rampList = rampSensor.readSensor();
@@ -108,7 +110,7 @@ public class SimpleMergeNormScheme extends NormScheme {
 			double posAtArrivalTime = currentCar.velocity* (timeBetweenCars + travelTime)+ currentCar.position;
 			acceleration 			= (posAtArrivalTime < lastCarMergePoint) ? currentCar.acceleration : currentCar.deceleration;
 			lastSpeed 				= findBestSpeedTime(currentCar.velocity, acceleration, distRemaining, travelTime, timeBetweenCars );
-			distanceSpeed			= findBestSpeedDistance(currentCar.velocity, acceleration, distRemaining, currentTime, newPrevCarArrivalTimeMergePoint, DISTANCE_BETWEEN_CARS);
+			//distanceSpeed			= findBestSpeedDistance(currentCar.velocity, acceleration, distRemaining, currentTime, newPrevCarArrivalTimeMergePoint, DISTANCE_BETWEEN_CARS);
 			if(Double.isNaN(lastSpeed)) {
 				lastSpeed = vmax;
 			}
@@ -130,16 +132,16 @@ public class SimpleMergeNormScheme extends NormScheme {
 		}
 		ni = new SimpleMergeNormInstantiation(this, currentCar.id);
 		double correctedLastSpeed = Math.round(lastSpeed*PRECISION)/PRECISION;
-		double distanceCorrectedSpeed = Math.round(distanceSpeed*PRECISION)/PRECISION;
+		//double distanceCorrectedSpeed = Math.round(distanceSpeed*PRECISION)/PRECISION;
 		// TODO: Dynamicize
 		// If TIME_BETWEEN_CARS distance with this speed means that the gap between cars is less than 2 meter,
 		// Calculate new speed, which insures the 2 m minGap.
 		// Argh, also keep in mind that cars have a certain size, currently 7 m. So 9 m gap between the two positions.
-		if(TIME_BETWEEN_CARS*correctedLastSpeed < DISTANCE_BETWEEN_CARS){
-			ni.setSpeedAndLane(distanceCorrectedSpeed, 0);
-		} else {
-			ni.setSpeedAndLane(correctedLastSpeed, 0);
-		}
+		//if(TIME_BETWEEN_CARS*correctedLastSpeed < DISTANCE_BETWEEN_CARS){
+			//ni.setSpeedAndLane(distanceCorrectedSpeed, 0);
+		//} else {
+		ni.setSpeedAndLane(correctedLastSpeed, 0);
+		//}
 		normInstList.add(ni);
 		return newPrevCarArrivalTimeMergePoint;
 	}
