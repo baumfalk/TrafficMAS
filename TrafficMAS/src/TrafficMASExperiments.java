@@ -30,7 +30,8 @@ public class TrafficMASExperiments {
 		double averageSpeedInNetwork 	= 0;
 		double sanctionsIssued 			= 0;
 		double throughput				= 0;
-		double startTimeAllExp = System.nanoTime();
+		double startTimeAllExp 			= System.nanoTime();
+		int crashes						= 0;
 		System.out.println("Going to run "+ numberOfRuns +" experiments");
 		for(int i = 0; i < numberOfRuns; i++) {
 			long start_time = System.nanoTime();
@@ -55,9 +56,11 @@ public class TrafficMASExperiments {
 				averageSpeedInNetwork 	+= stats.averageSpeedInNetwork;
 				sanctionsIssued			+= stats.sanctionsIssued;
 				throughput				+= stats.throughput;
+				
 			} catch(Exception exception) {
 				exception.printStackTrace();
 				i--;
+				crashes++;
 			}
 			
 		
@@ -72,12 +75,12 @@ public class TrafficMASExperiments {
 		averageSpeedInNetwork 	/= numberOfRuns;
 		sanctionsIssued			/= numberOfRuns;
 		throughput				/= numberOfRuns;
-		
 		Statistics aggregateStatistics = new Statistics(1,0);
 		aggregateStatistics.averageGap 				= averageGap;
 		aggregateStatistics.averageSpeedInNetwork 	= averageSpeedInNetwork;
 		aggregateStatistics.sanctionsIssued			= sanctionsIssued;
 		aggregateStatistics.throughput				= throughput;
+		aggregateStatistics.crashes					= crashes;
 		aggregateStatistics.simpleSave(dir, "AggregateOf"+numberOfRuns);
 		double endTimeAllExperiments = System.nanoTime();
 		double difference = (endTimeAllExperiments - startTimeAllExp)/1e6;

@@ -150,6 +150,9 @@ public class TrafficMASController {
 		long start_time = System.nanoTime();
 		long total_start_time = start_time;
 		StateData simulationStateData = TrafficMASController.nextSimulationState(simulationModel);
+		if(simulationStateData == null) {
+			throw new Exception("Stop, simulationstatedata is null!");
+		}
 		stats.addStateData(simulationStateData,i);
 		
 		TrafficMASController.verifyState(simulationStateData, this.roadNetwork);

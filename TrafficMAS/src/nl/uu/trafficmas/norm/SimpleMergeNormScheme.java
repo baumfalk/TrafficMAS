@@ -28,7 +28,7 @@ public class SimpleMergeNormScheme extends NormScheme {
 	public static final double TIME_BETWEEN_CARS = 2.5;
 	public static final double DISTANCE_BETWEEN_CARS = 11;
 	private static final double PRECISION = 100;
-	
+	public static final double MERGEPERCENTAGE = 0.9;
 
 	/**
 	 * first sensor: main road
@@ -281,11 +281,11 @@ public class SimpleMergeNormScheme extends NormScheme {
 	@Override
 	public boolean checkCondition(Map<String, AgentData> currentOrgKnowledge) {
 		for(Entry<String, AgentData> entry : currentOrgKnowledge.entrySet()){
-			// TODO: replace arbitratry hardcoded 90%.
 			String str = rampSensor.lane.getRoadID();
-			boolean posRampTriggered = entry.getValue().position > (rampSensor.position + rampSensor.length*.9);
+			
+			boolean posRampTriggered = entry.getValue().position > (rampSensor.position + rampSensor.length*MERGEPERCENTAGE);
 			boolean rampSensorTriggered = entry.getValue().roadID.equals(rampSensor.lane.getRoadID()) && posRampTriggered;
-			boolean posMainTriggered = entry.getValue().position > (mainSensor.position + mainSensor.length*.9);
+			boolean posMainTriggered = entry.getValue().position > (mainSensor.position + mainSensor.length*MERGEPERCENTAGE);
 			boolean mainSensorTriggered = entry.getValue().roadID.equals(mainSensor.lane.getRoadID()) && posMainTriggered;
 			boolean isNotTicked = !tickedAgents.contains(entry.getKey());
 			if((rampSensorTriggered || mainSensorTriggered) && isNotTicked)

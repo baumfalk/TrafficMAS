@@ -36,6 +36,7 @@ public class Statistics {
 	// every tick: add all sanctions issued by every organization
 	public double sanctionsIssued;
 	private long seed;
+	public int crashes;
 	
 	public Statistics(int simulationLength, long seed) {
 		sanctionsLog 	= new ArrayList<>(simulationLength);
@@ -94,8 +95,8 @@ public class Statistics {
 		fileContent.add("Average Network Speed:" + Double.toString(averageSpeedInNetwork));
 		fileContent.add("Average Gap:" + Double.toString(averageGap));
 		fileContent.add("Sanctions Issued:" + Double.toString(sanctionsIssued));
+		fileContent.add("Crashes tota:" + Double.toString(crashes));
 		fileContent.add("Seed:" + Long.toString(seed));
-
 		
 		try {
 			Files.write(p, fileContent, Charset.defaultCharset());
@@ -131,6 +132,7 @@ public class Statistics {
 		
 		double totalSpeed 	= 0;
 		double totalGap		= 0;
+
 		for(AgentData ad : simulationStateData.agentsData.values()) {
 			totalSpeed 	+= ad.velocity;
 			totalGap	+= ad.leaderDistance;
