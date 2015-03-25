@@ -282,6 +282,7 @@ public class TrafficMASController {
 		optionValueMap.put("e", Integer.toString(masData.simulationLength));
 		optionValueMap.put("start", "1");
 		optionValueMap.put("quit-on-end", "1");
+		optionValueMap.put("ignore-accidents", "1");
 		
 		simulationModel.initializeWithOptions(optionValueMap);
 		// add the agents
