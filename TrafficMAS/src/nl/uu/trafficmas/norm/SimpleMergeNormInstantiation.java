@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import nl.uu.trafficmas.roadnetwork.Sensor;
 import nl.uu.trafficmas.simulationmodel.AgentData;
 
 public class SimpleMergeNormInstantiation extends NormInstantiation {
@@ -22,7 +23,8 @@ public class SimpleMergeNormInstantiation extends NormInstantiation {
 	public boolean violated(AgentData ad) {
 		//TODO: some leeway, i.e. 3% deviation from the target speed?
 		// Agent can only receive a violation while on sensor 3.
-		if(!((SimpleMergeNormScheme)this.ns).mergeSensor.readSensor().contains(ad))
+		Sensor mergeSensor = ((SimpleMergeNormScheme)this.ns).mergeSensor;
+		if(!mergeSensor.readSensor().contains(ad) || ad.roadID.equals(mergeSensor.lane.getRoadID()))
 			return false;
 		
 		return (Math.abs(ad.velocity - speed) > 0.009 || (ad.laneIndex != laneIndex)) ;
@@ -33,8 +35,13 @@ public class SimpleMergeNormInstantiation extends NormInstantiation {
 			int currentTime) {
 		
 		AgentData agentData = currentOrgKnowledge.get(agentID);
+		if(agentData == null)
+			return false;
 		SimpleMergeNormScheme simpleMergeNormScheme = (SimpleMergeNormScheme)ns;
-		return simpleMergeNormScheme.mergeSensor.readSensor().contains(agentData);
+		Sensor mergeSensor = simpleMergeNormScheme.mergeSensor;
+		boolean onMergeSensor = mergeSensor.readSensor().contains(agentData);
+		boolean onMergeSensorRoad = agentData.roadID.equals(mergeSensor.lane.getRoadID());
+		return onMergeSensor || onMergeSensorRoad;
 	}
 
 	public void setLaneIndex(int laneIndex){
