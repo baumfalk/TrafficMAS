@@ -70,7 +70,7 @@ public class Organisation {
 				agentSanctions.get(ad.id).add(sanction);
 				// remove instantiation when sanctioned.
 				// TODO: also get this to agent
-				agentNormInst.get(ni.agentID).remove(ni);
+				//agentNormInst.get(ni.agentID).remove(ni);
 			}
 		}
 		
@@ -109,6 +109,8 @@ public class Organisation {
 		List<NormInstantiation> clearedList= new ArrayList<NormInstantiation>();
 		for(NormInstantiation ni : normInstantiations) {
 			//TODO: also delete on norm violation?
+			if(ni.agentID.equals("Agent 56"))
+				System.out.println("HO");
 			if(ni.deadline(currentOrgKnowledge, currentTime)) {
 				clearedList.add(ni);
 			}

@@ -39,6 +39,7 @@ public class MergeNormInstantiation extends NormInstantiation {
 		MergeNormScheme mergeNormScheme = (MergeNormScheme)ns;
 		boolean isOnRightMergeLaneSensor = mergeNormScheme.mergeSensor.readSensor().contains(agentData);
 		boolean isOnLeftMergeLaneSensor = mergeNormScheme.merge_1Sensor.readSensor().contains(agentData);
+
 		return isOnRightMergeLaneSensor || isOnLeftMergeLaneSensor;
 	}
 
