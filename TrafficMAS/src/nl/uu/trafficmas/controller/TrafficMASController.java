@@ -172,6 +172,7 @@ public class TrafficMASController {
 		//view.addMessage(agentActions.toString());
 		start_time = System.nanoTime();
 		TrafficMASController.updateSimulation(simulationModel, agentActions);
+		stats.addAgentActions(agentActions, i);
 		end_time = System.nanoTime();
 		difference = (end_time - start_time)/1e6;
 		view.addMessage("sim update duration:"+difference+"ms");

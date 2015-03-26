@@ -6,9 +6,14 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
+import nl.uu.trafficmas.agent.Agent;
+import nl.uu.trafficmas.agent.actions.AgentAction;
+import nl.uu.trafficmas.agent.actions.ChangeLaneAction;
 import nl.uu.trafficmas.norm.NormInstantiation;
 import nl.uu.trafficmas.norm.Sanction;
 import nl.uu.trafficmas.simulationmodel.AgentData;
@@ -35,6 +40,7 @@ public class Statistics {
 	public double averageGap; // average distance between leader and car
 	// every tick: add all sanctions issued by every organization
 	public double sanctionsIssued;
+	public double changeLaneActions;
 	private long seed;
 	public int crashes;
 	
@@ -79,6 +85,7 @@ public class Statistics {
 		fileContent.add("Average Network Speed:" + Double.toString(averageSpeedInNetwork));
 		fileContent.add("Average Gap:" + Double.toString(averageGap));
 		fileContent.add("Sanctions Issued:" + Double.toString(sanctionsIssued));
+		fileContent.add("ChangeLane actions:" + Double.toString(changeLaneActions));
 		fileContent.add("Seed:" + Long.toString(seed));
 
 		try {
@@ -91,12 +98,13 @@ public class Statistics {
 	public void simpleSave(String dir, String title) {
 		Path p = FileSystems.getDefault().getPath(dir,title+".txt");
 		List<String> fileContent = new ArrayList<>();
+		
 		fileContent.add("Throughput:" + Double.toString(throughput));
 		fileContent.add("Average Network Speed:" + Double.toString(averageSpeedInNetwork));
 		fileContent.add("Average Gap:" + Double.toString(averageGap));
 		fileContent.add("Sanctions Issued:" + Double.toString(sanctionsIssued));
-		fileContent.add("Crashes tota:" + Double.toString(crashes));
-		fileContent.add("Seed:" + Long.toString(seed));
+		fileContent.add("ChangeLane actions:" + Double.toString(changeLaneActions));
+		fileContent.add("Crashes total:" + Double.toString(crashes));
 		
 		try {
 			Files.write(p, fileContent, Charset.defaultCharset());
@@ -121,6 +129,13 @@ public class Statistics {
 		newNormsLog.add(normInst);
 	}
 
+	public void addAgentActions(HashMap<Agent,AgentAction> agentActions, int i) {
+		for(Entry<Agent, AgentAction> entry : agentActions.entrySet()){
+			if(entry.getValue() instanceof ChangeLaneAction && entry.getKey().getRoad().id.equals("mainFront"))
+				changeLaneActions++;
+		}
+	}
+	
 	public void addRemovedNorms(int currentTime,
 			Map<String, List<NormInstantiation>> clearedNormInst) {
 		// TODO Auto-generated method stub
@@ -146,15 +161,17 @@ public class Statistics {
 		
 		Statistics aggregate = new Statistics(1,0);
 		for(Statistics stat : statList) {
-			aggregate.averageGap += stat.averageGap;
+			aggregate.averageGap 			+= stat.averageGap;
 			aggregate.averageSpeedInNetwork += stat.averageSpeedInNetwork;
-			aggregate.sanctionsIssued += stat.sanctionsIssued;
-			aggregate.throughput += stat.throughput;
+			aggregate.sanctionsIssued 		+= stat.sanctionsIssued;
+			aggregate.changeLaneActions		+= stat.changeLaneActions; 
+			aggregate.throughput 			+= stat.throughput;
 		}
 		
 		aggregate.averageGap 			/= statList.size();
 		aggregate.averageSpeedInNetwork /= statList.size();
 		aggregate.sanctionsIssued 		/= statList.size();
+		aggregate.changeLaneActions		/= statList.size();
 		aggregate.throughput 			/= statList.size();
 		
 		return aggregate;

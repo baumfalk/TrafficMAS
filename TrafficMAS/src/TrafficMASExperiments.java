@@ -29,6 +29,7 @@ public class TrafficMASExperiments {
 		double averageGap 				= 0;
 		double averageSpeedInNetwork 	= 0;
 		double sanctionsIssued 			= 0;
+		double changeLaneActions		= 0;
 		double throughput				= 0;
 		double startTimeAllExp 			= System.nanoTime();
 		int crashes						= 0;
@@ -55,6 +56,7 @@ public class TrafficMASExperiments {
 				averageGap				+= stats.averageGap;
 				averageSpeedInNetwork 	+= stats.averageSpeedInNetwork;
 				sanctionsIssued			+= stats.sanctionsIssued;
+				changeLaneActions		+= stats.changeLaneActions;
 				throughput				+= stats.throughput;
 				
 			} catch(Exception exception) {
@@ -74,11 +76,13 @@ public class TrafficMASExperiments {
 		averageGap 				/= numberOfRuns;
 		averageSpeedInNetwork 	/= numberOfRuns;
 		sanctionsIssued			/= numberOfRuns;
+		changeLaneActions		/= numberOfRuns;
 		throughput				/= numberOfRuns;
 		Statistics aggregateStatistics = new Statistics(1,0);
 		aggregateStatistics.averageGap 				= averageGap;
 		aggregateStatistics.averageSpeedInNetwork 	= averageSpeedInNetwork;
 		aggregateStatistics.sanctionsIssued			= sanctionsIssued;
+		aggregateStatistics.changeLaneActions		= changeLaneActions;
 		aggregateStatistics.throughput				= throughput;
 		aggregateStatistics.crashes					= crashes;
 		aggregateStatistics.simpleSave(dir, "AggregateOf"+numberOfRuns);

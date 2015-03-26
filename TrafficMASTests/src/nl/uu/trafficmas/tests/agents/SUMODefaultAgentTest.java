@@ -51,8 +51,6 @@ public class SUMODefaultAgentTest {
 		HashMap<Agent,Integer> agentPairList 	= TrafficMASController.instantiateAgents(masData, random, routes, rn);
 		HashMap<String, Agent> completeAgentMap = SimulationModelTraaS.addAgents(agentPairList, random, -1, conn);
 		HashMap<String, Agent> currentAgentMap 	= SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, new LinkedHashMap<String, Agent>(), conn);
-		Map<String, Organisation> orgsMap	= TrafficMASController.instantiateOrganisations(dataModel, rn);
-		HashMap<Agent, AgentAction> actions = new HashMap<Agent, AgentAction>();
 
 		try {
 			int i = 0;
@@ -61,9 +59,6 @@ public class SUMODefaultAgentTest {
 				StateData stateData 	= SimulationModelTraaS.getStateData(conn, true);
 				currentAgentMap 		= TrafficMASController.updateAgents(completeAgentMap, rn, stateData);
 				rn						= TrafficMASController.updateRoadNetwork(rn, stateData);
-				orgsMap					= TrafficMASController.updateOrganisations(orgsMap, stateData);
-				actions					= TrafficMASController.nextMASState(i, currentAgentMap, orgsMap, rn, null);
-				SimulationModelTraaS.simulateAgentActions(actions, conn);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
