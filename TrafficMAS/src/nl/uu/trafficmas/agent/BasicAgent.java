@@ -28,7 +28,7 @@ public abstract class BasicAgent extends Agent {
 		for(SanctionType st : sanctionsTypes) {
 			switch(st) {
 			case LowFine:
-				intensity = 1;
+				intensity = .2;
 				break;
 			case HighFine:
 				intensity = 2;
