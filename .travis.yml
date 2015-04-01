@@ -2,7 +2,7 @@ language: java
 before_install:
     - sudo apt-get update -qq 
     - sudo apt-get install -y libgdal1h libgdal-dev g++ libxerces-c3.1 libxerces-c-dev libicu-dev libproj-dev libfox-1.6-dev libgl1-mesa-dev libglu1-mesa-dev python 
-    - wget http://www.dlr.de/ts/en/Portaldata/16/Resources/sumo/sumo-src-0.22.0.zip
+    - wget http://downloads.sourceforge.net/project/sumo/sumo/version%200.23.0/sumo-src-0.23.0.zip?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fsumo%2Ffiles%2Fsumo%2Fversion%25200.23.0%2F&ts=1427891378&use_mirror=switch
     - unzip ./sumo-src-0.22.0.zip
     - cd ./sumo-0.22.0
     - ./configure
