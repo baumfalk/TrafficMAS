@@ -193,11 +193,25 @@ public class Constants {
 	public static final int RESPONSE_SUBSCRIBE_AREAL_DETECTOR_CONTEXT = 0x9d;
 
 	/**command: subscribe areal detector (e2) variable*/
-	public static final int CMD_SUBSCRIBE_AREAL_DETECTOR_VARIABLE = 0x8f;
+	public static final int CMD_SUBSCRIBE_AREAL_DETECTOR_VARIABLE = 0xdd;
 
 	/**response: subscribe areal detector (e2) variable*/
-	public static final int RESPONSE_SUBSCRIBE_AREAL_DETECTOR_VARIABLE = 0x9f;
+	public static final int RESPONSE_SUBSCRIBE_AREAL_DETECTOR_VARIABLE = 0xed;
 	
+	// command: subscribe person context
+	public static final int CMD_SUBSCRIBE_PERSON_CONTEXT = 0x8e;
+	// response: subscribe person context
+	public static final int RESPONSE_SUBSCRIBE_PERSON_CONTEXT = 0x9e;
+	// command: get person variable
+	public static final int CMD_GET_PERSON_VARIABLE = 0xae;
+	// response: get person variable
+	public static final int RESPONSE_GET_PERSON_VARIABLE  =0xbe;
+	// command: set person variable
+	public static final int CMD_SET_PERSON_VARIABLE = 0xce;
+	// command: subscribe person variable
+	public static final int CMD_SUBSCRIBE_PERSON_VARIABLE = 0xde;
+	// response: subscribe person variable
+	public static final int RESPONSE_SUBSCRIBE_PERSON_VARIABLE = 0xee;
 	
 	/**route id (get & set: vehicles)*/
 	public static final int VAR_ROUTE_ID = 0x53;
@@ -245,8 +259,8 @@ public class Constants {
 	public static final int VAR_WIDTH = 0x4d;
 
 	/**get area detector (e2) variable*/
-	public static final int CMD_GET_AREAL_DETECTOR_VARIABLE = 0x8e;
-
+	public static final int CMD_GET_AREAL_DETECTOR_VARIABLE = 0xad;
+	public static final int CMD_GET_AREAL_DETECTOR_VARIABLE_OLD = 0x8e;
 	
 	/**get multi-entry/multi-exit detector (e3) variable*/
 	public static final int CMD_GET_MULTI_ENTRY_EXIT_DETECTOR_VARIABLE = 0xa1;
@@ -758,8 +772,8 @@ public class Constants {
 
 	
 	/**response: get area detector (e3) variable*/
-	public static final int RESPONSE_GET_AREAL_DETECTOR_VARIABLE = 0x9e;
-	
+	public static final int RESPONSE_GET_AREAL_DETECTOR_VARIABLE = 0xbd;
+	public static final int RESPONSE_GET_AREAL_DETECTOR_VARIABLE_OLD = 0x9e;
 	
 	/**response: get multi-/entry detector (e3) variable*/
 	public static final int RESPONSE_GET_MULTI_ENTRY_EXIT_DETECTOR_VARIABLE = 0xb1;
