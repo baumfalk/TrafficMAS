@@ -17,42 +17,41 @@ import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Sensor;
 import nl.uu.trafficmas.simulationmodel.AgentData;
 
-public class MergeNormScheme extends NormScheme {
+public class RealMergeNormScheme extends NormScheme {
 
 	private Sensor mainSensor;
 	private Sensor rampSensor;
+	private Sensor laneSensor;
 	public Sensor mergeSensor;
-	private Sensor main_1Sensor;
-	Sensor merge_1Sensor;
 	private double LastCarMergePointTime 	= -1;
 	private Set<String> tickedAgents;
 	private static List<Sensor> sensors;
 	public static final double MAX_VELOCITY = (80/3.6);
 	public static final double TIME_BETWEEN_CARS = 2.5;
+	//TODO: Remove or implement this.
+	//public static final double DISTANCE_BETWEEN_CARS = 9;
 	private static final double PRECISION = 100;
+	public static final double MERGEPERCENTAGE = 0.9;
 	
-
 	/**
 	 * first sensor: main road
 	 * second sensor: ramp
 	 * third sensor: after merge
 	 * @param sensorList the list of the sensors, used to determine how to merge.
 	 */
-	public MergeNormScheme(String id, SanctionType sanctionType, List<Sensor> sensorList) {
+	public RealMergeNormScheme(String id, SanctionType sanctionType, List<Sensor> sensorList) {
 		super(id,sanctionType,sensorList);
-		sensors			= sensorList;
-		mainSensor 		= sensorList.get(0);
-		rampSensor 		= sensorList.get(1);
-		mergeSensor		= sensorList.get(2);
-		main_1Sensor	= sensorList.get(3);
-		merge_1Sensor	= sensorList.get(4);
-		
+		sensors		= sensorList;
+		mainSensor 	= sensorList.get(0);
+		rampSensor 	= sensorList.get(1);
+		mergeSensor	= sensorList.get(2);
+		laneSensor	= sensorList.get(3);
 		tickedAgents= new HashSet<String>();
 	}
-
+	
 	@Override
 	public List<NormInstantiation> instantiateNorms(RoadNetwork rn, int currentTime, Map<String, AgentData> currentOrgKnowledge) {
-		double vmax = (80/3.6);
+		double vmax = MAX_VELOCITY;
 		
 		List<AgentData> mainList = mainSensor.readSensor();
 		List<AgentData> rampList = rampSensor.readSensor();
@@ -91,23 +90,12 @@ public class MergeNormScheme extends NormScheme {
 		return normInstList;
 	}
 
-	// Not used, horrible hacked code.
-	private boolean canChangeLane(AgentData agentData){
-		List<AgentData> nextLaneList = main_1Sensor.readSensor();
-		for(AgentData ad : nextLaneList){
-			// TODO: Improve and remove these hardcoded values, something with average speed of next lane.  
-			if((ad.position < agentData.position -10) && (ad.position > agentData.position - 50) ){
-				return false;
-			}
-		}
-		return true;
-	}
-	
 	private double carNormInstantiation(RoadNetwork rn, double vmax,
 			double timeBetweenCars, List<NormInstantiation> normInstList,
 			double prevCarArrivalTimeMergePoint, AgentData currentCar, int currentTime) {
-		MergeNormInstantiation ni;
+		RealMergeNormInstantiation ni;
 		double lastSpeed;
+		double distanceSpeed = 0;
 		double lastCarMergePoint;
 		double distRemaining;
 		double acceleration;
@@ -123,7 +111,8 @@ public class MergeNormScheme extends NormScheme {
 			double travelTime = prevCarArrivalTimeMergePoint-currentTime;
 			double posAtArrivalTime = currentCar.velocity* (timeBetweenCars + travelTime)+ currentCar.position;
 			acceleration 			= (posAtArrivalTime < lastCarMergePoint) ? currentCar.acceleration : currentCar.deceleration;
-			lastSpeed 				= findBestSpeed(currentCar.velocity, acceleration, distRemaining, travelTime, timeBetweenCars );
+			lastSpeed 				= findBestSpeedTime(currentCar.velocity, acceleration, distRemaining, travelTime, timeBetweenCars );
+			//distanceSpeed			= findBestSpeedDistance(currentCar.velocity, acceleration, distRemaining, currentTime, newPrevCarArrivalTimeMergePoint, DISTANCE_BETWEEN_CARS);
 			if(Double.isNaN(lastSpeed)) {
 				lastSpeed = vmax;
 			}
@@ -143,26 +132,26 @@ public class MergeNormScheme extends NormScheme {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		ni = new MergeNormInstantiation(this, currentCar.id);
+		ni = new RealMergeNormInstantiation(this, currentCar.id);
 		double correctedLastSpeed = Math.round(lastSpeed*PRECISION)/PRECISION;
-		// TODO: Add condition: is able to change lane at this moment.
-		if( correctedLastSpeed < vmax*0.5 && rn.getRoadFromID(currentCar.roadID).laneList.size() != 1){
-			ni.setLaneIndex(2);
-			newPrevCarArrivalTimeMergePoint = prevCarArrivalTimeMergePoint;
-		} else{
-			ni.setSpeedAndLane(correctedLastSpeed, 1);
-		}
+		//double distanceCorrectedSpeed = Math.round(distanceSpeed*PRECISION)/PRECISION;
+		// TODO: Dynamicize
+		// If TIME_BETWEEN_CARS distance with this speed means that the gap between cars is less than 2 meter,
+		// Calculate new speed, which insures the 2 m minGap.
+		// Argh, also keep in mind that cars have a certain size, currently 7 m. So 9 m gap between the two positions.
+		//if(TIME_BETWEEN_CARS*correctedLastSpeed < DISTANCE_BETWEEN_CARS){
+			//ni.setSpeedAndLane(distanceCorrectedSpeed, 0);
+		//} else {
+		ni.setSpeedAndLane(correctedLastSpeed, 0);
+		//}
 		normInstList.add(ni);
 		return newPrevCarArrivalTimeMergePoint;
 	}
 
-	public static double findBestSpeed(double velocity, double acceleration,
+	public static double findBestSpeedTime(double velocity, double acceleration,
 			double distRemaining, double lastCarArrivalTimeMergePoint,
 			double timeBetweenCars) {
-		// TODO Auto-generated method stub
 		
-		// boostrap depending on if we need to brake or not
-		// between 0m/s or 200m/s
 		double vprime;
 		
 		double time = lastCarArrivalTimeMergePoint+timeBetweenCars;
@@ -182,6 +171,32 @@ public class MergeNormScheme extends NormScheme {
 		} else {
 			vprime = negResult;
 		}
+		
+		return vprime;
+	}
+	
+	public static double findBestSpeedDistance(double velocity, double acceleration,
+			double distRemaining, double currentTime, double lastCarArrivalTimeMergePoint,
+			double distanceBetweenCars) {
+		
+		double v 	= velocity;
+		double a 	= acceleration;
+		double m 	= distRemaining;
+		double t1	= currentTime;
+		double t2	= lastCarArrivalTimeMergePoint;
+		double t 	= t2 - t1;
+		double d	= distanceBetweenCars;
+		double vprime;
+		
+		double firstSqrt 		= (a*a*t*t);
+		double secndSqrt		= (2*a*d);
+		double thirdSqrt		= (2*acceleration*m);
+		double forthSqrt		= (2*a*t*v);
+		double afterSqrt		= (a*t+v);
+
+		double sqrt = firstSqrt+secndSqrt-thirdSqrt+forthSqrt;
+		
+		vprime = Math.sqrt(sqrt)+afterSqrt;
 		
 		return vprime;
 	}
@@ -270,11 +285,11 @@ public class MergeNormScheme extends NormScheme {
 	@Override
 	public boolean checkCondition(Map<String, AgentData> currentOrgKnowledge) {
 		for(Entry<String, AgentData> entry : currentOrgKnowledge.entrySet()){
-			// TODO: replace arbitratry hardcoded 90%.
-			//String str = rampSensor.lane.getRoadID();
-			boolean posRampTriggered = entry.getValue().position > (rampSensor.position + rampSensor.length*.9);
+			String str = rampSensor.lane.getRoadID();
+			
+			boolean posRampTriggered = entry.getValue().position > (rampSensor.position + rampSensor.length*MERGEPERCENTAGE);
 			boolean rampSensorTriggered = entry.getValue().roadID.equals(rampSensor.lane.getRoadID()) && posRampTriggered;
-			boolean posMainTriggered = entry.getValue().position > (mainSensor.position + mainSensor.length*.9);
+			boolean posMainTriggered = entry.getValue().position > (mainSensor.position + mainSensor.length*MERGEPERCENTAGE);
 			boolean mainSensorTriggered = entry.getValue().roadID.equals(mainSensor.lane.getRoadID()) && posMainTriggered;
 			boolean isNotTicked = !tickedAgents.contains(entry.getKey());
 			if((rampSensorTriggered || mainSensorTriggered) && isNotTicked)
