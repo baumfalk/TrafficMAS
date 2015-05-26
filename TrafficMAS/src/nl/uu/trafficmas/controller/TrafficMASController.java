@@ -222,10 +222,12 @@ public class TrafficMASController {
 		if(stats != null)
 			stats.addSanctions(currentTime, sanctions);
 		Map<String,List<NormInstantiation>> normInst		= TrafficMASController.getNormInstantiations(organisations2,roadNetwork);
-		stats.addNewNorms(currentTime, normInst);
+		if(stats != null)
+			stats.addNewNorms(currentTime, normInst);
 		
 		Map<String,List<NormInstantiation>> clearedNormInst	= TrafficMASController.getClearedNormInst(organisations2);
-		stats.addRemovedNorms(currentTime, clearedNormInst);
+		if(stats != null)
+			stats.addRemovedNorms(currentTime, clearedNormInst);
 		return  TrafficMASController.getAgentActions(currentTime, currentAgentMap,sanctions,normInst,clearedNormInst);
 	}
 

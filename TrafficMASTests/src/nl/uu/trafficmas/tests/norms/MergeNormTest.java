@@ -30,7 +30,7 @@ import org.xml.sax.SAXException;
 public class MergeNormTest {
 
 	@Test
-	public void mergeNormTest() throws SAXException, IOException, ParserConfigurationException{
+	public void mergeNormTest() throws Exception{
 		Random random 	= new Random(1337);
 		String dir 		= System.getProperty("user.dir")+"/tests/Organisations/Norms/";
 		String sumocfg 	= System.getProperty("user.dir")+"/tests/Organisations/Norms/orgnormtest.cfg.xml";
@@ -43,7 +43,7 @@ public class MergeNormTest {
 		options.put("e", Integer.toString(masData.simulationLength));
 		options.put("start", "1");
 		options.put("quit-on-end", "1");
-		
+		options.put("ignore-accidents", "1");
 		SumoTraciConnection conn = SimulationModelTraaS.initializeWithOptions(options,"sumo", sumocfg);				
 		RoadNetwork rn = dataModel.instantiateRoadNetwork();
 		ArrayList<Route> routes = dataModel.getRoutes(rn);
@@ -54,19 +54,17 @@ public class MergeNormTest {
 		Map<String, Organisation> orgsMap	= TrafficMASController.instantiateOrganisations(dataModel, rn);
 		HashMap<Agent, AgentAction> actions = new HashMap<Agent, AgentAction>();
 
-		try {
-			int i = 0;
-			while (i++ < masData.simulationLength) {
-				currentAgentMap 		= SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, currentAgentMap, conn);
-				StateData stateData 	= SimulationModelTraaS.getStateData(conn, true);
-				currentAgentMap 		= TrafficMASController.updateAgents(completeAgentMap, rn, stateData);
-				rn						= TrafficMASController.updateRoadNetwork(rn, stateData);
-				orgsMap					= TrafficMASController.updateOrganisations(orgsMap, stateData);
-				actions					= TrafficMASController.nextMASState(i, currentAgentMap, orgsMap, rn, null);
-				SimulationModelTraaS.simulateAgentActions(actions, conn);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+
+		int i = 0;
+		while (i++ < masData.simulationLength) {
+			currentAgentMap 		= SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, currentAgentMap, conn);
+			StateData stateData 	= SimulationModelTraaS.getStateData(conn, true);
+			currentAgentMap 		= TrafficMASController.updateAgents(completeAgentMap, rn, stateData);
+			rn						= TrafficMASController.updateRoadNetwork(rn, stateData);
+			orgsMap					= TrafficMASController.updateOrganisations(orgsMap, stateData);
+			actions					= TrafficMASController.nextMASState(i, currentAgentMap, orgsMap, rn, null);
+			SimulationModelTraaS.simulateAgentActions(actions, conn);
 		}
+
 	}
 }
