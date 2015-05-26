@@ -53,8 +53,7 @@ public class ChangeLaneAction extends SumoAgentAction {
 		//	relevant = true;
 		//}
 		
-		// TODO remove this horrible distance based on a single scenario.
-		return agent.getLane().hasLeftLane() && agent.getDistance() >= 150;
+		return agent.getLane().hasLeftLane();
 	}
 
 	@Override

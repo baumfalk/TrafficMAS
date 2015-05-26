@@ -109,8 +109,6 @@ public class Organisation {
 		List<NormInstantiation> clearedList= new ArrayList<NormInstantiation>();
 		for(NormInstantiation ni : normInstantiations) {
 			//TODO: also delete on norm violation?
-			if(ni.agentID.equals("Agent 56"))
-				System.out.println("HO");
 			if(ni.deadline(currentOrgKnowledge, currentTime)) {
 				clearedList.add(ni);
 			}
@@ -129,7 +127,6 @@ public class Organisation {
 				// TODO: proper error handling when an agent is detected by *two* sensors
 				if(currentOrgKnowledge.containsKey(ad.id)) {
 					System.out.println("Org.readsensors: agent " + ad.id + " was already located by a sensor!");
-					
 					AgentData oldAD = currentOrgKnowledge.get(ad.id);
 					System.out.println("Its old road:"+ oldAD.roadID + ", lane:"+ (oldAD.laneIndex) + " and pos:" + oldAD.position);
 					System.out.println("Its new road:"+ ad.roadID + ", lane:"+ (ad.laneIndex) + " and pos:" + ad.position);
