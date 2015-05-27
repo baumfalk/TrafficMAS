@@ -17,6 +17,7 @@ import nl.uu.trafficmas.agent.AgentProfileType;
 import nl.uu.trafficmas.norm.MergeNormScheme;
 import nl.uu.trafficmas.norm.NormScheme;
 import nl.uu.trafficmas.norm.SanctionType;
+import nl.uu.trafficmas.organisation.CommunicationHub;
 import nl.uu.trafficmas.organisation.Organisation;
 import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Lane;
@@ -565,13 +566,42 @@ public class DataModelXML implements DataModel {
 					NormScheme normScheme = normSchemeMap.get(normId);
 					normSchemes.add(normScheme);
 				}	 
-				Organisation organisation = new Organisation(normSchemes, sensors);
+				Organisation organisation = new Organisation(orgId,normSchemes, sensors);
 				orgMap.put(orgId, organisation);
 			}
 		}
 		return orgMap;
 	}
 	
+	public CommunicationHub<Organisation> getCommunicationHub(Map<String,Organisation> orgMap){
+		return getCommunicationHub(orgMap, this.orgsDoc);
+	}
+	
+	public static CommunicationHub<Organisation> getCommunicationHub(
+			Map<String, Organisation> orgMap, Document orgsDoc) {
+		NodeList organisationList = orgsDoc.getElementsByTagName("organisation");
+		
+		CommunicationHub<Organisation> ch = new CommunicationHub<Organisation>();
+		
+		for (int i = 0; i < organisationList.getLength(); i++) {
+			 
+			org.w3c.dom.Node nNode = organisationList.item(i);
+			if (nNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
+				Element element = (Element) nNode;
+				String orgId = element.getAttribute("id");
+
+				NodeList normsSensorList = element.getElementsByTagName("observed");
+				for (int j = 0; j < normsSensorList.getLength(); j++) {
+					String observedid = normsSensorList.item(j).getAttributes().getNamedItem("id").getTextContent();
+					ch.addSubscription(orgMap.get(observedid), orgMap.get(orgId));
+				}	
+			}
+		}
+		
+		
+		return ch;
+	}
+
 	public static Map<String, Organisation> instantiateOrganisations(
 			Document nodeDoc, Document edgeDoc, Document sensorDoc, Document normDoc, Document orgDoc) {
 		
@@ -609,7 +639,7 @@ public class DataModelXML implements DataModel {
 					NormScheme normScheme = normSchemeMap.get(normId);
 					normSchemes.add(normScheme);
 				}	 
-				Organisation organisation = new Organisation(normSchemes, sensors);
+				Organisation organisation = new Organisation(orgId,normSchemes, sensors);
 				orgMap.put(orgId, organisation);
 			}
 		}
@@ -633,17 +663,19 @@ public class DataModelXML implements DataModel {
 	 * @throws SAXException 
 	 * @throws ParserConfigurationException 
 	 */
-	public static MASData getMASData(Document masDoc, Document agentProfilesDoc, Document nodeDoc, Document edgeDoc, Document sensorDoc, Document normDoc, Document orgDoc,Document routesDoc) {
+	public static MASData getMASData(Document masDoc, Document agentProfilesDoc, Document nodeDoc, Document edgeDoc, Document sensorDoc, Document normDoc, Document orgsDoc,Document routesDoc) {
 		int simulationLength 								= DataModelXML.simulationLength(masDoc);
 		boolean multipleRoutes 								= DataModelXML.getMultipleRoutesValue(agentProfilesDoc);
 		LinkedHashMap<String, Double> spawnProbabilities 	= DataModelXML.getAgentSpawnProbability(agentProfilesDoc);
 		double rightLaneRatio								= DataModelXML.getRightLaneRatio(agentProfilesDoc);
 		HashMap<String, LinkedHashMap<AgentProfileType,Double>> routeAgentTypeSpawnProbabilityMap 	= DataModelXML.getRoutesAgentTypeSpawnProbabilities(agentProfilesDoc);
 		Map<String, Organisation> instantiatedOrganisations = null;
-		if(!(sensorDoc == null || normDoc == null || orgDoc == null)) {
-			instantiatedOrganisations = DataModelXML.instantiateOrganisations(nodeDoc, edgeDoc, sensorDoc, normDoc, orgDoc);
+		CommunicationHub ch = null;
+		if(!(sensorDoc == null || normDoc == null || orgsDoc == null)) {
+			instantiatedOrganisations = DataModelXML.instantiateOrganisations(nodeDoc, edgeDoc, sensorDoc, normDoc, orgsDoc);
+			ch = DataModelXML.getCommunicationHub(instantiatedOrganisations, orgsDoc);
 		}
-		return new MASData(simulationLength, spawnProbabilities, rightLaneRatio, multipleRoutes, routeAgentTypeSpawnProbabilityMap,instantiatedOrganisations);
+		return new MASData(simulationLength, spawnProbabilities, rightLaneRatio, multipleRoutes, routeAgentTypeSpawnProbabilityMap,instantiatedOrganisations,ch);
 	}
 
 	@Override

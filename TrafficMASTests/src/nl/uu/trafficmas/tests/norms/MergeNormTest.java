@@ -18,6 +18,7 @@ import nl.uu.trafficmas.controller.TrafficMASController;
 import nl.uu.trafficmas.datamodel.DataModel;
 import nl.uu.trafficmas.datamodel.DataModelXML;
 import nl.uu.trafficmas.datamodel.MASData;
+import nl.uu.trafficmas.organisation.CommunicationHub;
 import nl.uu.trafficmas.organisation.Organisation;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Route;
@@ -53,15 +54,16 @@ public class MergeNormTest {
 		HashMap<String, Agent> currentAgentMap 	= SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, new LinkedHashMap<String, Agent>(), conn);
 		Map<String, Organisation> orgsMap	= TrafficMASController.instantiateOrganisations(dataModel, rn);
 		HashMap<Agent, AgentAction> actions = new HashMap<Agent, AgentAction>();
-
+		CommunicationHub<Organisation> ch		= new CommunicationHub<Organisation>();
 
 		int i = 0;
+		
 		while (i++ < masData.simulationLength) {
 			currentAgentMap 		= SimulationModelTraaS.updateCurrentAgentMap(completeAgentMap, currentAgentMap, conn);
 			StateData stateData 	= SimulationModelTraaS.getStateData(conn, true);
 			currentAgentMap 		= TrafficMASController.updateAgents(completeAgentMap, rn, stateData);
 			rn						= TrafficMASController.updateRoadNetwork(rn, stateData);
-			orgsMap					= TrafficMASController.updateOrganisations(orgsMap, stateData);
+			orgsMap					= TrafficMASController.updateOrganisations(orgsMap, stateData, ch);
 			actions					= TrafficMASController.nextMASState(i, currentAgentMap, orgsMap, rn, null);
 			SimulationModelTraaS.simulateAgentActions(actions, conn);
 		}
