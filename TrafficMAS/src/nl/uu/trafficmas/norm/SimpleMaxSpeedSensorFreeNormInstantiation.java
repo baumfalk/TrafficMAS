@@ -16,12 +16,21 @@ public class SimpleMaxSpeedSensorFreeNormInstantiation extends NormInstantiation
 	@Override
 	public boolean deadline(Map<String, AgentData> currentOrgKnowledge, int currentTime) {
 	
-		
-		if(((SimpleMaxSpeedNormScheme)this.ns).agentNorms.contains(this.agentID))
+		// TODO: here something for checking if the agent is on the correct lane?
+		AgentData ad = currentOrgKnowledge.get(this.agentID);
+		SimpleMaxSpeedSensorFreeNormScheme castedNS = (SimpleMaxSpeedSensorFreeNormScheme)this.ns;
+		if(castedNS.agentNorms.contains(this.agentID) && castedNS.getDeadlineRoad().equals(ad.roadID))
 		{
-			((SimpleMaxSpeedNormScheme)this.ns).agentNorms.remove(this.agentID);
+			castedNS.agentNorms.remove(this.agentID);
 			return true;
 		}
 		return false;
+	}
+	
+	@Override
+	public boolean violated(AgentData ad) {
+		SimpleMaxSpeedSensorFreeNormScheme castedNS = (SimpleMaxSpeedSensorFreeNormScheme)this.ns;
+		
+		return ad.laneIndex != 1;
 	}
 }

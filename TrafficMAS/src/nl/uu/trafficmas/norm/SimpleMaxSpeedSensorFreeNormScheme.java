@@ -22,6 +22,7 @@ public class SimpleMaxSpeedSensorFreeNormScheme extends NormScheme {
 	private String firstLaneId;
 	private String secondLaneId;
 	private String thirdLaneId;
+	private String deadlineRoad;
 	public SimpleMaxSpeedSensorFreeNormScheme(String id, SanctionType sanctionType,
 			List<Sensor> sensorList) {
 		super(id, sanctionType, sensorList);
@@ -55,7 +56,9 @@ public class SimpleMaxSpeedSensorFreeNormScheme extends NormScheme {
 				AgentData agentData = entry.getValue();
 				Lane l = rn.getRoadFromID(agentData.roadID).getLanes()[agentData.laneIndex];
 				if(l.getID().equals(firstLaneId)) {
-					list.add(new SimpleMaxSpeedSensorFreeNormInstantiation(this, agentData.id));
+					NormInstantiation ni = new SimpleMaxSpeedSensorFreeNormInstantiation(this, agentData.id);
+					ni.addRoadNetwork(rn);
+					list.add(ni);
 					agentNorms.add(agentData.id);
 				}
 			}
@@ -92,12 +95,23 @@ public class SimpleMaxSpeedSensorFreeNormScheme extends NormScheme {
 		firstLaneId = (String) attributes.get("firstlane");
 		secondLaneId = (String) attributes.get("secondlane");
 		thirdLaneId = (String) attributes.get("thirdlane");
+		setDeadlineRoad((String) attributes.get("deadlineroad"));
 	}
 
 
 	@Override
 	public List<AgentData> getGoals() {
 		return goals;
+	}
+
+
+	public String getDeadlineRoad() {
+		return deadlineRoad;
+	}
+
+
+	public void setDeadlineRoad(String deadlineRoad) {
+		this.deadlineRoad = deadlineRoad;
 	}
 	
 }

@@ -3,11 +3,13 @@ package nl.uu.trafficmas.norm;
 import java.util.List;
 import java.util.Map;
 
+import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.simulationmodel.AgentData;
 
 public abstract class NormInstantiation {
 	protected final NormScheme ns;
 	public final String agentID;
+	protected RoadNetwork rn;
 	
 	public NormInstantiation(NormScheme ns, String agentID) {
 		this.ns = ns;
@@ -21,6 +23,10 @@ public abstract class NormInstantiation {
 		return ns.violated(ad);
 	};
 
+	public void addRoadNetwork(RoadNetwork rn) {
+		this.rn = rn;
+	}
+	
 	public Sanction getSanction(String agentID) {
 		return ns.getSanction(agentID);
 	}
