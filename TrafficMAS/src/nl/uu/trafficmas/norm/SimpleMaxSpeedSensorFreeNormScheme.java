@@ -2,13 +2,13 @@ package nl.uu.trafficmas.norm;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
 import nl.uu.trafficmas.roadnetwork.Lane;
+import nl.uu.trafficmas.roadnetwork.Road;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Sensor;
 import nl.uu.trafficmas.simulationmodel.AgentData;
@@ -29,14 +29,35 @@ public class SimpleMaxSpeedSensorFreeNormScheme extends NormScheme {
 		maxSpeed = 4;
 		goals = new ArrayList<AgentData>();
 		agentNorms = new HashSet<String>();
-		// TODO Auto-generated constructor stub
-		goals.add(new AgentData(null, null, 1, -1, null, -1, -1, -1));
+	
 	}
 
 
 	@Override
 	public List<NormInstantiation> instantiateNorms(RoadNetwork rn, int currentTime,
 			Map<String, AgentData> currentOrgKnowledge) {
+		
+		if(goals.isEmpty()) {
+			Road r = rn.getRoadFromID(deadlineRoad);
+			Lane l = null;
+			
+			// find lane agent needs to move to
+			for(Lane l2 : r.getLanes()) {
+				if(l2.getID().equals(thirdLaneId)) {
+					l = l2;
+					break;
+				}
+			}
+					
+					
+			int position = 1;
+			int speed = -1;
+			int laneIndex = l.laneIndex;
+			int deceleration = -1;
+			int acceleration = -1;
+			goals.add(new AgentData(null, null, position, speed, null, laneIndex, deceleration, acceleration));
+		}
+		
 		
 		List<NormInstantiation> list = new ArrayList<NormInstantiation>();
 		
@@ -45,17 +66,20 @@ public class SimpleMaxSpeedSensorFreeNormScheme extends NormScheme {
 		for (Entry<String, AgentData> entry : currentOrgKnowledge.entrySet()) {
 			AgentData agentData = entry.getValue();
 			Lane l = rn.getRoadFromID(agentData.roadID).getLanes()[agentData.laneIndex];
-			if(l.getID().equals(firstLaneId)) {
+			boolean isOnFirstLane = l.getID().equals(firstLaneId);
+			if(isOnFirstLane) {
 				agentsFirstLaneCount++;
 			}
 		}
 		
 		// TODO: 2 is arbitrary here
 		if(agentsFirstLaneCount > 2) {
+			// add norm to agents that are on the first lane
 			for (Entry<String, AgentData> entry : currentOrgKnowledge.entrySet()) {
 				AgentData agentData = entry.getValue();
 				Lane l = rn.getRoadFromID(agentData.roadID).getLanes()[agentData.laneIndex];
-				if(l.getID().equals(firstLaneId)) {
+				boolean isOnFirstLane = l.getID().equals(firstLaneId);
+				if(isOnFirstLane) {
 					NormInstantiation ni = new SimpleMaxSpeedSensorFreeNormInstantiation(this, agentData.id);
 					ni.addRoadNetwork(rn);
 					list.add(ni);
@@ -95,7 +119,8 @@ public class SimpleMaxSpeedSensorFreeNormScheme extends NormScheme {
 		firstLaneId = (String) attributes.get("firstlane");
 		secondLaneId = (String) attributes.get("secondlane");
 		thirdLaneId = (String) attributes.get("thirdlane");
-		setDeadlineRoad((String) attributes.get("deadlineroad"));
+		deadlineRoad =(String) attributes.get("deadlineroad");
+
 	}
 
 
@@ -110,8 +135,9 @@ public class SimpleMaxSpeedSensorFreeNormScheme extends NormScheme {
 	}
 
 
-	public void setDeadlineRoad(String deadlineRoad) {
-		this.deadlineRoad = deadlineRoad;
+
+	public String getSecondLaneId() {
+		return secondLaneId;
 	}
 	
 }
