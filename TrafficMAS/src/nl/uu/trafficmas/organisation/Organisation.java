@@ -112,8 +112,6 @@ public class Organisation implements Observer{
 		List<NormInstantiation> clearedList= new ArrayList<NormInstantiation>();
 		for(NormInstantiation ni : normInstantiations) {
 			//TODO: also delete on norm violation?
-			if(ni.agentID.equals("Agent 56"))
-				System.out.println("HO");
 			if(ni.deadline(currentOrgKnowledge, currentTime)) {
 				clearedList.add(ni);
 			}
