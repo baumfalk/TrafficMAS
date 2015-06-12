@@ -18,6 +18,7 @@ import nl.uu.trafficmas.datamodel.MASData;
 import nl.uu.trafficmas.exception.DistanceLargerThanRoadException;
 import nl.uu.trafficmas.norm.NormInstantiation;
 import nl.uu.trafficmas.norm.Sanction;
+import nl.uu.trafficmas.organisation.CommunicationHub;
 import nl.uu.trafficmas.organisation.Organisation;
 import nl.uu.trafficmas.roadnetwork.Edge;
 import nl.uu.trafficmas.roadnetwork.Lane;
@@ -45,6 +46,7 @@ public class TrafficMASController {
 	private HashMap<String, Agent> currentAgentMap;
 	private MASData masData;
 	private Statistics stats;
+	private CommunicationHub<Organisation> communicationHub;
 	
 	
 	public TrafficMASController(DataModel dataModel,SimulationModel simulationModel, TrafficView view) {
@@ -72,6 +74,8 @@ public class TrafficMASController {
 		///////////////
 		// setup mas //
 		///////////////
+		
+		communicationHub = masData.ch;
 		// setup environment
 		
 		this.roadNetwork 	= TrafficMASController.setupRoadNetwork(dataModel);
@@ -222,10 +226,12 @@ public class TrafficMASController {
 		if(stats != null)
 			stats.addSanctions(currentTime, sanctions);
 		Map<String,List<NormInstantiation>> normInst		= TrafficMASController.getNormInstantiations(organisations2,roadNetwork);
-		stats.addNewNorms(currentTime, normInst);
+		if(stats != null)
+			stats.addNewNorms(currentTime, normInst);
 		
 		Map<String,List<NormInstantiation>> clearedNormInst	= TrafficMASController.getClearedNormInst(organisations2);
-		stats.addRemovedNorms(currentTime, clearedNormInst);
+		if(stats != null)
+			stats.addRemovedNorms(currentTime, clearedNormInst);
 		return  TrafficMASController.getAgentActions(currentTime, currentAgentMap,sanctions,normInst,clearedNormInst);
 	}
 
@@ -306,60 +312,9 @@ public class TrafficMASController {
 	private void updateMAS(StateData simulationStateData) {
 		roadNetwork 	= TrafficMASController.updateRoadNetwork(roadNetwork, simulationStateData);
 		currentAgentMap = TrafficMASController.updateAgents(completeAgentMap, roadNetwork, simulationStateData);
-		organisations	= TrafficMASController.updateOrganisations(organisations, simulationStateData);
+		organisations	= TrafficMASController.updateOrganisations(organisations, simulationStateData, communicationHub);
 	}
 	
-	public static Map<String, Organisation> updateOrganisations(
-			Map<String, Organisation> organisations2,
-			StateData simulationStateData) {
-		if(organisations2 == null) 
-			return null;
-		
-		// update the sensors with the sensordata
-		for(Organisation org : organisations2.values()) {
-			org.updateTime(simulationStateData.currentTimeStep/1000);
-			for(Sensor sensor : org.getSensors()) {
-				SensorData sd = simulationStateData.sensorData.get(sensor.id);
-				for(String agentID : sd.vehicleIDs) {
-					sd.addAgentData(agentID, simulationStateData.agentsData.get(agentID));
-				}
-				sensor.updateSensorData(simulationStateData.sensorData.get(sensor.id));
-			}
-			org.readSensors();
-		}
-		
-		return organisations2;
-	}
-
-	/**
-	 * Updates the Road Network 'roadNetwork' with information from 'simulationStateData. 
-	 * For both Road and Lane objects, the meanTravelTime and meanSpeed are updated
-	 * @param roadNetwork
-	 * @param simulationStateData
-	 * @return an updated RoadNetwork object.
-	 */
-	public static RoadNetwork updateRoadNetwork(RoadNetwork roadNetwork,
-			StateData simulationStateData) {
-		
-		for(Edge edge : roadNetwork.getEdges()) {
-			//simulationStateData.edgesData.
-			double meanTravelTimeEdge = simulationStateData.edgesData.get(edge.getID()).meanTime;
-			double meanSpeedEdge = simulationStateData.edgesData.get(edge.getID()).meanSpeed;
-
-			edge.getRoad().setMeanTravelTime(meanTravelTimeEdge); 
-			edge.getRoad().setMeanSpeedEdge(meanSpeedEdge); 
-			
-			for(Lane lane: edge.getRoad().getLanes()) {
-				double meanTravelTimeLane = simulationStateData.lanesData.get(lane.getID()).meanTime;
-				double meanSpeedLane = simulationStateData.lanesData.get(lane.getID()).meanSpeed;
-
-				lane.setMeanTravelTime(meanTravelTimeLane);
-				lane.setLaneMeanSpeed(meanSpeedLane);
-			}
-		}
-		return roadNetwork;
-	}
-
 	public static Map<String, List<Sanction>> getOrgSanctions(
 			Map<String, Organisation> organisations2) {
 		// TODO Auto-generated method stub
@@ -491,6 +446,63 @@ public class TrafficMASController {
 			
 			agent.setExpectedArrivalTime(expectedArrivalTime);
 		}
+	}
+
+	public static Map<String, Organisation> updateOrganisations(
+			Map<String, Organisation> organisations,
+			StateData simulationStateData, CommunicationHub<Organisation> communicationHub) {
+		if(organisations == null) 
+			return null;
+		
+		// update the sensors with the sensordata
+		for(Organisation org : organisations.values()) {
+			org.updateTime(simulationStateData.currentTimeStep/1000);
+			for(Sensor sensor : org.getSensors()) {
+				SensorData sd = simulationStateData.sensorData.get(sensor.id);
+				for(String agentID : sd.vehicleIDs) {
+					sd.addAgentData(agentID, simulationStateData.agentsData.get(agentID));
+				}
+				sensor.updateSensorData(simulationStateData.sensorData.get(sensor.id));
+			}
+			org.readSensors();
+			
+		}
+		
+		// share org knowledge with registered users	
+		for(Organisation org : organisations.values()) {
+			communicationHub.shareInformation(org, org.getKnowledge());
+		}
+		
+		return organisations;
+	}
+
+	/**
+	 * Updates the Road Network 'roadNetwork' with information from 'simulationStateData. 
+	 * For both Road and Lane objects, the meanTravelTime and meanSpeed are updated
+	 * @param roadNetwork
+	 * @param simulationStateData
+	 * @return an updated RoadNetwork object.
+	 */
+	public static RoadNetwork updateRoadNetwork(RoadNetwork roadNetwork,
+			StateData simulationStateData) {
+		
+		for(Edge edge : roadNetwork.getEdges()) {
+			//simulationStateData.edgesData.
+			double meanTravelTimeEdge = simulationStateData.edgesData.get(edge.getID()).meanTime;
+			double meanSpeedEdge = simulationStateData.edgesData.get(edge.getID()).meanSpeed;
+	
+			edge.getRoad().setMeanTravelTime(meanTravelTimeEdge); 
+			edge.getRoad().setMeanSpeedEdge(meanSpeedEdge); 
+			
+			for(Lane lane: edge.getRoad().getLanes()) {
+				double meanTravelTimeLane = simulationStateData.lanesData.get(lane.getID()).meanTime;
+				double meanSpeedLane = simulationStateData.lanesData.get(lane.getID()).meanSpeed;
+	
+				lane.setMeanTravelTime(meanTravelTimeLane);
+				lane.setLaneMeanSpeed(meanSpeedLane);
+			}
+		}
+		return roadNetwork;
 	}
 
 	/**

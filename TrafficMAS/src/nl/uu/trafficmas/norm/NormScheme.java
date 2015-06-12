@@ -3,14 +3,11 @@ package nl.uu.trafficmas.norm;
 import java.util.List;
 import java.util.Map;
 
-import nl.uu.trafficmas.organisation.Expression;
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Sensor;
 import nl.uu.trafficmas.simulationmodel.AgentData;
 
 public abstract class NormScheme {
-	protected Expression precondition;
-	protected Expression trigger;
 	protected SanctionType sanctionType;
 	public final List<Sensor> sensorList;
 	public final String id;

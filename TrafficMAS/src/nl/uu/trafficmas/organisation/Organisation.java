@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import nl.uu.trafficmas.norm.NormInstantiation;
@@ -14,7 +15,8 @@ import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Sensor;
 import nl.uu.trafficmas.simulationmodel.AgentData;
 
-public class Organisation {
+public class Organisation implements Observer{
+	public final String 						id;
 	private List<NormScheme> 					normSchemes;
 	private List<NormInstantiation> 			normInstantiations;
 	private Map<String,Set<NormInstantiation>> 	agentNormInst;
@@ -24,7 +26,8 @@ public class Organisation {
 	private List<InstitutionalState> 			institutionalStates;
 	private int 								currentTime;
 	
-	public Organisation(List<NormScheme> normSchemes, List<Sensor> sensors ){
+	public Organisation(String id, List<NormScheme> normSchemes, List<Sensor> sensors ){
+		this.id 			= id;
 		this.normSchemes 	= normSchemes;
 		this.sensors 		= sensors;
 		normInstantiations	= new ArrayList<NormInstantiation>();
@@ -109,8 +112,6 @@ public class Organisation {
 		List<NormInstantiation> clearedList= new ArrayList<NormInstantiation>();
 		for(NormInstantiation ni : normInstantiations) {
 			//TODO: also delete on norm violation?
-			if(ni.agentID.equals("Agent 56"))
-				System.out.println("HO");
 			if(ni.deadline(currentOrgKnowledge, currentTime)) {
 				clearedList.add(ni);
 			}
@@ -140,5 +141,19 @@ public class Organisation {
 	}
 	public void updateTime(int currentTime) {
 		this.currentTime = currentTime;
+	}
+
+	public Map<String,AgentData> getKnowledge() {
+		return currentOrgKnowledge;
+	}
+
+	@Override
+	public void receiveInformation(Object o) {
+		if(o instanceof Map) {
+			Set<Entry<String, AgentData>> entrySet = ((Map<String,AgentData>) o).entrySet();
+			for(Entry<String, AgentData> e : entrySet) {
+				currentOrgKnowledge.put(e.getKey(), e.getValue());
+			}
+		}
 	}
 }

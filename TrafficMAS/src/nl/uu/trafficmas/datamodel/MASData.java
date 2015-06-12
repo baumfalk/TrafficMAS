@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import nl.uu.trafficmas.agent.AgentProfileType;
+import nl.uu.trafficmas.organisation.CommunicationHub;
 import nl.uu.trafficmas.organisation.Organisation;
 
 public class MASData {
@@ -14,19 +15,20 @@ public class MASData {
 	public final HashMap<String, LinkedHashMap<AgentProfileType, Double>> routeAgentTypeSpawnDist;
 	public final Map<String, Organisation> organisations;
 	public final double rightLaneRatio;
-	
+	public final CommunicationHub ch;
 	public MASData(int simulationLength, 
 			LinkedHashMap<String,Double> spawnProbabilities, 
 			double rightLaneRatio,
 			boolean multipleRoutes,
 			HashMap<String, LinkedHashMap<AgentProfileType, Double>> routeAgentTypeSpawnDist, 
-			Map<String, Organisation> organisations) {
+			Map<String, Organisation> organisations,CommunicationHub ch) {
 		this.simulationLength 			= simulationLength;
 		this.spawnProbabilities 		= spawnProbabilities;
 		this.rightLaneRatio				= rightLaneRatio;
 		this.multipleRoutes 			= multipleRoutes;
 		this.routeAgentTypeSpawnDist 	= routeAgentTypeSpawnDist;
 		this.organisations				= organisations;
+		this.ch 						= ch;
 	}
 	
 	@Override
