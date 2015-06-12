@@ -8,7 +8,8 @@
         <!--<sensor id="sens5" /> -->
         </sensors>
         <norms>
-			<norm id="norm1" />        
+        	<norm id="norm1" />
+			<norm id="norm2" />    
         </norms>
     </organisation>
 </organisations>

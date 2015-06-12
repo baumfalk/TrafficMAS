@@ -27,7 +27,7 @@ public class RealMergeNormScheme extends NormScheme {
 	private Set<String> tickedAgents;
 	private static List<Sensor> sensors;
 	public static final double MAX_VELOCITY = (80/3.6);
-	public static final double TIME_BETWEEN_CARS = 2.5;
+	public static final double TIME_BETWEEN_CARS = 4;
 	//TODO: Remove or implement this.
 	//public static final double DISTANCE_BETWEEN_CARS = 9;
 	private static final double PRECISION = 100;
@@ -95,7 +95,6 @@ public class RealMergeNormScheme extends NormScheme {
 			double prevCarArrivalTimeMergePoint, AgentData currentCar, int currentTime) {
 		RealMergeNormInstantiation ni;
 		double lastSpeed;
-		double distanceSpeed = 0;
 		double lastCarMergePoint;
 		double distRemaining;
 		double acceleration;
@@ -285,7 +284,6 @@ public class RealMergeNormScheme extends NormScheme {
 	@Override
 	public boolean checkCondition(Map<String, AgentData> currentOrgKnowledge) {
 		for(Entry<String, AgentData> entry : currentOrgKnowledge.entrySet()){
-			String str = rampSensor.lane.getRoadID();
 			
 			boolean posRampTriggered = entry.getValue().position > (rampSensor.position + rampSensor.length*MERGEPERCENTAGE);
 			boolean rampSensorTriggered = entry.getValue().roadID.equals(rampSensor.lane.getRoadID()) && posRampTriggered;

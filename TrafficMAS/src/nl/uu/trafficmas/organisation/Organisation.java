@@ -130,7 +130,6 @@ public class Organisation implements Observer{
 				// TODO: proper error handling when an agent is detected by *two* sensors
 				if(currentOrgKnowledge.containsKey(ad.id)) {
 					System.out.println("Org.readsensors: agent " + ad.id + " was already located by a sensor!");
-					
 					AgentData oldAD = currentOrgKnowledge.get(ad.id);
 					System.out.println("Its old road:"+ oldAD.roadID + ", lane:"+ (oldAD.laneIndex) + " and pos:" + oldAD.position);
 					System.out.println("Its new road:"+ ad.roadID + ", lane:"+ (ad.laneIndex) + " and pos:" + ad.position);

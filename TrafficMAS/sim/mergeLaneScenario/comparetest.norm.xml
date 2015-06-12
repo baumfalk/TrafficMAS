@@ -6,4 +6,8 @@
     	<sensor id="sens4" />
     <!--<sensor id="sens5" />-->
     </norm_scheme> 
+    <norm_scheme id="norm2" classname="MergeLaneNormScheme" sanction="HighFine" >
+    	<sensor id="sens4" />
+    </norm_scheme> 
+    
 </norm_schemes>

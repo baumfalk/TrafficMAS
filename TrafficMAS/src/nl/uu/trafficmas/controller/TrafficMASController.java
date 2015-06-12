@@ -255,6 +255,9 @@ public class TrafficMASController {
 			List<NormInstantiation> agentInst 		= (normInst != null && normInst.containsKey(agent.agentID)) ? (normInst.get(agent.agentID)) : null;
 			List<NormInstantiation> agentClearInst	= (clearedNormInst!= null && clearedNormInst.containsKey(agent.agentID)) ? (clearedNormInst.get(agent.agentID)) : null;
 			
+			if(agent.agentID.equals("Agent 4")){
+				System.out.println("What");			
+			}
 			//System.out.println(agent + "\n\t id:" + agent.agentID + "\n\t sanc:" + agentSanc + "\n\t int:"+agentInst+"\n\t clear"+agentClearInst+"\n\n");
 			if(!(agent instanceof SUMODefaultAgent)){
 				actions.put(agent, agent.doAction(currentTime,agentSanc,agentInst,agentClearInst));

@@ -147,10 +147,12 @@ public class MergeNormScheme extends NormScheme {
 		double correctedLastSpeed = Math.round(lastSpeed*PRECISION)/PRECISION;
 		// TODO: Add condition: is able to change lane at this moment.
 		if( correctedLastSpeed < vmax*0.5 && rn.getRoadFromID(currentCar.roadID).laneList.size() != 1){
-			ni.setLaneIndex(2);
+			ni.setLaneIndex(1);
 			newPrevCarArrivalTimeMergePoint = prevCarArrivalTimeMergePoint;
 		} else{
-			ni.setSpeedAndLane(correctedLastSpeed, 1);
+			//ni.setSpeed(correctedLastSpeed);
+			//ni.setLaneIndex(0);
+			ni.setSpeedAndLane(correctedLastSpeed, 0);
 		}
 		normInstList.add(ni);
 		return newPrevCarArrivalTimeMergePoint;
