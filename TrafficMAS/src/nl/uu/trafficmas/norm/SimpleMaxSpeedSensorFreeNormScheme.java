@@ -23,13 +23,14 @@ public class SimpleMaxSpeedSensorFreeNormScheme extends NormScheme {
 	private String secondLaneId;
 	private String thirdLaneId;
 	private String deadlineRoad;
+	private int maxPeopleOnLane;
 	public SimpleMaxSpeedSensorFreeNormScheme(String id, SanctionType sanctionType,
 			List<Sensor> sensorList) {
 		super(id, sanctionType, sensorList);
 		maxSpeed = 4;
 		goals = new ArrayList<AgentData>();
 		agentNorms = new HashSet<String>();
-	
+		maxPeopleOnLane = 2;
 	}
 
 
@@ -73,7 +74,8 @@ public class SimpleMaxSpeedSensorFreeNormScheme extends NormScheme {
 		}
 		
 		// TODO: 2 is arbitrary here
-		if(agentsFirstLaneCount > 2) {
+		
+		if(agentsFirstLaneCount > maxPeopleOnLane) {
 			// add norm to agents that are on the first lane
 			for (Entry<String, AgentData> entry : currentOrgKnowledge.entrySet()) {
 				AgentData agentData = entry.getValue();
@@ -116,10 +118,14 @@ public class SimpleMaxSpeedSensorFreeNormScheme extends NormScheme {
 	public void addAttributes(Map<String, String> attributes) {
 		this.attributes = attributes;
 				
-		firstLaneId = (String) attributes.get("firstlane");
-		secondLaneId = (String) attributes.get("secondlane");
-		thirdLaneId = (String) attributes.get("thirdlane");
-		deadlineRoad =(String) attributes.get("deadlineroad");
+		firstLaneId = attributes.get("firstlane");
+		secondLaneId =  attributes.get("secondlane");
+		thirdLaneId =  attributes.get("thirdlane");
+		deadlineRoad = attributes.get("deadlineroad");
+		
+		if(attributes.get("maxPeopleOnLane")!= null) {
+			maxPeopleOnLane = Integer.parseInt(attributes.get("maxPeopleOnLane"));		
+		}
 
 	}
 
