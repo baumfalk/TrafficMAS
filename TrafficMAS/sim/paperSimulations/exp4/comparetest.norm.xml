@@ -4,4 +4,9 @@
     	<sensor id="sens1" />
     	<sensor id="sens3" />
     </norm_scheme>     
+    <norm_scheme id="norm2" classname="SimpleMergeNormScheme" sanction="InfiniteFine" >
+    	<sensor id="sens5" />
+    	<sensor id="sens4" />
+    	<sensor id="sens6" />
+    </norm_scheme>     
 </norm_schemes>
