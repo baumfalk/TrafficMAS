@@ -14,7 +14,7 @@ public class StayInLaneNormInstantiation extends NormInstantiation {
 		goals = new ArrayList<AgentData>();
 	}
 
-	public void setGoal(AgentData agentData){
+	public void addGoal(AgentData agentData){
 		goals.add(agentData);
 	}
 	

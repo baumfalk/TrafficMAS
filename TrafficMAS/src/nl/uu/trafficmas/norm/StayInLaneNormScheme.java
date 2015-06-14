@@ -40,7 +40,7 @@ public class StayInLaneNormScheme extends NormScheme {
 			StayInLaneNormInstantiation ni = new StayInLaneNormInstantiation(this, ad.id);
 			Object[] leader = {ad.leaderId, ad.leaderDistance};
 			AgentData agentData = new AgentData(ad.id, leader, -1, -1, null, ad.laneIndex, -1, -1);
-			ni.setGoal(agentData);
+			ni.addGoal(agentData);
 			normInstList.add(ni);
 		}
 		
