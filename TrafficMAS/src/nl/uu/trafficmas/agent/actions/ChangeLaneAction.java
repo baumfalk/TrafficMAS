@@ -8,7 +8,7 @@ import de.tudresden.sumo.cmd.Vehicle;
 import de.tudresden.sumo.util.SumoCommand;
 
 public class ChangeLaneAction extends SumoAgentAction {
-	public static final int OVERTAKE_DURATION = 5;
+	public static final int OVERTAKE_DURATION = 1;
 
 	public ChangeLaneAction(int priority) {
 		super(priority);

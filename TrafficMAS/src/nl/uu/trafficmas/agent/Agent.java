@@ -72,6 +72,9 @@ public abstract class Agent extends AgentPhysical {
 	 */
 	public AgentAction doAction(int currentTime, List<Sanction> agentSanc, List<NormInstantiation> agentInst, List<NormInstantiation> agentClearInst) {
 	
+		if(currentTime > 270 && this.agentID.equals("Agent 106")) {
+			System.out.println("SJA");
+		}
 		
 		// add the achieved sanctions
 		if(agentSanc != null)

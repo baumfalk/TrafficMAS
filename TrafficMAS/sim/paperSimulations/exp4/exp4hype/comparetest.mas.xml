@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<mas simulationlength = "3600">
+<mas simulationlength = "1000">
 	<edges value="comparetest.edg.xml"/>
     <nodes value="comparetest.nod.xml"/>
     <sensors value="comparetest.sens.xml"/>

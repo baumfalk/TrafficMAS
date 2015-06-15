@@ -16,6 +16,8 @@
             <sensor id="sens4" />
             <sensor id="sens5" />
             <sensor id="sens6" />
+           	<sensor id="sens6.1" />
+            
         </sensors>
         <norms>
 			<norm id="norm2" />  
