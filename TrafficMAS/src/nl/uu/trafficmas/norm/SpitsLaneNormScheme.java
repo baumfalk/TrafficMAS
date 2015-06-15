@@ -1,8 +1,11 @@
 package nl.uu.trafficmas.norm;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import nl.uu.trafficmas.roadnetwork.RoadNetwork;
 import nl.uu.trafficmas.roadnetwork.Sensor;
@@ -15,7 +18,7 @@ public class SpitsLaneNormScheme extends NormScheme {
 	public Sensor control0Sensor;
 	public Sensor control1Sensor;
 	public boolean spitsModus;
-
+	private Set<String> tickedAgents;
 	
 	private List<AgentData> goals;
 	public SpitsLaneNormScheme(String id, SanctionType sanctionType,
@@ -26,6 +29,7 @@ public class SpitsLaneNormScheme extends NormScheme {
 		control0Sensor	= sensorList.get(2);
 		control1Sensor	= sensorList.get(3);
 		goals = new ArrayList<AgentData>();
+		tickedAgents= new HashSet<String>();
 		int position = 1;
 		int speed = -1;
 		int laneIndex = 0;
@@ -38,10 +42,26 @@ public class SpitsLaneNormScheme extends NormScheme {
 	public List<NormInstantiation> instantiateNorms(RoadNetwork rn,
 			int currentTime, Map<String, AgentData> currentOrgKnowledge) {
 		
-		List<AgentData> main0List = main0Sensor.readSensor();
-		List<AgentData> main1List = main1Sensor.readSensor();
+		//List<AgentData> main0List = main0Sensor.readSensor();
+		//List<AgentData> main1List = main1Sensor.readSensor();
 
-		spitsModus = (main0List.size() > 2); 	
+		// Add all agents into a single list
+		List<AgentData> mainList = new ArrayList<AgentData>();
+		mainList.addAll(main0Sensor.readSensor());
+		mainList.addAll(main1Sensor.readSensor());
+		
+		
+		// First decide if "spitsModus" should be activated.
+		spitsModus = (mainList.size() > 10); 	
+
+		// Then remove previously checked agents from lists.
+		removeTickedAgents(mainList);
+		
+		// And check all new agents.
+		for (int i = 0; i < mainList.size(); i++) {
+			tickedAgents.add(mainList.get(i).id);
+		}
+		
 		
 		// what to do if spitsmode is turned on
 		if(spitsModus && goals.size() == 1) {
@@ -62,9 +82,7 @@ public class SpitsLaneNormScheme extends NormScheme {
 		// dus obligatie om links of rechts te rijden.
 		List<NormInstantiation> instances = new ArrayList<NormInstantiation>();
 		
-		main0List.addAll(main1List);
-		
-		List<AgentData> agentsOnCheckedLane = main0List;
+		List<AgentData> agentsOnCheckedLane = mainList;
 		for(AgentData ad : agentsOnCheckedLane) {
 			SpitsLaneNormInstantiation ni = new SpitsLaneNormInstantiation(this, ad.id);
 			instances.add(ni);
@@ -99,4 +117,14 @@ public class SpitsLaneNormScheme extends NormScheme {
 		return goals;
 	}
 
+	private void removeTickedAgents(List<AgentData> mainList) {
+		Iterator<AgentData> iter = mainList.iterator();
+		while (iter.hasNext()) {
+		    AgentData ad = iter.next();
+		    if (tickedAgents.contains(ad.id))
+		        iter.remove();
+		}
+	}
+
+	
 }

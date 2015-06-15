@@ -48,6 +48,10 @@ public class Lane implements BruteState {
 	public boolean hasLeftLane() {
 		return leftLane != null;
 	}
+	
+	public boolean hasRightLane(){
+		return (laneIndex > 0);
+	}
 
 	public Lane getLeftLane() {
 		return leftLane;

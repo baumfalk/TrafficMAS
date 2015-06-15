@@ -9,9 +9,12 @@ import nl.uu.trafficmas.simulationmodel.AgentData;
 
 public class SpitsLaneNormInstantiation extends NormInstantiation {
 
+	List<AgentData> goals;
+
+	
 	public SpitsLaneNormInstantiation(NormScheme ns, String agentID) {
 		super(ns, agentID);
-		// TODO Auto-generated constructor stub
+		goals = new ArrayList<AgentData>();
 	}
 
 	@Override
@@ -46,5 +49,9 @@ public class SpitsLaneNormInstantiation extends NormInstantiation {
 		boolean onControl0SensorRoad = agentData.roadID.equals(control0Sensor.lane.getRoadID());
 		boolean onControl1SensorRoad = agentData.roadID.equals(control1Sensor.lane.getRoadID());
 		return onControl0Sensor || onControl1Sensor || onControl0SensorRoad || onControl1SensorRoad;
+	}
+	
+	public List<AgentData> getGoals() {
+		return ns.getGoals();
 	}
 }
