@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on Fri Jun 12 16:35:26 2015 by SUMO netconvert Version 0.23.0
+<!-- generated on Mon Jun 15 11:15:32 2015 by SUMO netconvert Version 0.23.0
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
@@ -41,8 +41,8 @@
         <lane id=":node2_1_1" index="1" speed="42.00" length="19.32" shape="466.00,98.35 471.74,98.35 475.66,98.35 479.59,98.35 485.32,98.35"/>
     </edge>
     <edge id=":node5_0" function="internal">
-        <lane id=":node5_0_0" index="0" speed="42.00" length="0.10" shape="600.00,95.05 600.00,95.05"/>
-        <lane id=":node5_0_1" index="1" speed="42.00" length="0.10" shape="600.00,98.35 600.00,98.35"/>
+        <lane id=":node5_0_0" index="0" speed="42.00" length="0.10" shape="900.00,95.05 900.00,95.05"/>
+        <lane id=":node5_0_1" index="1" speed="42.00" length="0.10" shape="900.00,98.35 900.00,98.35"/>
     </edge>
     <edge id=":node7_0" function="internal">
         <lane id=":node7_0_0" index="0" speed="42.00" length="19.36" shape="1066.35,91.59 1070.02,92.54 1074.06,93.69 1078.98,94.65 1085.32,95.05"/>
@@ -61,8 +61,8 @@
         <lane id="exit1_1" index="1" speed="42.00" length="1.00" shape="1400.00,98.35 1401.00,98.35"/>
     </edge>
     <edge id="mainEnd" from="node2" to="node5" priority="1">
-        <lane id="mainEnd_0" index="0" speed="42.00" length="114.68" shape="485.32,95.05 600.00,95.05"/>
-        <lane id="mainEnd_1" index="1" speed="42.00" length="114.68" shape="485.32,98.35 600.00,98.35"/>
+        <lane id="mainEnd_0" index="0" speed="42.00" length="414.68" shape="485.32,95.05 900.00,95.05"/>
+        <lane id="mainEnd_1" index="1" speed="42.00" length="414.68" shape="485.32,98.35 900.00,98.35"/>
     </edge>
     <edge id="mainEnd1" from="node7" to="node8" priority="1">
         <lane id="mainEnd1_0" index="0" speed="42.00" length="314.68" shape="1085.32,95.05 1400.00,95.05"/>
@@ -73,8 +73,8 @@
         <lane id="mainFront_1" index="1" speed="42.00" length="466.00" shape="0.00,98.35 466.00,98.35"/>
     </edge>
     <edge id="mainFront1" from="node5" to="node7" priority="1">
-        <lane id="mainFront1_0" index="0" speed="42.00" length="466.00" shape="600.00,95.05 1066.00,95.05"/>
-        <lane id="mainFront1_1" index="1" speed="42.00" length="466.00" shape="600.00,98.35 1066.00,98.35"/>
+        <lane id="mainFront1_0" index="0" speed="42.00" length="166.00" shape="900.00,95.05 1066.00,95.05"/>
+        <lane id="mainFront1_1" index="1" speed="42.00" length="166.00" shape="900.00,98.35 1066.00,98.35"/>
     </edge>
     <edge id="ramp" from="node1" to="node2" priority="1">
         <lane id="ramp_0" index="0" speed="42.00" length="475.25" shape="0.32,-1.62 466.35,91.59"/>
@@ -90,7 +90,7 @@
         <request index="1" response="000" foes="001" cont="0"/>
         <request index="2" response="000" foes="001" cont="0"/>
     </junction>
-    <junction id="node5" type="priority" x="600.00" y="100.00" incLanes="mainEnd_0 mainEnd_1" intLanes=":node5_0_0 :node5_0_1" shape="600.00,99.95 600.00,93.45 600.00,99.95">
+    <junction id="node5" type="priority" x="900.00" y="100.00" incLanes="mainEnd_0 mainEnd_1" intLanes=":node5_0_0 :node5_0_1" shape="900.00,99.95 900.00,93.45 900.00,99.95">
         <request index="0" response="00" foes="00" cont="0"/>
         <request index="1" response="00" foes="00" cont="0"/>
     </junction>
