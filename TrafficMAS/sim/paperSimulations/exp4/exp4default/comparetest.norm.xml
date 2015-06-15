@@ -8,5 +8,13 @@
     	<sensor id="sens5" />
     	<sensor id="sens4" />
     	<sensor id="sens6" />
-    </norm_scheme>     
+    </norm_scheme>  
+     <norm_scheme id="normSpeed" classname="MaxSpeedNormScheme" sanction="InfiniteFine" >
+    	<sensor id="1" />
+    	<maxspeed>15</maxspeed>
+    	<instantiateAtLane>mainFront_1</instantiateAtLane>
+    	<deadlineRoad>mainEnd1</deadlineRoad>
+    	<deadlineAtRoad></deadlineAtRoad>
+    </norm_scheme>  
+    
 </norm_schemes>

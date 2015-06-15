@@ -84,7 +84,6 @@ public class Organisation implements Observer{
 		return getNewNormInstantiations(rn, normSchemes, currentOrgKnowledge, agentNormInst, normInstantiations, currentTime);
 	}
 	
-	
 	public static List<NormInstantiation> getNewNormInstantiations(
 			RoadNetwork rn, List<NormScheme> normSchemes,
 			Map<String, AgentData> currentOrgKnowledge,

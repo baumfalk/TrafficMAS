@@ -50,13 +50,13 @@ public class SimpleMaxSpeedSensorFreeNormScheme extends NormScheme {
 				}
 			}
 					
-					
 			int position = 1;
-			int speed = -1;
+			double speed = 40/3.6;
 			int laneIndex = l.laneIndex;
 			int deceleration = -1;
 			int acceleration = -1;
-			goals.add(new AgentData(null, null, position, speed, null, laneIndex, deceleration, acceleration));
+			goals.add(new AgentData(null, null, position, speed, null, 0, deceleration, acceleration));
+			goals.add(new AgentData(null, null, position, -1, null, laneIndex, deceleration, acceleration));
 		}
 		
 		
