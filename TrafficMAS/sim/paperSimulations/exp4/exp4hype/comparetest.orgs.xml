@@ -8,7 +8,6 @@
         </sensors>
         <norms>
 			<norm id="norm1" />  
-			<norm id="normSpeed"/>      
         </norms>
     </organisation>    
     <organisation id="org2">
