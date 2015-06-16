@@ -7,7 +7,9 @@ import nl.uu.trafficmas.roadnetwork.Route;
 public enum AgentProfileType {
 	Normal,
 	HotShot,
+	Impatient,
 	OldLady,
+	Patient,
 	SUMODefault;
 	
 	public Agent toAgent(String agentID, Node goalNode, Route route, RoadNetwork roadNetwork, int goalArrivalTime, double maxSpeed) {
@@ -18,9 +20,11 @@ public enum AgentProfileType {
 			agent = new NormalAgent(agentID, goalNode, route, roadNetwork, goalArrivalTime, maxSpeed,maxComfySpeed);
 			break;
 		case OldLady:
+		case Patient:	
 			agent = new OldLadyAgent(agentID, goalNode, route, roadNetwork, goalArrivalTime, maxSpeed,maxComfySpeed);
 			break;
 		case HotShot:
+		case Impatient:
 			agent = new HotShotAgent(agentID, goalNode, route, roadNetwork, goalArrivalTime, maxSpeed,maxComfySpeed);
 			break;
 		case SUMODefault:
@@ -36,9 +40,11 @@ public enum AgentProfileType {
 			maxComfySpeed = maxSpeed * 0.8;
 			break;
 		case OldLady:
+		case Patient:
 			maxComfySpeed = maxSpeed * 0.6;
 			break;
 		case HotShot:
+		case Impatient:
 			maxComfySpeed = maxSpeed;
 			break;
 		case SUMODefault:
@@ -55,10 +61,12 @@ public enum AgentProfileType {
 			goalArrivalTime =  startTime + minimalTravelTime;
 			break;
 		case OldLady:
+		case Patient:	
 			// No hurry, my dear
 			goalArrivalTime =  startTime + minimalTravelTime;
 			break;
 		case HotShot:
+		case Impatient:	
 			//OUTTATHEWAY
 			goalArrivalTime =  startTime + minimalTravelTime;
 		case SUMODefault:
@@ -75,9 +83,11 @@ public enum AgentProfileType {
 			agent = Normal;
 			break;
 		case "OldLady":
+		case "Patient":
 			agent = OldLady;
 			break;
 		case "HotShot":
+		case "Impatient":	
 			agent = HotShot;
 			break;
 		case "SUMODefault":
