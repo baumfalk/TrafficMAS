@@ -10,24 +10,14 @@
     	<sensor id="sens6" />
     	<deadlinelane>mainEnd1_1</deadlinelane>
     </norm_scheme>   
-     <norm_scheme id="norm3" classname="BusyRoadNormScheme" sanction="InfiniteFine" >
-    	<sensor id="sens5"/>
-    	<busyroad>ramp1</busyroad>
-    	<firstlane>mainEnd_0</firstlane>
-    	<secondlane>mainEnd1_0</secondlane>
-    	<thirdlane>mainEnd1_1</thirdlane>
-    	<deadlineroad>mainEnd1</deadlineroad>
-    	<maxPeopleOnLane>0</maxPeopleOnLane>
-    </norm_scheme>  
-    
-    <norm_scheme id="norm4" classname="SimpleMaxSpeedSensorFreeNormScheme" sanction="InfiniteFine" >
+     <norm_scheme id="norm3" classname="SimpleMaxSpeedSensorFreeNormScheme" sanction="InfiniteFine" >
     	<sensor id="sens5"/>
     	<firstlane>mainEnd_0</firstlane>
     	<secondlane>mainEnd1_0</secondlane>
     	<thirdlane>mainEnd1_1</thirdlane>
     	<deadlineroad>mainEnd1</deadlineroad>
     	<maxPeopleOnLane>0</maxPeopleOnLane>
-    </norm_scheme >
+    </norm_scheme>   
     <norm_scheme id="normSpeed" classname="MaxSpeedNormScheme" sanction="InfiniteFine" >
     	<sensor id="1" />
     	<maxspeed>13</maxspeed>

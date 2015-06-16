@@ -8,11 +8,7 @@
         </sensors>
         <norms>
 			<norm id="norm1" />  
-			<norm id="norm3" />  
         </norms>
-         <observes>
-        	<observed id="org2"></observed>
-        </observes>
     </organisation>    
     <organisation id="org2">
         <sensors>
@@ -24,9 +20,11 @@
         </sensors>
         <norms>
 			<norm id="norm2" />  
-									      
-						      
+			<norm id="norm3" />        
+			      
         </norms>
-       
+         <observes>
+        	<observed id="org1"></observed>
+        </observes>
     </organisation>
 </organisations>
