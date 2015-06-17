@@ -51,13 +51,12 @@ public class BusyRoadNormScheme extends NormScheme {
 				}
 			}
 					
-			int position = 1;
-			double speed = 40/3.6;
+			int position = -1;
+			double speed = -1;
 			int laneIndex = l.laneIndex;
 			int deceleration = -1;
 			int acceleration = -1;
-			goals.add(new AgentData(null, null, position, speed, null, 0, deceleration, acceleration));
-			goals.add(new AgentData(null, null, position, -1, null, laneIndex, deceleration, acceleration));
+			goals.add(new AgentData(null, null, position, speed, null, 1, deceleration, acceleration));
 		}
 		
 		
@@ -68,13 +67,11 @@ public class BusyRoadNormScheme extends NormScheme {
 		for (Entry<String, AgentData> entry : currentOrgKnowledge.entrySet()) {
 			AgentData agentData = entry.getValue();
 			Lane l = rn.getRoadFromID(agentData.roadID).getLanes()[agentData.laneIndex];
-			boolean isOnFirstLane = l.getID().equals(busyRoadId);
-			if(isOnFirstLane) {
+			boolean isOnBusyRoad = l.getRoadID().equals(busyRoadId);
+			if(isOnBusyRoad) {
 				agentsFirstLaneCount++;
 			}
 		}
-		
-		// TODO: 2 is arbitrary here
 		
 		if(agentsFirstLaneCount > maxPeopleOnLane) {
 			// add norm to agents that are on the first lane
