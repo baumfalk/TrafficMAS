@@ -10,9 +10,9 @@
 			<norm id="norm1" />  
 			<norm id="norm3" />  
         </norms>
-         <observes>
+        <observes>
         	<observed id="org2"></observed>
-        </observes>
+        </observes>    
     </organisation>    
     <organisation id="org2">
         <sensors>
@@ -23,10 +23,8 @@
             
         </sensors>
         <norms>
-			<norm id="norm2" />  
-									      
-						      
-        </norms>
-       
+			<norm id="norm2" />  		  
+        </norms> 
+
     </organisation>
 </organisations>
